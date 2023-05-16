@@ -206,7 +206,8 @@ public class EPCE0160116Service {
 			epce0160101Mapper.epce0160116_delete4(data);
 		} catch (Exception e) {
 			rtnCd = "B018";
-			e.printStackTrace();
+			/*e.printStackTrace();*/
+			//취약점점검 6325 기원우
 			throw new Exception("B018"); // 해당 사업자정보의 업무데이터가 존재합니다.
 		}
 		

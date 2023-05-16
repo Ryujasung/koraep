@@ -151,7 +151,8 @@ public class EPCE9000201Controller {
 			}
 
 		}catch(Exception e){
-			e.printStackTrace();
+			/*e.printStackTrace();*/
+			//취약점점검 6315 기원우
 			errCd = "A001";
 		}
 

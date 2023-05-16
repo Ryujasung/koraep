@@ -164,8 +164,10 @@ public class INSBK001Service {
             resultMap.put("RESULT_CODE" , rCode );
             resultMap.put("RUN_STAT_CD" , rTaxGbn );
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			/*System.out.println(e.getMessage());*/
+			//취약점점검 6338 기원우
+			/*e.printStackTrace();*/
+			//취약점점검 6312 기원우
 		}
 		
 		return resultMap;

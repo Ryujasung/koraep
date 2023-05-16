@@ -823,7 +823,8 @@ public class EPCE9000801Service {
 						//epce0191801Mapper.epce0191831_insert2(inputMap); // 기준취급수수료 이력 저장
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					/*e.printStackTrace();*/
+					//취약점점검 6294 기원우
 					throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 				}
 				return errCd;
@@ -881,7 +882,8 @@ public class EPCE9000801Service {
 					inputMap.put("RGST_PRSN_ID", vo.getUSER_ID());
 					epce9000801Mapper.epce900080142_update(inputMap);  //기준취급수수료 수정
 			}catch(Exception e){
-				e.printStackTrace();
+				/*e.printStackTrace();*/
+				//취약점점검 6288 기원우
 				 if(e.getMessage().equals("A005")){
 					throw new Exception(e.getMessage()); 
 				 }else{

@@ -198,6 +198,7 @@ public class CommonCeController {
 		}
 		catch(Exception e) {
 			/*e.printStackTrace();*/
+			//취약점점검 6302 기원우
 		}
 		
 		if(null == device) {
@@ -484,24 +485,22 @@ public class CommonCeController {
 			JSONObject mainObj = new JSONObject();
 			JSONArray jArr = new JSONArray();
 			JSONObject rtnObj = new JSONObject();
-			
-			if(prop != null) {
-				rtnObj.put("c_available_service", prop.getProperty("c_available_service"));
-				rtnObj.put("c_start_url", prop.getProperty("c_start_url"));
-				rtnObj.put("c_program_ver", prop.getProperty("c_program_ver"));
-				rtnObj.put("c_minimum_ver", prop.getProperty("c_minimum_ver"));
-				rtnObj.put("c_act", this.iniEncStr(prop.getProperty("c_act")));
-				rtnObj.put("c_act_close", prop.getProperty("c_act_close"));
-				rtnObj.put("c_act_yn", prop.getProperty("c_act_yn"));
-				rtnObj.put("c_update_act", this.iniEncStr(prop.getProperty("c_update_act")));
-				rtnObj.put("c_update_close", prop.getProperty("c_update_close"));
-				rtnObj.put("c_appstore_url", prop.getProperty("c_appstore_url"));
-				rtnObj.put("c_session_time", prop.getProperty("c_session_time"));
-				rtnObj.put("c_update_date", prop.getProperty("c_update_date"));
-				rtnObj.put("c_qna_url", prop.getProperty("c_qna_url"));
-				rtnObj.put("_master_id", prop.getProperty("_master_id"));
-				rtnObj.put("_locale", prop.getProperty("_locale"));
-			}
+
+			rtnObj.put("c_available_service", prop.getProperty("c_available_service"));
+			rtnObj.put("c_start_url", prop.getProperty("c_start_url"));
+			rtnObj.put("c_program_ver", prop.getProperty("c_program_ver"));
+			rtnObj.put("c_minimum_ver", prop.getProperty("c_minimum_ver"));
+			rtnObj.put("c_act", this.iniEncStr(prop.getProperty("c_act")));
+			rtnObj.put("c_act_close", prop.getProperty("c_act_close"));
+			rtnObj.put("c_act_yn", prop.getProperty("c_act_yn"));
+			rtnObj.put("c_update_act", this.iniEncStr(prop.getProperty("c_update_act")));
+			rtnObj.put("c_update_close", prop.getProperty("c_update_close"));
+			rtnObj.put("c_appstore_url", prop.getProperty("c_appstore_url"));
+			rtnObj.put("c_session_time", prop.getProperty("c_session_time"));
+			rtnObj.put("c_update_date", prop.getProperty("c_update_date"));
+			rtnObj.put("c_qna_url", prop.getProperty("c_qna_url"));
+			rtnObj.put("_master_id", prop.getProperty("_master_id"));
+			rtnObj.put("_locale", prop.getProperty("_locale"));
 
 			jArr.add(rtnObj);
 			mainObj.put("_tran_res_data", jArr);
@@ -1721,6 +1720,7 @@ public class CommonCeController {
 		} catch (Exception e) {
 			errCd = e.getMessage();
 			/*e.printStackTrace();*/
+			//취약점점검 6326 기원우
 		}
 
 		JSONObject rtnObj = new JSONObject();
@@ -1738,7 +1738,6 @@ public class CommonCeController {
 		
 		HttpURLConnection connection = null;
 		OutputStream os =null;
-		BufferedReader br = null;
 		try{
 
 			//전송할 서버 url
@@ -1766,8 +1765,7 @@ public class CommonCeController {
 			if(rc==200){
 				StringBuffer sb = new StringBuffer();
 				String str = "";
-				//CHECKPOINT	부적절한 자원 해제
-				br = new BufferedReader(new InputStreamReader((connection.getInputStream())));
+				BufferedReader br = new BufferedReader(new InputStreamReader((connection.getInputStream())));
 				while( (str = br.readLine()) !=null) {      
 					sb.append(URLDecoder.decode(str, "utf-8"));
 				}
@@ -1782,7 +1780,7 @@ public class CommonCeController {
 			}else{
 				StringBuffer sb = new StringBuffer();
 				String str = "";
-				br = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
+				BufferedReader br = new BufferedReader(new InputStreamReader((connection.getErrorStream())));
 				while( (str = br.readLine()) !=null) {      
 					sb.append(URLDecoder.decode(str, "utf-8"));
 				}
@@ -1804,6 +1802,7 @@ public class CommonCeController {
 			rtn = "9999";
 		} catch (Exception e) {
 			/*System.out.println("failed: " + e.getMessage());*/
+			//취약점점검 6309 기원우
 			rtn = "8888";
 		} finally{
 			if(os!=null){
@@ -1813,13 +1812,6 @@ public class CommonCeController {
 
 				}
 				connection.disconnect();
-			}
-			if(br!=null) {
-				try {
-					br.close();
-				}catch (IOException e) {
-					e.printStackTrace();
-				}
 			}
 		}
 		return rtn;
@@ -1902,18 +1894,21 @@ public class CommonCeController {
 	        
 		}catch(IOException e){
 			/*e.printStackTrace();*/
+			//취약점점검 6337 기원우
 			errCd = "B999";	//"파일 수신오류"
 			System.out.println("sssssssssss : " + errCd);
 		}catch(JSONException e){
-			e.printStackTrace();
+			/* e.printStackTrace(); */
 			errCd = "B009";	//"josn 형식 불일치"
 			System.out.println("sssssssssss : " + errCd);
 		}catch(SQLException e){
 			/*e.printStackTrace();*/
+			//취약점점검 6313 기원우
 			errCd = "B003";	//db처리 오류
 			System.out.println("sssssssssss : " + errCd);
 		}catch(Exception e){
 			/*e.printStackTrace();*/
+			//취약점점검 6340 기원우
 			errCd = e.getMessage();
 			System.out.println("sssssssssss : " + errCd);
 		}
@@ -1934,6 +1929,7 @@ public class CommonCeController {
 			out.close();
 		}catch(Exception e){
 			/*e.printStackTrace();*/
+			//취약점점검 6324 기원우 
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}finally{
 			if(out != null) out.close();

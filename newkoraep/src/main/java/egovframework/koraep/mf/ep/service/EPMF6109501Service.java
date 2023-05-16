@@ -100,7 +100,8 @@ public class EPMF6109501Service {
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				/*e.printStackTrace();*/
+				//취약점점검 6279 기원우 
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 			}
 

@@ -580,7 +580,8 @@ public class EPCE2925801Service {
 					 	}     
 						   
 					} catch (Exception e) {
-						e.printStackTrace();
+						/*e.printStackTrace();*/
+						//취약점점검 6332 기원우
 						 if(e.getMessage().equals("A003")){
 							 throw new Exception(e.getMessage()); 
 						 }else if(e.getMessage().equals("A021")){
@@ -996,12 +997,10 @@ public class EPCE2925801Service {
 	            		//System.out.println("[GODCOM] fileData : " + fileData);
 	            		
 	            		HashMap<String, String> fMap = EgovFileMngUtil.uploadFile(fileData, vo.getBIZRNO(), fileName);
-	            		if (fMap != null) {
-	            			inputMap.put("FILE_NM"      ,(String)fMap.get("originalFileName"));
-							inputMap.put("SAVE_FILE_NM" ,(String)fMap.get("uploadFileName"));
-							inputMap.put("FILE_PATH"    ,(String)fMap.get("filePath"));
-		            		inputMap.put("REG_PRSN_ID"  ,userId);
-	            		}
+						inputMap.put("FILE_NM"      ,(String)fMap.get("originalFileName"));
+						inputMap.put("SAVE_FILE_NM" ,(String)fMap.get("uploadFileName"));
+						inputMap.put("FILE_PATH"    ,(String)fMap.get("filePath"));
+	            		inputMap.put("REG_PRSN_ID"  ,userId);
 	            		
 	            		//System.out.println("[GODCOM] InputMap : " + inputMap);
 	            		

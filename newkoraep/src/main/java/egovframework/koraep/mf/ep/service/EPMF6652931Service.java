@@ -219,7 +219,8 @@ public class EPMF6652931Service {
 			 	}
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				/*e.printStackTrace();*/
+				//취약점점검 6331 기원우
 				if(e.getMessage().equals("A014") ){
 					 throw new Exception(e.getMessage());
 				 }else if(e.getMessage().equals("A021")){

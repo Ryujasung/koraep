@@ -598,7 +598,8 @@ public class EPCE0085201Controller {
 //			System.out.println("885 : "+_csrf);
             
         }catch(Exception e){
-        	e.printStackTrace();
+        	/*e.printStackTrace();*/
+        	//취약점점검 6316 기원우 
         	msg = "[KMCIS] Receive Error -" + e.getMessage();
         	model.addAttribute("msg", msg);
 //        	/*model.addAttribute("msg", msg);*/

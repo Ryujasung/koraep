@@ -110,7 +110,8 @@ public class EPCE4793901Service {
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			/*e.printStackTrace();*/
+			//취약점점검 6327 기원우
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}
 		
@@ -453,7 +454,8 @@ public class EPCE4793901Service {
 		        }
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			/*e.printStackTrace();*/
+			//취약점점검 6328 기원우
 			throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		}
 		
