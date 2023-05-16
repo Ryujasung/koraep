@@ -219,7 +219,7 @@ public class EPMF6652931Service {
 			 	}
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				/*e.printStackTrace();*/
 				if(e.getMessage().equals("A014") ){
 					 throw new Exception(e.getMessage());
 				 }else if(e.getMessage().equals("A021")){

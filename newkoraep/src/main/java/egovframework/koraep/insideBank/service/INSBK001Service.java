@@ -164,8 +164,8 @@ public class INSBK001Service {
             resultMap.put("RESULT_CODE" , rCode );
             resultMap.put("RUN_STAT_CD" , rTaxGbn );
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
+			/*System.out.println(e.getMessage());*/
+			/*e.printStackTrace();*/
 		}
 		
 		return resultMap;

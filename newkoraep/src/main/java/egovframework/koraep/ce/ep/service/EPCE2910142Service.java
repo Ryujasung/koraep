@@ -97,7 +97,7 @@ public class EPCE2910142Service {
 				model.addAttribute("rmk_list", util.mapToJson(rmk_list));             
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				/* e.printStackTrace(); */
+				/*e.printStackTrace();*/
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 			}	
 			return model;    	

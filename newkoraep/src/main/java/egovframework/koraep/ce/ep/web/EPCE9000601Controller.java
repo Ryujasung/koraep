@@ -367,7 +367,7 @@ public class EPCE9000601Controller {
 
 		}catch(Exception e){
 			errCd = e.getMessage();
-			e.printStackTrace();
+			/*e.printStackTrace();*/
 		}
 		
 		JSONObject rtnObj = new JSONObject();
@@ -424,7 +424,7 @@ public class EPCE9000601Controller {
 			errCd = epce9000601Service.epce9000642_insert(data, request);
 		}catch(Exception e){
 			errCd = e.getMessage();
-			e.printStackTrace();
+			/*e.printStackTrace();*/
 			if(data.get("ERR_CTNR_NM") !=null){
 				System.out.println(data.get("ERR_CTNR_NM").toString());
 			}
@@ -514,19 +514,16 @@ public class EPCE9000601Controller {
 	System.out.println("########json 데이터로 테스트start@@@@@@");
 	JSONParser parser = new JSONParser();
 	try {
-		
-		//CHECKPOINT 부적절한 자원 해제 : 자원회수를 위해 FileReader로 선언
 		Object obj;
-		FileReader filereader = new FileReader("C:/Temp/TOMRA-Testdata.json");
 		System.out.println("########1@@@@@@");
-		obj = parser.parse(filereader);
+		obj = parser.parse(new FileReader("C:/Temp/TOMRA-Testdata.json"));
 		System.out.println(obj);
 		JSONObject jo = (JSONObject) obj;
 		System.out.println(jo);
 		JSONArray docuArray = (JSONArray) jo.get("data");
-		
 		System.out.println(docuArray);
 		//System.out.println(jo.get("JDBCDriver"));
+		
 		System.out.println("########5@@@@@@"+ docuArray.size());
 		for(int i = 0 ; docuArray.size() > i ; i++){
 			Map<String, String> map = new HashMap<String, String>();
@@ -561,13 +558,14 @@ public class EPCE9000601Controller {
 			//뽑아오기 원하는 Key 이름을 넣어주면 그 value가 반환된다.
 			//System.out.println("########6@@@@@@"+docuObject.get("serial"));
 		}
-		filereader.close();
+		
+		
 	} catch (FileNotFoundException e1) {
 		// TODO Auto-generated catch block
-		e1.printStackTrace();
+		/*e1.printStackTrace();*/
 	} catch (IOException e1) {
 		// TODO Auto-generated catch block
-		e1.printStackTrace();
+		/*e1.printStackTrace();*/
 	}
 	}
 

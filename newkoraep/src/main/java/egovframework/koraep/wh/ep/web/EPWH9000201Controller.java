@@ -71,12 +71,7 @@ public class EPWH9000201Controller {
 			}
 			model.addAttribute("userInfo", ssUserInfo); //사용자
 			model.addAttribute("ttObject", util.mapToJson(commonceService.getLangCdList())); //다국어
-			if(vo != null){
-				model.addAttribute("mmObject", util.mapToJson(commonceService.getMenuCdList(vo))); //메뉴
-			} else {
-				model.addAttribute("mmObject", ""); //메뉴
-			}
-			
+			model.addAttribute("mmObject", util.mapToJson(commonceService.getMenuCdList(vo))); //메뉴
 
 			return "/WH_M/EPWH9000201";		
 		}
@@ -175,7 +170,7 @@ public class EPWH9000201Controller {
 			}
 
 		}catch(Exception e){
-			e.printStackTrace();
+			/*e.printStackTrace();*/
 			errCd = "A001";
 		}
 
@@ -360,11 +355,8 @@ public class EPWH9000201Controller {
 			}
 			model.addAttribute("userInfo", ssUserInfo); //사용자
 			model.addAttribute("ttObject", util.mapToJson(commonceService.getLangCdList())); //다국어
-			if(vo != null){
-				model.addAttribute("mmObject", util.mapToJson(commonceService.getMenuCdList(vo))); //메뉴
-			} else {
-				model.addAttribute("mmObject", ""); //메뉴
-			}
+			model.addAttribute("mmObject", util.mapToJson(commonceService.getMenuCdList(vo))); //메뉴
+
 			return "/WH_M/EPWH9000216";
 		}
 	}

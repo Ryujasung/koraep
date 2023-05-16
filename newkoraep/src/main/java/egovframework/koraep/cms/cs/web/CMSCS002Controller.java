@@ -195,12 +195,11 @@ public class CMSCS002Controller {
 		
 		String inputLine = null;
 		StringBuffer outResult = new StringBuffer();
-		HttpURLConnection conn = null;
 		Map<String, String> data = new HashMap<String, String>();
 		
 		try {
 			URL url = new URL(apiUrl);
-            conn = (HttpURLConnection)url.openConnection();
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
@@ -210,14 +209,14 @@ public class CMSCS002Controller {
             os.write(jsonValue.getBytes("UTF-8"));
             
             os.flush();
-            os.close();
+            
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
             
             while((inputLine = in.readLine()) != null) {
             	outResult.append(inputLine);
             }
             
-            
+            conn.disconnect();
             
             String responseStr = outResult.toString();
             log.debug("===================== CMS Api 결과 ====================");
@@ -227,13 +226,10 @@ public class CMSCS002Controller {
 			data = (Map<String, String>)gson.fromJson(responseStr, Map.class);
 			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		} finally {
-			if(conn != null) {
-				conn.disconnect();
-			}
+			/*System.out.println(e.getMessage());*/
+			/*e.printStackTrace();*/
 		}
+		
 		return data;
 	}
 	

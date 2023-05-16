@@ -359,7 +359,7 @@ public class EPCE0120601Service {
 
 			epce0120601Mapper.epce0120602_update(data);
 		}catch(Exception e){
-			System.out.println(e);
+			/*System.out.println(e);*/
 			throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		}
 

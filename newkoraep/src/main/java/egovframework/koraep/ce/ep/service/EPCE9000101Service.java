@@ -501,7 +501,7 @@ public class EPCE9000101Service {
  			HttpSession session = request.getSession();
 			UserVO vo = (UserVO) session.getAttribute("userSession");
 
-			if(inputMap.size() == 0) {
+			if(inputMap == null) {
 				if(vo != null){
 					inputMap.put("WHSDL_BIZRID", vo.getBIZRID());
 					inputMap.put("WHSDL_BIZRNO", vo.getBIZRNO_ORI());
@@ -559,7 +559,7 @@ public class EPCE9000101Service {
 						
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
+						/*e.printStackTrace();*/
 						 if(e.getMessage().equals("A003")){
 							 throw new Exception(e.getMessage()); 
 						 }else if(e.getMessage().equals("A021")){
@@ -971,13 +971,11 @@ public class EPCE9000101Service {
 	            		//System.out.println("[GODCOM] fileData : " + fileData);
 	            		
 	            		HashMap<String, String> fMap = EgovFileMngUtil.uploadFile(fileData, vo.getBIZRNO(), fileName);
-	            		if (fMap != null) {
-	            			inputMap.put("FILE_NM"      ,(String)fMap.get("originalFileName"));
-							inputMap.put("SAVE_FILE_NM" ,(String)fMap.get("uploadFileName"));
-							inputMap.put("FILE_PATH"    ,(String)fMap.get("filePath"));
-		            		inputMap.put("REG_PRSN_ID"  ,userId);
-	            		}
-						
+						inputMap.put("FILE_NM"      ,(String)fMap.get("originalFileName"));
+						inputMap.put("SAVE_FILE_NM" ,(String)fMap.get("uploadFileName"));
+						inputMap.put("FILE_PATH"    ,(String)fMap.get("filePath"));
+	            		inputMap.put("REG_PRSN_ID"  ,userId);
+	            		
 	            		//System.out.println("[GODCOM] InputMap : " + inputMap);
 	            		
 	            		EPCE9000101Mapper.EPCE9000188_insert(inputMap);

@@ -216,16 +216,14 @@ public class EPCE0160131Controller {
 			apiUrl = apiUrl + "?JSONData="+URLEncoder.encode(sData, "utf-8");
 			document = (Document) Jsoup.connect(apiUrl).get();
 		} catch (IOException e1) {
-			System.out.println(e1.getMessage());
-			e1.printStackTrace();
+			/*System.out.println(e1.getMessage());*/
+			/*e1.printStackTrace();*/
 		} catch(Exception e){
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
-		Elements e = null;
-		if(document != null) {
-			e = document.select("body");
-		}
+		Elements e = document.select("body");
+
 		return util.toHalfChar(e.get(0).text());	//전각을 반각처리후 리턴
 	}
 	
