@@ -1,0 +1,17 @@
+.SampleScrollBar{
+	position:absolute;
+	width:6px;
+	background-color:#eaeaea;
+	right:6px;
+	top:0px;
+	opacity:0;
+	transition:width 0.2s, right 0.2s, background-color 0.2s, opacity 0.5s;
+	border-radius:2px;
+}
+
+.SampleScrollBar:hover{
+	width:8px;
+	right:5px;
+	background-color:#ccc;
+	border-radius:4px;
+}

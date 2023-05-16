@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+			xmlns:beans="http://www.springframework.org/schema/beans"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:schemaLocation="http://www.springframework.org/schema/beans
+				http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+				http://www.springframework.org/schema/security
+				http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+		
+		<http auto-config='true'  use-expressions="true" pattern="/api/*.do" ></http>
+		
+		<http auto-config='true'  use-expressions="true" pattern="/MBL_LOGIN.do" ></http>
+		
+        <http auto-config='true'  use-expressions="true" pattern="/magicsso/*" ></http>
+
+        <http auto-config='true'  use-expressions="true" pattern="/ClipReport4/*" ></http>
+
+        <http auto-config='true'  use-expressions="true" pattern="/MAIN/APP_IMG_SAVE.do" ></http>
+        
+        <http auto-config='true'  use-expressions="true" pattern="/jsp/file_down_m.jsp" ></http>
+<!--         <http auto-config='true'  use-expressions="true" pattern="/EP/EPCE0085*.do" ></http> -->
+<!--         <http auto-config='true'  use-expressions="true" pattern="/EP/EPCE00852885.do" ></http> -->
+        <!-- CSRF 토큰 검사 예외처리 URL 을 등록 -->
+<!--         <http pattern="/EP/EPCE00852883.do" security="none"/> -->
+<!-- 		<http pattern="/EP/EPCE00852885.do" security="none"/> -->
+
+		<http auto-config='true'  use-expressions="true">
+			<intercept-url pattern="**/images/**" access="permitAll" />
+			<intercept-url pattern="/*.js" access="permitAll" />
+			<intercept-url pattern="*.css" access="permitAll" />
+			<intercept-url pattern="/" access="permitAll" />
+			<intercept-url pattern="/index.jsp" access="permitAll" />
+			<intercept-url pattern="/**/footer.jsp" access="permitAll" />
+			<intercept-url pattern="/jsp/terms.jsp" access="permitAll" />
+			<intercept-url pattern="/jsp/privacy*.jsp" access="permitAll" />
+			<intercept-url pattern="/**/common.jsp" access="permitAll" />
+			<intercept-url pattern="/**/common_page.jsp" access="permitAll" />
+            <intercept-url pattern="/login.do" access="permitAll" />
+			<intercept-url pattern="/SSO_LOGIN*.do" access="permitAll" />
+			<intercept-url pattern="/loginfail.do" access="permitAll" />
+			<intercept-url pattern="/SELECT_USER_MENU_LIST.do" access="permitAll" />
+            <intercept-url pattern="/MAIN/APP_INFO.do" access="permitAll" />
+			<intercept-url pattern="/EP/*.do" access="permitAll" />
+            <intercept-url pattern="/MAIN/APP_IMG_SAVE.do" access="permitAll" />
+			<intercept-url pattern="/*" access="hasRole('ROLE_USER')" />
+			<intercept-url pattern="/**/*" method="OPTIONS" access="permitAll"/>
+		<!-- 
+			<intercept-url pattern="/login" access="permitAll" />
+			<intercept-url pattern="/index" access="permitAll" />
+			<intercept-url pattern="/resources/**" access="permitAll" />
+			<intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
+			<intercept-url pattern="..." access="hasRole('ROLE_ANONYMOUS')" />
+			<intercept-url pattern="..." access="hasRole('ROLE_USER')" />
+			<intercept-url pattern="..." access="hasRole('ROLE_ADMIN')" /
+			 -->
+	
+				<!-- 로그인 form spring에 인지. default-target-url 성공시 이동 url  -->
+				<!-- 
+				<form-login login-page="/login.do"
+					default-target-url="/USER_LOGIN_CHECK.do"
+					username-parameter="USER_ID"
+					password-parameter="USER_PWD"
+					authentication-failure-url="/loginfail.do"
+					always-use-default-target='true'
+				/>
+				 -->
+				 
+				<form-login login-page="/login.do"
+					default-target-url="/USER_LOGIN_CHECK.do"
+					username-parameter="USER_ID"
+					password-parameter="USER_PWD"
+					authentication-failure-handler-ref="authenticationFailHandlerImpl"
+					always-use-default-target='true'
+				/>
+				
+				<logout invalidate-session="true" 
+						logout-url="/logout.do"
+						logout-success-url="/login.do" />
+			
+			<!-- enable csrf protection : Cross-site request forgery 해킹 방지 -->
+ 			<csrf/>
+ 			
+<!--  			<access-denied-handler error-page="/common/sessionerror.jsp" /> -->
+		
+		</http>
+		<!-- 인증처리 서비스 erase-credentials="false" 패스워드기억..true(생략)삭제 -->
+		<authentication-manager erase-credentials="false">
+			<authentication-provider user-service-ref="userAuthCheckService">
+				<password-encoder ref="passwordEncoder"/>
+			</authentication-provider>
+		</authentication-manager>
+		
+		<beans:bean id="userAuthCheckService" class="egovframework.koraep.auth.service.UserAuthCheckService">
+		</beans:bean>
+		
+		<beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+		  <beans:constructor-arg name="strength" value="256"></beans:constructor-arg>
+		</beans:bean>
+
+		<beans:bean id="authenticationFailHandlerImpl" class="egovframework.common.AuthenticationFailHandlerImpl" />
+		
+</beans:beans>

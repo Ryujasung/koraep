@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Province code="0" symbol="NorthKorea" gisLeftLng="124.32532400000000" gisTopLat="43.00404200000000" gisScaleX="67.69103301320000" gisScaleY="91.13478176558520">
+	</Province>
+	<Province code="100" label="평양" symbol="Pyongyang" horizontalCenterGap="0" verticalCenterGap="-5" gisLeftLng="125.50709200000000" gisTopLat="39.27532800000000" gisScaleX="400.46615694326500" gisScaleY="393.60648620902500">
+		<Gu code="101" label="순안" symbol="Sunan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="102" label="룡성" symbol="Ryongsong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="103" label="만경대" symbol="Mangyongdae" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="104" label="대성" symbol="Taesong"/>
+		<Gu code="105" label="삼석" symbol="Samsok" horizontalCenterGap="5" verticalCenterGap="0"/>
+		<Gu code="106" label="강동군" symbol="Kangdong" horizontalCenterGap="-10" verticalCenterGap="-5"/>
+		<Gu code="107" label="사동" symbol="Sadong" horizontalCenterGap="0" verticalCenterGap="-10"/>
+		<Gu code="108" label="력포" symbol="Ryokpo"/>
+		<Gu code="109" label="락랑" symbol="Rakrang" horizontalCenterGap="5" verticalCenterGap="-5"/>
+		<Gu code="110" label="형제산" symbol="Hyongjesan" horizontalCenterGap="0" verticalCenterGap="5"/>
+		<Gu code="111" label="평양시" symbol="Pyongyangsi" horizontalCenterGap="0" verticalCenterGap="-5"/>
+	</Province>
+	<Province code="200" label="남포" symbol="Nampo" gisLeftLng="125.12585200000000" gisTopLat="39.03964700000000" gisScaleX="698.93374745266400" gisScaleY="908.04368781629200">
+		<Gu code="201" label="와우도" symbol="Waudo" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="202" label="항구" symbol="Hanggu" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="203" label="강서" symbol="Kangso" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="204" label="대안" symbol="Taean" horizontalCenterGap="0" verticalCenterGap="5"/>
+		<Gu code="205" label="룡강" symbol="Ryonggang" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="206" label="온천" symbol="Onchon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+	</Province>
+	<Province code="300" label="라선" symbol="Rason" horizontalCenterGap="3" verticalCenterGap="-5" gisLeftLng="130.03653100000000" gisTopLat="42.61296000000000" gisScaleX="455.03225389959900" gisScaleY="742.85422312210200">
+		<Gu code="301" label="라진구역" symbol="Rajin" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="302" label="선봉군" symbol="Sonbong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+	</Province>
+	<Province code="400" label="평안북도" symbol="Pyongbuk" gisLeftLng="124.32005700000000" gisTopLat="40.64632400000000" gisScaleX="160.57176092087500" gisScaleY="230.39287093688800">
+		<Gu code="401" label="벽동군" symbol="Pyoktong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="402" label="창성군" symbol="Changsong" horizontalCenterGap="0" verticalCenterGap="-3"/>
+		<Gu code="403" label="녕변군" symbol="Nyongbyon" horizontalCenterGap="0" verticalCenterGap="-3"/>
+		<Gu code="404" label="신도군" symbol="Sindo" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="405" label="철산군" symbol="Cholsan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="406" label="염주군" symbol="Yomju" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="407" label="삭주군" symbol="Sakju" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="408" label="의주군" symbol="Uiju"/>
+		<Gu code="409" label="천마군" symbol="Chonma" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="410" label="대관군" symbol="Taegwan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="411" label="동창군" symbol="Tongchang" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="412" label="곽산군" symbol="Kwaksan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="413" label="운산군" symbol="Unsan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="414" label="향산군" symbol="Hyangsan" horizontalCenterGap="5"/>
+		<Gu code="415" label="구장군" symbol="Kujang" verticalCenterGap="5"/>
+		<Gu code="416" label="룡천군" symbol="Yongchon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="417" label="태천군" symbol="Taechon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="418" label="박천군" symbol="Pakchon" verticalCenterGap="-8"/>
+		<Gu code="419" label="운전군" symbol="Unjon" verticalCenterGap="-5"/>
+		<Gu code="420" label="선천군" symbol="Sonchon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="421" label="동림군" symbol="Tongrim" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="422" label="피현군" symbol="Pihyon" horizontalCenterGap="0" verticalCenterGap="-2"/>
+		<Gu code="423" label="신의주" symbol="Sinuiju" horizontalCenterGap="-3" verticalCenterGap="5"/>
+		<Gu code="424" label="구성" symbol="Kusong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="425" label="정주" symbol="Chongju" horizontalCenterGap="0" verticalCenterGap="-5"/>
+	</Province>
+	<Province code="500" label="평안남도" symbol="Pyongnam" horizontalCenterGap="0" verticalCenterGap="5" gisLeftLng="125.14170900000000" gisTopLat="40.34801900000000" gisScaleX="165.12067910293900" gisScaleY="221.44020538965700">
+		<Gu code="501" label="증산군" symbol="Chungsan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="502" label="대흥군" symbol="Taehung" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="503" label="맹산군" symbol="Maengsan" horizontalCenterGap="-5" verticalCenterGap="-3"/>
+		<Gu code="504" label="북창군" symbol="Pukchang" horizontalCenterGap="7" verticalCenterGap="-5"/>
+		<Gu code="505" label="문덕군" symbol="Mundok" horizontalCenterGap="3" verticalCenterGap="0"/>
+		<Gu code="506" label="녕원군" symbol="Nyongwon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="507" label="평원군" symbol="Pyongwon" horizontalCenterGap="0" verticalCenterGap="-0"/>
+		<Gu code="508" label="대동군" symbol="Daedong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="510" label="성천군" symbol="Songchon"/>
+		<Gu code="511" label="신양군" symbol="Sinyang" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="512" label="양덕군" symbol="Yangdok" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="513" label="회창군" symbol="Hoechang" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="514" label="은산군" symbol="Eunsan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="515" label="평성" symbol="Pyongsong"/>
+		<Gu code="516" label="안주" symbol="Anju" horizontalCenterGap="5" verticalCenterGap="0"/>
+		<Gu code="517" label="개천" symbol="Kaechon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="518" label="덕천" symbol="Tokchon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="519" label="순천" symbol="Sunchon"/>
+		<Gu code="520" label="숙천군" symbol="Sukchon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+	</Province>
+	<Province code="600" label="자강도" symbol="Chagang" horizontalCenterGap="0" verticalCenterGap="-0" gisLeftLng="125.43067900000000" gisTopLat="41.79959600000000" gisScaleX="129.85704506893700" gisScaleY="172.68500210007800">
+		<Gu code="601" label="중강군" symbol="Chunggang"/>
+		<Gu code="602" label="자성군" symbol="Chasong" verticalCenterGap="-5"/>
+		<Gu code="603" label="화평군" symbol="Hwapyong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="604" label="장강군" symbol="Changgang" verticalCenterGap="-5"/>
+		<Gu code="605" label="시중군" symbol="Sijung" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="606" label="위원군" symbol="Wiwon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="607" label="초산군" symbol="Chosan"/>
+		<Gu code="608" label="우시군" symbol="Usi" verticalCenterGap="-10"/>
+		<Gu code="609" label="고풍군" symbol="Kopung"/>
+		<Gu code="610" label="송원군" symbol="Songwon"/>
+		<Gu code="611" label="전천군" symbol="Jonchon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="612" label="동신군" symbol="Tongsin" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="613" label="룡림군" symbol="Ryongrim" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="614" label="성간군" symbol="Songgan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="615" label="랑림군" symbol="Rangnim" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="616" label="만포" symbol="Manpo" verticalCenterGap="-5"/>
+		<Gu code="617" label="강계" symbol="Kanggye" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="618" label="희천" symbol="Huichon"/>
+	</Province>
+	<Province code="700" label="양강도" symbol="Ryanggang" horizontalCenterGap="10" verticalCenterGap="-0" gisLeftLng="126.89386800000000" gisTopLat="42.09130000000000" gisScaleX="153.85172300795900" gisScaleY="204.71316395177200">
+		<Gu code="701" label="김형직군" symbol="Kimhyongjik" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="702" label="김정숙군" symbol="Kimjongsuk" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="703" label="삼수군" symbol="Samsu" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="704" label="풍서군" symbol="Pungso" horizontalCenterGap="-5" verticalCenterGap="-15"/>
+		<Gu code="705" label="김형권군" symbol="Kimhyonggwon" horizontalCenterGap="5" verticalCenterGap="-10"/>
+		<Gu code="706" label="갑산군" symbol="Kapsan" horizontalCenterGap="-5" verticalCenterGap="0"/>
+		<Gu code="707" label="운흥군" symbol="Unhung" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="708" label="보천군" symbol="Pochon" horizontalCenterGap="5" verticalCenterGap="5"/>
+		<Gu code="709" label="백암군" symbol="Paekam" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="710" label="대홍단군" symbol="Taehongdan" horizontalCenterGap="5"/>
+		<Gu code="711" label="삼지연군" symbol="Samjiyon" horizontalCenterGap="-5" verticalCenterGap="-5"/>
+		<Gu code="712" label="혜산" symbol="Hyesan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+	</Province>
+	<Province code="800" label="함경북도" symbol="Hambuk" horizontalCenterGap="-12" verticalCenterGap="1" gisLeftLng="128.90920200000000" gisTopLat="43.00526900000000" gisScaleX="97.92931146475050" gisScaleY="129.47095219594700">
+		<Gu code="801" label="온성군" symbol="Onsong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="802" label="명간군" symbol="Myonggan" horizontalCenterGap="5"/>
+		<Gu code="803" label="부령군" symbol="Puryong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="804" label="무산군" symbol="Musan"/>
+		<Gu code="805" label="연사군" symbol="Yonsa" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="806" label="경성군" symbol="Kyongsong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="807" label="어랑군" symbol="Orang" horizontalCenterGap="0" verticalCenterGap="3"/>
+		<Gu code="808" label="경흥군" symbol="Kyonghung" horizontalCenterGap="5" verticalCenterGap="0"/>
+		<Gu code="809" label="경원군" symbol="Kyongwon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="810" label="길주군" symbol="Kilju" horizontalCenterGap="0" verticalCenterGap="-2"/>
+		<Gu code="811" label="명천군" symbol="Myongchon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="812" label="화대군" symbol="Hwadae" horizontalCenterGap="2" verticalCenterGap="-5"/>
+		<Gu code="813" label="청진" symbol="Chongjin" horizontalCenterGap="-5" verticalCenterGap="15"/>
+		<Gu code="814" label="회령" symbol="Hoeryong" horizontalCenterGap="0" verticalCenterGap="5"/>
+		<Gu code="815" label="김책" symbol="Kimchek" horizontalCenterGap="-5" verticalCenterGap="0"/>
+	</Province>
+	<Province code="900" label="함경남도" symbol="Hamnam" horizontalCenterGap="1" verticalCenterGap="1" gisLeftLng="126.69663600000000" gisTopLat="41.18497800000000" gisScaleX="127.31884150529600" gisScaleY="160.40765198829000">
+		<Gu code="901" label="부전군" symbol="Pujon" verticalCenterGap="15"/>
+		<Gu code="902" label="장진군" symbol="Changjin" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="903" label="신흥군" symbol="Sinhung" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="904" label="영광군" symbol="Yonggwang" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="905" label="함주군" symbol="Hamju" horizontalCenterGap="0" verticalCenterGap="-2"/>
+		<Gu code="906" label="요덕군" symbol="Yodok" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="907" label="정평군" symbol="Chongpyong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="908" label="금야군" symbol="Kumya" verticalCenterGap="-3"/>
+		<Gu code="909" label="고원군" symbol="Kowon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="910" label="흥원군" symbol="Hongwon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="911" label="락원군" symbol="Ragwon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="912" label="덕성군" symbol="Toksong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="913" label="북청군" symbol="Pukchong" horizontalCenterGap="0" verticalCenterGap="-2"/>
+		<Gu code="914" label="리원군" symbol="Riwon" verticalCenterGap="-8"/>
+		<Gu code="915" label="허천군" symbol="Hochon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="916" label="단천" symbol="Tanchon" horizontalCenterGap="5"/>
+		<Gu code="917" label="신포" symbol="Sinpo" horizontalCenterGap="0" verticalCenterGap="-2"/>
+		<Gu code="918" label="함흥" symbol="Hamhung" horizontalCenterGap="0" verticalCenterGap="-5"/>
+	</Province>
+	<Province code="1000" label="황해북도" symbol="Hwangbuk" verticalCenterGap="-3" gisLeftLng="125.60685600000000" gisTopLat="39.16919100000000" gisScaleX="246.90893487640300" gisScaleY="240.82580381685400">
+		<Gu code="1001" label="상원군" symbol="Sangwon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="1002" label="중화군" symbol="Chunghwa" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="1003" label="금천군" symbol="Kumchon" horizontalCenterGap="5" verticalCenterGap="-5"/>
+		<Gu code="1004" label="황주군" symbol="Hwangju" horizontalCenterGap="2" verticalCenterGap="0"/>
+		<Gu code="1005" label="연탄군" symbol="Yontan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="1006" label="연산군" symbol="Yonsan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="1007" label="신평군" symbol="Sinpyong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="1008" label="곡산군" symbol="Koksan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="1009" label="수안군" symbol="Suan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="1010" label="봉산군" symbol="Bongsan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="1011" label="은파군" symbol="Unpa" horizontalCenterGap="0" verticalCenterGap="5"/>
+		<Gu code="1012" label="린산군" symbol="Rinsan" horizontalCenterGap="5" verticalCenterGap="0"/>
+		<Gu code="1013" label="서흥군" symbol="Sohung"/>
+		<Gu code="1014" label="신계군" symbol="Singye" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="1015" label="평산군" symbol="Pyongsan" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="1016" label="강남군" symbol="Kangnam" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="1017" label="토산군" symbol="Tosan" horizontalCenterGap="-5" verticalCenterGap="5"/>
+		<Gu code="1018" label="송림" symbol="Songrim" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="1019" label="승호구역" symbol="Sungho" horizontalCenterGap="0" verticalCenterGap="-2"/>
+	</Province>
+	<Province code="1100" label="황해남도" symbol="Hwangnam" horizontalCenterGap="5" verticalCenterGap="0" gisLeftLng="124.65427700000000" gisTopLat="38.70897100000000" gisScaleX="201.42902012234900" gisScaleY="255.06844924271500">
+		<Gu code="1101" label="안악군" symbol="Anak" horizontalCenterGap="5" verticalCenterGap="5"/>
+		<Gu code="1102" label="과일군" symbol="Kwail" horizontalCenterGap="5" verticalCenterGap="0"/>
+		<Gu code="1103" label="룡연군" symbol="Ryongyon" horizontalCenterGap="5" verticalCenterGap="0"/>
+		<Gu code="1104" label="태탄군" symbol="Taetan"/>
+		<Gu code="1105" label="재령군" symbol="Jaeryong"/>
+		<Gu code="1106" label="옹진군" symbol="Ongjin" horizontalCenterGap="0" verticalCenterGap="-10"/>
+		<Gu code="1107" label="삼천군" symbol="Samchon"/>
+		<Gu code="1108" label="은률군" symbol="Unryul"/>
+		<Gu code="1109" label="장연군" symbol="Jangyon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="1110" label="배천군" symbol="Baechon"/>
+		<Gu code="1111" label="신천군" symbol="Sinchon"/>
+		<Gu code="1112" label="은천군" symbol="Unchon"/>
+		<Gu code="1113" label="청단군" symbol="Chongdan"/>
+		<Gu code="1114" label="봉천군" symbol="Pongchon"/>
+		<Gu code="1115" label="신원군" symbol="Sinwon"/>
+		<Gu code="1116" label="연안군" symbol="Yonan"/>
+		<Gu code="1117" label="강령군" symbol="Kangryong" horizontalCenterGap="5" verticalCenterGap="-10"/>
+		<Gu code="1118" label="벽성군" symbol="Byoksong" horizontalCenterGap="-8" verticalCenterGap="0"/>
+		<Gu code="1119" label="송화군" symbol="Songhwa"/>
+		<Gu code="1120" label="해주시" symbol="Haeju" horizontalCenterGap="0" verticalCenterGap="-5"/>
+	</Province>
+	<Province code="1200" label="강원도" symbol="Kangwon" horizontalCenterGap="2" gisLeftLng="126.67870900000000" gisTopLat="39.40528400000000" gisScaleX="180.90448940126800" gisScaleY="264.35433154110600">
+		<Gu code="1201" label="천내군" symbol="Chonnae" horizontalCenterGap="-8" verticalCenterGap="0"/>
+		<Gu code="1202" label="법동군" symbol="popdong"/>
+		<Gu code="1203" label="안변군" symbol="Anbyon" horizontalCenterGap="5" verticalCenterGap="0"/>
+		<Gu code="1204" label="고산군" symbol="Kosan"/>
+		<Gu code="1205" label="통천군" symbol="Tongchon"/>
+		<Gu code="1206" label="회양군" symbol="Hoiyang"/>
+		<Gu code="1207" label="판교군" symbol="Pangyo"/>
+		<Gu code="1208" label="이천군" symbol="Ichon"/>
+		<Gu code="1209" label="세포군" symbol="Sepo"/>
+		<Gu code="1210" label="평강군" symbol="Pyonggang"/>
+		<Gu code="1211" label="철원군" symbol="Chorwon" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		<Gu code="1212" label="김화군" symbol="Kimhwa"/>
+		<Gu code="1213" label="창도군" symbol="Changdo" horizontalCenterGap="3" verticalCenterGap="0"/>
+		<Gu code="1214" label="금강군" symbol="Kumgang"/>
+		<Gu code="1215" label="고성군" symbol="Kosong" horizontalCenterGap="10" verticalCenterGap="0"/>
+		<Gu code="1216" label="문천시" symbol="Munchon"/>
+		<Gu code="1217" label="원산" symbol="Wonsan"/>
+	</Province>
+	<Province code="1300" label="개성" symbol="Kaesong" horizontalCenterGap="4" gisLeftLng="126.38570000000000" gisTopLat="38.33335900000000" gisScaleX="516.24005843189500" gisScaleY="571.43887121401600">
+		<Gu code="1301" label="개풍군" symbol="Kaepung"/>
+		<Gu code="1302" label="장풍군" symbol="Changpung"/>
+		<Gu code="1303" label="판문군" symbol="Panmun"/>
+		<Gu code="1304" label="개성시" symbol="Kaesongsi"/>
+	</Province>
+</Map>

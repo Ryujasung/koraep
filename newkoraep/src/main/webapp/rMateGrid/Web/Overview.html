@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>rMate HTML5 Grid</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="rMateGrid for HTML5, Riamore Soft 2016">
+<meta name="keywords" content="HTML5,Grid,JavaScript,CSS,Ajax,Graph,rMateGrid">
+
+<link rel="stylesheet" type="text/css" href="./style.css">
+<link rel="stylesheet" type="text/css" href="./rMateGridH5Sample.css"/>
+<script type="text/javascript">
+function frameloadHandler(){}
+</script>
+<style>
+.tg td{padding:4px; border:1px solid #dddddd; text-align:center;}
+.ulList {padding:0;}
+.ulList li {list-style-type:none; padding:2px;}
+ul {padding-left:30px;}
+ul li {list-style-type:disc; padding:2px;}
+</style>
+</head>
+<body>
+<div id="overview">
+	<div style="text-align:center; color:#213d64; letter-spacing:-5px;">
+		<div style="font-size:35px;">강력한 기능, 다양한 예제</div>
+		<div style="font-size:45px; font-weight:bold;">쉽고 빠른 알메이트-그리드</div>
+		<div style="padding:40px 0 15px 0;">
+			<img src="./Images/overview.png">
+		</div>
+	</div>
+	<div style="padding:10px 0 20px 0;">
+		<img src="./Images/hr1.png">
+	</div>
+	<div>
+		<div style="font-size:16px; color:#348fd6; font-weight:bold;">그리드의 주요 기능</div>
+		<div>
+			<ul class="ulList">
+				<li>정렬, 이동, 셀병합, 입력, 필터링, 검색, 엑셀연동등 핵심기능을 제공.</li>
+				<li>컬럼 및 로우(행), 셀에 대한 속성제어 기능제공.</li>
+				<li>웹상에서 입력 및 편집/수정 기능 제공.</li>
+				<li>병합(행 및 열병합)기능 및 자동병합기능 제공.</li>
+				<li>자동 행높이 조절기능 제공.</li>
+				<li>계층형 자료 표현(보이기/숨기기)기능 제공.</li>
+				<li>엑셀과의 연동 : 엑셀 import (csv, xls, xlsx 지원), 엑셀 export (xls, xlsx 지원), 엑셀과 그리드간의 Copy & Paste 기능제공.</li>
+				<li>자동합산 (소계,전체합계,합산라벨변경등)기능제공.</li>
+				<li>선택제어 (한행, 여러행, 한셀, 여러셀선택)기능제공.</li>
+				<li>각종 랜더러(CheckBox, Icon, Image, Spark Chart 등)제공.</li>
+				<li>헤더 및 셀내에 html 표시기능제공.</li>
+				<li>행의 추가/수정/삭제 여부 표시 컬럼 제공.</li>
+				<li>푸터(Footer)기능제공.</li>
+				<li>Lazy Loading 기능제공.</li>
+				<li>피벗 기능의 제공.</li>
+				<li>웹접근성 준수.</li>
+			</ul>
+		</div>
+	</div>
+	<div style="margin-top:30px">
+		<div style="font-size:16px; color:#348fd6; font-weight:bold;">그리드의 레이아웃 및 데이터 연동</div>
+		<div>
+			<ul class="ulList">
+				<li style="padding-bottom:8px;">rMate  Grid의 생성은  레이아웃(LayOut)과  데이터(Data)가 필요합니다.</li>
+				<li>레이아웃은 그리드의  컬럼이나, 객체의 ID, 속성, 스타일등을  정의하기 위한  XML형식의 파일 혹은 String입니다.</li>
+				<li>데이터는 JSON 형식과 배열형식, XML 형식, CSV(comma-separated values) 와 TSV(tab-separated values)형식을 모두 지원하며, 파일(URL)로 전달할 수도 있고, String으로 전달할 수 있습니다.</li>
+			</ul>
+		</div>
+	</div>
+	<div style="padding:30px 0 20px 0;">
+		<img src="./Images/hr2.png">
+	</div>
+	<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse; border: none; text-align:center; margin-bottom:70px;">
+		<tr style="font-size:17px; color:#348fd6; font-weight:bold;">
+			<td style="width:128px; height:124px; padding:10px 17px 10px 17px; background-image:url('./Images/circlebg.png'); background-position:center; background-repeat:no-repeat;">
+				크로스<br/>브라우저<br/>지원
+			</td>
+			<td style="width:128px; height:124px; padding:10px 17px 10px 17px; background-image:url('./Images/circlebg.png'); background-position:center; background-repeat:no-repeat;">
+				모바일<br/>단말의 지원<br/><div style="font-size:13px">(HTML5 그리드)</div>
+			</td>
+			<td style="width:128px; height:124px; padding:10px 17px 10px 17px; background-image:url('./Images/circlebg.png'); background-position:center; background-repeat:no-repeat;">
+				서버의<br/>OS
+			</td>
+			<td style="width:128px; height:124px; padding:10px 17px 10px 17px; background-image:url('./Images/circlebg.png'); background-position:center; background-repeat:no-repeat;">
+				서버의<br/>DBMS
+			</td>
+			<td style="width:128px; height:124px; padding:10px 17px 10px 17px; background-image:url('./Images/circlebg.png'); background-position:center; background-repeat:no-repeat;">
+				서버의<br/>개발언어
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-top:20px">
+				IE 외 FireFox나<br/>크롬, 사파리 
+			</td>
+			<td style="padding-top:20px">
+				HTML5를 지원하는<br/>모든 모바일 플랫폼
+			</td>
+			<td style="padding-top:20px">
+				서버의 OS에<br/>종속되지 않음
+			</td>
+			<td style="padding-top:20px">
+				서버의 DBMS는<br/>어떤 제품도 사용가능
+			</td>
+			<td style="padding-top:20px">
+				서버의 개발언어에<br/>종속되지 않음
+			</td>
+		</tr>
+	</table>
+	<table class="tg" border="0" cellpadding="0" cellspacing="0" style="width:100%; border-collapse:collapse;">
+		<tr>
+			<td colspan="2" style="height:40px; border:1px solid #666666; background-color:#777777; color:#ffffff; font-size:17px; font-weight:bold;">버젼 업데이트 정보</td>
+		</tr>
+		<tr>
+			<td style="width:125px; font-size:17px; color:#333333;">V 4.0</td>
+			<td style="text-align:left; color:#555555;">
+				<ul>
+					<li>필터링 및 검색기능의 보강(필터링:다중조건설정,이용자 조건설정등,  검색:특정컬럼 검색등)</li> 
+					<li>그리드 편집용 컴포넌트 (달력-년월선택 에디터, numeric stepper 에디터, 편집가능 콤보박스 에디터)의 보강</li> 
+					<li>피벗(Pivot)(다차원 View)기능의 신규추가</li> 
+					<li>편집시 엑셀(Excel)과 같은 키조작법의 지원 (임의의 키 입력으로 편집모드전환, 화살표키를 통한 셀이동 등)</li> 
+					<li>편집 모드에서 Undo, Redo 기능의 제공</li> 
+					<li>계층형 편집기능의 제공(편집 및 child 생성/삭제 등)</li> 
+					<li>기타(푸터 셀병합 기능, 셀렉터(selector) 체크시 행 전체 선택기능, 셀안에 편집이 가능한 html 삽입기능, 계층형 구조에서 자식노드 전체선택기능 등)</li> 
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:125px; font-size:17px; color:#333333;">V 3.5</td>
+			<td style="text-align:left; color:#555555;">
+				<ul>
+					<li>그리드 스타일 대폭 개선</li> 
+					<li>JavaDoc 스타일의 API 문서 제공</li> 
+					<li>PagingCollection을 이용한 페이지별 조회기능 추가</li> 
+					<li>자바스크립트 include를 통한, 그리드 기본 속성 및 스타일 변경 기능</li> 
+					<li>그리드 폭 변경시 적용되는 컬럼의 defaultWidth 지정 기능</li> 
+					<li>그리드 편집시 사용되는 Editor의 속성을 레이아웃에서 지정하는 기능</li> 
+					<li>Excel Import시 Sheet가 여러개일 경우 선택할 수 있는 기능</li> 
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td style="width:125px; font-size:17px; color:#333333;">V 3.1</td>
+			<td style="text-align:left; color:#555555;">
+				<ul>
+					<li>웹접근성 지원 대폭보강</li> 
+					<li>랜더링 속도 개선 (10%)</li> 
+					<li>그리드의 자동 높이 조정</li> 
+					<li>한 화면에 표시된 여러개의 그리드를 한개의 엑셀파일에 복수의 시트로 export 할 수 있는 기능</li> 
+					<li>JQuery UI의 resizable 샘플 추가</li> 
+					<li>브라우저의 자동 완성 기능을 이용한 Text Editor 편집기능</li> 
+					<li>CheckBoxEditor 사용시 true/false외에 trueValue/falseValue를 지정할 수 있는 기능</li> 
+				</ul>
+			</td>
+		</tr>
+	</table>
+</div>
+<br/><br/><br/>
+</body>
+</html>

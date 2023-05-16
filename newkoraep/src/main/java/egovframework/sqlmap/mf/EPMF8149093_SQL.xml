@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF8149093Mapper">
+    
+    <resultMap id="notiMap" type="hashmap">
+		<result property="NOTI_SEQ" column="NOTI_SEQ" />
+		<result property="SBJ" column="SBJ" />
+		<result property="CNTN_TP" column="CNTN_TP"  />
+		<result property="CNTN" column="CNTN"  javaType="java.lang.String" jdbcType="CLOB" />
+		<result property="SEL_CNT" column="SEL_CNT"  />
+	</resultMap>
+    
+	<!-- 공지사항 상세조회 -->
+	<select id="epmf8149093_select1" parameterType="map" resultMap="notiMap">
+	    SELECT NOTI_SEQ,
+	    	   SBJ,
+	    	   CNTN_TP,
+	    	   CNTN,
+	    	   SEL_CNT,
+	    	   TO_CHAR(REG_DTTM, 'YYYY-MM-DD') AS REG_DTTM
+	      FROM EPCN_NOTI
+	     WHERE 1=1
+	       AND NOTI_SEQ = #{NOTI_SEQ}
+    </select>
+    
+	<!-- 공지사항 조회수 증가 -->
+	<update id="epmf8149093_update" parameterType="map">
+	    UPDATE EPCN_NOTI
+	       SET SEL_CNT = SEL_CNT + 1
+	     WHERE NOTI_SEQ = #{NOTI_SEQ}
+	</update>
+    
+	<!-- 공지사항 이전글 조회 -->
+	<select id="epmf8149093_select2" parameterType="map" resultType="hashmap">
+	    SELECT NOTI_SEQ,
+		       SBJ
+		  FROM EPCN_NOTI
+		 WHERE NOTI_SEQ = (SELECT MAX(NOTI_SEQ)
+		          FROM EPCN_NOTI
+		         WHERE NOTI_SEQ &lt; #{NOTI_SEQ})
+    </select>
+    
+	<!-- 공지사항 다음글 조회 -->
+	<select id="epmf8149093_select3" parameterType="map" resultType="hashmap">
+	    SELECT NOTI_SEQ,
+		       SBJ
+		  FROM EPCN_NOTI
+		 WHERE NOTI_SEQ = (SELECT MIN(NOTI_SEQ)
+		          FROM EPCN_NOTI
+		         WHERE NOTI_SEQ > #{NOTI_SEQ})
+    </select>
+    
+	<!-- 공지사항 첨부파일 조회 -->
+	<select id="epmf8149093_select4" parameterType="map" resultType="hashmap">
+	    SELECT NOTI_SEQ,
+	    	   REG_SN,
+	    	   FILE_NM,
+	    	   SAVE_FILE_NM,
+	    	   FILE_PATH
+	      FROM EPCN_NOTI_FILE
+	     WHERE 1=1
+	       AND NOTI_SEQ = #{NOTI_SEQ}
+	     ORDER BY NOTI_SEQ, REG_SN
+	</select>
+	
+	<!-- 첨부파일 리스트 삭제 -->
+	<delete id="epmf8149093_delete1" parameterType="map">
+	    DELETE
+	      FROM EPCN_NOTI_FILE
+	     WHERE 1=1
+	       AND NOTI_SEQ = #{NOTI_SEQ}
+	</delete>
+	
+	<!-- 공지사항 삭제 -->
+	<delete id="epmf8149093_delete2" parameterType="map">
+	    DELETE
+	      FROM EPCN_NOTI
+	     WHERE 1=1
+	       AND NOTI_SEQ = #{NOTI_SEQ}
+	</delete>
+    
+</mapper>

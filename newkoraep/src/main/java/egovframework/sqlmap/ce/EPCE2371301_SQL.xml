@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE2371301Mapper">
+
+	<select id="epce2371301_select" resultType="hashmap">
+		SELECT A.PAY_DOC_NO
+			  ,A.PAY_REG_DT
+			  ,A.PAY_REG_DT_PAGE
+			  ,A.STD_YEAR
+			  ,A.PAY_BIZRID, A.PAY_BIZRNO, A.WHSDL_BRCH_ID, A.WHSDL_BRCH_NO
+			  ,A.WHSDL_BIZRNM
+			  ,A.ACP_BANK_CD AS BANK_CD
+			  ,A.ACP_BANK_NM
+		      ,ECL_DECRYPT(A.ACP_ACCT_NO) AS ACP_ACCT_NO
+		      ,A.ACP_ACCT_DPSTR_NM
+		      ,A.GTN_TOT
+		      ,A.FEE_TOT
+		      ,A.FEE_STAX_TOT
+		      ,A.PAY_AMT
+		      ,A.PAY_STAT_CD
+		      ,A.PAY_STAT_NM
+		      ,A.REAL_PAY_DT
+		      ,A.BIZR_ABBR_NM
+		      ,A.SEL_ORD
+		      ,A.TX_EXEC_CD
+		      ,A.TX_EXEC_NM
+		FROM
+		(
+			 SELECT 	DISTINCT
+					 	 A.PAY_DOC_NO
+			 			,A.PAY_REG_DT
+			 			,<![CDATA['<a href="javascript:fn_page()" class="gridLink">' || TO_CHAR(TO_DATE(A.PAY_REG_DT, 'YYYYMMDD'), 'YYYY-MM-DD') || '</a>' as PAY_REG_DT_PAGE]]>
+			 			,A.STD_YEAR
+				        ,A.PAY_BIZRID, A.PAY_BIZRNO, A.WHSDL_BRCH_ID, A.WHSDL_BRCH_NO
+				        ,B.BIZRNM AS WHSDL_BIZRNM
+				        ,A.ACP_BANK_CD
+				        ,EPCN_ETC_NM(A.ACP_BANK_CD, 'S090') AS ACP_BANK_NM
+				        ,A.ACP_ACCT_NO
+				        ,A.ACP_ACCT_DPSTR_NM
+				        ,A.GTN_TOT
+				        ,A.WHSL_FEE_TOT + A.RTL_FEE_TOT AS FEE_TOT
+				        ,A.WHSL_FEE_STAX_TOT AS FEE_STAX_TOT
+				        ,A.PAY_AMT
+				        ,A.PAY_STAT_CD
+				        ,EPCN_ETC_NM(A.PAY_STAT_CD, 'D034') AS PAY_STAT_NM
+				        ,TO_CHAR(TO_DATE(A.REAL_PAY_DT || A.REAL_PAY_TM, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS REAL_PAY_DT
+				        ,A.BIZR_ABBR_NM
+				        ,B.SEL_ORD
+				        ,A.TX_EXEC_CD
+						,EPCN_ETC_NM(A.TX_EXEC_CD, 'D062') AS TX_EXEC_NM
+			   FROM 
+						EPGM_PAY_INFO_LST A
+				        ,EPCN_BIZR_INFO B
+	                    ,(SELECT C.PAY_DOC_NO, C.MFC_BIZRID, C.MFC_BIZRNO  FROM EPCM_CFM_MST C GROUP BY C.PAY_DOC_NO, C.MFC_BIZRID, C.MFC_BIZRNO) C
+			 WHERE 1=1
+			     AND A.PAY_REG_DT BETWEEN REPLACE(#{START_DT_SEL}, '-') AND REPLACE(#{END_DT_SEL}, '-')
+			     AND A.PAY_BIZRID = B.BIZRID
+			     AND A.PAY_BIZRNO = B.BIZRNO
+	             AND A.PAY_DOC_NO = C.PAY_DOC_NO(+)
+			    <if test='WHSDL_BIZRID != null and WHSDL_BIZRID != "" '>
+	             AND A.PAY_BIZRID = #{WHSDL_BIZRID}
+	             AND A.PAY_BIZRNO = #{WHSDL_BIZRNO}
+			    </if>
+			    <if test='STAT_CD_SEL != null and STAT_CD_SEL != "" '>
+			     AND A.PAY_STAT_CD = #{STAT_CD_SEL}
+			    </if>
+	            <if test='MFC_BIZRID !="" and MFC_BIZRID !=null and MFC_BIZRNO !="" and MFC_BIZRNO !=null'>
+	             AND C.MFC_BIZRID = #{MFC_BIZRID}
+	             AND C.MFC_BIZRNO = #{MFC_BIZRNO}
+	            </if>
+	            <if test='STD_YEAR_SEL != null and STD_YEAR_SEL != "" '>
+	              AND A.STD_YEAR = #{STD_YEAR_SEL}
+	            </if>	     
+	            <if test='TX_EXEC_CD_SEL != null and TX_EXEC_CD_SEL != "" '>
+			     AND A.TX_EXEC_CD = #{TX_EXEC_CD_SEL}
+			    </if>      
+			    <if test='WHSDL_SE_CD_SEL != null and WHSDL_SE_CD_SEL != "" '>
+			    AND B.BIZR_TP_CD = #{WHSDL_SE_CD_SEL}
+			    </if> 
+		) A
+		ORDER BY A.PAY_REG_DT DESC, A.SEL_ORD
+	</select>
+
+	<select id="epce2371364_select" resultType="hashmap">
+		 SELECT B.BIZRNM, ECL_DECRYPT(B.BIZRNO) AS BIZRNO
+			        ,B.RPST_NM, B.ADDR1 ||' '|| B.ADDR2 AS ADDR
+			        ,B.RPST_TEL_NO1||'-'||B.RPST_TEL_NO2||'-'||B.RPST_TEL_NO3 AS RPST_TEL_NO
+			        ,A.PAY_AMT
+			        ,B.ACP_ACCT_DPSTR_NM
+			        ,ECL_DECRYPT(B.ACP_ACCT_NO) AS ACP_ACCT_NO
+			        ,TO_CHAR(TO_DATE(A.REAL_PAY_DT || A.REAL_PAY_TM, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS REAL_PAY_DT
+		   FROM EPGM_PAY_INFO_LST A
+		        	,EPCN_BIZR_INFO B
+		 WHERE 1=1
+		     AND A.PAY_DOC_NO = #{PAY_DOC_NO}
+		     AND A.PAY_BIZRID = B.BIZRID
+			 AND A.PAY_BIZRNO = B.BIZRNO
+	</select>
+	
+	<select id="epce2371364_select2" resultType="hashmap">
+		  SELECT B.WRHS_CFM_DT
+		  			 ,<![CDATA['<a href="javascript:fn_page()" class="gridLink">' || TO_CHAR(TO_DATE(B.WRHS_CFM_DT, 'YYYYMMDD'), 'YYYY-MM-DD') || '</a>' as WRHS_CFM_DT_PAGE]]>
+			         ,C.BIZRNM AS WHSDL_BIZRNM
+			         ,E.BIZRNM AS MFC_BIZRNM
+			         ,E.BRCH_NM AS MFC_BRCH_NM
+			         ,B.WRHS_QTY
+			         ,B.WRHS_GTN
+			         ,B.WHSL_FEE + B.RTL_FEE AS FEE
+			         ,B.WHSL_FEE_STAX AS FEE_STAX
+			         ,B.WRHS_GTN + B.WHSL_FEE + B.RTL_FEE + B.WHSL_FEE_STAX AS TOT
+			         ,D.WRHS_DOC_NO
+			         ,D.RTN_DOC_NO
+                     ,TO_CHAR(TO_DATE(F.RTN_REG_DT, 'YYYYMMDD'), 'YYYY-MM-DD') as RTN_REG_DT
+                     ,TO_CHAR(TO_DATE(F.RTN_DT, 'YYYYMMDD'), 'YYYY-MM-DD') as RTN_DT
+		    FROM EPGM_PAY_INFO_LST A
+			         ,EPGM_PAY_INFO_DTL B
+			         ,EPCN_BIZR_INFO C
+			         ,EPCM_CFM_MST D
+			         ,EPCN_BRCH_INFO E
+                     ,EPCM_RTN_MST F
+		 WHERE 1=1
+		 	 AND A.PAY_DOC_NO = #{PAY_DOC_NO}
+		     AND A.PAY_DOC_NO = B.PAY_DOC_NO
+		     AND A.PAY_BIZRID = C.BIZRID
+		     AND A.PAY_BIZRNO = C.BIZRNO
+		     AND B.MAPP_WRHS_DOC_NO = D.WRHS_DOC_NO
+		     AND D.MFC_BIZRID = E.BIZRID
+		     AND D.MFC_BIZRNO = E.BIZRNO
+		     AND D.MFC_BRCH_ID = E.BRCH_ID
+		     AND D.MFC_BRCH_NO = E.BRCH_NO
+             AND F.RTN_DOC_NO = D.RTN_DOC_NO	     
+		  ORDER BY E.BIZRNM, E.BRCH_NM   
+	</select>
+
+	<update id="epce2371331_update" >
+		UPDATE EPGM_PAY_INFO_LST 
+			  SET PAY_STAT_CD = #{PAY_STAT_CD}
+			  		,LK_BIZRNO = #{LK_BIZRNO}
+				    ,LK_REG_DATE = #{LK_REG_DATE}
+				    ,LK_REG_TIME = #{LK_REG_TIME}
+				    ,LK_REG_SEQ = #{LK_REG_SEQ}
+				    
+				    <if test='BF_PAY_STAT_CD == "R" '>
+				    ,(ACP_BANK_CD, ACP_ACCT_NO, ACP_ACCT_DPSTR_NM)
+             	 		= (SELECT ACP_BANK_CD, ACP_ACCT_NO, ACP_ACCT_DPSTR_NM 
+             	 			   FROM EPCN_BIZR_INFO 
+             	 			 WHERE BIZRID = PAY_BIZRID 
+             	 			     AND BIZRNO = PAY_BIZRNO
+             	 			) 
+				    </if>
+				    
+		 WHERE 1=1
+		 	 AND PAY_DOC_NO = #{PAY_DOC_NO}
+		 	 AND PAY_STAT_CD = #{BF_PAY_STAT_CD}
+	</update>
+	
+	<update id="epce2371331_update3" >
+		UPDATE EPGM_PAY_INFO_LST 
+			  SET PAY_STAT_CD = #{PAY_STAT_CD}
+			  		,UPD_PRSN_ID = #{S_USER_ID}
+			  		,UPD_DTTM = SYSDATE
+		 WHERE 1=1
+		 	 AND PAY_STAT_CD = 'C'
+		 	 AND LK_REG_DATE = #{LK_REG_DATE}
+			 AND LK_REG_TIME = #{LK_REG_TIME}
+	</update>
+	
+	<update id="epce2371331_update4" >
+		UPDATE EPGM_PAY_INFO_LST 
+			  SET PAY_STAT_CD = 'P' /* 지급확인 */
+			  		,LK_YN = 'Y'
+			  		,UPD_PRSN_ID = #{S_USER_ID}
+			  		,UPD_DTTM = SYSDATE
+		 WHERE 1=1
+		 	 AND PAY_DOC_NO = #{PAY_DOC_NO}
+	</update>
+
+	<update id="epce2371331_update2" parameterType="hashmap">
+    	INSERT INTO NEOE.FI_Z_KORA_ECDOCU@DBSVR /* NEOE.FI_Z_KORA_ECDOCU@DBSVR */
+			   (
+				    CD_COMPANY
+				    ,NO_EC
+				    ,NO_ECLINE
+				    ,NO_ECDOCU
+				    ,CD_PC
+				    ,TP_EC
+				    ,YY_CALC
+				    ,TP_CALC
+				    ,DT_ACCT
+				    ,AM_EC1
+				    ,AM_EC2
+				    ,AM_VAT1
+				    ,AM_EC3
+				    ,AM_VAT2
+				    ,CD_PARTNER1
+				    ,CD_BANK1
+				    ,NO_DEPOSIT1
+				    ,NM_BANK1
+				    ,CD_PARTNER2
+				    ,CD_BANK2
+				    ,NO_DEPOSIT2
+				    ,NM_BANK2
+				    ,CD_CMSTRA
+				    ,CD_BANK3
+				    ,NO_DEPOSIT3
+				    ,NM_BANK3
+				    ,ST_PROC1
+				    ,ST_PROC2
+				    ,NO_DOCU1
+				    ,NO_DOCU2
+				    ,ID_INSERT
+				    ,DTS_INSERT
+				    ,ID_UPDATE
+				    ,DTS_UPDATE
+				    ,AM_EC4
+				    ,YN_RE /* 재전송여부 */
+				    ,YN_BEGIN
+			   )
+			   (
+				     SELECT
+			                    'COSMO'
+			                    ,A.LK_REG_DATE||A.LK_REG_TIME||'1'  /* 1:일반지급 */
+			                    ,ROW_NUMBER()OVER(ORDER BY B.DTL_SN) /* 일련번호 */
+			                    ,A.PAY_DOC_NO /* 빈용기 묶음 문서번호 */
+			                    ,'5000'
+			                    ,'1' /* 1:일반지급  */
+			                    ,A.STD_YEAR
+			                    ,'0' /* 0:비정산 , 1:정산 */
+			                    ,TO_CHAR(SYSDATE, 'YYYYMMDD') /* 일자 */
+			                    ,NVL(B.WRHS_GTN, 0) /* 보증금 */
+			                    ,NVL(B.WHSL_FEE, 0)
+			                    ,NVL(B.WHSL_FEE_STAX, 0)
+			                    ,NVL(B.RTL_FEE, 0)
+			                    ,0
+			                    ,(SELECT S1.ERP_BIZR_CD 
+			                        FROM EPCN_BIZR_INFO S1
+			                             ,EPCM_CFM_MST S2
+			                       WHERE 1=1
+			                         AND S1.BIZRID = S2.MFC_BIZRID
+			                         AND S1.BIZRNO = S2.MFC_BIZRNO
+			                         AND S2.WRHS_DOC_NO = B.MAPP_WRHS_DOC_NO
+			                     ) /* 거래처코드1  수납용 */
+			                    ,''
+			                    ,''
+			                    ,''
+			                    ,C.ERP_BIZR_CD/* 거래처코드2 지급용 */
+			                    ,''
+			                    ,''
+			                    ,''
+			                    ,'' /* 거래처코드3 집금용 */
+			                    ,A.ACP_BANK_CD
+			                    ,PI_DECRYPT(A.ACP_ACCT_NO)
+			                    ,A.ACP_ACCT_DPSTR_NM
+			                    ,'0' /* 0:미처리, 1:집금전표+집금데이타생성 , 2:이체전표생성  */
+			                    ,'0' /* 0:집금미실행 , 1:집금실행 */
+			                    ,''
+			                    ,''
+			                    ,'SHINHAN'
+			                    ,TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')  
+			                    ,''
+			                    ,''
+			                    ,''
+                                ,DECODE(#{YN_RE}, 'Y', (CASE WHEN PAY_REG_DT = TO_CHAR(SYSDATE, 'YYYYMMDD') THEN 'Y' ELSE 'N' END), 'N' )
+			                    ,CASE WHEN A.STD_YEAR = TO_CHAR(SYSDATE, 'YYYY') THEN 'N' ELSE 'Y' END /* 기준년도와 실행년도가 다를경우 Y */
+			            FROM EPGM_PAY_INFO_LST A
+			                    ,EPGM_PAY_INFO_DTL B
+			                    ,EPCN_BIZR_INFO C
+			          WHERE 1=1
+			              AND A.PAY_DOC_NO = B.PAY_DOC_NO
+			              AND A.PAY_BIZRID = C.BIZRID
+			              AND A.PAY_BIZRNO = C.BIZRNO
+			              AND A.PAY_STAT_CD = 'C' /* 연계전송처리중 */
+			              AND A.LK_REG_DATE = #{LK_REG_DATE}
+			              AND A.LK_REG_TIME = #{LK_REG_TIME}
+			 )
+    </update>
+</mapper>

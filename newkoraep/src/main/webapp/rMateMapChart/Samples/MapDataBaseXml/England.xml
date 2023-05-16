@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<State code="100" label="Isles of Scilly" symbol="Islesofscilly"/>
+	<State code="200" label="Aberdeen" symbol="Aberdeencity"/>
+	<State code="300" label="Aberdeenshire" symbol="Aberdeenshire" horizontalCenterGap="10" verticalCenterGap="5"/>
+	<State code="400" label="Stirling" symbol="Stirling"/>
+	<State code="500" label="Fife" symbol="Fife"/>
+	<State code="600" label="Falkirk" symbol="Falkirk"/>
+	<State code="700" label="Glasgow" symbol="Glasgowcity"/>
+	<State code="800" label="South Lanarkshire" symbol="Southlanarkshire"/>
+	<State code="900" label="East Renfrewshire" symbol="Eastrenfrewshire"/>
+	<State code="1000" label="East Ayrshire" symbol="Eastayrshire"/>
+	<State code="1100" label="Channel Islands" symbol="Channelisland"/>
+	<State code="1200" label="Newport" symbol="Newport"/>
+	<State code="1300" label="Caerphilly" symbol="Caerphilly"/>
+	<State code="1400" label="Blaenau Gwent" symbol="Blaenaugwent"/>
+	<State code="1500" label="Cardiff" symbol="Cardiff"/>
+	<State code="1600" label="Merthyr Tydfil" symbol="Merthyrtydfil"/>
+	<State code="1700" label="Rhondda Cynon Taf" symbol="Rhonddacynonraf"/>
+	<State code="1800" label="Bridgend" symbol="Bridgend"/>
+	<State code="1900" label="Carmarthenshire" symbol="carmarthenshire"/>
+	<State code="2000" label="Swansea" symbol="Swansea"/>
+	<State code="2100" label="Powys" symbol="Powys"/>
+	<State code="2200" label="Neath Port Talbot" symbol="Neathporttalbot"/>
+	<State code="2300" label="Vale of Glamorgan" symbol="Valeofglamorgan"/>
+	<State code="2400" label="Monmouthshire" symbol="Monmouthshire"/>
+	<State code="2500" label="Torfaen" symbol="Torfaen"/>
+	<State code="2600" label="Bedfordshire" symbol="Bedfordshire"/>
+	<State code="2700" label="Hertfordshire" symbol="Hertfordshire"/>
+	<State code="2800" label="Buckinghamshire" symbol="Buckinhamshire"/>
+	<State code="2900" label="Greater London" symbol="Greaterlondon"/>
+	<State code="3000" label="Surrey" symbol="Surrey"/>
+	<State code="3100" label="Berkshire" symbol="Berkshire"/>
+	<State code="3200" label="West Sussex" symbol="Westsussex"/>
+	<State code="3300" label="Hampshire" symbol="Hampshire"/>
+	<State code="3400" label="East Sussex" symbol="Eastsussex"/>
+	<State code="3500" label="Kent" symbol="Kent" horizontalCenterGap="10" verticalCenterGap="0"/>
+	<State code="3600" label="Northamptonshire" symbol="Northamptonshire"/>
+	<State code="3700" label="Wiltshire" symbol="Wiltshire"/>
+	<State code="3800" label="Oxfordshire" symbol="Oxfordshire"/>
+	<State code="3900" label="Cambridgeshire" symbol="Cambridgeshire"/>
+	<State code="4000" label="Dorset" symbol="Dorset" horizontalCenterGap="5" verticalCenterGap="0"/>
+	<State code="4100" label="Essex" symbol="Essex"/>
+	<State code="4200" label="Gloucestershire" symbol="Gloucestershire"/>
+	<State code="4300" label="Herefordshire" symbol="Herefordshire"/>
+	<State code="4400" label="Worcestershire" symbol="Worcestershire"/>
+	<State code="4500" label="West Midlands" symbol="Westmidlands"/>
+	<State code="4600" label="Warwickshire" symbol="Waraickshire"/>
+	<State code="4700" label="Staffordshire" symbol="Staffordshire"/>
+	<State code="4800" label="Shropshire" symbol="Shropshire"/>
+	<State code="4900" label="Ceredigion" symbol="Ceredegion"/>
+	<State code="5000" label="Pembrokeshire" symbol="Pembrokeshire"/>
+	<State code="5100" label="Denbighshire" symbol="Denbighshire"/>
+	<State code="5200" label="Wrexham" symbol="Wrexham"/>
+	<State code="5300" label="Flintshire" symbol="Flintshire"/>
+	<State code="5400" label="Conwy" symbol="Conwy"/>
+	<State code="5500" label="Gwynedd" symbol="Gwynedd" horizontalCenterGap="-5" verticalCenterGap="0"/>
+	<State code="5600" label="Anglesey" symbol="Isleofanglesey"/>
+	<State code="5700" label="Rutland" symbol="Rutland"/>
+	<State code="5800" label="Northamptonshire" symbol="Northamptonshire"/>
+	<State code="5900" label="Merseyside" symbol="Merseyside"/>
+	<State code="6000" label="Cheshire" symbol="Cheshire"/>
+	<State code="6100" label="Lancashire" symbol="Lancashire"/>
+	<State code="6200" label="Greater Manchester" symbol="Greatermanchester"/>
+	<State code="6300" label="Derbyshire" symbol="Derbyshire"/>
+	<State code="6400" label="West Yorkshire" symbol="Westyorkshire"/>
+	<State code="6500" label="South Yorkshire" symbol="Southyorkshire"/>
+	<State code="6600" label="Nottinghamshire" symbol="Nottinghamshire"/>
+	<State code="6700" label="Lincolnshire" symbol="Lincolnshire"/>
+	<State code="6800" label="East Riding of Yorkshire" symbol="Eastridingofyorkshire"/>
+	<State code="6900" label="North Yorkshire" symbol="Northyorkshire" horizontalCenterGap="10" verticalCenterGap="0"/>
+	<State code="7000" label="Norfolk" symbol="Norfolk" horizontalCenterGap="0" verticalCenterGap="-5"/>
+	<State code="7100" label="Suffolk" symbol="Suffork"/>
+	<State code="7200" label="Bristol" symbol="Bristol"/>
+	<State code="7300" label="Somerset" symbol="Somerset"/>
+	<State code="7400" label="Devon" symbol="Devon"/>
+	<State code="7500" label="Cornwall" symbol="Cornwall"/>
+	<State code="7600" label="Tyne and Wear" symbol="Tyneandwear"/>
+	<State code="7700" label="Northumberland" symbol="Northumberland"/>
+	<State code="7800" label="Durham" symbol="Durham" horizontalCenterGap="10" verticalCenterGap="0"/>
+	<State code="7900" label="Cumbria" symbol="Cumbria" horizontalCenterGap="-8" verticalCenterGap="3"/>
+	<State code="8000" label="Midlothian" symbol="Midlothian"/>
+	<State code="8100" label="Edinburgh" symbol="Cityofedinburgh"/>
+	<State code="8200" label="East Lothian" symbol="Eastlothian"/>
+	<State code="8300" label="Scottish Borders" symbol="Scottishborders"/>
+	<State code="8400" label="West Lothian" symbol="Westlothian"/>
+	<State code="8500" label="North Lanarkshire" symbol="Northlanarkshire"/>
+	<State code="8600" label="East Dunbartonshire" symbol="Eastdunbartonshire"/>
+	<State code="8700" label="West Dunbartonshire" symbol="Westdunbartonshire"/>
+	<State code="8800" label="Renfrewshire" symbol="Renfrewshire"/>
+	<State code="8900" label="Dumfries and Galloway" symbol="Dumfriesandgalloway"/>
+	<State code="9000" label="South Ayrshire" symbol="Southayrshire"/>
+	<State code="9100" label="Argyll and Bute" symbol="Argyllandbute" horizontalCenterGap="-10" verticalCenterGap="5"/>
+	<State code="9200" label="Inverclyde" symbol="Inverclde"/>
+	<State code="9300" label="Clackmannanshire" symbol="Clackmannanshire"/>
+	<State code="9400" label="Perth and Kinross " symbol="Perthandkinross"/>
+	<State code="9500" label="Angus" symbol="Angus" horizontalCenterGap="10" verticalCenterGap="0"/>
+	<State code="9600" label="Moray" symbol="Moray" horizontalCenterGap="5" verticalCenterGap="-5"/>
+	<State code="9700" label="Highland" symbol="Highland"/>
+	<State code="9800" label="Armagh" symbol="Armagh"/>
+	<State code="9900" label="Down" symbol="Down" horizontalCenterGap="3" verticalCenterGap="0"/>
+	<State code="10000" label="Tyrone" symbol="Tyrone" horizontalCenterGap="-5" verticalCenterGap="0"/>
+	<State code="10100" label="Fermanagh" symbol="Fermanagh"/>
+	<State code="10200" label="Londonderry" symbol="Londonderry"/>
+	<State code="10300" label="Antrim" symbol="Antrim" horizontalCenterGap="5" verticalCenterGap="-5"/>
+	<State code="10400" label="Isle of Wight" symbol="Isleofwight"/>
+	<State code="10500" label="Eilean Siar" symbol="Eileansiar" horizontalCenterGap="0" verticalCenterGap="-10"/>
+	<State code="10600" label="Isle of Man" symbol="Isleofman"/>
+	<State code="10700" label="Shetland" symbol="Shetland"/>
+	<State code="10800" label="Orkney" symbol="Orkney"/>
+	<State code="10900" label="Leicestershire" symbol="Leicestershire"/>
+</Map>

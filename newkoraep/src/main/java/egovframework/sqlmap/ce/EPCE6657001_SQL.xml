@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE6657001Mapper">
+   
+	<!-- 연간출고회수현황확인서 조회  -->
+	<select id="epce6657001_select"  resultType="hashmap" parameterType="map">
+		<if test='excelYn == null or excelYn == "" '>
+		 SELECT 
+		 		PNO, 
+                MFC_BIZRID, 
+                MFC_BIZRNO ,
+                MFC_BIZRNM ,
+                MFC_BIZRABBRNM ,
+                ALKND_NM,
+                STANDARD_NM,
+                CPCT_NM,
+                PRPS_NM,
+                DLIVY_GTN ,
+                DLIVY_QTY ,
+                CFM_QTY ,
+                REQ_EXCH_QTY ,
+                CFM_EXCH_QTY ,
+                CFM_QTY_TOT        
+		  FROM (
+		</if>
+		SELECT ROW_NUMBER()OVER(ORDER BY EPCN_BIZR_SEL_ORD(MFC_BIZRID, MFC_BIZRNO), ALKND_CD, CPCT_CD, PRPS_CD) AS PNO, 
+               MFC_BIZRID, 
+               MFC_BIZRNO ,
+               EPCN_BIZR_NM(MFC_BIZRID, MFC_BIZRNO) AS MFC_BIZRNM ,
+               EPCN_BIZR_ABBR_NM(MFC_BIZRID, MFC_BIZRNO) AS MFC_BIZRABBRNM ,
+               EPCN_ETC_NM(ALKND_CD,'E004')   AS ALKND_NM,
+               STANDARD_NM,
+               EPCN_ETC_NM(CPCT_CD,'E001')    AS CPCT_NM,
+               EPCN_ETC_NM(PRPS_CD,'E002')    AS PRPS_NM,
+               MAX(DLIVY_GTN) AS DLIVY_GTN,
+               NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY ,
+               NVL(SUM(CFM_QTY),0) + NVL(SUM(DRCT_RTRVL_QTY),0) AS CFM_QTY ,
+               NVL(SUM(REQ_EXCH_QTY),0) AS REQ_EXCH_QTY ,
+               NVL(SUM(CFM_EXCH_QTY),0) AS CFM_EXCH_QTY ,
+               NVL(SUM(CFM_QTY),0) + NVL(SUM(DRCT_RTRVL_QTY),0) - NVL(SUM(REQ_EXCH_QTY),0) + NVL(SUM(CFM_EXCH_QTY),0) AS CFM_QTY_TOT
+          FROM 
+              (SELECT MFC_BIZRID ,
+                      MFC_BIZRNO ,
+                      PRPS_CD,
+                      CPCT_CD,
+                      ALKND_CD,
+                      CASE WHEN SUBSTR(CTNR_CD,4,2) = 00 THEN '표준용기' ELSE '비표준용기' END AS STANDARD_NM,
+                      (SELECT STD_DPS FROM EPCN_STD_DPS_MGNT AA WHERE AA.CTNR_CD = A.CTNR_CD AND USE_YN = 'Y' AND LANG_SE_CD = 'KOR' AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN APLC_ST_DT AND APLC_END_DT) AS DLIVY_GTN,
+                      DLIVY_QTY ,
+                      CFM_QTY ,
+                      DRCT_RTRVL_QTY ,
+                      REQ_EXCH_QTY ,
+                      CFM_EXCH_QTY
+                 FROM 
+                      (SELECT A.MFC_BIZRID , 
+                             A.MFC_BIZRNO ,
+                             C.CTNR_CD,
+                             C.PRPS_CD, 
+                             C.CPCT_CD, 
+                             C.ALKND_CD,
+                             NVL(SUM(B.DLIVY_GTN), 0) AS DLIVY_GTN,
+                             NVL(SUM(B.DLIVY_QTY), 0) AS DLIVY_QTY,
+                             NULL AS CFM_QTY ,
+                             NULL AS DRCT_RTRVL_QTY ,
+                             NULL AS REQ_EXCH_QTY ,
+                             NULL AS CFM_EXCH_QTY
+                        FROM EPDM_DLIVY_MST A , 
+                             EPDM_DLIVY_INFO B , 
+                             EPCN_STD_CTNR_CD C
+                       WHERE 1=1 
+                             AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO 
+                             AND B.CTNR_CD = C.CTNR_CD 
+                             AND B.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, C.CTNR_CD, C.CPCT_CD, C.PRPS_CD, C.ALKND_CD
+                               
+                          UNION ALL
+                            
+                      SELECT A.MFC_BIZRID , 
+                             A.MFC_BIZRNO ,
+                             C.CTNR_CD,
+                             C.PRPS_CD, 
+                             C.CPCT_CD, 
+                             C.ALKND_CD,                             
+                             NVL(SUM(A.DLIVY_GTN), 0) AS DLIVY_GTN,
+                             NVL(SUM(A.DLIVY_QTY), 0) AS DLIVY_QTY,
+                             NULL AS CFM_QTY ,
+                             NULL AS DRCT_RTRVL_QTY ,
+                             NULL AS REQ_EXCH_QTY ,
+                             NULL AS CFM_EXCH_QTY
+                        FROM EXCA_DLIVY_CRCT A , 
+                             EPCN_STD_CTNR_CD C 
+                       WHERE 1=1 
+                             AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I') 
+                             AND A.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                             AND A.CTNR_CD = C.CTNR_CD 
+                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, C.CTNR_CD, C.PRPS_CD, C.CPCT_CD, C.ALKND_CD
+                         
+                          UNION ALL
+                            
+                      SELECT A.MFC_BIZRID , 
+                             A.MFC_BIZRNO ,
+                             C.CTNR_CD,
+                             C.PRPS_CD, 
+                             C.CPCT_CD, 
+                             C.ALKND_CD,
+                             NULL AS DLIVY_GTN ,
+                             NULL AS DLIVY_QTY ,
+                             NVL(SUM(NVL2(D.WRHS_DOC_NO, 0, B.CFM_QTY)), 0) AS CFM_QTY,
+                             NULL AS DRCT_RTRVL_QTY ,
+                             NULL AS REQ_EXCH_QTY ,
+                             NULL AS CFM_EXCH_QTY
+                        FROM EPCM_CFM_MST A , 
+                             EPCM_CFM_INFO B , 
+                             EPCN_STD_CTNR_CD C,
+                             (
+                                 SELECT distinct WRHS_DOC_NO
+                                   FROM EXCA_WRHS_CRCT A
+                                 WHERE 1=1
+                                     AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+                              ) D
+                             
+                       WHERE 1=1 
+                             AND A.WRHS_DOC_NO = B.WRHS_DOC_NO 
+                             AND A.RTN_STAT_CD IN ('WC','CC','IB','AC','PA','PP','PC') 
+                             AND B.CTNR_CD = C.CTNR_CD 
+                             AND A.WRHS_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                             AND B.WRHS_DOC_NO = D.WRHS_DOC_NO(+)
+                       GROUP BY A.MFC_BIZRID,  A.MFC_BIZRNO, C.CTNR_CD, C.PRPS_CD, C.CPCT_CD, C.ALKND_CD
+                         
+                          UNION ALL
+                            
+                      SELECT A.MFC_BIZRID , 
+                             A.MFC_BIZRNO ,
+                             D.CTNR_CD,
+                             D.PRPS_CD, 
+                             D.CPCT_CD, 
+                             D.ALKND_CD,
+                             NULL AS DLIVY_GTN ,
+                             NULL AS DLIVY_QTY ,
+                             NVL(SUM(D.CRCT_QTY), 0) AS CFM_QTY ,
+                             NULL AS DRCT_RTRVL_QTY ,
+                             NULL AS REQ_EXCH_QTY ,
+                             NULL AS CFM_EXCH_QTY
+                        FROM EPCM_CFM_MST A , 
+                             (SELECT C.PRPS_CD, 
+                                     C.CPCT_CD, 
+                                     C.ALKND_CD,
+                                    A.WRHS_DOC_NO, 
+                                    A.CTNR_CD, 
+                                    SUM(A.CRCT_QTY) AS CRCT_QTY 
+                                    
+                               FROM EXCA_WRHS_CRCT A , 
+                                    EPCN_STD_CTNR_CD C 
+                              WHERE A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') 
+                                    AND A.CRCT_WRHS_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                                    AND A.CTNR_CD = C.CTNR_CD 
+                                    AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+                                          SELECT 'X' FROM EXCA_WRHS_CRCT B
+                                          WHERE 1=1
+                                             AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+                                             AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+                                             AND B.MNUL_EXCA_SE IS NOT NULL
+                                        )                                    
+                              GROUP BY C.PRPS_CD, A.WRHS_DOC_NO, A.CTNR_CD, C.PRPS_CD, C.CPCT_CD, C.ALKND_CD
+                             ) D 
+                       WHERE 1=1 
+                             AND A.WRHS_DOC_NO = D.WRHS_DOC_NO 
+                             AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+                       GROUP BY A.MFC_BIZRID,  A.MFC_BIZRNO, D.CTNR_CD, D.PRPS_CD, D.CPCT_CD, D.ALKND_CD
+
+                          UNION ALL
+                            
+                      SELECT A.MFC_BIZRID , 
+                             A.MFC_BIZRNO ,
+                             A.CTNR_CD,
+                             A.PRPS_CD, 
+                             A.CPCT_CD, 
+                             A.ALKND_CD,                             
+                             NULL AS DLIVY_GTN ,
+                             NULL AS DLIVY_QTY ,
+                             NVL(SUM(A.CRCT_QTY), 0) AS CFM_QTY ,
+                             NULL AS DRCT_RTRVL_QTY ,
+                             NULL AS REQ_EXCH_QTY ,
+                             NULL AS CFM_EXCH_QTY
+                        FROM (SELECT MNUL_MFC_BIZRID AS MFC_BIZRID,
+                                     MNUL_MFC_BIZRNO AS MFC_BIZRNO,
+                                     C.PRPS_CD, 
+                                     C.CPCT_CD, 
+                                     C.ALKND_CD,
+                                    A.WRHS_DOC_NO, 
+                                    A.CTNR_CD, 
+                                    SUM(A.CRCT_QTY) AS CRCT_QTY 
+                               FROM EXCA_WRHS_CRCT A , 
+                                    EPCN_STD_CTNR_CD C 
+                              WHERE A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') 
+                                    AND A.CRCT_WRHS_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                                    AND A.CTNR_CD = C.CTNR_CD 
+                                    AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+                                          SELECT 'X' FROM EXCA_WRHS_CRCT B
+                                          WHERE 1=1
+                                             AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+                                             AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+                                             AND B.MNUL_EXCA_SE IS NOT NULL
+                                        )                                 
+                                    AND 'IN-0' = A.WRHS_DOC_NO    
+                              GROUP BY MNUL_MFC_BIZRID, MNUL_MFC_BIZRNO, C.PRPS_CD, C.CPCT_CD, C.ALKND_CD, A.WRHS_DOC_NO, A.CTNR_CD 
+                             ) A 
+                       WHERE 1=1 
+                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, A.CTNR_CD, A.PRPS_CD, A.CPCT_CD, A.ALKND_CD
+                         
+                          UNION ALL
+                            
+                      SELECT A.MFC_BIZRID , 
+                             A.MFC_BIZRNO ,
+                             C.CTNR_CD,
+                             C.PRPS_CD, 
+                             C.CPCT_CD, 
+                             C.ALKND_CD,                              
+                             NULL AS DLIVY_GTN ,
+                             NULL AS DLIVY_QTY ,
+                             NULL AS CFM_QTY ,
+                             NVL(SUM(B.DRCT_RTRVL_QTY), 0) AS DRCT_RTRVL_QTY ,
+                             NULL AS REQ_EXCH_QTY ,
+                             NULL AS CFM_EXCH_QTY
+                        FROM EPDM_DRCT_RTRVL_MST A ,
+                             EPDM_DRCT_RTRVL_INFO B ,
+                             EPCN_STD_CTNR_CD C
+                       WHERE 1=1 
+                             AND A.DRCT_RTRVL_DOC_NO = B.DRCT_RTRVL_DOC_NO 
+                             AND B.CTNR_CD = C.CTNR_CD 
+                             AND A.DRCT_RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, C.CTNR_CD, C.PRPS_CD, C.CPCT_CD, C.ALKND_CD
+                         
+                          UNION ALL
+                          
+                      SELECT A.MFC_BIZRID , 
+                             A.MFC_BIZRNO ,
+                             C.CTNR_CD,
+                             C.PRPS_CD, 
+                             C.CPCT_CD, 
+                             C.ALKND_CD,                                                           
+                             NULL AS DLIVY_GTN ,
+                             NULL AS DLIVY_QTY ,
+                             NULL AS CFM_QTY ,
+                             NVL(SUM(A.DRCT_RTRVL_QTY), 0) AS DRCT_RTRVL_QTY ,
+                             NULL AS REQ_EXCH_QTY ,
+                             NULL AS CFM_EXCH_QTY
+                        FROM EXCA_DRCT_RTRVL_CRCT A , 
+                             EPCN_STD_CTNR_CD C 
+                       WHERE 1=1 
+                             AND A.DRCT_RTRVL_CRCT_STAT_CD IN ('C', 'I') 
+                             AND A.DRCT_RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                             AND A.CTNR_CD = C.CTNR_CD 
+                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, C.CTNR_CD, C.PRPS_CD, C.CPCT_CD, C.ALKND_CD
+                            
+                          UNION ALL
+
+                      SELECT A.MFC_BIZRID, 
+                             A.MFC_BIZRNO ,
+                             C.CTNR_CD,
+                             C.PRPS_CD, 
+                             C.CPCT_CD, 
+                             C.ALKND_CD,                             
+                             NULL AS DLIVY_GTN ,
+                             NULL AS DLIVY_QTY ,
+                             NULL AS CFM_QTY ,
+                             NULL AS DRCT_RTRVL_QTY ,
+                             NVL(SUM(REQ_EXCH_QTY), 0) AS REQ_EXCH_QTY ,
+                             NVL(SUM(CFM_EXCH_QTY), 0) AS CFM_EXCH_QTY  
+                        FROM 
+                             (SELECT A.REQ_MFC_BIZRID AS MFC_BIZRID , 
+                                    A.REQ_MFC_BIZRNO AS MFC_BIZRNO , 
+                                    B.REQ_CTNR_CD AS CTNR_CD,
+                                    B.EXCH_QTY AS REQ_EXCH_QTY ,
+                                    0 AS CFM_EXCH_QTY
+                               FROM EPDM_EXCH_MST A , 
+                                    EPDM_EXCH_INFO B 
+                              WHERE 1=1 
+                                    AND A.EXCH_REQ_DOC_NO = B.EXCH_REQ_DOC_NO 
+                                    AND A.EXCH_STAT_CD = 'CC' 
+                                    AND A.EXCH_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                                 UNION ALL 
+                             SELECT A.CFM_MFC_BIZRID AS MFC_BIZRID , 
+                                    A.CFM_MFC_BIZRNO AS MFC_BIZRNO , 
+                                    B.CFM_CTNR_CD AS CTNR_CD,
+                                    0 AS REQ_EXCH_QTY , 
+                                    B.EXCH_QTY AS CFM_EXCH_QTY 
+                               FROM EPDM_EXCH_MST A , 
+                                    EPDM_EXCH_INFO B 
+                              WHERE 1=1 
+                                    AND A.EXCH_REQ_DOC_NO = B.EXCH_REQ_DOC_NO 
+                                    AND A.EXCH_STAT_CD = 'CC' 
+                                    AND A.EXCH_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-') 
+                             ) A,
+                             EPCN_STD_CTNR_CD C 
+                       WHERE 1=1 
+                       AND A.CTNR_CD = C.CTNR_CD 
+                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, C.CTNR_CD, C.PRPS_CD, C.CPCT_CD, C.ALKND_CD
+                      ) A 
+				WHERE 1=1
+				 <if test='MFC_LIST !=null and MFC_LIST !=""' >
+				 	 AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO = #{MFC_LIST}
+				 </if>    
+				 <choose>
+			         <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+			             AND SUBSTR(A.CPCT_CD,2,1) in ('1','2')
+			         </when>
+			         <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+			             AND SUBSTR(A.CPCT_CD,2,1) in ('3','4')
+			         </when>
+		         </choose>
+		         <choose>
+                 	<when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "Y" '>
+                    	  AND SUBSTR(A.CTNR_CD,4,2) = 00 
+                  	</when>
+                 	 <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "N" '>
+                    	 AND SUBSTR(A.CTNR_CD,4,2) != 00  
+                  	</when>
+              	</choose>
+		         <if test='PRPS_CD != null and PRPS_CD != "" '>
+		         	AND A.PRPS_CD = #{PRPS_CD}
+		         </if>
+			     <if test='ALKND_CD != null and ALKND_CD != "" '>
+			     	AND A.ALKND_CD = #{ALKND_CD}
+			     </if> 				                      
+               ) AA
+         GROUP BY MFC_BIZRID, MFC_BIZRNO, PRPS_CD, CPCT_CD, ALKND_CD,STANDARD_NM
+         ORDER BY EPCN_BIZR_SEL_ORD(MFC_BIZRID, MFC_BIZRNO), ALKND_CD, CPCT_CD, PRPS_CD
+				 
+		<if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+        </if>		          
+	</select>
+
+	<select id="epce6657001_select_cnt" parameterType="map" resultType="hashmap">
+		SELECT 
+		 		COUNT(1) AS CNT,
+                SUM(DLIVY_QTY) AS DLIVY_QTY ,
+                SUM(CFM_QTY) AS CFM_QTY ,
+                SUM(REQ_EXCH_QTY) AS REQ_EXCH_QTY ,
+                SUM(CFM_EXCH_QTY) AS CFM_EXCH_QTY,
+                SUM(CFM_QTY_TOT) AS CFM_QTY_TOT      
+		  FROM (       
+			SELECT ROW_NUMBER()OVER(ORDER BY EPCN_BIZR_SEL_ORD(MFC_BIZRID, MFC_BIZRNO), ALKND_CD, CPCT_CD, PRPS_CD) AS PNO, 
+	               MFC_BIZRID, 
+	               MFC_BIZRNO ,
+	               EPCN_BIZR_NM(MFC_BIZRID, MFC_BIZRNO) AS MFC_BIZRNM ,
+	               EPCN_BIZR_ABBR_NM(MFC_BIZRID, MFC_BIZRNO) AS MFC_BIZRABBRNM ,
+	               EPCN_ETC_NM(ALKND_CD,'E004')   AS ALKND_NM,
+	               STANDARD_NM,
+	               EPCN_ETC_NM(CPCT_CD,'E001')    AS CPCT_NM,
+	               EPCN_ETC_NM(PRPS_CD,'E002')    AS PRPS_NM,
+	               NVL(SUM(DLIVY_GTN),0) AS DLIVY_GTN ,
+	               NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY ,
+	               NVL(SUM(CFM_QTY),0) + NVL(SUM(DRCT_RTRVL_QTY),0) AS CFM_QTY ,
+	               NVL(SUM(REQ_EXCH_QTY),0) AS REQ_EXCH_QTY ,
+	               NVL(SUM(CFM_EXCH_QTY),0) AS CFM_EXCH_QTY ,
+	               NVL(SUM(CFM_QTY),0) + NVL(SUM(DRCT_RTRVL_QTY),0) - NVL(SUM(REQ_EXCH_QTY),0) + NVL(SUM(CFM_EXCH_QTY),0) AS CFM_QTY_TOT
+	          FROM 
+	               (SELECT MFC_BIZRID ,
+	                      MFC_BIZRNO ,
+	                      PRPS_CD,
+	                      CPCT_CD,
+	                      ALKND_CD,
+	                      CASE WHEN SUBSTR(CTNR_CD,4,2) = 00 THEN '표준용기' ELSE '비표준용기' END AS STANDARD_NM,
+	                      DLIVY_GTN ,
+	                      DLIVY_QTY ,
+	                      CFM_QTY ,
+	                      DRCT_RTRVL_QTY ,
+	                      REQ_EXCH_QTY ,
+	                      CFM_EXCH_QTY
+	                 FROM 
+	                      (SELECT A.MFC_BIZRID , 
+	                             A.MFC_BIZRNO ,
+	                             C.CTNR_CD,
+	                             C.PRPS_CD, 
+	                             C.CPCT_CD, 
+	                             C.ALKND_CD,
+	                             NVL(SUM(B.DLIVY_GTN), 0) AS DLIVY_GTN,
+	                             NVL(SUM(B.DLIVY_QTY), 0) AS DLIVY_QTY,
+	                             NULL AS CFM_QTY ,
+	                             NULL AS DRCT_RTRVL_QTY ,
+	                             NULL AS REQ_EXCH_QTY ,
+	                             NULL AS CFM_EXCH_QTY
+	                        FROM EPDM_DLIVY_MST A , 
+	                             EPDM_DLIVY_INFO B , 
+	                             EPCN_STD_CTNR_CD C
+	                       WHERE 1=1 
+	                             AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO 
+	                             AND B.CTNR_CD = C.CTNR_CD 
+	                             AND B.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+	                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, C.CTNR_CD, C.CPCT_CD, C.PRPS_CD, C.ALKND_CD
+	                               
+	                          UNION ALL
+	                            
+	                      SELECT A.MFC_BIZRID , 
+	                             A.MFC_BIZRNO ,
+	                             C.CTNR_CD,
+	                             C.PRPS_CD, 
+	                             C.CPCT_CD, 
+	                             C.ALKND_CD,                             
+	                             NVL(SUM(A.DLIVY_GTN), 0) AS DLIVY_GTN,
+	                             NVL(SUM(A.DLIVY_QTY), 0) AS DLIVY_QTY,
+	                             NULL AS CFM_QTY ,
+	                             NULL AS DRCT_RTRVL_QTY ,
+	                             NULL AS REQ_EXCH_QTY ,
+	                             NULL AS CFM_EXCH_QTY
+	                        FROM EXCA_DLIVY_CRCT A , 
+	                             EPCN_STD_CTNR_CD C 
+	                       WHERE 1=1 
+	                             AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I') 
+	                             AND A.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+	                             AND A.CTNR_CD = C.CTNR_CD 
+	                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, C.CTNR_CD, C.PRPS_CD, C.CPCT_CD, C.ALKND_CD
+	                         
+	                          UNION ALL
+	                            
+	                      SELECT A.MFC_BIZRID , 
+	                             A.MFC_BIZRNO ,
+	                             C.CTNR_CD,
+	                             C.PRPS_CD, 
+	                             C.CPCT_CD, 
+	                             C.ALKND_CD,
+	                             NULL AS DLIVY_GTN ,
+	                             NULL AS DLIVY_QTY ,
+	                             NVL(SUM(NVL2(D.WRHS_DOC_NO, 0, B.CFM_QTY)), 0) AS CFM_QTY,
+	                             NULL AS DRCT_RTRVL_QTY ,
+	                             NULL AS REQ_EXCH_QTY ,
+	                             NULL AS CFM_EXCH_QTY
+	                        FROM EPCM_CFM_MST A , 
+	                             EPCM_CFM_INFO B , 
+	                             EPCN_STD_CTNR_CD C,
+	                             (
+	                                 SELECT distinct WRHS_DOC_NO
+	                                   FROM EXCA_WRHS_CRCT A
+	                                 WHERE 1=1
+	                                     AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+	                              ) D
+	                             
+	                       WHERE 1=1 
+	                             AND A.WRHS_DOC_NO = B.WRHS_DOC_NO 
+	                             AND A.RTN_STAT_CD IN ('WC','CC','IB','AC','PA','PP','PC') 
+	                             AND B.CTNR_CD = C.CTNR_CD 
+	                             AND A.WRHS_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+	                             AND B.WRHS_DOC_NO = D.WRHS_DOC_NO(+)
+	                       GROUP BY A.MFC_BIZRID,  A.MFC_BIZRNO, C.CTNR_CD, C.PRPS_CD, C.CPCT_CD, C.ALKND_CD
+	                         
+	                          UNION ALL
+	                            
+	                      SELECT A.MFC_BIZRID , 
+	                             A.MFC_BIZRNO ,
+	                             D.CTNR_CD,
+	                             D.PRPS_CD, 
+	                             D.CPCT_CD, 
+	                             D.ALKND_CD,
+	                             NULL AS DLIVY_GTN ,
+	                             NULL AS DLIVY_QTY ,
+	                             NVL(SUM(D.CRCT_QTY), 0) AS CFM_QTY ,
+	                             NULL AS DRCT_RTRVL_QTY ,
+	                             NULL AS REQ_EXCH_QTY ,
+	                             NULL AS CFM_EXCH_QTY
+	                        FROM EPCM_CFM_MST A , 
+	                             (SELECT C.PRPS_CD, 
+	                                     C.CPCT_CD, 
+	                                     C.ALKND_CD,
+	                                    A.WRHS_DOC_NO, 
+	                                    A.CTNR_CD, 
+	                                    SUM(A.CRCT_QTY) AS CRCT_QTY 
+	                                    
+	                               FROM EXCA_WRHS_CRCT A , 
+	                                    EPCN_STD_CTNR_CD C 
+	                              WHERE A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') 
+	                                    AND A.CRCT_WRHS_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+	                                    AND A.CTNR_CD = C.CTNR_CD 
+	                                    AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+	                                          SELECT 'X' FROM EXCA_WRHS_CRCT B
+	                                          WHERE 1=1
+	                                             AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+	                                             AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+	                                             AND B.MNUL_EXCA_SE IS NOT NULL
+	                                        )                                    
+	                              GROUP BY C.PRPS_CD, A.WRHS_DOC_NO, A.CTNR_CD, C.PRPS_CD, C.CPCT_CD, C.ALKND_CD
+	                             ) D 
+	                       WHERE 1=1 
+	                             AND A.WRHS_DOC_NO = D.WRHS_DOC_NO 
+	                             AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+	                       GROUP BY A.MFC_BIZRID,  A.MFC_BIZRNO, D.CTNR_CD, D.PRPS_CD, D.CPCT_CD, D.ALKND_CD
+	
+	                          UNION ALL
+	                            
+	                      SELECT A.MFC_BIZRID , 
+	                             A.MFC_BIZRNO ,
+	                             A.CTNR_CD,
+	                             A.PRPS_CD, 
+	                             A.CPCT_CD, 
+	                             A.ALKND_CD,                             
+	                             NULL AS DLIVY_GTN ,
+	                             NULL AS DLIVY_QTY ,
+	                             NVL(SUM(A.CRCT_QTY), 0) AS CFM_QTY ,
+	                             NULL AS DRCT_RTRVL_QTY ,
+	                             NULL AS REQ_EXCH_QTY ,
+	                             NULL AS CFM_EXCH_QTY
+	                        FROM (SELECT MNUL_MFC_BIZRID AS MFC_BIZRID,
+	                                     MNUL_MFC_BIZRNO AS MFC_BIZRNO,
+	                                     C.PRPS_CD, 
+	                                     C.CPCT_CD, 
+	                                     C.ALKND_CD,
+	                                    A.WRHS_DOC_NO, 
+	                                    A.CTNR_CD, 
+	                                    SUM(A.CRCT_QTY) AS CRCT_QTY 
+	                               FROM EXCA_WRHS_CRCT A , 
+	                                    EPCN_STD_CTNR_CD C 
+	                              WHERE A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') 
+	                                    AND A.CRCT_WRHS_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+	                                    AND A.CTNR_CD = C.CTNR_CD 
+	                                    AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+	                                          SELECT 'X' FROM EXCA_WRHS_CRCT B
+	                                          WHERE 1=1
+	                                             AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+	                                             AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+	                                             AND B.MNUL_EXCA_SE IS NOT NULL
+	                                        )                                 
+	                                    AND 'IN-0' = A.WRHS_DOC_NO    
+	                              GROUP BY MNUL_MFC_BIZRID, MNUL_MFC_BIZRNO, C.PRPS_CD, C.CPCT_CD, C.ALKND_CD, A.WRHS_DOC_NO, A.CTNR_CD 
+	                             ) A 
+	                       WHERE 1=1 
+	                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, A.CTNR_CD, A.PRPS_CD, A.CPCT_CD, A.ALKND_CD
+	                         
+	                          UNION ALL
+	                            
+	                      SELECT A.MFC_BIZRID , 
+	                             A.MFC_BIZRNO ,
+	                             C.CTNR_CD,
+	                             C.PRPS_CD, 
+	                             C.CPCT_CD, 
+	                             C.ALKND_CD,                              
+	                             NULL AS DLIVY_GTN ,
+	                             NULL AS DLIVY_QTY ,
+	                             NULL AS CFM_QTY ,
+	                             NVL(SUM(B.DRCT_RTRVL_QTY), 0) AS DRCT_RTRVL_QTY ,
+	                             NULL AS REQ_EXCH_QTY ,
+	                             NULL AS CFM_EXCH_QTY
+	                        FROM EPDM_DRCT_RTRVL_MST A ,
+	                             EPDM_DRCT_RTRVL_INFO B ,
+	                             EPCN_STD_CTNR_CD C
+	                       WHERE 1=1 
+	                             AND A.DRCT_RTRVL_DOC_NO = B.DRCT_RTRVL_DOC_NO 
+	                             AND B.CTNR_CD = C.CTNR_CD 
+	                             AND A.DRCT_RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+	                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, C.CTNR_CD, C.PRPS_CD, C.CPCT_CD, C.ALKND_CD
+	                         
+	                          UNION ALL
+	                          
+	                      SELECT A.MFC_BIZRID , 
+	                             A.MFC_BIZRNO ,
+	                             C.CTNR_CD,
+	                             C.PRPS_CD, 
+	                             C.CPCT_CD, 
+	                             C.ALKND_CD,                                                           
+	                             NULL AS DLIVY_GTN ,
+	                             NULL AS DLIVY_QTY ,
+	                             NULL AS CFM_QTY ,
+	                             NVL(SUM(A.DRCT_RTRVL_QTY), 0) AS DRCT_RTRVL_QTY ,
+	                             NULL AS REQ_EXCH_QTY ,
+	                             NULL AS CFM_EXCH_QTY
+	                        FROM EXCA_DRCT_RTRVL_CRCT A , 
+	                             EPCN_STD_CTNR_CD C 
+	                       WHERE 1=1 
+	                             AND A.DRCT_RTRVL_CRCT_STAT_CD IN ('C', 'I') 
+	                             AND A.DRCT_RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+	                             AND A.CTNR_CD = C.CTNR_CD 
+	                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, C.CTNR_CD, C.PRPS_CD, C.CPCT_CD, C.ALKND_CD
+	                            
+	                          UNION ALL
+	
+	                      SELECT A.MFC_BIZRID, 
+	                             A.MFC_BIZRNO,
+	                             C.CTNR_CD,
+	                             C.PRPS_CD, 
+	                             C.CPCT_CD, 
+	                             C.ALKND_CD,                             
+	                             NULL AS DLIVY_GTN ,
+	                             NULL AS DLIVY_QTY ,
+	                             NULL AS CFM_QTY ,
+	                             NULL AS DRCT_RTRVL_QTY ,
+	                             NVL(SUM(REQ_EXCH_QTY), 0) AS REQ_EXCH_QTY ,
+	                             NVL(SUM(CFM_EXCH_QTY), 0) AS CFM_EXCH_QTY  
+	                        FROM 
+	                             (SELECT A.REQ_MFC_BIZRID AS MFC_BIZRID , 
+	                                    A.REQ_MFC_BIZRNO AS MFC_BIZRNO , 
+	                                    B.REQ_CTNR_CD AS CTNR_CD,
+	                                    B.EXCH_QTY AS REQ_EXCH_QTY ,
+	                                    0 AS CFM_EXCH_QTY
+	                               FROM EPDM_EXCH_MST A , 
+	                                    EPDM_EXCH_INFO B 
+	                              WHERE 1=1 
+	                                    AND A.EXCH_REQ_DOC_NO = B.EXCH_REQ_DOC_NO 
+	                                    AND A.EXCH_STAT_CD = 'CC' 
+	                                    AND A.EXCH_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+	                                 UNION ALL 
+	                             SELECT A.CFM_MFC_BIZRID AS MFC_BIZRID , 
+	                                    A.CFM_MFC_BIZRNO AS MFC_BIZRNO , 
+	                                    B.CFM_CTNR_CD AS CTNR_CD,
+	                                    0 AS REQ_EXCH_QTY , 
+	                                    B.EXCH_QTY AS CFM_EXCH_QTY 
+	                               FROM EPDM_EXCH_MST A , 
+	                                    EPDM_EXCH_INFO B 
+	                              WHERE 1=1 
+	                                    AND A.EXCH_REQ_DOC_NO = B.EXCH_REQ_DOC_NO 
+	                                    AND A.EXCH_STAT_CD = 'CC' 
+	                                    AND A.EXCH_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-') 
+	                             ) A,
+	                             EPCN_STD_CTNR_CD C 
+	                       WHERE 1=1 
+	                       AND A.CTNR_CD = C.CTNR_CD 
+	                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO,C.CTNR_CD, C.PRPS_CD, C.CPCT_CD, C.ALKND_CD
+	                      ) A 
+					WHERE 1=1
+					 <if test='MFC_LIST !=null and MFC_LIST !=""' >
+					 	 AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO = #{MFC_LIST}
+					 </if>      
+					 <choose>
+				         <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+				             AND SUBSTR(A.CPCT_CD,2,1) in ('1','2')
+				         </when>
+				         <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+				             AND SUBSTR(A.CPCT_CD,2,1) in ('3','4')
+				         </when>
+			         </choose>
+			         <choose>
+		                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "Y" '>
+		                      AND SUBSTR(A.CTNR_CD,4,2) = 00 
+		                  </when>
+		                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "N" '>
+		                     AND SUBSTR(A.CTNR_CD,4,2) != 00  
+		                  </when>
+		              </choose>
+			         <if test='PRPS_CD != null and PRPS_CD != "" '>
+			         	AND A.PRPS_CD = #{PRPS_CD}
+			         </if>
+				     <if test='ALKND_CD != null and ALKND_CD != "" '>
+				     	AND A.ALKND_CD = #{ALKND_CD}
+				     </if> 		                      
+	               ) AA
+				GROUP BY MFC_BIZRID, MFC_BIZRNO, PRPS_CD, CPCT_CD, ALKND_CD,STANDARD_NM
+			)
+	</select>
+
+
+	
+</mapper>

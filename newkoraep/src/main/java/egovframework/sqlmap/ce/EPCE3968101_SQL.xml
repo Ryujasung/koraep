@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3968101Mapper">
+           
+    <!--기타코드관리 그룹코드 조회  -->                                                                  
+	<select id="epce3968101_select" parameterType="map" resultType="hashmap">
+		SELECT 
+		    GRP_CD
+		   ,LANG_SE_CD
+		   ,GRP_NM 
+		   ,GRP_SE 
+		   ,USE_YN
+		   
+		FROM 
+		   EPCN_ETC_CD_GRP
+	    WHERE 1=1
+			   AND    LANG_SE_CD  = #{LANG_SE_CD}
+			  <if test='GRP_SE != ""' >
+			   AND    GRP_SE         = #{GRP_SE}
+			  </if>
+			  <if test='GRP_NM != ""' >
+			     AND GRP_NM LIKE '%' || #{GRP_NM} || '%'
+		 	 </if>
+		  ORDER BY GRP_CD, GRP_NM
+	</select>
+
+     <!-- 기타코드관리 그룹코드 저장 수정여부 확인 -->
+    <select id="epce3968101_select2"  parameterType="map"  resultType="int">
+           SELECT 
+               COUNT(*)
+           FROM 
+                EPCN_ETC_CD_GRP
+           WHERE  1=1
+           AND      GRP_CD  =TRIM(#{GRP_CD})
+           AND      LANG_SE_CD  = #{LANG_SE_CD}
+    </select>
+    
+    <!-- 기타코드관리 상세코드 조회 -->
+    <select id="epce3968101_select3" parameterType="map" resultType="hashmap">
+    
+	    SELECT
+	        ETC_CD 
+	       ,LANG_SE_CD
+	       ,GRP_CD
+	       ,ETC_CD_NM
+	       ,RSV_ITEM1 
+	       ,RSV_ITEM2 
+	       ,RSV_ITEM3 
+	       ,USE_YN
+	       ,SEL_ORD
+	     FROM EPCN_ETC_CD
+	     WHERE 1=1
+	      <if test="LANG_SE_CD != ''">
+	     AND    LANG_SE_CD  = #{LANG_SE_CD}
+	     </if>
+	      <if test="GRP_CD != ''">
+	     AND    GRP_CD         = #{GRP_CD}
+         </if>
+    
+     	 ORDER BY SEL_ORD, GRP_CD, ETC_CD
+    </select>
+    
+    <!-- 기타코드관리 상세코드 저장 수정여부 확인 -->
+    <select id="epce3968101_select4"  parameterType="map"  resultType="int">
+           SELECT 
+               COUNT(*)
+           FROM 
+                EPCN_ETC_CD
+           WHERE  1=1
+           AND      GRP_CD         = #{GRP_CD}
+           AND      LANG_SE_CD  = #{LANG_SE_CD}
+           AND      ETC_CD          =  TRIM(#{ETC_CD})
+    </select>
+
+	<insert id="epce3968101_insert" parameterType="map">
+	   INSERT 
+		    INTO EPCN_ETC_CD_GRP
+		    (
+		     GRP_CD
+		     ,LANG_SE_CD
+		     ,GRP_NM
+		     ,GRP_SE
+		     ,USE_YN
+		     ,REG_PRSN_ID
+		     ,REG_DTTM
+		    )
+		    VALUES
+		    (
+	          TRIM(#{GRP_CD})
+		     ,#{LANG_SE_CD}
+		     ,#{GRP_NM}
+		     ,#{GRP_SE}
+		     ,#{USE_YN}
+		     ,#{RGST_PRSN_ID}
+		     ,SYSDATE
+		    )
+	</insert>
+	
+	<insert id="epce3968101_insert2" parameterType="map">
+	
+	  INSERT 
+		    INTO EPCN_ETC_CD
+		    (
+		    LANG_SE_CD
+		    ,GRP_CD
+		      ,ETC_CD
+		     ,ETC_CD_NM
+		     ,RSV_ITEM1
+		     ,RSV_ITEM2
+		     ,RSV_ITEM3
+		     ,USE_YN
+		     ,SEL_ORD
+		     ,REG_PRSN_ID
+		     ,REG_DTTM
+		    )
+		    VALUES
+		    ( 
+		    	#{LANG_SE_CD}
+		     ,TRIM(#{GRP_CD})
+	         ,TRIM(#{ETC_CD})
+		     ,#{ETC_CD_NM}
+		     ,#{RSV_ITEM1}
+		     ,#{RSV_ITEM2}
+		     ,#{RSV_ITEM3}
+		     ,#{USE_YN}
+		     ,#{SEL_ORD}
+		     ,#{RGST_PRSN_ID}
+		     ,SYSDATE
+		    )
+	
+	</insert>
+	
+    <!--기타코드 그룹코드 수정  -->
+    <update id="epce3968101_update" parameterType="map">
+       UPDATE 
+          EPCN_ETC_CD_GRP
+       SET
+	       GRP_NM = #{GRP_NM}
+		   ,GRP_SE   = #{GRP_SE}
+		   ,USE_YN  = #{USE_YN}
+		   ,UPD_PRSN_ID   =  #{RGST_PRSN_ID}
+		   ,UPD_DTTM       =   SYSDATE 
+	  WHERE 1=1
+	  AND   GRP_CD         =UPPER(#{GRP_CD})
+	  AND   LANG_SE_CD  = #{LANG_SE_CD}
+    </update>
+
+    <!-- 기타코드 상세코드 수정  -->    
+    <update id="epce3968101_update2" parameterType="map"> 
+    
+      UPDATE 
+          EPCN_ETC_CD
+       SET
+	       ETC_CD_NM = #{ETC_CD_NM}
+	       <if test="RSV_ITEM1 != ''">
+		   ,RSV_ITEM1   = #{RSV_ITEM1}
+		   </if>
+		   <if test="RSV_ITEM2 != ''">
+		   ,RSV_ITEM2   = #{RSV_ITEM2}
+		   </if>
+		   <if test="RSV_ITEM3 != ''">
+		   ,RSV_ITEM3   = #{RSV_ITEM3}
+		   </if>
+		   ,USE_YN           = #{USE_YN}
+		   ,SEL_ORD          =  #{SEL_ORD}
+		   ,UPD_PRSN_ID   =  #{RGST_PRSN_ID}
+		   ,UPD_DTTM       =   SYSDATE 
+	  WHERE 1=1
+	  AND   ETC_CD         = #{ETC_CD}
+	  AND   LANG_SE_CD  = #{LANG_SE_CD}
+	  AND   GRP_CD         = #{GRP_CD}
+    
+    </update>
+    
+    <!-- 기타코드 상세코드 상대순번 수정 -->
+    <update id="epce3968101_update3" parameterType="map"> 
+     UPDATE 
+          EPCN_ETC_CD
+       SET
+	       SEL_ORD          =  #{SEL_ORD_ALT}
+		   ,UPD_PRSN_ID   =  #{RGST_PRSN_ID}
+		   ,UPD_DTTM       =   SYSDATE 
+	  WHERE 1=1
+	  AND   ETC_CD         = #{ETC_CD_ALT}
+	  AND   LANG_SE_CD  = #{LANG_SE_CD}
+	  AND   GRP_CD         = #{GRP_CD}
+    
+    </update>
+    
+    
+    
+</mapper>

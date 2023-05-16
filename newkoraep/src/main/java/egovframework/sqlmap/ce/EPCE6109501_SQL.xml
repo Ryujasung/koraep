@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE6109501Mapper">
+
+	<select id="epce6109501_select" parameterType="map" resultType="hashmap">
+			
+		<if test='excelYn == null or excelYn == "" '>
+		 SELECT PNO 
+					,MFC_BIZRNO
+			        ,MFC_BIZRNM
+			        ,CTNR_CD
+			        ,CTNR_NM
+			        ,STANDARD_NM
+			        ,CPCT_CD
+			        ,CPCT_NM
+                    ,ALKND_CD
+                    ,ALKND_NM
+			        ,CFM_QTY
+			        ,REQ_EXCH_QTY
+			        ,CFM_EXCH_QTY
+			        ,ADJ_WRHS_QTY 
+		  FROM (
+		</if>
+				    SELECT ROW_NUMBER()OVER(ORDER BY T5.SEL_ORD, T3.SEL_ORD  ) AS PNO 
+				   			   ,PI_DECRYPT(T1.MFC_BIZRNO) AS MFC_BIZRNO
+						       ,T5.BIZRNM AS MFC_BIZRNM
+						       ,T1.CTNR_CD
+						       ,T3.CTNR_NM
+						       ,CASE WHEN SUBSTR(T3.CTNR_CD,4,2) = 00 THEN '표준용기' ELSE '비표준용기' END AS STANDARD_NM
+						       ,T3.CPCT_CD
+						       ,EPCN_ETC_NM(T3.CPCT_CD , 'E001') AS CPCT_NM
+                               ,T3.ALKND_CD
+                               ,EPCN_ETC_NM(T3.ALKND_CD , 'E004') AS ALKND_NM
+						       ,NVL(T2.CFM_QTY,0) AS CFM_QTY
+						       ,NVL(T1.REQ_EXCH_QTY,0) AS REQ_EXCH_QTY
+						       ,NVL(T1.CFM_EXCH_QTY,0) AS CFM_EXCH_QTY
+						       ,NVL(T2.CFM_QTY,0) - NVL(T1.REQ_EXCH_QTY,0) + NVL(T1.CFM_EXCH_QTY,0) AS ADJ_WRHS_QTY 
+					  FROM 
+						       (
+						          SELECT MFC_BIZRID, MFC_BIZRNO, CTNR_CD
+							                 ,NVL(SUM(DECODE(GUBUN, '1', EXCH_QTY)), 0) REQ_EXCH_QTY
+							                 ,NVL(SUM(DECODE(GUBUN, '2', EXCH_QTY)), 0) CFM_EXCH_QTY 
+						            FROM 
+							                 (    
+							                   SELECT '1' AS GUBUN
+								                          ,A.REQ_MFC_BIZRID AS MFC_BIZRID
+								                          ,A.REQ_MFC_BIZRNO AS MFC_BIZRNO
+								                          ,B.REQ_CTNR_CD AS CTNR_CD
+								                          ,B.EXCH_QTY 
+							                     FROM EPDM_EXCH_MST A
+							                          		,EPDM_EXCH_INFO B
+							                  WHERE 1=1
+							                      AND A.EXCH_REQ_DOC_NO = B.EXCH_REQ_DOC_NO
+							                      <!-- AND A.EXCH_REG_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-') -->
+							                     <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+						                      		AND A.EXCH_REG_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+												 </if>
+												 <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+							                      	AND A.EXCH_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+												 </if>
+							                      AND A.EXCH_STAT_CD = 'CC'
+							                               
+							                    UNION ALL 
+							                        
+							                   SELECT '2' AS GUBUN
+								                          ,A.CFM_MFC_BIZRID AS MFC_BIZRID
+								                          ,A.CFM_MFC_BIZRNO AS MFC_BIZRNO
+								                          ,B.CFM_CTNR_CD AS CTNR_CD
+								                          ,B.EXCH_QTY 
+							                     FROM EPDM_EXCH_MST A
+							                          		,EPDM_EXCH_INFO B
+							                    WHERE 1=1
+							                      AND A.EXCH_REQ_DOC_NO = B.EXCH_REQ_DOC_NO
+							                      <!-- AND A.EXCH_REG_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-') -->
+							                      <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+						                      		AND A.EXCH_REG_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+												 </if>
+												 <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+							                      	AND A.EXCH_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+												 </if>
+							                      AND A.EXCH_STAT_CD = 'CC'    
+							                ) A 
+						        WHERE 1=1
+					         
+					         	 <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+												AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+									        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+									            #{type.MFC_BIZRID_NO}
+									        </foreach>
+								 </if>    
+								 <if test="CTNR_LIST !=null and CTNR_LIST.size >0" >
+												AND	A.CTNR_CD IN
+									        <foreach collection="CTNR_LIST"  item="type"  open="(" close=")" separator=",">
+									            #{type.CTNR_CD}
+									        </foreach>
+								 </if>     
+							      
+						         GROUP BY MFC_BIZRID, MFC_BIZRNO, CTNR_CD 
+						       ) T1
+						       ,(
+						           SELECT A.MFC_BIZRID, A.MFC_BIZRNO, B.CTNR_CD
+						                  	  ,SUM(NVL(CFM_QTY,0)) AS CFM_QTY 
+						             FROM EPCM_CFM_MST A
+						                  	  ,EPCM_CFM_INFO B 
+						          WHERE 1=1
+						              AND WRHS_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+						              AND RTN_STAT_CD IN ('WC','CC','AC','PA','PP','PC')
+						              AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+						           GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO,  B.CTNR_CD 
+						       ) T2
+						       ,EPCN_STD_CTNR_CD T3
+							   ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') T4
+						       ,EPCN_BIZR_INFO T5
+					WHERE 1=1
+					    AND T1.MFC_BIZRID = T2.MFC_BIZRID(+)
+					    AND T1.MFC_BIZRNO = T2.MFC_BIZRNO(+)
+					    AND T1.CTNR_CD = T2.CTNR_CD(+)
+					    AND T1.CTNR_CD = T3.CTNR_CD
+					    AND T3.LANG_SE_CD = T4.LANG_SE_CD
+					    AND T1.MFC_BIZRID = T5.BIZRID
+					    AND T1.MFC_BIZRNO = T5.BIZRNO
+                      <choose>
+                          <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+                           AND SUBSTR(T3.CTNR_CD,2,1) in ('1','2')
+                          </when>
+                          <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+                           AND SUBSTR(T3.CTNR_CD,2,1) in ('3','4')
+                          </when>
+                      </choose>
+                      <choose>
+		                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "Y" '>
+		                      AND SUBSTR(T3.CTNR_CD,4,2) = 00
+		                  </when>
+		                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "N" '>
+		                     AND SUBSTR(T3.CTNR_CD,4,2) != 00
+		                  </when>
+		              </choose>
+                      <if test='PRPS_CD != null and PRPS_CD != "" '>
+                      AND T3.PRPS_CD = #{PRPS_CD}
+                      </if>
+                      <if test='ALKND_CD != null and ALKND_CD != "" '>
+                      AND T3.ALKND_CD = #{ALKND_CD}
+                      </if>
+				 ORDER BY T5.SEL_ORD, T3.SEL_ORD  
+				 
+		<if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+        </if>		 
+				 
+	</select>
+	
+	<select id="epce6109501_select_cnt" parameterType="map" resultType="hashmap">
+		  SELECT COUNT(1) as CNT
+		  			 ,SUM(NVL(T2.CFM_QTY,0)) AS CFM_QTY
+			         ,SUM(NVL(T1.REQ_EXCH_QTY,0)) AS REQ_EXCH_QTY
+			         ,SUM(NVL(T1.CFM_EXCH_QTY,0)) AS CFM_EXCH_QTY
+			         ,SUM(NVL(T2.CFM_QTY,0) - NVL(T1.REQ_EXCH_QTY,0) + NVL(T1.CFM_EXCH_QTY,0)) AS ADJ_WRHS_QTY 
+		     FROM 
+				       (
+				          SELECT MFC_BIZRID, MFC_BIZRNO, CTNR_CD
+					                 ,NVL(SUM(DECODE(GUBUN, '1', EXCH_QTY)), 0) REQ_EXCH_QTY
+					                 ,NVL(SUM(DECODE(GUBUN, '2', EXCH_QTY)), 0) CFM_EXCH_QTY 
+				            FROM 
+					                 (    
+					                   SELECT '1' AS GUBUN
+						                          ,A.REQ_MFC_BIZRID AS MFC_BIZRID
+						                          ,A.REQ_MFC_BIZRNO AS MFC_BIZRNO
+						                          ,B.REQ_CTNR_CD AS CTNR_CD
+						                          ,B.EXCH_QTY 
+					                     FROM EPDM_EXCH_MST A
+					                          		,EPDM_EXCH_INFO B
+					                  WHERE 1=1
+					                      AND A.EXCH_REQ_DOC_NO = B.EXCH_REQ_DOC_NO
+                                          <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+                                          AND A.EXCH_REG_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                                          </if>
+                                          <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+                                          AND A.EXCH_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                                          </if>
+					                      AND A.EXCH_STAT_CD = 'CC'
+					                               
+					                    UNION ALL 
+					                        
+					                   SELECT '2' AS GUBUN
+						                          ,A.CFM_MFC_BIZRID AS MFC_BIZRID
+						                          ,A.CFM_MFC_BIZRNO AS MFC_BIZRNO
+						                          ,B.CFM_CTNR_CD AS CTNR_CD
+						                          ,B.EXCH_QTY 
+					                     FROM EPDM_EXCH_MST A
+					                          		,EPDM_EXCH_INFO B
+					                    WHERE 1=1
+					                      AND A.EXCH_REQ_DOC_NO = B.EXCH_REQ_DOC_NO
+                                          <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+                                          AND A.EXCH_REG_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                                          </if>
+                                          <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+                                          AND A.EXCH_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                                          </if>
+					                      AND A.EXCH_STAT_CD = 'CC'    
+					                ) A 
+				         WHERE 1=1
+					         
+			         	  	 <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+											AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+								        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+								            #{type.MFC_BIZRID_NO}
+								        </foreach>
+							 </if>    
+							 <if test="CTNR_LIST !=null and CTNR_LIST.size >0" >
+											AND	A.CTNR_CD IN
+								        <foreach collection="CTNR_LIST"  item="type"  open="(" close=")" separator=",">
+								            #{type.CTNR_CD}
+								        </foreach>
+							 </if> 
+							             
+				         GROUP BY MFC_BIZRID, MFC_BIZRNO, CTNR_CD 
+				       ) T1
+				       ,(
+				           SELECT A.MFC_BIZRID, A.MFC_BIZRNO, B.CTNR_CD
+				                  		,SUM(NVL(CFM_QTY,0)) AS CFM_QTY 
+				             FROM EPCM_CFM_MST A
+				                  		,EPCM_CFM_INFO B 
+				          WHERE 1=1
+				              AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+				              AND WRHS_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+				              AND RTN_STAT_CD IN ('WC','CC','AC','PA','PP','PC')
+				           GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO,  B.CTNR_CD 
+				       ) T2
+				       ,EPCN_STD_CTNR_CD T3
+					   ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') T4
+				       ,EPCN_BIZR_INFO T5
+			WHERE 1=1
+			    AND T1.MFC_BIZRID = T2.MFC_BIZRID(+)
+			    AND T1.MFC_BIZRNO = T2.MFC_BIZRNO(+)
+			    AND T1.CTNR_CD = T2.CTNR_CD(+)
+			    AND T1.CTNR_CD = T3.CTNR_CD
+			    AND T3.LANG_SE_CD = T4.LANG_SE_CD
+			    AND T1.MFC_BIZRID = T5.BIZRID
+			    AND T1.MFC_BIZRNO = T5.BIZRNO
+              <choose>
+                  <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+                   AND SUBSTR(T3.CTNR_CD,2,1) in ('1','2')
+                  </when>
+                  <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+                   AND SUBSTR(T3.CTNR_CD,2,1) in ('3','4')
+                  </when>
+              </choose>
+              <choose>
+                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "Y" '>
+                      AND SUBSTR(T3.CTNR_CD,4,2) = 00
+                  </when>
+                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "N" '>
+                     AND SUBSTR(T3.CTNR_CD,4,2) != 00
+                  </when>
+              </choose>
+              <if test='PRPS_CD != null and PRPS_CD != "" '>
+              AND T3.PRPS_CD = #{PRPS_CD}
+              </if>
+              <if test='ALKND_CD != null and ALKND_CD != "" '>
+              AND T3.ALKND_CD = #{ALKND_CD}
+              </if>
+	</select>
+	
+	<select id="epce6109501_select2" parameterType="map" resultType="hashmap">   
+				SELECT        
+		     			 EPCN_BIZR_ABBR_NM(T1.MFC_BIZRID ,T1.MFC_BIZRNO) AS BIZRNM        
+				         ,SUM(NVL(T1.REQ_EXCH_QTY,0)) AS REQ_EXCH_QTY   
+				         ,SUM(NVL(T1.CFM_EXCH_QTY,0)) AS CFM_EXCH_QTY   
+				FROM      
+					       (    
+					          SELECT A.MFC_BIZRID, A.MFC_BIZRNO, A.CTNR_CD   
+						                 ,NVL(SUM(DECODE(GUBUN, '1', EXCH_QTY)), 0) REQ_EXCH_QTY   
+						                 ,NVL(SUM(DECODE(GUBUN, '2', EXCH_QTY)), 0) CFM_EXCH_QTY   
+					            FROM          
+						                 (               
+						                   SELECT '1' AS GUBUN
+						                          ,A.REQ_MFC_BIZRID AS MFC_BIZRID
+						                          ,A.REQ_MFC_BIZRNO AS MFC_BIZRNO
+						                          ,B.REQ_CTNR_CD AS CTNR_CD
+						                          ,B.EXCH_QTY 
+						                     FROM EPDM_EXCH_MST A
+						                          ,EPDM_EXCH_INFO B
+						                    WHERE 1=1
+						                      AND A.EXCH_REQ_DOC_NO = B.EXCH_REQ_DOC_NO
+                                              <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+                                              AND A.EXCH_REG_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                                              </if>
+                                              <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+                                              AND A.EXCH_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                                              </if>
+						                      AND A.EXCH_STAT_CD = 'CC'
+						                                 
+						                    UNION ALL 
+						                           
+						                   SELECT '2' AS GUBUN
+						                          ,A.CFM_MFC_BIZRID AS MFC_BIZRID
+						                          ,A.CFM_MFC_BIZRNO AS MFC_BIZRNO
+						                          ,B.CFM_CTNR_CD AS CTNR_CD
+						                          ,B.EXCH_QTY 
+						                     FROM EPDM_EXCH_MST A
+						                          ,EPDM_EXCH_INFO B
+						                    WHERE 1=1
+						                      AND A.EXCH_REQ_DOC_NO = B.EXCH_REQ_DOC_NO
+                                              <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+                                              AND A.EXCH_REG_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                                              </if>
+                                              <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+                                              AND A.EXCH_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                                              </if>
+						                      AND A.EXCH_STAT_CD = 'CC'    
+						                ) A , EPCN_STD_CTNR_CD T3
+					         WHERE 1=1
+                             AND A.CTNR_CD = T3.CTNR_CD
+					         
+				         	  	 <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+											AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+								        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+								            #{type.MFC_BIZRID_NO}
+								        </foreach>
+								 </if>    
+								 <if test="CTNR_LIST !=null and CTNR_LIST.size >0" >
+												AND	A.CTNR_CD IN
+									        <foreach collection="CTNR_LIST"  item="type"  open="(" close=")" separator=",">
+									            #{type.CTNR_CD}
+									        </foreach>
+								 </if> 
+                                  <choose>
+                                      <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+                                       AND SUBSTR(T3.CTNR_CD,2,1) in ('1','2')
+                                      </when>
+                                      <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+                                       AND SUBSTR(T3.CTNR_CD,2,1) in ('3','4')
+                                      </when>
+                                  </choose>
+                                  <choose>
+					                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "Y" '>
+					                      AND SUBSTR(T3.CTNR_CD,4,2) = 00
+					                  </when>
+					                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "N" '>
+					                     AND SUBSTR(T3.CTNR_CD,4,2) != 00
+					                  </when>
+					              </choose>
+                                  <if test='PRPS_CD != null and PRPS_CD != "" '>
+                                  AND T3.PRPS_CD = #{PRPS_CD}
+                                  </if>
+                                  <if test='ALKND_CD != null and ALKND_CD != "" '>
+                                  AND T3.ALKND_CD = #{ALKND_CD}
+                                  </if>
+					       
+					         GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, A.CTNR_CD 
+					       ) T1
+					       ,EPCN_BIZR_INFO T5
+				WHERE 1=1
+				    AND T1.MFC_BIZRID = T5.BIZRID
+				    AND T1.MFC_BIZRNO = T5.BIZRNO
+		 GROUP BY T1.MFC_BIZRID, T1.MFC_BIZRNO,  T5.SEL_ORD
+		 ORDER BY T5.SEL_ORD
+		 
+	</select>
+
+</mapper>
+

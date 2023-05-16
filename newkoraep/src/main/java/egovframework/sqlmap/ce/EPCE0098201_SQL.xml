@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE0098201Mapper">
+
+	
+	<!-- 문의하기 공지사항 -->
+	<select id="epce0098201_select" parameterType="map" resultType="hashmap">
+				 SELECT 
+									 *  
+				 FROM (  
+				 
+				  		SELECT 
+				 			<![CDATA[
+				  						 ROW_NUMBER()OVER(ORDER BY   A.NOTI_SEQ DESC , A.REG_DTTM DESC ) AS PNO
+										,A.NOTI_SEQ
+										,CASE 
+								          	WHEN (SELECT COUNT(1) FROM EPCN_NOTI_FILE WHERE NOTI_SEQ=A.NOTI_SEQ)  < 1
+								           	THEN  '<a href="javascript:link();" target="_self" class="gridLink">'||A.SBJ||'</a>' 
+								           	ELSE   '<a href="javascript:link();" target="_self" class="gridLink">'||A.SBJ||' '||'<img src="/images/util/attach_ico.png">'||'</a>' 
+								       		END AS SBJ 	
+										,A.CNTN_TP 
+										,A.SEL_CNT
+										,TO_CHAR(A.REG_DTTM, 'yyyy-mm-dd') as REG_DTTM
+							 ]]>	
+						FROM 
+										EPCN_NOTI A
+						WHERE 1=1
+					
+						<if test="SBJ_CNTN_TYPE !=nuill and SBJ_CNTN_TYPE !=''">
+							<choose>
+							          <when test="SBJ_CNTN_TYPE.equalsIgnoreCase('S')"> 
+							           	AND upper(SBJ) LIKE '%' || upper(#{SBJ_CNTN}) || '%'
+							         </when>
+							         <otherwise>
+							         	 AND upper(CNTN) LIKE '%' || upper(#{SBJ_CNTN}) || '%'
+							         </otherwise>
+						     </choose>
+						</if>
+						ORDER BY   A.NOTI_SEQ DESC , A.REG_DTTM DESC
+						)
+			WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+				
+	</select>
+	
+	
+	<!-- 문의하기  카운트-->
+	<select id="epce0098201_select_cnt" parameterType="map" resultType="int">
+	
+		  			SELECT 
+		  					COUNT(1)
+					FROM 
+								EPCN_NOTI A
+					WHERE 1=1
+					<if test="SBJ_CNTN_TYPE !=nuill and SBJ_CNTN_TYPE !=''">
+						<choose>
+						          <when test="SBJ_CNTN_TYPE.equalsIgnoreCase('S')"> 
+						           	AND upper(SBJ) LIKE '%' || upper(#{SBJ_CNTN}) || '%'
+						         </when>
+						         <otherwise>
+						         	 AND upper(CNTN) LIKE '%' || upper(#{SBJ_CNTN}) || '%'
+						         </otherwise>
+					     </choose>
+				     </if>
+	</select>
+	
+<!--
+/***************************************************************************************************************************************************************************************
+* 			문의하기 FAQ
+****************************************************************************************************************************************************************************************/
+-->
+
+<!-- 문의하기 FAQ -->
+	<select id="epce00982882_select" parameterType="map" resultType="hashmap">
+				SELECT 
+									 *
+				 FROM (
+				    
+				  		SELECT 
+				 			<![CDATA[
+				  						 ROW_NUMBER()OVER(ORDER BY   A.FAQ_SEQ DESC , A.REG_DTTM DESC ) AS PNO
+										,A.FAQ_SEQ
+										,CASE 
+								          	WHEN B.FILE_NM IS NULL
+								           	THEN  '<a href="javascript:link();" target="_self" class="gridLink">'||A.SBJ||'</a>' 
+								           	ELSE   '<a href="javascript:link();" target="_self" class="gridLink">'||A.SBJ||' '||'<img src="/images/util/attach_ico.png">'||'</a>' 
+								       		END AS SBJ 	
+										,B.FILE_NM   
+										,B.REG_SN
+										,A.CNTN_TP 
+										,TO_CHAR(A.REG_DTTM, 'yyyy-mm-dd') as REG_DTTM
+							]]>	   
+						FROM   
+										EPCN_FAQ A
+										,EPCN_FAQ_FILE B
+						WHERE 1=1
+						AND A.FAQ_SEQ  = B.FAQ_SEQ(+)
+						<if test="SBJ_CNTN_TYPE !=nuill and SBJ_CNTN_TYPE !=''">
+							<choose>
+							          <when test="SBJ_CNTN_TYPE.equalsIgnoreCase('S')"> 
+							           	AND upper(SBJ) LIKE '%' || upper(#{SBJ_CNTN}) || '%'
+							         </when>
+							         <otherwise>
+							         	 AND upper(CNTN) LIKE '%' || upper(#{SBJ_CNTN}) || '%'
+							         </otherwise>
+						     </choose>
+						</if>
+						ORDER BY   A.FAQ_SEQ DESC , A.REG_DTTM DESC
+						)
+			WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+	</select>       
+	
+	<!-- 문의하기 FAQ 카운트-->
+	<select id="epce00982882_select_cnt" parameterType="map" resultType="int">
+	   
+		  			SELECT 
+		  					COUNT(1)
+					FROM 
+								EPCN_FAQ A
+								,EPCN_FAQ_FILE B
+					WHERE 1=1
+					AND A.FAQ_SEQ  = B.FAQ_SEQ(+)
+					<if test="SBJ_CNTN_TYPE !=nuill and SBJ_CNTN_TYPE !=''">
+						<choose>
+						          <when test="SBJ_CNTN_TYPE.equalsIgnoreCase('S')"> 
+						           	AND upper(SBJ) LIKE '%' || upper(#{SBJ_CNTN}) || '%'
+						         </when>   
+						         <otherwise>
+						         	 AND upper(CNTN) LIKE '%' || upper(#{SBJ_CNTN}) || '%'
+						         </otherwise>
+					     </choose>
+				     </if>
+	</select>
+   	
+	
+</mapper>

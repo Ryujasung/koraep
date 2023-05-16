@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Continent code="100" label="NORTH&lt;br&gt;AMERICA" symbol="north-america" horizontalCenterGap="50" verticalCenterGap="40"/>
+	<Continent code="200" label="SOUTH&lt;br&gt;AMERICA" symbol="south-america" horizontalCenterGap="50" verticalCenterGap="25"/>
+	<Continent code="300" label="CENTRAL&lt;br&gt;AMERICA" symbol="central-america"/>
+	<Continent code="400" label="EUROPE" symbol="europe" horizontalCenterGap="-30" verticalCenterGap="-35"/>
+	<Continent code="500" label="AFRICA" symbol="africa" horizontalCenterGap="-40" verticalCenterGap="35"/>
+	<Continent code="600" label="ASIA" symbol="asia" horizontalCenterGap="80" verticalCenterGap="30"/>
+	<Continent code="700" label="OCEANIA" symbol="oceania" horizontalCenterGap="50" verticalCenterGap="-10"/>
+</Map>

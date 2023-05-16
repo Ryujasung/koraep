@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE6186201Mapper">
+
+	<!-- 주간누계 조회 -->
+	<select id="epce6186201_select" parameterType="map" resultType="hashmap">
+
+	    SELECT NVL( EPCN_ETC_NM(NVL(A.ALKND_CD, B.ALKND_CD), 'E004'), '합계') AS ALKND_NM
+		           ,NVL( EPCN_BIZR_NM(NVL(A.MFC_BIZRID, B.MFC_BIZRID)||';'||NVL(A.MFC_BIZRNO, B.MFC_BIZRNO), ''), NVL2( EPCN_ETC_NM(NVL(A.ALKND_CD, B.ALKND_CD), 'E004'), '소계', '')) AS MFC_BIZRNM
+		           ,NVL(SUM(DLIVY_QTY_SUM), 0) AS DLIVY_QTY_SUM
+		           ,NVL(SUM(DLIVY_QTY_SUM_OLD), 0) AS DLIVY_QTY_SUM_OLD
+		           ,NVL(SUM(DLIVY_QTY_SUM_NEW), 0) AS DLIVY_QTY_SUM_NEW
+		           ,NVL(SUM(DLIVY_QTY_1WEEK), 0) AS DLIVY_QTY_1WEEK
+		           ,NVL(SUM(DLIVY_QTY_1WEEK_OLD), 0) AS DLIVY_QTY_1WEEK_OLD
+		           ,NVL(SUM(DLIVY_QTY_1WEEK_NEW), 0) AS DLIVY_QTY_1WEEK_NEW
+		           ,NVL(SUM(DLIVY_QTY_2WEEK), 0) AS DLIVY_QTY_2WEEK
+		           ,NVL(SUM(DLIVY_QTY_2WEEK_OLD), 0) AS DLIVY_QTY_2WEEK_OLD
+		           ,NVL(SUM(DLIVY_QTY_2WEEK_NEW), 0) AS DLIVY_QTY_2WEEK_NEW
+		           ,NVL(SUM(DLIVY_QTY_AVG), 0) AS DLIVY_QTY_AVG
+		           ,NVL(SUM(DLIVY_QTY_AVG_OLD), 0) AS DLIVY_QTY_AVG_OLD
+		           ,NVL(SUM(DLIVY_QTY_AVG_NEW), 0) AS DLIVY_QTY_AVG_NEW
+		           ,NVL(SUM(DLIVY_INDE_QTY), 0) AS DLIVY_INDE_QTY
+		           ,NVL(SUM(DLIVY_INDE_RT), 0) AS DLIVY_INDE_RT
+		           ,NVL(SUM(CFM_QTY_SUM), 0) AS CFM_QTY_SUM
+		           ,NVL(SUM(CFM_QTY_SUM_OLD), 0) AS CFM_QTY_SUM_OLD
+		           ,NVL(SUM(CFM_QTY_SUM_NEW), 0) AS CFM_QTY_SUM_NEW
+		           ,NVL(SUM(CFM_QTY_1WEEK), 0) AS CFM_QTY_1WEEK
+		           ,NVL(SUM(CFM_QTY_1WEEK_OLD), 0) AS CFM_QTY_1WEEK_OLD
+		           ,NVL(SUM(CFM_QTY_1WEEK_NEW), 0) AS CFM_QTY_1WEEK_NEW
+		           ,NVL(SUM(CFM_QTY_2WEEK), 0) AS CFM_QTY_2WEEK
+		           ,NVL(SUM(CFM_QTY_2WEEK_OLD), 0) AS CFM_QTY_2WEEK_OLD
+		           ,NVL(SUM(CFM_QTY_2WEEK_NEW), 0) AS CFM_QTY_2WEEK_NEW
+		           ,NVL(SUM(CFM_QTY_AVG), 0) AS CFM_QTY_AVG
+		           ,NVL(SUM(CFM_QTY_AVG_OLD), 0) AS CFM_QTY_AVG_OLD
+		           ,NVL(SUM(CFM_QTY_AVG_NEW), 0) AS CFM_QTY_AVG_NEW
+		           ,NVL(SUM(CFM_INDE_QTY), 0) AS CFM_INDE_QTY
+		           ,NVL(SUM(CFM_INDE_RT), 0) AS CFM_INDE_RT
+		           ,NVL(SUM(TRUNC( decode(DLIVY_QTY_SUM, 0, 0, (CFM_QTY_SUM/DLIVY_QTY_SUM)*100), 2) ), 0) AS RTRVL_RT
+	               ,NVL(SUM(TRUNC( decode(DLIVY_QTY_SUM_OLD, 0, 0, (CFM_QTY_SUM_OLD/DLIVY_QTY_SUM_OLD)*100), 2) ), 0) AS RTRVL_RT_OLD
+	               ,NVL(SUM(TRUNC( decode(DLIVY_QTY_SUM_NEW, 0, 0, (CFM_QTY_SUM_NEW/DLIVY_QTY_SUM_NEW)*100), 2) ), 0) AS RTRVL_RT_NEW
+	               ,NVL(SUM(TRUNC( decode(DLIVY_QTY_2WEEK, 0, 0, (CFM_QTY_2WEEK/DLIVY_QTY_2WEEK)*100), 2) ), 0) AS RTRVL_RT_2WEEK
+	               ,NVL(SUM(TRUNC( decode(DLIVY_QTY_2WEEK_OLD, 0, 0, (CFM_QTY_2WEEK_OLD/DLIVY_QTY_2WEEK_OLD)*100), 2) ), 0) AS RTRVL_RT_2WEEK_OLD
+	               ,NVL(SUM(TRUNC( decode(DLIVY_QTY_2WEEK_NEW, 0, 0, (CFM_QTY_2WEEK_NEW/DLIVY_QTY_2WEEK_NEW)*100), 2) ), 0) AS RTRVL_RT_2WEEK_NEW
+		      FROM
+		         (
+		            SELECT MFC_BIZRID, MFC_BIZRNO, ALKND_CD
+			                   ,NVL(DLIVY_QTY_SUM, 0) AS DLIVY_QTY_SUM
+		                       ,NVL(DLIVY_QTY_SUM_OLD, 0) AS DLIVY_QTY_SUM_OLD
+		                       ,NVL(DLIVY_QTY_SUM_NEW, 0) AS DLIVY_QTY_SUM_NEW
+		                       ,NVL(DLIVY_QTY_1WEEK, 0) AS DLIVY_QTY_1WEEK
+		                       ,NVL(DLIVY_QTY_1WEEK_OLD, 0) AS DLIVY_QTY_1WEEK_OLD
+		                       ,NVL(DLIVY_QTY_1WEEK_NEW, 0) AS DLIVY_QTY_1WEEK_NEW
+		                       ,NVL(DLIVY_QTY_2WEEK, 0) AS DLIVY_QTY_2WEEK
+		                       ,NVL(DLIVY_QTY_2WEEK_OLD, 0) AS DLIVY_QTY_2WEEK_OLD
+		                       ,NVL(DLIVY_QTY_2WEEK_NEW, 0) AS DLIVY_QTY_2WEEK_NEW
+		                       ,NVL(TRUNC(DLIVY_QTY_SUM/2), 0) AS DLIVY_QTY_AVG
+		                       ,NVL(TRUNC(DLIVY_QTY_SUM_OLD/2), 0) AS DLIVY_QTY_AVG_OLD
+		                       ,NVL(TRUNC(DLIVY_QTY_SUM_NEW/2), 0) AS DLIVY_QTY_AVG_NEW
+		                       ,NVL(TRUNC(DLIVY_QTY_2WEEK-(DLIVY_QTY_SUM/2)), 0) AS DLIVY_INDE_QTY
+		                       ,NVL(DECODE(DLIVY_QTY_SUM, 0, 0, TRUNC( ((DLIVY_QTY_2WEEK-(DLIVY_QTY_SUM/2))/(DLIVY_QTY_SUM/2) ) * 100 , 2) ), 0) AS DLIVY_INDE_RT
+		              FROM (
+		                     SELECT A.MFC_BIZRID, A.MFC_BIZRNO, C.ALKND_CD
+		                            ,SUM(B.DLIVY_QTY) AS DLIVY_QTY_SUM
+		                            ,SUM(CASE WHEN SUBSTR(B.CTNR_CD,2,1) IN ('1','2') THEN B.DLIVY_QTY END) AS DLIVY_QTY_SUM_OLD
+		                            ,SUM(CASE WHEN SUBSTR(B.CTNR_CD,2,1) IN ('3','4') THEN B.DLIVY_QTY END) AS DLIVY_QTY_SUM_NEW
+		                            ,SUM(CASE WHEN B.DLIVY_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-7, 'YYYYMMDD') 
+		                               THEN B.DLIVY_QTY END) AS DLIVY_QTY_1WEEK
+		                            ,SUM(CASE WHEN B.DLIVY_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-6, 'YYYYMMDD') AND #{STD_DT}
+		                               THEN B.DLIVY_QTY END) AS DLIVY_QTY_2WEEK
+		                            ,SUM(CASE WHEN B.DLIVY_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-7, 'YYYYMMDD') 
+		                                        AND SUBSTR(B.CTNR_CD,2,1) IN ('1','2')
+		                               THEN B.DLIVY_QTY END) AS DLIVY_QTY_1WEEK_OLD
+		                            ,SUM(CASE WHEN B.DLIVY_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-7, 'YYYYMMDD') 
+		                                        AND SUBSTR(B.CTNR_CD,2,1) IN ('3','4')
+		                               THEN B.DLIVY_QTY END) AS DLIVY_QTY_1WEEK_NEW
+		                            ,SUM(CASE WHEN B.DLIVY_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-6, 'YYYYMMDD') AND #{STD_DT}
+		                                        AND SUBSTR(B.CTNR_CD,2,1) IN ('1','2')
+		                               THEN B.DLIVY_QTY END) AS DLIVY_QTY_2WEEK_OLD
+		                            ,SUM(CASE WHEN B.DLIVY_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-6, 'YYYYMMDD') AND #{STD_DT}
+		                                        AND SUBSTR(B.CTNR_CD,2,1) IN ('3','4')
+		                               THEN B.DLIVY_QTY END) AS DLIVY_QTY_2WEEK_NEW
+		                       FROM EPDM_DLIVY_MST A
+		                            ,EPDM_DLIVY_INFO B
+		                            ,(
+		                                SELECT C.CTNR_CD, C.PRPS_CD, C.ALKND_CD
+		                                  FROM EPCN_STD_CTNR_CD C
+		                                       ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+		                                 WHERE 1=1
+		                                   AND C.LANG_SE_CD = F.LANG_SE_CD
+		                              ) C
+		                      WHERE 1=1
+		                        AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+		                        AND B.CTNR_CD = C.CTNR_CD
+		                        AND B.DLIVY_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND #{STD_DT}
+		                     GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, C.ALKND_CD
+		                   ) 
+		        ) A
+		        FULL OUTER JOIN
+		        (
+		            SELECT MFC_BIZRID, MFC_BIZRNO, ALKND_CD
+			                   ,NVL(CFM_QTY_SUM, 0) AS CFM_QTY_SUM
+		                       ,NVL(CFM_QTY_SUM_OLD, 0) AS CFM_QTY_SUM_OLD
+		                       ,NVL(CFM_QTY_SUM_NEW, 0) AS CFM_QTY_SUM_NEW
+		                       ,NVL(CFM_QTY_1WEEK, 0) AS CFM_QTY_1WEEK
+		                       ,NVL(CFM_QTY_1WEEK_OLD, 0) AS CFM_QTY_1WEEK_OLD
+		                       ,NVL(CFM_QTY_1WEEK_NEW, 0) AS CFM_QTY_1WEEK_NEW
+		                       ,NVL(CFM_QTY_2WEEK, 0) AS CFM_QTY_2WEEK
+		                       ,NVL(CFM_QTY_2WEEK_OLD, 0) AS CFM_QTY_2WEEK_OLD
+		                       ,NVL(CFM_QTY_2WEEK_NEW, 0) AS CFM_QTY_2WEEK_NEW
+		                       ,NVL(TRUNC(CFM_QTY_SUM/2), 0) AS CFM_QTY_AVG
+		                       ,NVL(TRUNC(CFM_QTY_SUM_OLD/2), 0) AS CFM_QTY_AVG_OLD
+		                       ,NVL(TRUNC(CFM_QTY_SUM_NEW/2), 0) AS CFM_QTY_AVG_NEW
+		                       ,NVL(TRUNC(CFM_QTY_2WEEK-(CFM_QTY_SUM/2)), 0) AS CFM_INDE_QTY
+		                       ,NVL(DECODE(CFM_QTY_SUM, 0, 0, TRUNC( ((CFM_QTY_2WEEK-(CFM_QTY_SUM/2))/(CFM_QTY_SUM/2) ) * 100 , 2) ), 0) AS CFM_INDE_RT
+		              FROM (
+                         SELECT A.MFC_BIZRID, 
+                                A.MFC_BIZRNO, 
+                                C.ALKND_CD , 
+                                SUM(CFM_QTY_SUM) AS CFM_QTY_SUM , 
+                                SUM(CFM_QTY_SUM_OLD) AS CFM_QTY_SUM_OLD , 
+                                SUM(CFM_QTY_SUM_NEW) AS CFM_QTY_SUM_NEW , 
+                                SUM(CFM_QTY_1WEEK) AS CFM_QTY_1WEEK , 
+                                SUM(CFM_QTY_2WEEK) AS CFM_QTY_2WEEK , 
+                                SUM(CFM_QTY_1WEEK_OLD) AS CFM_QTY_1WEEK_OLD , 
+                                SUM(CFM_QTY_1WEEK_NEW) AS CFM_QTY_1WEEK_NEW , 
+                                SUM(CFM_QTY_2WEEK_OLD) AS CFM_QTY_2WEEK_OLD , 
+                                SUM(CFM_QTY_2WEEK_NEW) AS CFM_QTY_2WEEK_NEW 
+                           FROM 
+                                (SELECT A.MFC_BIZRID, 
+                                       A.MFC_BIZRNO, 
+                                       B.CTNR_CD AS CTNR_CD, 
+                                       B.CFM_QTY AS CFM_QTY_SUM , 
+                                       CASE WHEN SUBSTR(B.CTNR_CD,2,1) IN ('1','2') THEN B.CFM_QTY END AS CFM_QTY_SUM_OLD ,
+                                       CASE WHEN SUBSTR(B.CTNR_CD,2,1) IN ('3','4') THEN B.CFM_QTY END AS CFM_QTY_SUM_NEW ,
+                                       CASE WHEN A.WRHS_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-7, 'YYYYMMDD') THEN B.CFM_QTY END AS CFM_QTY_1WEEK ,
+                                       CASE WHEN A.WRHS_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-6, 'YYYYMMDD') AND #{STD_DT} THEN B.CFM_QTY END AS CFM_QTY_2WEEK ,
+                                       CASE WHEN A.WRHS_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-7, 'YYYYMMDD') AND SUBSTR(B.CTNR_CD,2,1) IN ('1','2') THEN B.CFM_QTY END AS CFM_QTY_1WEEK_OLD ,
+                                       CASE WHEN A.WRHS_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-7, 'YYYYMMDD') AND SUBSTR(B.CTNR_CD,2,1) IN ('3','4') THEN B.CFM_QTY END AS CFM_QTY_1WEEK_NEW ,
+                                       CASE WHEN A.WRHS_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-6, 'YYYYMMDD') AND #{STD_DT} AND SUBSTR(B.CTNR_CD,2,1) IN ('1','2') THEN B.CFM_QTY END AS CFM_QTY_2WEEK_OLD ,
+                                       CASE WHEN A.WRHS_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-6, 'YYYYMMDD') AND #{STD_DT} AND SUBSTR(B.CTNR_CD,2,1) IN ('3','4') THEN B.CFM_QTY END AS CFM_QTY_2WEEK_NEW 
+                                  FROM EPCM_CFM_MST A , 
+                                       EPCM_CFM_INFO B 
+                                 WHERE 1=1 
+                                       AND A.RTN_STAT_CD IN ('WC','CC','IB','AC','PA','PP','PC') 
+                                       AND A.WRHS_DOC_NO = B.WRHS_DOC_NO 
+                                       AND A.WRHS_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND #{STD_DT} 
+                                    UNION ALL 
+                                SELECT A.MFC_BIZRID, 
+                                       A.MFC_BIZRNO, 
+                                       B.CTNR_CD AS CTNR_CD, 
+                                       B.DRCT_RTRVL_QTY AS CFM_QTY_SUM , 
+                                       CASE WHEN SUBSTR(B.CTNR_CD,2,1) IN ('1','2') THEN B.DRCT_RTRVL_QTY END AS CFM_QTY_SUM_OLD ,
+                                       CASE WHEN SUBSTR(B.CTNR_CD,2,1) IN ('3','4') THEN B.DRCT_RTRVL_QTY END AS CFM_QTY_SUM_NEW ,
+                                       CASE WHEN A.DRCT_RTRVL_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-7, 'YYYYMMDD') THEN B.DRCT_RTRVL_QTY END AS CFM_QTY_1WEEK ,
+                                       CASE WHEN A.DRCT_RTRVL_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-6, 'YYYYMMDD') AND #{STD_DT} THEN B.DRCT_RTRVL_QTY END AS CFM_QTY_2WEEK ,
+                                       CASE WHEN A.DRCT_RTRVL_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-7, 'YYYYMMDD') AND SUBSTR(B.CTNR_CD,2,1) IN ('1','2') THEN B.DRCT_RTRVL_QTY END AS CFM_QTY_1WEEK_OLD ,
+                                       CASE WHEN A.DRCT_RTRVL_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-7, 'YYYYMMDD') AND SUBSTR(B.CTNR_CD,2,1) IN ('3','4') THEN B.DRCT_RTRVL_QTY END AS CFM_QTY_1WEEK_NEW ,
+                                       CASE WHEN A.DRCT_RTRVL_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-6, 'YYYYMMDD') AND #{STD_DT} AND SUBSTR(B.CTNR_CD,2,1) IN ('1','2') THEN B.DRCT_RTRVL_QTY END AS CFM_QTY_2WEEK_OLD ,
+                                       CASE WHEN A.DRCT_RTRVL_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-6, 'YYYYMMDD') AND #{STD_DT} AND SUBSTR(B.CTNR_CD,2,1) IN ('3','4') THEN B.DRCT_RTRVL_QTY END AS CFM_QTY_2WEEK_NEW 
+                                  FROM EPDM_DRCT_RTRVL_MST A , 
+                                       EPDM_DRCT_RTRVL_INFO B 
+                                 WHERE 1=1 
+                                       AND A.DRCT_RTRVL_DOC_NO = B.DRCT_RTRVL_DOC_NO 
+                                       AND A.DRCT_RTRVL_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND #{STD_DT} 
+                                    UNION ALL 
+                                SELECT A.MFC_BIZRID, 
+                                       A.MFC_BIZRNO, 
+                                       A.CTNR_CD AS CTNR_CD, 
+                                       A.EXCH_QTY AS CFM_QTY_SUM ,   
+                                       CASE WHEN SUBSTR(A.CTNR_CD,2,1) IN ('1','2') THEN A.EXCH_QTY END AS CFM_QTY_SUM_OLD ,
+                                       CASE WHEN SUBSTR(A.CTNR_CD,2,1) IN ('3','4') THEN A.EXCH_QTY END AS CFM_QTY_SUM_NEW ,
+                                       CASE WHEN A.EXCH_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-7, 'YYYYMMDD') THEN A.EXCH_QTY END AS CFM_QTY_1WEEK ,
+                                       CASE WHEN A.EXCH_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-6, 'YYYYMMDD') AND #{STD_DT} THEN A.EXCH_QTY END AS CFM_QTY_2WEEK ,
+                                       CASE WHEN A.EXCH_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-7, 'YYYYMMDD') AND SUBSTR(A.CTNR_CD,2,1) IN ('1','2') THEN A.EXCH_QTY END AS CFM_QTY_1WEEK_OLD ,
+                                       CASE WHEN A.EXCH_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-7, 'YYYYMMDD') AND SUBSTR(A.CTNR_CD,2,1) IN ('3','4') THEN A.EXCH_QTY END AS CFM_QTY_1WEEK_NEW ,
+                                       CASE WHEN A.EXCH_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-6, 'YYYYMMDD') AND #{STD_DT} AND SUBSTR(A.CTNR_CD,2,1) IN ('1','2') THEN A.EXCH_QTY END AS CFM_QTY_2WEEK_OLD ,
+                                       CASE WHEN A.EXCH_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-6, 'YYYYMMDD') AND #{STD_DT} AND SUBSTR(A.CTNR_CD,2,1) IN ('3','4') THEN A.EXCH_QTY END AS CFM_QTY_2WEEK_NEW 
+                                  FROM 
+                                       (SELECT A.REQ_MFC_BIZRID AS MFC_BIZRID , 
+                                              A.REQ_MFC_BIZRNO AS MFC_BIZRNO , 
+                                              B.REQ_CTNR_CD AS CTNR_CD , 
+                                              A.EXCH_CFM_DT, 
+                                              -1 * B.EXCH_QTY AS EXCH_QTY 
+                                         FROM EPDM_EXCH_MST A , 
+                                              EPDM_EXCH_INFO B 
+                                        WHERE 1=1 
+                                              AND A.EXCH_REQ_DOC_NO = B.EXCH_REQ_DOC_NO 
+                                              AND A.EXCH_STAT_CD = 'CC' 
+                                              AND A.EXCH_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND #{STD_DT} 
+                                           UNION ALL 
+                                       SELECT A.CFM_MFC_BIZRID AS MFC_BIZRID , 
+                                              A.CFM_MFC_BIZRNO AS MFC_BIZRNO , 
+                                              B.CFM_CTNR_CD AS CTNR_CD , 
+                                              A.EXCH_CFM_DT , 
+                                              B.EXCH_QTY 
+                                         FROM EPDM_EXCH_MST A , 
+                                              EPDM_EXCH_INFO B 
+                                        WHERE 1=1 
+                                              AND A.EXCH_REQ_DOC_NO = B.EXCH_REQ_DOC_NO 
+                                              AND A.EXCH_STAT_CD = 'CC' 
+                                              AND A.EXCH_CFM_DT BETWEEN TO_CHAR(TO_DATE(#{STD_DT},'YYYYMMDD')-13, 'YYYYMMDD') AND #{STD_DT} 
+                                       ) A 
+                                ) A, 
+                                (SELECT C.CTNR_CD, 
+                                       C.PRPS_CD, 
+                                       C.ALKND_CD 
+                                  FROM EPCN_STD_CTNR_CD C , 
+                                       (SELECT LANG_SE_CD 
+                                         FROM EPCN_LANG_CD 
+                                        WHERE USE_YN = 'Y' 
+                                              AND STD_YN = 'Y' 
+                                              AND ROWNUM = '1' 
+                                       ) F 
+                                 WHERE 1=1 
+                                       AND C.LANG_SE_CD = F.LANG_SE_CD 
+                                ) C 
+                          WHERE 1=1 
+                                AND A.CTNR_CD = C.CTNR_CD 
+                          GROUP BY A.MFC_BIZRID,A.MFC_BIZRNO,C.ALKND_CD   
+		                 )    
+		         ) B
+		         ON (A.MFC_BIZRID = B.MFC_BIZRID AND A.MFC_BIZRNO = B.MFC_BIZRNO AND A.ALKND_CD = B.ALKND_CD)
+		   GROUP BY ROLLUP(NVL(A.ALKND_CD, B.ALKND_CD), NVL(A.MFC_BIZRID, B.MFC_BIZRID)||';'||NVL(A.MFC_BIZRNO, B.MFC_BIZRNO) )
+		   ORDER BY NVL(A.ALKND_CD, B.ALKND_CD), EPCN_BIZR_SEL_ORD(NVL(A.MFC_BIZRID, B.MFC_BIZRID)||';'||NVL(A.MFC_BIZRNO, B.MFC_BIZRNO), '')
+	
+	</select>
+	
+</mapper>
+

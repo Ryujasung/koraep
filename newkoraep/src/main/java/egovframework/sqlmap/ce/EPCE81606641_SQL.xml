@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE81606641Mapper">
+    
+    <resultMap id="cntnMap" type="hashmap">
+        <result property="SVY_NO" column="SVY_NO" />
+        <result property="CNTN" column="CNTN"  javaType="java.lang.String" jdbcType="CLOB" />
+    </resultMap>
+
+    
+    <!-- 설문조사 설명 조회 -->
+    <select id="epce81606641_select" parameterType="map" resultMap="cntnMap">
+        /* EPCE81606641Mapper.epce81606641_select */
+        SELECT 
+            SVY_NO
+            ,NVL(CNTN,' ') AS CNTN
+        FROM EPCN_SVY_MST
+        WHERE 1=1
+            AND SVY_NO = #{SVY_NO}
+    </select>
+
+    
+	<!-- 선택설문 문항조회 -->
+	<select id="epce81606641_select1" parameterType="map" resultType="hashmap">
+		/* EPCE81606641Mapper.epce81606641_select1 */
+		SELECT 
+		    SVY_NO
+			,SVY_ITEM_NO
+			,ASK_CNTN
+			,ANSR_SE_CD
+			,'Y' AS SAVE_YN
+            ,NVL(SVY_ITEM_NO_NM,' ') AS SVY_ITEM_NO_NM
+		FROM EPCN_SVY_ITEM
+		WHERE 1=1
+			AND SVY_NO = #{SVY_NO}
+    </select>
+    
+    <!-- 조사문항저장 -->
+    <update id="epce81606641_update1" parameterType="map">
+    	/* EPCE81606641Mapper.epce81606641_update1 */
+    	MERGE INTO EPCN_SVY_ITEM
+    	USING DUAL 
+    	ON (SVY_NO = #{SVY_NO} AND SVY_ITEM_NO = #{SVY_ITEM_NO})
+    	WHEN MATCHED THEN
+    		UPDATE SET
+                SVY_ITEM_NO_NM = #{SVY_ITEM_NO_NM}
+                ,ASK_CNTN = #{ASK_CNTN}
+				,ANSR_SE_CD = #{ANSR_SE_CD}
+				,UPD_PRSN_ID = #{UPD_PRSN_ID}
+				,UPD_DTTM = SYSDATE
+		WHEN NOT MATCHED THEN
+			INSERT(
+				SVY_NO				,SVY_ITEM_NO				,ASK_CNTN
+				,ANSR_SE_CD			,REG_PRSN_ID				,REG_DTTM
+                ,SVY_ITEM_NO_NM
+			)VALUES(
+				#{SVY_NO}			,#{SVY_ITEM_NO}				,#{ASK_CNTN}
+				,#{ANSR_SE_CD}		,#{REG_PRSN_ID}				,SYSDATE
+                ,#{SVY_ITEM_NO_NM}
+			)
+    </update>
+    
+    <!-- 조사문항 삭제 -->
+    <delete id="epce81606641_delete1" parameterType="map">
+    	/* EPCE81606641Mapper.epce81606641_delete1 */
+    	DELETE FROM EPCN_SVY_ITEM
+    	WHERE SVY_NO = #{SVY_NO} 
+    		AND SVY_ITEM_NO = #{SVY_ITEM_NO}
+    </delete>
+    
+    <!-- 선택문항 옵션조회 -->
+	<select id="epce81606641_select2" parameterType="map" resultType="hashmap">
+		/* EPCE81606641Mapper.epce81606641_select2 */
+		SELECT 
+		    SVY_NO
+			,SVY_ITEM_NO
+			,OPT_NO
+			,OPT_CNTN
+			,REFN_IMG
+			,SUBSTR(REFN_IMG, INSTR(REFN_IMG, '/', -1) + 1) AS REFN_IMG_NM
+			,'/images/util/attach_ico.png' AS ICON
+			,'Y' AS SAVE_YN
+		FROM EPCN_SVY_ITEM_OPT
+		WHERE 1=1
+			AND SVY_NO = #{SVY_NO}
+			AND SVY_ITEM_NO = #{SVY_ITEM_NO}
+    </select>
+    
+    
+    <!-- 선택문항 옵션저장 -->
+    <update id="epce81606641_update2" parameterType="map">
+    	/* EPCE81606641Mapper.epce81606641_update2 */
+    	MERGE INTO EPCN_SVY_ITEM_OPT 
+    	USING DUAL 
+    	ON (SVY_NO = #{SVY_NO} AND SVY_ITEM_NO = #{SVY_ITEM_NO} AND OPT_NO = #{OPT_NO})
+    	WHEN MATCHED THEN
+    		UPDATE SET
+    			OPT_CNTN = #{OPT_CNTN}
+				,REFN_IMG = #{REFN_IMG}
+				,UPD_PRSN_ID = #{UPD_PRSN_ID}
+				,UPD_DTTM = SYSDATE
+		WHEN NOT MATCHED THEN
+			INSERT(
+				SVY_NO				,SVY_ITEM_NO			,OPT_NO
+				,OPT_CNTN			,REFN_IMG				,REG_PRSN_ID				
+				,REG_DTTM
+			)VALUES(
+				#{SVY_NO}			,#{SVY_ITEM_NO}				,#{OPT_NO}
+				,#{OPT_CNTN}		,#{REFN_IMG}				,#{REG_PRSN_ID}
+				,SYSDATE
+			)
+    </update>
+    
+    <!-- 선택문항의 옵션삭제 -->
+    <delete id="epce81606641_delete2" parameterType="map">
+    	/* EPCE81606641Mapper.epce81606641_delete2 */
+    	DELETE FROM EPCN_SVY_ITEM_OPT
+    	WHERE SVY_NO = #{SVY_NO} 
+    		AND SVY_ITEM_NO = #{SVY_ITEM_NO}
+    		AND OPT_NO = #{OPT_NO}
+    </delete>
+    
+    <!-- 설명 장 -->
+    <update id="epce81606641_update3" parameterType="map">
+        /* EPCE81606641Mapper.epce81606641_update3 */
+        UPDATE EPCN_SVY_MST 
+               SET CNTN = #{CNTN} ,
+               UPD_PRSN_ID = #{UPD_PRSN_ID} ,
+               UPD_DTTM = SYSDATE 
+         WHERE SVY_NO = #{SVY_NO} 
+    </update>
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE9000102Mapper">
+      
+    <!-- 지역별출고회수현황 조회  -->
+    <select id="epce9000102_select" parameterType="map" resultType="hashmap">
+       SELECT ROW_NUMBER()OVER(ORDER BY SUM(KEEP_QTY) DESC) AS PNO,
+				       EPCN_ETC_NM(AREA_CD , 'B010') AS AREA_NM,
+				       AREA_CD,
+				       SUM(KEEP_QTY) AS KEEP_QTY,
+				       SUM(KEEP_QTY) / (SELECT SUM(KEEP_QTY) FROM EPCM_PBOX_INFO
+				       WHERE RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')) * 100 AS KEEP_QTY_RT,
+				       SUM(DLIVY_QTY) AS DLIVY_QTY,
+				       SUM(DLIVY_QTY) / (SELECT SUM(DLIVY_QTY) FROM EPCM_PBOX_INFO
+				       WHERE RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')) * 100 AS DLIVY_QTY_RT,
+				       SUM(RTN_QTY) AS RTN_QTY,
+				       SUM(RTN_QTY) / (SELECT SUM(RTN_QTY) FROM EPCM_PBOX_INFO
+				       WHERE RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')) * 100 AS RTN_QTY_RT
+		FROM
+		EPCM_PBOX_INFO
+		WHERE RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+		GROUP BY AREA_CD
+    </select>
+    
+    <!-- 지역별_생산자별 출고회수현황 조회  -->
+    <select id="epce9000102_select2" parameterType="map" resultType="hashmap">
+           SELECT ROW_NUMBER()OVER(ORDER BY SUM(KEEP_QTY) DESC) AS PNO,
+				       EPCN_ETC_NM(AREA_CD , 'B010') AS AREA_NM,
+				       SUM(KEEP_QTY) AS KEEP_QTY,
+				       SUM(KEEP_QTY) / (SELECT SUM(KEEP_QTY) FROM EPCM_PBOX_INFO
+				       WHERE RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')) * 100 AS KEEP_QTY_RT,
+				       SUM(DLIVY_QTY) AS DLIVY_QTY,
+				       SUM(DLIVY_QTY) / (SELECT SUM(DLIVY_QTY) FROM EPCM_PBOX_INFO
+				       WHERE RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')) * 100 AS DILVY_QTY_RT,
+				       SUM(RTN_QTY) AS RTN_QTY,
+				       SUM(RTN_QTY) / (SELECT SUM(RTN_QTY) FROM EPCM_PBOX_INFO
+				       WHERE RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')) * 100 AS RTN_QTY_RT
+		FROM
+		EPCM_PBOX_INFO
+		WHERE RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+		AND AREA_CD = #{AREA_CD}
+		GROUP BY AREA_CD
+    </select>
+</mapper>

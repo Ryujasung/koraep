@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Province code="100" label="평양" symbol="Pyongyang"/>
+	<Province code="200" label="남포" symbol="Nampo"/>
+	<Province code="300" label="라선" symbol="Rason" horizontalCenterGap="-6" verticalCenterGap="-5"/>
+	<Province code="400" label="평안북도" symbol="Pyongbuk"/>
+	<Province code="500" label="평안남도" symbol="Pyongnam"/>
+	<Province code="600" label="자강도" symbol="Chagang"/>
+	<Province code="700" label="양강도" symbol="Ryanggang"/>
+	<Province code="800" label="함경북도" symbol="Hambuk" horizontalCenterGap="-5" verticalCenterGap="1"/>
+	<Province code="900" label="함경남도" symbol="Hamnam" horizontalCenterGap="1" verticalCenterGap="1"/>
+	<Province code="1000" label="황해북도" symbol="Hwangbuk" verticalCenterGap="-3"/>
+	<Province code="1100" label="황해남도" symbol="Hwangnam" horizontalCenterGap="5" verticalCenterGap="0"/>
+	<Province code="1200" label="강원도" symbol="Kangwon" horizontalCenterGap="4"/>
+	<Province code="1300" label="개성" symbol="Kaesong" horizontalCenterGap="4"/>
+</Map>

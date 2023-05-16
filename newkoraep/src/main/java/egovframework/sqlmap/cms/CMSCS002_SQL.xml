@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.cms.CMSCS002Mapper">
+
+	<!-- 	예금주조회결과상세 -->
+	<select id="cmscs002_select" resultType="hashmap">
+		SELECT	A.REG_IDX
+				,EPCN_ETC_NM(A.ACP_BANK_CD, 'S090') AS ACP_BANK_NM
+				,ECL_DECRYPT(A.ACP_ACCT_NO) AS ACP_ACCT_NO
+				,A.ACP_ACCT_DPSTR_NM
+				,A.SEL_AH_DPSTR_NM
+				,A.AH_RLT_CD
+				,EPCN_ETC_NM(A.AH_RLT_CD, 'D061') AS AH_RLT_NM
+				,A.TX_EXEC_CD
+				,EPCN_ETC_NM(A.TX_EXEC_CD, 'D062') AS TX_EXEC_NM
+				,A.PAY_BANK_CD
+				,A.PAY_DOC_NO
+				,A.STAC_DOC_NO
+				,A.EXCA_ISSU_SE_CD
+				,A.AH_RLT_MSG
+		FROM AH_RLT_LST_DET A
+		WHERE	A.REG_IDX = #{REG_IDX}
+		<if test='AH_RLT_CD_SEL != null and AH_RLT_CD_SEL != "" '>
+		  AND A.AH_RLT_CD = #{AH_RLT_CD_SEL}
+		</if>
+		ORDER BY A.IDX
+	</select>
+	
+	<!-- 	예금주조회결과상세 count -->
+	<select id="cmscs002_select_cnt" resultType="hashmap">
+		SELECT	A.REG_IDX
+			    ,A.REG_CNT
+			    ,B.AM_CNT
+			    ,B.AC_CNT
+			    ,B.AE_CNT
+			    ,B.AV_CNT
+			    ,B.CE_CNT
+		FROM
+		    AH_RLT_LST A
+		    ,(
+		        SELECT REG_IDX,
+		            COUNT(DECODE(D.AH_RLT_CD,'AM',1)) AS AM_CNT
+		            ,COUNT(DECODE(D.AH_RLT_CD,'AC',1)) AS AC_CNT
+		            ,COUNT(DECODE(D.AH_RLT_CD,'AE',1)) AS AE_CNT
+		            ,COUNT(DECODE(D.AH_RLT_CD,'AV',1)) AS AV_CNT
+		            ,COUNT(DECODE(D.AH_RLT_CD,'CE',1)) AS CE_CNT
+		        FROM
+		            AH_RLT_LST_DET D
+		        GROUP BY REG_IDX 
+		    ) B
+		WHERE A.REG_IDX = B.REG_IDX
+		AND A.REG_IDX = #{REG_IDX}
+		ORDER BY A.REG_DTTM DESC
+	</select>
+
+	<!-- 	이체실행상태 변경 - 지급 -->
+	<update id="cmscs002_update21" parameterType="hashmap">
+	    UPDATE AH_RLT_LST_DET
+	    SET TX_EXEC_CD = 'TY'
+	    	,UPD_PRSN_ID = #{UPD_PRSN_ID}
+			,UPD_DTTM = SYSDATE
+	    WHERE REG_IDX = #{REG_IDX} 
+       	<if test="LIST != null and LIST.size > 0" >
+				AND	PAY_DOC_NO IN
+	        <foreach collection="LIST" item="list" open="(" close=")" separator=",">
+	            #{list.PAY_DOC_NO}
+	        </foreach>
+		 </if>	
+	</update>
+	<update id="cmscs002_update22" parameterType="hashmap">     
+	    UPDATE EPGM_PAY_INFO_LST
+	    SET TX_EXEC_CD = #{TX_EXEC_CD}
+	    	,UPD_PRSN_ID = #{UPD_PRSN_ID}
+			,UPD_DTTM = SYSDATE
+	    WHERE 1=1
+   			 <if test="LIST != null and LIST.size > 0" >
+					AND	PAY_DOC_NO IN
+		        <foreach collection="LIST" item="list" open="(" close=")" separator=",">
+		            #{list.PAY_DOC_NO}
+		        </foreach>
+			 </if>	
+	    
+	</update>
+	
+	<!-- 	이체실행상태 실행상태 변경 - 정산 -->
+	<update id="cmscs002_update31" parameterType="hashmap">
+		UPDATE AH_RLT_LST_DET
+		SET TX_EXEC_CD = 'TY'
+			,UPD_PRSN_ID = #{UPD_PRSN_ID}
+			,UPD_DTTM = SYSDATE
+		WHERE REG_IDX = #{REG_IDX}
+		<if test="LIST != null and LIST.size > 0" >
+			AND	STAC_DOC_NO||EXCA_ISSU_SE_CD IN
+	        <foreach collection="LIST" item="list" open="(" close=")" separator=",">
+	            #{list.STAC_DOC_NO}||#{list.EXCA_ISSU_SE_CD}
+	        </foreach>
+		</if>
+	</update>
+	<update id="cmscs002_update32" parameterType="hashmap">
+	    UPDATE EPGM_EXCA_LST
+	    SET TX_EXEC_CD = #{TX_EXEC_CD}
+	    	,UPD_PRSN_ID = #{UPD_PRSN_ID}
+			,UPD_DTTM = SYSDATE
+	    WHERE 1=1
+    	<if test="LIST != null and LIST.size > 0" >
+			AND	STAC_DOC_NO||EXCA_ISSU_SE_CD IN
+	        <foreach collection="LIST" item="list" open="(" close=")" separator=",">
+	            #{list.STAC_DOC_NO}||#{list.EXCA_ISSU_SE_CD}
+	        </foreach>
+		</if>
+	</update>
+</mapper>

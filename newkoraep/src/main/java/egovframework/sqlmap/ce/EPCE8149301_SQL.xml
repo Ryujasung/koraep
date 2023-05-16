@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE8149301Mapper">
+
+	<resultMap id="popMap" type="hashmap">
+		<result property="POP_SEQ" column="POP_SEQ"  javaType="java.lang.String"  />
+		<result property="SBJ" column="SBJ" />
+		<result property="CNTN_SE" column="CNTN_SE"  />
+		<result property="CNTN" column="CNTN"  javaType="java.lang.String" jdbcType="CLOB" />
+		<result property="CNTN_IMG_FILE_NM" column="CNTN_IMG_FILE_NM"  />
+		<result property="POP_WID" column="POP_WID"  />
+		<result property="POP_HGT" column="POP_HGT"  />
+		<result property="VIEW_ST_DATE" column="VIEW_ST_DATE"  />
+		<result property="VIEW_END_DATE" column="VIEW_END_DATE"  />
+		<result property="LK_URL" column="LK_URL"  />
+		<result property="VIEW_LC_TOP" column="VIEW_LC_TOP"  />
+		<result property="VIEW_LC_LFT" column="VIEW_LC_LFT"  />
+		<result property="USE_YN" column="USE_YN"  />
+		<result property="REG_PRSN_ID" column="REG_PRSN_ID"  />
+		<result property="REG_DTTM" column="REG_DTTM"  />
+		<result property="UPD_PRSN_ID" column="UPD_PRSN_ID"  />
+		<result property="UPD_DTTM" column="UPD_DTTM"  />
+	</resultMap>
+	
+	<!-- 팝업 리스트 -->
+	<select id="epce8149301_select1" resultType="hashmap">
+		SELECT POP_SEQ
+				    ,SBJ
+				    ,DECODE(CNTN_SE, '1', '텍스트', '이미지') AS CNTN_SE_NM
+				    ,CNTN_SE
+					,CNTN_IMG_FILE_NM
+				    ,POP_WID
+				    ,POP_HGT
+				    ,TO_CHAR(TO_DATE(VIEW_ST_DATE, 'YYYYMMDD'), 'YYYY-MM-DD') VIEW_ST_DATE
+				    ,TO_CHAR(TO_DATE(VIEW_END_DATE, 'YYYYMMDD'), 'YYYY-MM-DD') VIEW_END_DATE
+				    ,LK_URL
+				    ,VIEW_LC_TOP
+					,VIEW_LC_LFT
+					,DECODE(USE_YN, 'Y', '사용', '사용안함') AS USE_YN
+		   FROM EPCN_POP_MGNT
+		WHERE 1 = 1
+			<if test='ADMIN_YN != "Y" '>
+				AND USE_YN = 'Y'
+				AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN VIEW_ST_DATE AND VIEW_END_DATE
+			</if>
+		ORDER BY POP_SEQ DESC
+	</select>
+
+	<!-- 팝업상세 조회 : 수정용 -->
+	<select id="epce8149301_select2" parameterType="java.lang.String" resultMap="popMap">
+	    SELECT 
+			    	POP_SEQ		
+			    	,SBJ				
+			    	,CNTN_SE
+					,CNTN			,CNTN_IMG_FILE_NM	,POP_WID
+					,POP_HGT		,TO_CHAR(TO_DATE(VIEW_ST_DATE, 'YYYYMMDD'), 'YYYY-MM-DD') VIEW_ST_DATE			
+					,TO_CHAR(TO_DATE(VIEW_END_DATE, 'YYYYMMDD'), 'YYYY-MM-DD') VIEW_END_DATE
+					,LK_URL			,VIEW_LC_TOP		,VIEW_LC_LFT
+					,USE_YN
+					,REG_PRSN_ID AS REG_ID
+		  FROM EPCN_POP_MGNT
+		WHERE POP_SEQ = #{POP_SEQ}
+	</select>
+	
+	<insert id="epce8149301_update1" parameterType="map">
+			INSERT INTO EPCN_POP_MGNT(
+		    	POP_SEQ		
+		    	,SBJ			,CNTN_SE
+				,CNTN			,CNTN_IMG_FILE_NM	,POP_WID
+				,POP_HGT		,VIEW_ST_DATE			,VIEW_END_DATE
+				,LK_URL			,VIEW_LC_TOP		,VIEW_LC_LFT
+				,USE_YN			,REG_PRSN_ID		,REG_DTTM
+	    	)VALUES(
+	    		(SELECT NVL(MAX(POP_SEQ), 0) + 1 FROM EPCN_POP_MGNT)
+	    		,#{SBJ}			,#{CNTN_SE}
+				,#{CNTN2:CLOB}		,#{CNTN_IMG_FILE_NM}	,#{POP_WID}
+				,#{POP_HGT}	,TO_CHAR(TO_DATE(#{VIEW_ST_DATE}, 'YYYY-MM-DD'), 'YYYYMMDD')		,TO_CHAR(TO_DATE(#{VIEW_END_DATE}, 'YYYY-MM-DD'), 'YYYYMMDD')
+				,#{LK_URL}		,#{VIEW_LC_TOP}			,#{VIEW_LC_LFT}
+				,#{USE_YN}		,#{REG_PRSN_ID}		,SYSDATE
+	    	)
+	</insert>
+	
+	<update id="epce8149301_update2" parameterType="map">
+    	UPDATE EPCN_POP_MGNT SET
+    		SBJ = #{SBJ}
+    		,CNTN_SE = #{CNTN_SE}
+    		,CNTN = #{CNTN2:CLOB}
+    		,CNTN_IMG_FILE_NM = (CASE WHEN NVL(#{CNTN_IMG_FILE_NM}, '') = '' THEN CNTN_IMG_FILE_NM ELSE #{CNTN_IMG_FILE_NM} END)
+    		,POP_WID = #{POP_WID}
+    		,POP_HGT = #{POP_HGT}
+    		,VIEW_ST_DATE = TO_CHAR(TO_DATE(#{VIEW_ST_DATE}, 'YYYY-MM-DD'), 'YYYYMMDD')
+    		,VIEW_END_DATE = TO_CHAR(TO_DATE(#{VIEW_END_DATE}, 'YYYY-MM-DD'), 'YYYYMMDD')
+    		,LK_URL = #{LK_URL}
+    		,VIEW_LC_TOP = #{VIEW_LC_TOP}
+    		,VIEW_LC_LFT = #{VIEW_LC_LFT}
+    		,USE_YN = #{USE_YN}
+    		,UPD_PRSN_ID = #{UPD_PRSN_ID}
+    		,UPD_DTTM = SYSDATE
+ 		WHERE 
+ 			POP_SEQ = #{POP_SEQ}
+	</update>
+	
+	
+	<delete id="epce8149301_delete" parameterType="java.lang.String">
+	    	DELETE FROM EPCN_POP_MGNT
+	    	WHERE POP_SEQ = #{POP_SEQ}
+	</delete>
+
+	<update id="epce8149301_update3" parameterType="map">
+			UPDATE EPCN_POP_MGNT
+			SET USE_YN = 'N'
+			WHERE POP_SEQ = #{POP_SEQ}
+	</update>
+	
+	<select id="popRegId" parameterType="HashMap" resultType="hashmap">
+	    SELECT 
+	    	   REG_PRSN_ID as REG_ID
+	      FROM EPCN_POP_MGNT
+	     WHERE 1=1
+	       AND POP_SEQ = #{POP_SEQ}
+    </select>
+	
+	
+</mapper>

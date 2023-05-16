@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF0130201Mapper">
+	
+	<!-- 생산자ERP입고정보 조회  -->
+	<select id="epmf0130201_select" parameterType="map" resultType="hashmap">
+	
+	<if test='excelYn == null or excelYn == "" '>
+			SELECT 
+					PNO
+				    , CFM_DT
+				    , BIZR_TP_CD
+				    , CUST_BIZRNM
+				    , CFM_QTY
+				    , CFM_GTN
+				    , CFM_FEE
+				    , CFM_FEE_STAX
+				    , AMT_TOT
+				    , MFC_BIZRNM
+				    , MFC_BRCH_NM
+				    , WHSDL_BIZRNO_ORI
+				    , WHSDL_BIZRID
+				    , WHSDL_BIZRNO
+				    , WHSDL_BRCH_ID
+				    , WHSDL_BRCH_NO
+				    , MFC_BIZRID
+				    , MFC_BIZRNO
+				    , MFC_BRCH_ID
+				    , MFC_BRCH_NO
+				    , DTL_SN
+			 FROM (
+	</if>
+				<![CDATA[
+				 		SELECT
+				 			ROW_NUMBER()OVER(ORDER BY A.CFM_DT DESC) AS PNO
+						    , A.CFM_DT
+						    , EPCN_ETC_NM(B.BIZR_TP_CD , 'B001') AS BIZR_TP_CD
+						    , B.CUST_BIZRNM
+						    , A.CFM_QTY
+						    , A.CFM_GTN
+						    , A.CFM_FEE
+						    , A.CFM_FEE_STAX
+						    , (CFM_GTN + CFM_FEE + CFM_FEE_STAX) AS AMT_TOT
+						    , B.MFC_BIZRNM
+						    , B.MFC_BRCH_NM
+						    , PI_DECRYPT(A.WHSDL_BIZRNO) AS WHSDL_BIZRNO
+						    , A.WHSDL_BIZRID
+						    , A.WHSDL_BIZRNO AS WHSDL_BIZRNO_ORI
+						    , A.WHSDL_BRCH_ID
+						    , A.WHSDL_BRCH_NO
+						    , A.MFC_BIZRID
+						    , A.MFC_BIZRNO
+						    , A.MFC_BRCH_ID
+						    , A.MFC_BRCH_NO
+						    , A.DTL_SN
+				]]>
+						FROM
+						    EPCN_MFC_CFM_INFO A
+						    , EPCN_DTSS_CUST_INFO B
+						WHERE 1=1
+							AND A.WHSDL_BIZRID = B.CUST_BIZRID
+							AND A.WHSDL_BIZRNO = B.CUST_BIZRNO
+							AND A.WHSDL_BRCH_ID = B.CUST_BRCH_ID
+							AND A.WHSDL_BRCH_NO	= B.CUST_BRCH_NO
+							AND A.MFC_BIZRID = B.MFC_BIZRID
+							AND A.MFC_BIZRNO = B.MFC_BIZRNO
+							AND A.MFC_BRCH_ID = B.MFC_BRCH_ID
+							AND A.MFC_BRCH_NO = B.MFC_BRCH_NO
+							AND A.CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+							AND A.MFC_BIZRID = #{MFC_BIZRID}
+							AND A.MFC_BIZRNO = #{MFC_BIZRNO}
+	    <if test='excelYn == null or excelYn == "" '>
+			            ORDER BY A.CFM_DT DESC
+			)  
+			WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+		</if>
+	</select>
+	       
+	<!--생산자ERP입고 정보-->   
+	<select id="epmf0130201_select_cnt" parameterType="map" resultType="hashmap">
+	 		SELECT     
+	 			COUNT(*) AS CNT
+	 			, SUM(A.CFM_QTY) AS CFM_QTY_TOT
+	 			, SUM(A.CFM_GTN) AS CFM_GTN_TOT
+	 			, SUM(A.CFM_FEE) AS CFM_FEE_TOT
+	 			, SUM(A.CFM_FEE_STAX) AS CFM_FEE_STAX_TOT
+	 			, (SUM(CFM_GTN) + SUM(CFM_FEE) + SUM(CFM_FEE_STAX)) AS AMT_TOT
+			FROM
+			    EPCN_MFC_CFM_INFO A
+			    , EPCN_DTSS_CUST_INFO B
+			WHERE 1=1
+				AND A.WHSDL_BIZRID = B.CUST_BIZRID
+				AND A.WHSDL_BIZRNO = B.CUST_BIZRNO
+				AND A.WHSDL_BRCH_ID = B.CUST_BRCH_ID
+				AND A.WHSDL_BRCH_NO	= B.CUST_BRCH_NO
+				AND A.MFC_BIZRID = B.MFC_BIZRID
+				AND A.MFC_BIZRNO = B.MFC_BIZRNO
+				AND A.MFC_BRCH_ID = B.MFC_BRCH_ID
+				AND A.MFC_BRCH_NO = B.MFC_BRCH_NO
+				AND A.CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+				AND A.MFC_BIZRID = #{MFC_BIZRID}
+				AND A.MFC_BIZRNO = #{MFC_BIZRNO}
+	</select>
+	
+	<!-- 생산자ERP입고정보 삭제 -->
+	<delete id="epmf0130201_delete"  parameterType="hashmap">
+		DELETE 
+		FROM EPCN_MFC_CFM_INFO
+		WHERE 1=1
+		    AND WHSDL_BIZRID = #{WHSDL_BIZRID}
+		    AND WHSDL_BIZRNO = #{WHSDL_BIZRNO_ORI}
+		    AND WHSDL_BRCH_ID = #{WHSDL_BRCH_ID}
+		    AND WHSDL_BRCH_NO = #{WHSDL_BRCH_NO}
+		    AND MFC_BIZRID = #{MFC_BIZRID}
+		    AND MFC_BIZRNO = #{MFC_BIZRNO}
+		    AND MFC_BRCH_ID = #{MFC_BRCH_ID}
+		    AND MFC_BRCH_NO = #{MFC_BRCH_NO}
+		    AND DTL_SN = #{DTL_SN}
+	</delete>
+	
+</mapper>
+

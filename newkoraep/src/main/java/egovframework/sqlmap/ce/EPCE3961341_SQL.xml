@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- API전송상세이력조회 -->
+
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3961341Mapper">
+
+  <!--API전송상세이력조회  -->  
+  <select id="epce3961341_select3" parameterType="map" resultType="hashmap">
+  
+		 SELECT 
+		 		PNO 
+				, REG_DT
+			    , REG_SN
+			    , REG_TM
+			    , PRAM
+			    , ANSR_RST
+			    , ANSR_TM
+		  FROM (
+	     	 <![CDATA[     
+			 SELECT ROW_NUMBER()OVER(ORDER BY REG_DT DESC , REG_SN ) AS PNO 
+					, TO_CHAR(TO_DATE(REG_DT, 'yyyymmdd'),'yyyy-mm-dd') AS REG_DT
+				    , REG_SN
+				    , '<a href="javascript:link();" class="gridLink">'||'확인'||'</a>' AS PRAM
+				    , ANSR_RST
+				    , SUBSTR(REG_TM,1,2) ||':'|| SUBSTR(REG_TM,3,2) ||':'|| SUBSTR(REG_TM,5,2) AS REG_TM
+			 		, SUBSTR(ANSR_TM,1,2) ||':'|| SUBSTR(ANSR_TM,3,2) ||':'|| SUBSTR(ANSR_TM,5,2) AS ANSR_TM
+			  ]]>			
+			   FROM 
+				 	EPCN_API_DTL_HIST
+			   WHERE 1=1
+					 AND REG_DT||SUBSTR(REG_TM,1,2) BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}    
+
+		 	   ORDER BY REG_DT DESC , REG_SN
+	      )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+  </select>
+
+  <!--API전송상세이력조회  -->  
+  <select id="epce3961341_select3_cnt" parameterType="map" resultType="int">
+	SELECT 
+		COUNT(1)
+	FROM 
+		EPCN_API_DTL_HIST
+	WHERE 1=1
+	AND REG_DT||SUBSTR(REG_TM,1,2) BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}
+  </select>
+	
+	<resultMap id="notiMap" type="hashmap">
+		<result property="PRAM" column="PRAM"  javaType="java.lang.String" jdbcType="CLOB" />
+	</resultMap>
+	
+	<select id="epce3961341_select4" parameterType="map" resultMap="notiMap">
+	   	SELECT
+			PRAM
+	    FROM  
+	    	EPCN_API_DTL_HIST
+	  	WHERE
+	  		REG_DT = #{REG_DT}
+			AND REG_SN  = #{REG_SN}
+  	</select>
+  
+</mapper>
+   

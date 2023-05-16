@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE8169998Mapper">
+    
+	<resultMap id="faqMap" type="hashmap">
+		<result property="FAQ_SEQ" column="FAQ_SEQ" />
+		<result property="SBJ" column="SBJ" />
+		<result property="CNTN_TP" column="CNTN_TP"  />
+		<result property="CNTN" column="CNTN"  javaType="java.lang.String" jdbcType="CLOB" />
+	</resultMap>
+    
+    <!-- FAQ 등록 순번 조회 -->
+    <select id="epce8169998_select1" resultType="hashmap">
+        SELECT NVL(MAX(FAQ_SEQ), 0)+1 AS FAQ_SEQ
+          FROM EPCN_FAQ
+    </select>
+    
+    <!-- FAQ 등록 -->
+    <insert id="epce8169998_update1" parameterType="map">
+        INSERT
+          INTO EPCN_FAQ
+          		(
+          			FAQ_SEQ,
+          			SBJ,
+          			CNTN_TP,
+          			CNTN,
+          			REG_PRSN_ID,
+          			REG_DTTM
+          		)
+          		VALUES
+          		(
+          			#{FAQ_SEQ},
+          			#{SBJ},
+          			#{CNTN_TP},
+          			#{CNTN2:CLOB},
+          			#{REG_PRSN_ID},
+          			SYSDATE
+          		)
+    </insert>
+    
+    <!-- FAQ 수정 -->
+    <update id="epce8169998_update3" parameterType="map">
+        UPDATE EPCN_FAQ
+           SET SBJ = #{SBJ},
+               CNTN = #{CNTN2:CLOB},
+               UPD_PRSN_ID = #{UPD_PRSN_ID},
+               UPD_DTTM = SYSDATE
+         WHERE FAQ_SEQ = #{FAQ_SEQ}
+    </update>
+    
+	<!-- FAQ 첨부파일 등록 -->
+	<insert id="epce8169998_update2" parameterType="map">
+	    INSERT
+	      INTO EPCN_FAQ_FILE
+	      		(
+	      			FAQ_SEQ,
+	      			REG_SN,
+	      			FILE_NM,
+	      			SAVE_FILE_NM,
+	      			FILE_PATH,
+	      			REG_PRSN_ID,
+	      			REG_DTTM
+	      		)
+	      		VALUES
+	      		(
+	      			#{FAQ_SEQ},
+	      			#{REG_SN},
+	      			#{FILE_NM},
+	      			#{SAVE_FILE_NM},
+	      			#{FILE_PATH},
+	      			#{REG_PRSN_ID},
+	      			SYSDATE
+	      		)
+	</insert>
+	
+	<!-- FAQ 상세조회 -->
+	<select id="epce8169998_select2" parameterType="map" resultMap="faqMap">
+	    SELECT FAQ_SEQ,
+	    	   SBJ,
+	    	   CNTN_TP,
+	    	   CNTN,
+	    	   TO_CHAR(REG_DTTM, 'YYYYMMDD') AS REG_DTTM,
+	    	   REG_PRSN_ID as REG_ID
+	      FROM EPCN_FAQ
+	     WHERE 1=1
+	       AND FAQ_SEQ = #{FAQ_SEQ}
+    </select>
+    
+	<!-- FAQ 첨부파일 조회 -->
+	<select id="epce8169998_select3" parameterType="map" resultType="hashmap">
+	    SELECT FAQ_SEQ,
+	    	   REG_SN,
+	    	   FILE_NM,
+	    	   SAVE_FILE_NM,
+	    	   FILE_PATH
+	      FROM EPCN_FAQ_FILE
+	     WHERE 1=1
+	       AND FAQ_SEQ = #{FAQ_SEQ}
+	     ORDER BY FAQ_SEQ, REG_SN
+	</select>
+	
+	<!-- 삭제할 FAQ 첨부파일 이름조회 -->
+	<select id="epce8169998_select4" parameterType="map" resultType="hashmap">
+	    SELECT FAQ_SEQ,
+	    	   REG_SN,
+	    	   FILE_NM,
+	    	   SAVE_FILE_NM,
+	    	   FILE_PATH
+	      FROM EPCN_FAQ_FILE
+	     WHERE 1=1
+	       AND FAQ_SEQ = #{FAQ_SEQ}
+	       AND REG_SN = #{REG_SN}
+	     ORDER BY FAQ_SEQ, REG_SN
+	</select>
+	
+	<!-- FAQ 첨부파일 이름삭제 -->
+	<delete id="epce8169998_delete" parameterType="map">
+	    DELETE
+	      FROM EPCN_FAQ_FILE
+	     WHERE 1=1
+	       AND FAQ_SEQ = #{FAQ_SEQ}
+	       AND REG_SN = #{REG_SN}
+	</delete>
+	
+	<!-- FAQ 기존 첨부파일 리스트 조회 -->
+	<select id="epce8169998_select5" parameterType="map" resultType="hashmap">
+	    SELECT FAQ_SEQ,
+	    	   FILE_NM,
+	    	   SAVE_FILE_NM,
+	    	   FILE_PATH
+	      FROM EPCN_FAQ_FILE
+	     WHERE 1=1
+	       AND FAQ_SEQ = #{FAQ_SEQ}
+	     ORDER BY REG_SN
+	</select>
+	
+	<!-- FAQ 기존 첨부파일 순번 재조정 -->
+	<update id="epce8169998_update4" parameterType="map">
+	    UPDATE EPCN_FAQ_FILE
+	       SET REG_SN = #{REG_SN}
+	     WHERE 1=1
+	       AND FAQ_SEQ = #{FAQ_SEQ}
+	       AND FILE_NM = #{FILE_NM}
+	       AND SAVE_FILE_NM = #{SAVE_FILE_NM}
+	       AND FILE_PATH = #{FILE_PATH}
+	</update>
+	
+	<select id="faqRegId" parameterType="HashMap" resultType="hashmap">
+	    SELECT 
+	    	   REG_PRSN_ID as REG_ID
+	      FROM EPCN_FAQ
+	     WHERE 1=1
+	       AND FAQ_SEQ = #{FAQ_SEQ}
+    </select>
+    
+</mapper>

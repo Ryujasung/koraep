@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- API전송이력조회 -->
+
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3973901Mapper">
+
+	<!--메뉴명조회 -->
+	<select id="epce3973901_select" parameterType="map" resultType="hashmap">
+		SELECT
+			 A.MENU_NM
+			,A.MENU_CD
+		FROM EPCN_MENU A
+		 JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+		 ON A.LANG_SE_CD = C.LANG_SE_CD
+		
+		WHERE 1=1
+		<if test="MENU_GRP_CD != ''">
+		AND	MENU_GRP_CD = #{MENU_GRP_CD}
+		AND  MENU_LVL= '2'
+		</if>
+	</select>
+
+    <!--버튼명조회 -->
+   <select id="epce3973901_select2" parameterType="map" resultType="hashmap">
+	SELECT
+	  A.BTN_CD
+	, A.BTN_NM
+	, A.BTN_SE_CD
+	, A.BTN_LC_SE
+
+	FROM EPCN_BTN A
+	 JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') B
+	 ON A.LANG_SE_CD = B.LANG_SE_CD
+	 JOIN EPCN_MENU C       
+	 ON  A.MENU_CD = C.MENU_CD
+	   
+	WHERE 1=1
+	AND    C.MENU_GRP_CD = #{MENU_GRP_CD}
+   <if test="MENU_CD != ''">
+	AND   ( C.MENU_CD = #{MENU_CD} OR C.UP_MENU_CD =#{MENU_CD} )
+   </if>
+   </select>
+
+  <!--API전송이력조회  -->  
+  <select id="epce3973901_select3" parameterType="map" resultType="hashmap">
+  
+	  	<if test='excelYn == null or excelYn == "" '>
+			 SELECT 
+			 			PNO 
+			 			, LK_API_CD
+						, ACSS_IP 
+			            , ERR_YN
+						, ERR_MSG	
+			            , ACPT_ERR 
+					    , REG_DTTM
+					    , BIZRNM
+					    , BIZRNO
+		                , REG_SN
+		                , PRAM
+		                , REG_DT		
+		                , ERP_NM    
+			  FROM (
+			</if>
+	  
+	     <![CDATA[ 
+			  SELECT ROW_NUMBER()OVER(ORDER BY A.REG_DTTM DESC  ) AS PNO 
+						, EPCN_ETC_NM(A.LK_API_CD, 'S003') AS LK_API_CD
+						, A.ACSS_IP 
+			            , EPCN_ETC_NM(A.ERR_YN, 'S009') AS ERR_YN
+						, A.ERR_MSG	
+			            , A.ACPT_ERR 
+					    , TO_CHAR(TO_DATE(SUBSTR(A.REG_DTTM, 1,14), 'YYYYMMDDHH24MISS'),'YYYY-MM-DD HH24:MI:SS') AS REG_DTTM
+					    , B.BIZRNM
+					    , ECL_DECRYPT(BIZRNO) AS BIZRNO
+              			, A.REG_SN
+  				        , DECODE(A.REG_SN, NULL, '', '<a href="javascript:link();" class="gridLink">'||'확인'||'</a>') AS PRAM		
+  				        , A.REG_DT			    
+  				        ,DECODE(B.erp_cd,'E99',B.ERP_CD_NM,(SELECT ETC_CD_NM FROM EPCN_ETC_CD C WHERE ETC_CD = B.erp_cd)) AS ERP_NM   
+			  ]]>
+			FROM 
+				 	EPCN_API_HIST A
+	                , EPCN_BIZR_INFO B
+		 WHERE 1=1
+	   		 AND A.BIZR_ISSU_KEY = B.BIZR_ISSU_KEY
+	   		 
+			 AND A.REG_DT||SUBSTR(A.REG_TM,1,2)     BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}    
+
+	
+	    <if test='LK_API_CD_SEL != null and LK_API_CD_SEL != "" '>
+		    AND  A.LK_API_CD =  #{LK_API_CD_SEL}   
+	    </if>
+	    <if test='BIZRNM_SEL != null and BIZRNM_SEL != "" '>
+		    AND  B.BIZRNM =  #{BIZRNM_SEL}   
+	    </if>
+	    <if test='BIZRNO != null and BIZRNO != "" '>
+		    AND  B.BIZRNO =  ECL_ENCRYPT(#{BIZRNO})   
+	    </if>
+		
+		 ORDER BY A.REG_DTTM DESC 
+	  
+	  <if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+         </if>	
+	  
+  </select>
+
+	<!--API전송이력조회  -->  
+  <select id="epce3973901_select3_cnt" parameterType="map" resultType="int">
+
+		  SELECT COUNT(1)
+			FROM EPCN_API_HIST A
+	                 ,EPCN_BIZR_INFO B
+		 WHERE 1=1
+	   		 AND A.BIZR_ISSU_KEY = B.BIZR_ISSU_KEY
+	   		 
+			 AND A.REG_DT||SUBSTR(A.REG_TM,1,2)     BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}
+	
+	    <if test='LK_API_CD != null and LK_API_CD != "" '>
+		    AND  A.LK_API_CD =  #{LK_API_CD_SEL}   
+	    </if>
+	    <if test='BIZRNM != null and BIZRNM != "" '>
+		    AND  B.BIZRNM =  #{BIZRNM_SEL}   
+	    </if>
+	    <if test='BIZRNO != null and BIZRNO != "" '>
+		    AND  B.BIZRNO =  ECL_ENCRYPT(#{BIZRNO})   
+	    </if>
+	  
+  </select>
+	
+   <resultMap id="notiMap" type="hashmap">
+		<result property="ERR_CD" column="ERR_CD" />
+		<result property="ERR_MSG" column="ERR_MSG" />
+		<result property="ACPT_ERR" column="ACPT_ERR"  />
+		<result property="PRAM" column="PRAM"  javaType="java.lang.String" jdbcType="CLOB" />
+	</resultMap>
+
+  <!--API전송이력조회 상세조회  -->  
+  <select id="epce3973901_select4" parameterType="map" resultMap="notiMap">
+	   SELECT
+					ERR_CD, 
+					ERR_MSG, 
+					ACPT_ERR, 
+					PRAM
+	    FROM  EPCN_ERR_HIST
+	  WHERE 1=1
+	      AND REG_DTTM =#{REG_DTTM}
+  </select>
+
+
+
+   <select id="epce3973901_excel" parameterType="map" resultType="hashmap">
+  
+	     <![CDATA[ 
+			  SELECT ROW_NUMBER()OVER(ORDER BY A.REG_DTTM DESC  ) AS PNO 
+						, EPCN_ETC_NM(A.LK_API_CD, 'S003') AS LK_API_CD
+						, A.ACSS_IP 
+			            , EPCN_ETC_NM(A.ERR_YN, 'S009') AS ERR_YN
+						, A.ERR_MSG	
+			            , A.ACPT_ERR 
+					    , TO_CHAR(TO_DATE(SUBSTR(A.REG_DTTM, 1,14), 'YYYYMMDDHH24MISS'),'YYYY-MM-DD HH24:MI:SS') AS REG_DTTM
+					    , B.BIZRNM
+              			, A.REG_SN
+  				        , DECODE(A.REG_SN, NULL, '', '<a href="javascript:link();" class="gridLink">'||'확인'||'</a>') AS PRAM		
+  				        , A.REG_DT
+  				        , DECODE(B.erp_cd,'E99',B.ERP_CD_NM,(SELECT ETC_CD_NM FROM EPCN_ETC_CD C WHERE ETC_CD = B.erp_cd)) AS ERP_NM   			    
+			  ]]>
+			FROM 
+				 	EPCN_API_HIST A
+	                , EPCN_BIZR_INFO B
+		 WHERE 1=1
+	   		 AND A.BIZR_ISSU_KEY = B.BIZR_ISSU_KEY
+	   		 
+			 AND A.REG_DT||SUBSTR(A.REG_TM,1,2)     BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}    
+
+	
+	    <if test='LK_API_CD_SEL != null and LK_API_CD_SEL != "" '>
+		    AND  A.LK_API_CD =  #{LK_API_CD_SEL}   
+	    </if>
+	    <if test='BIZRNM_SEL != null and BIZRNM_SEL != "" '>
+		    AND  B.BIZRNM =  #{BIZRNM_SEL}   
+	    </if>
+	    <if test='BIZRNO != null and BIZRNO != "" '>
+		    AND  B.BIZRNO =  ECL_ENCRYPT(#{BIZRNO})   
+	    </if>
+		
+		 ORDER BY A.REG_DTTM DESC 
+	  
+
+  </select>
+</mapper>
+   

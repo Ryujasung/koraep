@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE0164301Mapper">
+	
+	 <!--기준수수료 조회 현재 날짜 이후꺼까지 같이 조회    &lt; 은   < 랑 같은뜻    -->
+	 <select id="epce0164301_select" parameterType="map" resultType="hashmap">
+
+	 		<if test='excelYn == null or excelYn == "" '>
+				SELECT 
+								* 
+				FROM				
+					(
+			</if>
+						SELECT 
+									 ROW_NUMBER()OVER(ORDER BY B.APLC_ST_DT DESC,D.SEL_ORD,D.BIZRNM ,A.MFC_BRCH_NM , E.SEL_ORD,E.BIZRNM,C.CTNR_NM) AS PNO
+									 ,A.MFC_BRCH_ID
+									 ,A.MFC_BRCH_NO
+									 ,A.MFC_BIZRID
+							         ,A.MFC_BIZRNO
+									 ,A.CUST_BRCH_ID
+									 ,A.CUST_BRCH_NO
+									 ,A.CUST_BIZRID
+							         ,PI_DECRYPT(A.CUST_BIZRNO) AS CUST_BIZRNO
+							         ,EPCN_ETC_NM(A.BIZR_TP_CD,'B001') AS BIZR_TP_NM
+							         ,A.BIZR_TP_CD
+							         ,A.MFC_BIZRNM
+							         ,A.MFC_BRCH_NM
+							         ,A.CUST_BIZRNM
+							         ,A.CUST_BRCH_NM
+									 ,B.LANG_SE_CD
+							         ,B.APLC_NO
+									 ,B.WHSL_FEE
+							         ,B.RTL_FEE
+							         ,B.CTNR_CD
+							         ,B.REG_SN
+							         ,B.INDV_SN
+							         ,B.APLC_ST_DT
+							         ,B.APLC_END_DT
+							         ,C.CTNR_NM
+									 ,CASE 
+							           WHEN		B.APLC_ST_DT IS NOT NULL 
+							           AND		B.APLC_END_DT IS NOT NULL 
+							           THEN TO_CHAR(TO_DATE(B.APLC_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(B.APLC_END_DT,'YYYYMMDD'),'YYYY-MM-DD') 
+							           ELSE '' 
+							         END AS APLC_DT
+							          ,CASE 
+							           WHEN		TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN B.APLC_ST_DT AND B.APLC_END_DT 
+							           THEN 'Y'
+							           ELSE 'N' 
+							         END AS Y_N
+							         ,EPCN_ETC_NM(STD_FEE_YN,'S007') AS STD_FEE_YN_NM
+							         ,STD_FEE_YN
+							         
+						FROM    EPCN_DTSS_CUST_INFO A
+						      		,EPCN_INDV_FEE_MGNT B 
+						      		,EPCN_STD_CTNR_CD C
+						      		,EPCN_BIZR_INFO D
+						      		,EPCN_BIZR_INFO E
+						      		
+						WHERE 1=1
+						AND	A.MFC_BIZRID			=  D.BIZRID
+				   		AND	A.MFC_BIZRNO		=  D.BIZRNO
+				   		AND	A.CUST_BIZRID		=  E.BIZRID
+				   		AND	A.CUST_BIZRNO		=  E.BIZRNO
+						AND	A.MFC_BRCH_ID		=  B.MFC_BRCH_ID (+)
+				   		AND	A.MFC_BRCH_NO		=  B.MFC_BRCH_NO(+)
+				   		AND	A.MFC_BIZRID			=  B.MFC_BIZRID(+)
+				   		AND	A.MFC_BIZRNO		=  B.MFC_BIZRNO(+)
+				   		AND	A.CUST_BRCH_ID		=  B.CUST_BRCH_ID(+)
+				   		AND	A.CUST_BRCH_NO	=  B.CUST_BRCH_NO(+)
+				   		AND	A.CUST_BIZRID		=  B.CUST_BIZRID(+)
+				   		AND	A.CUST_BIZRNO		=  B.CUST_BIZRNO(+)
+				   		AND B.CTNR_CD             =  C.CTNR_CD (+)
+				   		AND B.LANG_SE_CD			=  C.LANG_SE_CD (+)
+						AND (	TO_CHAR(SYSDATE, 'YYYYMMDD') >= B.APLC_ST_DT
+							   AND TO_CHAR(SYSDATE, 'YYYYMMDD') &lt;= B.APLC_END_DT)
+						<if test="STD_FEE_YN !=''  and  STD_FEE_YN !=null">
+						AND B.STD_FEE_YN 			=#{STD_FEE_YN}  
+						</if>	   
+				   		<if test="BIZRNO !=''  and  BIZRNO !=null">
+				   		AND	A.MFC_BIZRNO      	=	#{BIZRNO}  
+				   		AND  A.MFC_BIZRID 		= #{BIZRID}
+						</if>
+				   		<if test="MFC_BRCH_ID !=''  and  MFC_BRCH_ID !=null">
+				   		AND	A.MFC_BRCH_ID   	=	#{MFC_BRCH_ID}
+						AND	A.MFC_BRCH_NO   	=	#{MFC_BRCH_NO}
+						</if>
+						<if test="CTNR_CD !=''  and  CTNR_CD !=null ">
+						AND	B.CTNR_CD     		=	#{CTNR_CD}
+						</if>
+						<if test="BIZR_TP_CD !=''  and  BIZR_TP_CD !=null">
+						AND	A.BIZR_TP_CD     		=	#{BIZR_TP_CD}
+						</if>
+						<if test="CUST_BIZRNM !='' and  CUST_BIZRNM !=null ">
+						 AND  A.CUST_BIZRNM LIKE '%' || #{CUST_BIZRNM} || '%'
+						</if>
+						 <if test="CUST_BIZRNO !=''  and  CUST_BIZRNO !=null">
+						AND	A.CUST_BIZRNO    	=	ECL_ENCRYPT(#{CUST_BIZRNO})
+						</if>
+						ORDER BY B.APLC_ST_DT DESC,D.SEL_ORD,D.BIZRNM ,A.MFC_BRCH_NM , E.SEL_ORD,E.BIZRNM,C.CTNR_NM
+			<if test='excelYn == null or excelYn == "" '>
+			)
+			WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+		</if>				
+
+	</select> 
+	
+	 <!--조회 카운트  -->
+	 <select id="epce0164301_select_cnt" parameterType="map" resultType="int">
+						SELECT 
+								COUNT(1)
+						FROM    EPCN_DTSS_CUST_INFO A
+						      		,EPCN_INDV_FEE_MGNT B 
+						      		,EPCN_STD_CTNR_CD C
+						WHERE 1=1
+						AND	A.MFC_BRCH_ID		=  B.MFC_BRCH_ID (+)
+				   		AND	A.MFC_BRCH_NO		=  B.MFC_BRCH_NO(+)
+				   		AND	A.MFC_BIZRID			=  B.MFC_BIZRID(+)
+				   		AND	A.MFC_BIZRNO		=  B.MFC_BIZRNO(+)
+				   		AND	A.CUST_BRCH_ID		=  B.CUST_BRCH_ID(+)
+				   		AND	A.CUST_BRCH_NO	=  B.CUST_BRCH_NO(+)
+				   		AND	A.CUST_BIZRID		=  B.CUST_BIZRID(+)
+				   		AND	A.CUST_BIZRNO		=  B.CUST_BIZRNO(+)
+				   		AND B.CTNR_CD             =  C.CTNR_CD (+)
+				   		AND B.LANG_SE_CD			=  C.LANG_SE_CD (+)
+						AND (	TO_CHAR(SYSDATE, 'YYYYMMDD') >= B.APLC_ST_DT
+							   AND TO_CHAR(SYSDATE, 'YYYYMMDD') &lt;= B.APLC_END_DT)
+						<if test="STD_FEE_YN !=''  and  STD_FEE_YN !=null">
+						AND B.STD_FEE_YN 			=#{STD_FEE_YN}  
+						</if>	   
+				   		<if test="BIZRNO !=''  and  BIZRNO !=null">
+				   		AND	A.MFC_BIZRNO      	=	#{BIZRNO}  
+				   		AND  A.MFC_BIZRID 		= #{BIZRID}
+				   		
+						</if>
+				   		<if test="MFC_BRCH_ID !=''  and  MFC_BRCH_ID !=null">
+				   		AND	A.MFC_BRCH_ID   	=	#{MFC_BRCH_ID}
+						AND	A.MFC_BRCH_NO   	=	#{MFC_BRCH_NO}
+						</if>
+						<if test="CTNR_CD !=''  and  CTNR_CD !=null ">
+						AND	B.CTNR_CD     		=	#{CTNR_CD}
+						</if>
+						<if test="BIZR_TP_CD !=''  and  BIZR_TP_CD !=null">
+						AND	A.BIZR_TP_CD     		=	#{BIZR_TP_CD}
+						</if>
+						<if test="CUST_BIZRNM !='' and  CUST_BIZRNM !=null ">
+						 AND  A.CUST_BIZRNM LIKE '%' || #{CUST_BIZRNM} || '%'
+						</if>
+						 <if test="CUST_BIZRNO !=''  and  CUST_BIZRNO !=null">
+						AND	A.CUST_BIZRNO    	=	ECL_ENCRYPT(#{CUST_BIZRNO})
+						</if>
+	</select> 
+	
+	 <!-- 개별취급수수료 삭제가능한지  조회 -->
+	<select id="epce0164301_select2" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)  AS NCNT 
+		FROM EPCN_INDV_FEE_MGNT
+		WHERE   1=1
+		AND  CTNR_CD			=  #{CTNR_CD}
+		AND  LANG_SE_CD	    =  #{LANG_SE_CD}
+		AND	 REG_SN            =  #{REG_SN}
+		AND 	INDV_SN			=  #{INDV_SN}
+		AND  APLC_ST_DT 		&lt;= TO_CHAR(SYSDATE,'YYYYMMDD')
+	</select>
+	
+	<!-- 개별취급수수료  삭제 -->
+	<delete id="epce0164301_delete" parameterType="map">
+	
+		DELETE   FROM	EPCN_INDV_FEE_MGNT
+		WHERE 1=1
+		AND  CTNR_CD			=  #{CTNR_CD}
+		AND  LANG_SE_CD	    =  #{LANG_SE_CD}
+		AND	 REG_SN            =  #{REG_SN}
+		AND 	INDV_SN			=  #{INDV_SN}
+	
+	</delete>
+	
+	<!-- 개별취급수수료 이력 삭제 -->	
+	<delete id="epce0164301_delete2" parameterType="map">
+		DELETE   FROM	EPCN_INDV_FEE_ALT_HIST
+		WHERE 1=1
+		AND  CTNR_CD			=  #{CTNR_CD}
+		AND  LANG_SE_CD	    =  #{LANG_SE_CD}
+		AND	 REG_SN            =  #{REG_SN}
+		AND 	INDV_SN			=  #{INDV_SN}
+	
+	</delete>
+	
+     <!--거래처구분 코드  조회 -->
+	<select id="epce0164331_select" parameterType="map" resultType="hashmap">
+		SELECT 
+					ETC_CD
+					,ETC_CD_NM
+		FROM 
+		           EPCN_ETC_CD 
+		WHERE   1=1
+		AND	GRP_CD ='B001'
+		AND ETC_CD IN ('W1','W2','R1','R2')
+	</select>
+
+	<!-- 개별취급수수료등록  직매장/공장 조회 -->  <!-- &amp;   == &  -->
+    <select id="epce0164331_select2" parameterType="map" resultType="hashmap">
+    
+	    SELECT 
+			        BRCH_ID
+			       ,BRCH_NO
+			       ,BRCH_NM
+			       ,BRCH_ID||';'||BRCH_NO AS BRCH_CD
+	    FROM 
+	    			EPCN_BRCH_INFO    
+	    WHERE   1=1
+	    <if test="BIZRNO !='' and BIZRNO !=null ">
+	    AND   	 BIZRNO = #{BIZRNO}
+	    AND   	 BIZRID 	 = #{BIZRID}
+	    </if>
+    </select>
+
+	<!-- 개별취급수수료등록 기준취급수수료 선택 부분   적용기간 조회 -->
+    <select id="epce0164331_select3" parameterType="map" resultType="hashmap">
+
+		SELECT
+					CTNR_CD,
+					APLC_ST_DT, APLC_END_DT
+					,( APLC_ST_DT||'N'||APLC_END_DT) AS APLC_DT_CD
+					,CASE
+						WHEN APLC_ST_DT IS NOT NULL
+						AND   APLC_END_DT IS NOT NULL
+						THEN
+						TO_CHAR(TO_DATE(APLC_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(APLC_END_DT,'YYYYMMDD'),'YYYY-MM-DD')
+						ELSE ''
+						END AS APLC_DT
+		FROM 	EPCN_STD_FEE_MGNT A
+					JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+					ON   A.LANG_SE_CD = E.LANG_SE_CD
+		WHERE 1=1
+	    AND 	  TO_CHAR(SYSDATE, 'YYYYMMDD') &lt;= A.APLC_END_DT
+	    AND    CTNR_CD = #{CTNR_CD}
+    
+    </select>
+    
+    <!--개별취급수수료등록 기준취급수수료 선택  조회 -->
+    <select id="epce0164331_select4" parameterType="map" resultType="hashmap">
+				        SELECT 
+				        			
+										A.CTNR_CD 
+										,A.LANG_SE_CD
+										,A.REG_SN
+										,A.STD_FEE
+										,A.PSBL_ST_FEE
+										,A.PSBL_END_FEE
+										,A.STD_WHSL_FEE
+										,A.PSBL_ST_WHSL_FEE
+										,A.PSBL_END_WHSL_FEE
+										,A.STD_RTL_FEE
+										,A.PSBL_ST_RTL_FEE
+										,A.PSBL_END_RTL_FEE
+										,A.APLC_ST_DT
+										,A.APLC_END_DT 
+										,B.CTNR_NM
+										,NVL2(A.PSBL_ST_FEE, A.PSBL_ST_FEE||' ~ '||A.PSBL_END_FEE,'') AS PSBL_FEE
+										,NVL2(A.PSBL_ST_WHSL_FEE, A.PSBL_ST_WHSL_FEE||' ~ '||A.PSBL_END_WHSL_FEE,'') AS PSBL_WHSL_FEE
+										,NVL2(A.PSBL_ST_RTL_FEE, A.PSBL_ST_RTL_FEE||' ~ '||A.PSBL_END_RTL_FEE,'') AS	PSBL_RTL_FEE
+										
+										,CASE 
+								           WHEN A.APLC_ST_DT IS NOT NULL 
+								           AND   A.APLC_END_DT IS NOT NULL 
+								           THEN TO_CHAR(TO_DATE(A.APLC_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(A.APLC_END_DT,'YYYYMMDD'),'YYYY-MM-DD') 
+								           ELSE '' 
+								         END AS APLC_DT
+					   FROM  EPCN_STD_FEE_MGNT		A   
+					            , EPCN_STD_CTNR_CD		B
+					            , EPCN_ETC_CD				C   
+					            ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+								   	          
+						WHERE 1=1
+						AND A.LANG_SE_CD	= E.LANG_SE_CD
+						AND A.CTNR_CD			= B.CTNR_CD
+						AND B.MFC_SE_CD    	= C.ETC_CD
+						AND A.CTNR_CD 		= #{CTNR_CD}
+						AND C.RSV_ITEM2		IN(#{BIZRNO} ,'0000000000')
+						AND A.APLC_ST_DT 	= #{APLC_ST_DT}
+						AND A.APLC_END_DT 	= #{APLC_END_DT}
+    </select>
+    
+	<!--개별취급수수료등록 일괄적용대상 설정  조회 -->
+    <select id="epce0164331_select5" parameterType="map" resultType="hashmap">
+		SELECT 
+					  A.MFC_BRCH_ID
+					 ,A.MFC_BRCH_NO
+					 ,A.MFC_BIZRID
+			         ,ECL_DECRYPT(A.MFC_BIZRNO) AS MFC_BIZRNO
+					 ,A.CUST_BRCH_ID
+					 ,A.CUST_BRCH_NO
+					 ,A.CUST_BIZRID
+			         ,ECL_DECRYPT(A.CUST_BIZRNO) AS CUST_BIZRNO
+			         ,EPCN_ETC_NM(BIZR_TP_CD,'B001') AS BIZR_TP_NM
+			         ,A.BIZR_TP_CD
+			         ,A.MFC_BIZRNM
+			         ,A.MFC_BRCH_NM
+			         ,A.CUST_BIZRNM
+			         ,A.CUST_BRCH_NM
+			         ,B.LANG_SE_CD
+			         ,B.REG_SN
+			         ,B.APLC_NO
+					 ,B.APLC_ST_DT
+					 ,B.APLC_END_DT
+					 ,B.WHSL_FEE
+			         ,B.RTL_FEE
+			         ,B.CTNR_CD
+			         ,B.INDV_SN
+			         ,C.CTNR_NM
+					 ,CASE 
+			           WHEN		B.APLC_ST_DT IS NOT NULL 
+			           AND		B.APLC_END_DT IS NOT NULL 
+			           THEN TO_CHAR(TO_DATE(B.APLC_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(B.APLC_END_DT,'YYYYMMDD'),'YYYY-MM-DD') 
+			           ELSE '' 
+			         END AS APLC_DT
+		FROM    EPCN_DTSS_CUST_INFO A
+		      		,EPCN_INDV_FEE_MGNT B 
+		      		,EPCN_STD_CTNR_CD C
+		      		
+		WHERE 1=1
+		AND	A.MFC_BRCH_ID		=  B.MFC_BRCH_ID (+)
+   		AND	A.MFC_BRCH_NO		=  B.MFC_BRCH_NO(+)
+   		AND	A.MFC_BIZRID			=  B.MFC_BIZRID(+)
+   		AND	A.MFC_BIZRNO		=  B.MFC_BIZRNO(+)
+   		AND	A.CUST_BRCH_ID		=  B.CUST_BRCH_ID(+)
+   		AND	A.CUST_BRCH_NO	=  B.CUST_BRCH_NO(+)
+   		AND	A.CUST_BIZRID		=  B.CUST_BIZRID(+)
+   		AND	A.CUST_BIZRNO		=  B.CUST_BIZRNO(+)
+   		AND	A.MFC_BIZRNO      	=	#{BIZRNO}
+   		AND	A.MFC_BIZRID      	=	#{BIZRID}
+   		AND B.CTNR_CD             =  C.CTNR_CD (+)
+   		AND  B.STD_FEE_YN(+)     	= 'N'
+   		<if test='CTNR_CD  != "" '>
+   			 AND	B.CTNR_CD(+)  		=	#{CTNR_CD}
+   		</if>
+   		
+   		<if test='SAVE_CHK  == "S"'>
+   		AND B.APLC_END_DT(+)   >= #{START_DT}
+   		AND B.APLC_ST_DT(+)  	&lt;= #{END_DT}
+   		</if>
+   		<if test='SAVE_CHK == "U"'>
+   		AND B.RTL_FEE				= #{RTL_FEE}
+   		AND B.WHSL_FEE			= #{WHSL_FEE}
+   		AND B.APLC_ST_DT			= #{START_DT}
+   		AND B.APLC_END_DT		= #{END_DT}
+   		</if>
+   		<if test="MFC_BRCH_ID !='' and MFC_BRCH_ID !=null">
+   		AND	A.MFC_BRCH_ID   	=	#{MFC_BRCH_ID}
+		AND	A.MFC_BRCH_NO   	=	#{MFC_BRCH_NO}
+		</if>
+		<if test="BIZR_TP_CD !='' and BIZR_TP_CD !=null ">
+		AND	A.BIZR_TP_CD     		=	#{BIZR_TP_CD}
+		</if>
+		 ORDER BY C.CTNR_NM, B.APLC_ST_DT DESC , B.APLC_END_DT DESC, A.MFC_BIZRNM ,A.MFC_BRCH_NM ,A.CUST_BIZRNM ,A.CUST_BRCH_NM
+    </select>
+
+	<!--개별순번설정  조회 -->
+    <select id="epce0164331_select6" parameterType="map" resultType="String">
+    		SELECT NVL(MAX(INDV_SN),0)+1 FROM EPCN_INDV_FEE_MGNT
+		    WHERE  1=1
+		    AND CTNR_CD		=	#{CTNR_CD}
+			AND LANG_SE_CD	=	#{LANG_SE_CD}
+			AND REG_SN			=	#{REG_SN}
+			
+    </select>
+    
+    <!-- 적용번호  -->
+    <select id="epce0164331_select7"  parameterType="map" resultType="String">
+      SELECT  TO_CHAR(SYSDATE,'YYYYMMDD')||PSNB_SEQ
+      FROM EPCN_PSNB_MGNT
+      WHERE PSNB_CD	=#{PSNB_CD}
+      AND	 PSNB_SEQ	=#{PSNB_SEQ}
+    </select>
+    
+     <!-- 적용기간 중복체크  -->
+    <select id="epce0164331_select8"  parameterType="map" resultType="int">
+      	SELECT 
+				COUNT(*) 
+     	FROM 
+      			EPCN_INDV_FEE_MGNT
+		WHERE	1=1
+		AND	CTNR_CD			=		#{CTNR_CD}       
+		AND 	LANG_SE_CD  		=  	#{LANG_SE_CD}  
+		AND	REG_SN				=  	#{REG_SN}			
+		AND 	MFC_BRCH_ID   	=     	#{MFC_BRCH_ID} 
+		AND 	MFC_BRCH_NO   =     	#{MFC_BRCH_NO} 
+		AND 	MFC_BIZRID    	=     	#{MFC_BIZRID}  
+		AND 	MFC_BIZRNO    	=     	ECL_ENCRYPT(#{MFC_BIZRNO})  
+		AND 	CUST_BRCH_ID  	=     	#{CUST_BRCH_ID}
+		AND 	CUST_BRCH_NO  =     	#{CUST_BRCH_NO}
+		AND 	CUST_BIZRID   	=     	#{CUST_BIZRID} 
+		AND 	CUST_BIZRNO   	=     	ECL_ENCRYPT(#{CUST_BIZRNO}) 
+		AND  STD_FEE_YN       = 'N'
+	    AND APLC_END_DT >= #{START_DT}   
+	    AND APLC_ST_DT &lt;= #{END_DT}
+		<if test='SAVE_CHK== "U"'>
+	      AND INDV_SN		 	!=		#{INDV_SN}
+		</if> 
+    </select>
+    
+     <!-- 기준취급수수료 시간 체크  -->
+    <select id="epce0164331_select9"  parameterType="map" resultType="int">
+	   SELECT COUNT(*)  FROM EPCN_STD_FEE_MGNT
+		WHERE	1=1
+		AND	CTNR_CD			=	#{CTNR_CD}       
+		AND 	LANG_SE_CD  		=  #{LANG_SE_CD}  
+		AND	REG_SN				=  #{REG_SN}			
+		AND APLC_ST_DT   &lt;=	#{START_DT}
+		AND APLC_END_DT   >=	#{END_DT}
+    </select>
+
+	<!-- 개별취급수수료 등록 -->
+     <insert id="epce0164331_insert" parameterType="map">
+		   INSERT  
+					INTO EPCN_INDV_FEE_MGNT
+						(
+						CTNR_CD
+						,LANG_SE_CD
+						,REG_SN
+						,INDV_SN
+						,APLC_NO
+						,STD_FEE_YN
+						,MFC_BRCH_ID
+						,MFC_BRCH_NO
+						,MFC_BIZRID
+						,MFC_BIZRNO
+						,CUST_BRCH_ID
+						,CUST_BRCH_NO
+						,CUST_BIZRID
+						,CUST_BIZRNO
+						,WHSL_FEE
+						,RTL_FEE
+						,APLC_ST_DT
+						,APLC_END_DT
+				 		,REG_PRSN_ID
+						,REG_DTTM
+						)
+						VALUES
+						(
+						 #{CTNR_CD}
+						,#{LANG_SE_CD}
+						,#{REG_SN}
+						,#{INDV_SN}
+						,#{APLC_NO}
+						,'N'
+						,#{MFC_BRCH_ID}
+						,#{MFC_BRCH_NO}
+						,#{MFC_BIZRID}
+						,ECL_ENCRYPT(#{MFC_BIZRNO})
+						,#{CUST_BRCH_ID}
+						,#{CUST_BRCH_NO}
+						,#{CUST_BIZRID}
+						,ECL_ENCRYPT(#{CUST_BIZRNO})
+						,#{WHSL_FEE}
+						,#{RTL_FEE}
+						,#{START_DT}
+						,#{END_DT}
+						,#{REG_PRSN_ID}
+						,SYSDATE
+						)     
+     </insert>
+     
+     <!--개별취습수수료 이력 -->
+     <insert id="epce0164331_insert2" parameterType="map">
+     
+     		INSERT  
+					INTO EPCN_INDV_FEE_ALT_HIST
+						(
+						ALT_DTTM
+						,CTNR_CD
+						,LANG_SE_CD
+						,REG_SN
+						,INDV_SN
+						,BTN_SE_CD
+						,APLC_NO
+						,STD_FEE_YN
+						,MFC_BRCH_ID
+						,MFC_BRCH_NO
+						,MFC_BIZRID
+						,MFC_BIZRNO
+						,CUST_BRCH_ID
+						,CUST_BRCH_NO
+						,CUST_BIZRID
+						,CUST_BIZRNO
+						,WHSL_FEE
+						,RTL_FEE
+						,APLC_ST_DT
+						,APLC_END_DT
+						<if test='SAVE_CHK == "S"'>
+				 		,REG_PRSN_ID
+						,REG_DTTM
+						</if>
+					   <if test='SAVE_CHK == "U"'>
+				   		,UPD_PRSN_ID
+						,UPD_DTTM
+				   		</if>
+						)
+						VALUES
+						(
+					
+			            ( SELECT
+				         TO_CHAR(SYSTIMESTAMP,'YYYYMMDDHH24MISSFF1')
+					       SYSTIMESTAMP
+					       FROM DUAL	  
+				       	 )
+						,#{CTNR_CD}
+						,#{LANG_SE_CD}
+						,#{REG_SN}
+						,#{INDV_SN}
+						,#{BTN_SE_CD}
+						,#{APLC_NO}
+						,'N'
+						,#{MFC_BRCH_ID}
+						,#{MFC_BRCH_NO}
+						,#{MFC_BIZRID}
+						,ECL_ENCRYPT(#{MFC_BIZRNO})
+						,#{CUST_BRCH_ID}
+						,#{CUST_BRCH_NO}
+						,#{CUST_BIZRID}
+						,ECL_ENCRYPT(#{CUST_BIZRNO})
+						,#{WHSL_FEE}
+						,#{RTL_FEE}
+						,#{START_DT}
+						,#{END_DT}
+						,#{REG_PRSN_ID}
+						,SYSDATE
+						)     
+     </insert>
+
+	     <!--채번순번저장 -->
+     <insert id="epce0164331_insert3" parameterType="map">
+		INSERT INTO
+			   EPCN_PSNB_MGNT
+			   (
+					PSNB_CD
+					,PSNB_NM
+					,PSNB_SEQ
+					,REG_DTTM
+				)
+				VALUES
+				(
+				'S0003'
+				,'개별취급수수료 적용번호'
+				, (SELECT NVL(MAX(TO_NUMBER(PSNB_SEQ)),0)+1 FROM EPCN_PSNB_MGNT WHERE PSNB_CD='S0003')
+				,SYSDATE
+				)
+     </insert>
+
+
+	  <!-- 개별취급수수료 변경  1번그리드 셋팅값-->
+	  <select id="epce0164342_select" parameterType="map" resultType="hashmap">
+	
+		SELECT 
+				A.CTNR_CD 
+				,A.LANG_SE_CD
+				,A.REG_SN
+				,A.STD_FEE
+				,A.PSBL_ST_FEE
+				,A.PSBL_END_FEE
+				,A.STD_WHSL_FEE
+				,A.PSBL_ST_WHSL_FEE
+				,A.PSBL_END_WHSL_FEE
+				,A.STD_RTL_FEE
+				,A.PSBL_ST_RTL_FEE
+				,A.PSBL_END_RTL_FEE
+				,A.APLC_ST_DT
+				,A.APLC_END_DT 
+				,C.CTNR_NM
+				,NVL(A.PSBL_ST_FEE,0)||' ~ '||NVL(A.PSBL_END_FEE,0) AS PSBL_FEE 
+				,NVL(A.PSBL_ST_WHSL_FEE,0)||' ~ '||NVL(A.PSBL_END_WHSL_FEE,0) AS PSBL_WHSL_FEE 
+				,NVL(A.PSBL_ST_RTL_FEE,0)||' ~ '||NVL(A.PSBL_END_RTL_FEE,0) AS PSBL_RTL_FEE 
+				,CASE 
+		           WHEN A.APLC_ST_DT IS NOT NULL 
+		           AND   A.APLC_END_DT IS NOT NULL 
+		           THEN TO_CHAR(TO_DATE(A.APLC_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(A.APLC_END_DT,'YYYYMMDD'),'YYYY-MM-DD') 
+		           ELSE '' 
+		         END AS APLC_DT
+		
+		FROM 
+			        EPCN_STD_FEE_MGNT		A
+			       ,EPCN_INDV_FEE_MGNT		B
+			       ,EPCN_STD_CTNR_CD		C
+		 WHERE 1=1
+		 AND  A.CTNR_CD		= B.CTNR_CD
+		 AND  A.LANG_SE_CD	= B.LANG_SE_CD
+		 AND  A.REG_SN 		= B.REG_SN
+		 AND  A.CTNR_CD 		= C.CTNR_CD
+		 AND  A.LANG_SE_CD 	= C.LANG_SE_CD
+		 AND	B.CTNR_CD 		=	#{CTNR_CD}
+		 AND	B.LANG_SE_CD 	= 	#{LANG_SE_CD}
+		 AND	B.REG_SN 			= 	#{REG_SN}
+		 AND	B.INDV_SN 		=	#{INDV_SN}
+	
+	  </select>
+	  <!-- 개별취급수수료변경   변경 -->
+      <update id="epce0164342_update" parameterType="map">
+           
+			UPDATE 
+						EPCN_INDV_FEE_MGNT 
+			SET
+							WHSL_FEE    		=#{WHSL_FEE}
+							,RTL_FEE				=#{RTL_FEE}
+							,APLC_ST_DT		=#{START_DT}
+							,APLC_END_DT	=#{END_DT}
+							,UPD_PRSN_ID		=#{REG_PRSN_ID}
+							,UPD_DTTM		=SYSDATE
+			WHERE  		1=1
+			AND			CTNR_CD		=#{CTNR_CD}
+			AND			LANG_SE_CD	=#{LANG_SE_CD}
+			AND			REG_SN			=#{REG_SN}
+			AND			INDV_SN		=#{INDV_SN}
+      
+      </update>
+
+</mapper>
+

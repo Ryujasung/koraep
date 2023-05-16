@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.auth.AuthMapper">
+  
+	<select id="selectAuthCheckInfo" parameterType="map" resultType="userVo">
+		/*egovframework.mapper.auth.AuthMapper.selectAuthCheckInfo*/
+		SELECT
+			USER_ID					,USER_NM			,USER_SE_CD
+			,USER_PWD				,BIZRID				,BIZRNO
+			,BIZR_TP_CD				,BRCH_ID			,BRCH_NO
+		FROM EPCN_USER_INFO
+		WHERE USER_ID = #{USER_ID} 
+	</select>
+</mapper>
+

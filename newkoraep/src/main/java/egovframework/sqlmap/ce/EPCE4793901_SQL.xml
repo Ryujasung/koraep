@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE4793901Mapper">
+
+	<select id="epce4793901_select" resultType="hashmap">
+		 SELECT A.BIZRID || ';' || A.BIZRNO AS BIZRID_NO
+			        ,A.BIZRNM
+			        ,B.EXCA_ST_DT, B.EXCA_END_DT, B.EXCA_SE_YEAR, B.EXCA_STD_CD
+		   FROM EPCN_BIZR_INFO A
+		        	,(SELECT * FROM EXCA_STD_MGNT WHERE EXCA_STAT_CD = 'S' AND ROWNUM = 1) B
+		 WHERE 1=1
+		     AND A.BIZR_TP_CD IN ('M1','M2') 
+		     AND A.BIZR_STAT_CD = 'Y'
+		     AND '1' = (
+				              CASE WHEN B.EXCA_TRGT_SE = 'W' THEN '1'
+				                 ELSE (
+					                         SELECT '1'
+					                           FROM EXCA_TRGT_INFO C
+					                         WHERE 1=1
+					                             AND C.EXCA_STD_CD = B.EXCA_STD_CD
+					                             AND C.MFC_BIZRID = A.BIZRID
+					                             AND C.MFC_BIZRNO = A.BIZRNO
+				                         )
+				                END
+				             )
+		 ORDER BY A.SEL_ORD, A.BIZRNM
+	 </select>
+	 
+	 <select id="epce4793901_select2" resultType="hashmap">
+		 SELECT MFC_BIZRID, MFC_BIZRNO
+                    ,SUM(NVL(PLAN_GTN_BAL, 0) + NVL(GTN_INDE, 0) + NVL(PLAN_GTN_ADJ, 0) ) AS PLAN_GTN_BAL
+                    ,SUM(NVL(ADIT_GTN_BAL, 0) + NVL(ADIT_GTN_ADJ, 0) ) AS ADIT_GTN_BAL
+                    ,SUM(NVL(DRCT_PAY_GTN_BAL, 0) + NVL(DRCT_PAY_GTN_ADJ, 0) ) AS DRCT_PAY_GTN_BAL
+            FROM EPGM_MFC_GTN_BAL
+          WHERE 1=1
+              AND DEL_YN = 'N'
+              AND STD_YEAR = #{EXCA_SE_YEAR}
+              AND MFC_BIZRID = #{BIZRID}
+              AND MFC_BIZRNO = #{BIZRNO}
+         GROUP BY MFC_BIZRID, MFC_BIZRNO
+	</select>
+
+	<select id="epce4793901_select3" resultType="hashmap"> 
+		  SELECT B.ETC_CD
+			         ,B.ETC_CD_NM
+			         ,NVL(A.PAY_PLAN_AMT, 0) AS PAY_PLAN_AMT
+			         ,NVL(A.PAY_MDT_AMT, 0) AS PAY_MDT_AMT
+			         ,NVL(A.ACP_PLAN_AMT, 0) AS ACP_PLAN_AMT
+			         ,NVL(A.PAY_PLAN_AMT, 0) - NVL(A.ACP_PLAN_AMT, 0) AS OFF_SET_AMT
+			FROM
+			        (
+                       SELECT 'G' AS GBN ,
+                              SUM(NVL(ADIT_GTN_BAL,0)) AS PAY_PLAN_AMT ,
+                              0 AS PAY_MDT_AMT ,
+                              NULL AS ACP_PLAN_AMT
+                         FROM EPGM_MFC_GTN_BAL 
+                        WHERE 1=1 
+                            AND MFC_BIZRID = #{BIZRID}
+                            AND MFC_BIZRNO = #{BIZRNO}
+                            AND STD_YEAR = #{EXCA_SE_YEAR}
+                            AND DEL_YN = 'N'
+                            <if test='G != null '>
+                                AND 'G' = #{G}
+                            </if>  
+
+                         UNION ALL      
+
+                       SELECT 'H' AS GBN ,
+                              SUM(NVL(DRCT_PAY_GTN_BAL,0) + NVL(DRCT_PAY_GTN_ADJ,0)) AS PAY_PLAN_AMT ,
+                              0 AS PAY_MDT_AMT ,
+                              NULL AS ACP_PLAN_AMT
+                         FROM EPGM_MFC_GTN_BAL 
+                        WHERE 1=1 
+                            AND MFC_BIZRID = #{BIZRID}
+                            AND MFC_BIZRNO = #{BIZRNO}
+                            AND STD_YEAR = #{EXCA_SE_YEAR}
+                            AND DEL_YN = 'N'
+                            <if test='H != null '>
+                                AND 'H' = #{H}
+                            </if>  
+
+                         UNION ALL      
+                            
+                       SELECT 'K' AS GBN , 
+                              SUM(NVL(PLAN_GTN_BAL, 0) + NVL(GTN_INDE, 0) + NVL(PLAN_GTN_ADJ, 0) ) AS PAY_PLAN_AMT ,
+                              0 AS PAY_MDT_AMT ,
+                              NULL AS ACP_PLAN_AMT
+                         FROM EPGM_MFC_GTN_BAL
+                        WHERE 1=1
+                            AND DEL_YN = 'N'
+                            AND STD_YEAR = #{EXCA_SE_YEAR}
+                            AND MFC_BIZRID = #{BIZRID}
+                            AND MFC_BIZRNO = #{BIZRNO}
+                       GROUP BY MFC_BIZRID, MFC_BIZRNO
+                            <if test='K != null '>
+                                AND 'K' = #{K}
+                            </if>  
+
+                         UNION ALL      
+                            
+                       SELECT 'L' AS GBN , 
+                              0 AS PAY_PLAN_AMT ,
+                              0 AS PAY_MDT_AMT ,
+                              0 AS ACP_PLAN_AMT
+                         FROM DUAL
+                        WHERE 1=1 
+                            <if test='L != null '>
+                                AND 'L' = #{L}
+                            </if>  
+                            
+                         UNION ALL      
+                            
+                       SELECT 'M' AS GBN , 
+                              0 AS PAY_PLAN_AMT ,
+                              0 AS PAY_MDT_AMT ,
+                              0 AS ACP_PLAN_AMT
+                         FROM DUAL
+                        WHERE 1=1 
+                            <if test='M != null '>
+                                AND 'M' = #{M}
+                            </if>  
+			          ) A
+			          ,EPCN_ETC_CD B
+			          ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+			   WHERE 1=1
+			     AND B.GRP_CD = 'C022'
+			     AND B.ETC_CD = A.GBN
+			     AND B.LANG_SE_CD = C.LANG_SE_CD
+			     AND B.USE_YN = 'Y'
+			 ORDER BY B.SEL_ORD    
+	</select>
+    
+	<select id="epce4793931_select2" resultType="hashmap"> 
+		SELECT #{EXCA_SE_YEAR}||'0101' as EXCA_ST_DT, #{EXCA_SE_YEAR}||'1231' as EXCA_END_DT
+			        ,A.BIZRID, A.BIZRNO
+			        ,A.BIZRNM, A.RPST_NM, ECL_DECRYPT(A.BIZRNO) AS BIZRNO_DE
+			        ,A.RPST_TEL_NO1||'-'||A.RPST_TEL_NO2||'-'||A.RPST_TEL_NO3 AS RPST_TEL_NO
+			        ,'('||A.PNO||') '||A.ADDR1||' '||A.ADDR2 AS ADDR
+			        ,EPCN_ETC_NM(#{EXCA_ISSU_SE_CD}, 'C025') as EXCA_ISSU_SE_NM
+			        ,EPCN_ETC_NM(#{EXCA_SE_CD}, 'C023') as EXCA_SE_NM
+			        ,#{EXCA_AMT} as EXCA_AMT
+			        
+			        <choose>
+			        	<when test='EXCA_SE_CD == "A"'>
+			        	  ,(SELECT A.RSV_ITEM1
+			        		   FROM EPCN_ETC_CD A
+			        		   			,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+			        		 WHERE A.GRP_CD = 'D035' 
+			        		     AND A.ETC_CD = '31'
+			        		     AND A.LANG_SE_CD = C.LANG_SE_CD ) as ACP_ACCT_NO
+			        	</when>
+			        	<when test='EXCA_SE_CD == "C"'>
+			        	  ,(SELECT PI_DECRYPT(ACP_ACCT_NO) as ACP_ACCT_NO
+			        		   FROM EPCN_BIZR_INFO
+			        		 WHERE BIZRID = #{BIZRID}
+			        		     AND BIZRNO = #{BIZRNO} ) as ACP_ACCT_NO
+			        	</when>
+			        </choose>
+			        
+		   FROM EPCN_BIZR_INFO A
+		 WHERE 1=1
+		    AND BIZRID = #{BIZRID}
+		    AND BIZRNO = #{BIZRNO}
+	</select>
+	
+
+	<update id="epce4793931_insert" parameterType="map">
+		   INSERT INTO EPGM_EXCA_LST
+		   (
+		      STAC_DOC_NO
+		      ,EXCA_STD_CD
+		      ,BIZRID
+		      ,BIZRNO
+		      ,EXCA_ISSU_SE_CD
+		      ,BIZR_TP_CD
+		      ,EXCA_SE_CD
+		      ,EXCA_PROC_STAT_CD
+		      ,STD_YEAR
+		      ,EXCA_REG_DT
+		      ,EXCA_AMT
+		      ,GTN
+
+		      <choose>
+		        <when test='EXCA_SE_CD == "A"'>
+		          ,ACP_BANK_CD
+		          ,ACP_ACCT_NO
+		        </when>
+		        <when test='EXCA_SE_CD == "C"'>
+		          ,PAY_BANK_CD
+		          ,PAY_ACCT_NO
+		          ,PAY_ACCT_DPSTR_NM
+		        </when>
+		      </choose>
+		
+		      ,DLIVY_CRCT_PAY_AMT
+		      ,DLIVY_CRCT_ACP_AMT
+		      ,WRHS_CRCT_PAY_AMT
+		      ,WRHS_CRCT_ACP_AMT
+		      ,DRCT_RTRVL_CRCT_PAY_AMT
+		      ,DRCT_RTRVL_CRCT_ACP_AMT
+		      ,FYER_WRHS_PAY_AMT
+		      ,FYER_WRHS_ACP_AMT
+		      ,FYER_DLIVY_PAY_AMT
+		      ,FYER_DLIVY_ACP_AMT
+		      ,AGTN_BAL_PAY_AMT
+		      ,DRVL_BAL_PAY_AMT
+		      ,GTN_BAL_INDE_AMT
+		      ,EXCA_PLAN_GTN_BAL
+		      ,EXCA_GTN_BAL
+		      ,AGTN_INDE_AMT
+		      ,REG_PRSN_ID
+		      ,REG_DTTM
+		      
+		      ,MFC_BIZRID
+		      ,MFC_BIZRNO
+              ,AGTN_BAL_ADJ_AMT
+              ,DRVL_BAL_ADJ_AMT
+              ,MNUL_ISSU_RSN
+              ,TX_EXEC_CD
+		   )
+		   
+		   SELECT 
+			          #{STAC_DOC_NO}
+			          ,#{EXCA_STD_CD}
+			          ,BIZRID
+			          ,BIZRNO
+			          ,#{EXCA_ISSU_SE_CD}
+			          ,BIZR_TP_CD
+			          ,#{EXCA_SE_CD}
+			          ,#{EXCA_PROC_STAT_CD}
+			          ,#{STD_YEAR}
+			          ,TO_CHAR(SYSDATE, 'YYYYMMDD')
+			          ,#{EXCA_AMT}
+			          ,#{GTN}
+			          
+			          <choose>
+			            <when test='EXCA_SE_CD == "A"'>
+			              ,'088' AS ACP_BANK_CD
+			              ,(SELECT PI_ENCRYPT(A.RSV_ITEM1)
+			                 FROM EPCN_ETC_CD A
+			                      ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+			               WHERE A.GRP_CD = 'D035' 
+			                   AND A.ETC_CD = '31'
+			                   AND A.LANG_SE_CD = C.LANG_SE_CD ) AS ACP_ACCT_NO
+			            </when>
+			            <when test='EXCA_SE_CD == "C"'>
+			              ,ACP_BANK_CD
+			              ,ACP_ACCT_NO
+			              ,ACP_ACCT_DPSTR_NM
+			            </when>
+			          </choose>
+			          
+			          ,#{DLIVY_CRCT_PAY_AMT}
+			          ,#{DLIVY_CRCT_ACP_AMT}
+			          ,#{WRHS_CRCT_PAY_AMT}
+			          ,#{WRHS_CRCT_ACP_AMT}
+			          ,#{DRCT_RTRVL_CRCT_PAY_AMT}
+			          ,#{DRCT_RTRVL_CRCT_ACP_AMT}
+			          ,#{FYER_WRHS_PAY_AMT}
+			          ,#{FYER_WRHS_ACP_AMT}
+			          ,#{FYER_DLIVY_PAY_AMT}
+			          ,#{FYER_DLIVY_ACP_AMT}
+			          ,#{AGTN_BAL_PAY_AMT}
+			          ,#{DRVL_BAL_PAY_AMT}
+			          ,#{GTN_BAL_INDE_AMT}
+			          ,#{EXCA_PLAN_GTN_BAL}
+			          ,#{EXCA_GTN_BAL}
+			          ,#{AGTN_INDE_AMT}
+			          ,#{S_USER_ID}
+			          ,SYSDATE
+			          
+			          ,BIZRID
+			          ,BIZRNO
+                      ,#{AGTN_BAL_MDT_AMT}
+			          ,#{DRVL_BAL_MDT_AMT}
+                      ,#{MNUL_ISSU_RSN}
+                      ,'TV'	/* 조회필요 */
+		     FROM EPCN_BIZR_INFO
+		   WHERE 1=1
+		       AND BIZRID = #{BIZRID}
+		       AND BIZRNO = #{BIZRNO}
+		      
+	</update>
+	
+	<update id="epce4793931_insert4" parameterType="map">
+		   INSERT INTO EPGM_EXCA_LST
+		   (
+		      STAC_DOC_NO
+		      ,EXCA_STD_CD
+		      ,BIZRID
+		      ,BIZRNO
+		      ,EXCA_ISSU_SE_CD
+		      ,BIZR_TP_CD
+		      ,EXCA_SE_CD
+		      ,EXCA_PROC_STAT_CD
+		      ,STD_YEAR
+		      ,EXCA_REG_DT
+		      ,EXCA_AMT
+		      ,WHSL_FEE_TOT
+			  ,WHSL_FEE_STAX_TOT
+		 	  ,RTL_FEE_TOT
+
+		      <choose>
+		        <when test='EXCA_SE_CD == "A"'>
+		          ,ACP_BANK_CD
+		          ,ACP_ACCT_NO
+		        </when>
+		        <when test='EXCA_SE_CD == "C"'>
+		          ,PAY_BANK_CD
+		          ,PAY_ACCT_NO
+		          ,PAY_ACCT_DPSTR_NM
+		        </when>
+		      </choose>
+		
+		      ,WRHS_CRCT_PAY_AMT
+		      ,WRHS_CRCT_ACP_AMT
+
+		      ,REG_PRSN_ID
+		      ,REG_DTTM
+		      
+		      ,MFC_BIZRID
+		      ,MFC_BIZRNO
+              ,MNUL_ISSU_RSN
+		      ,TX_EXEC_CD
+		   )
+		   
+		   SELECT 
+			          #{STAC_DOC_NO}
+			          ,#{EXCA_STD_CD}
+			          ,BIZRID
+			          ,BIZRNO
+			          ,#{EXCA_ISSU_SE_CD}
+			          ,BIZR_TP_CD
+			          ,#{EXCA_SE_CD}
+			          ,#{EXCA_PROC_STAT_CD}
+			          ,#{STD_YEAR}
+			          ,TO_CHAR(SYSDATE, 'YYYYMMDD')
+			          ,#{EXCA_AMT}
+			          ,#{WHSL_FEE_TOT}
+					  ,#{WHSL_FEE_STAX_TOT}
+				 	  ,#{RTL_FEE_TOT}
+			          
+			          <choose>
+			            <when test='EXCA_SE_CD == "A"'>
+			              ,'088' AS ACP_BANK_CD
+			              ,(SELECT PI_ENCRYPT(A.RSV_ITEM1)
+			                 FROM EPCN_ETC_CD A
+			                      ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+			               WHERE A.GRP_CD = 'D035' 
+			                   AND A.ETC_CD = '31'
+			                   AND A.LANG_SE_CD = C.LANG_SE_CD ) AS ACP_ACCT_NO
+			            </when>
+			            <when test='EXCA_SE_CD == "C"'>
+			              ,ACP_BANK_CD
+			              ,ACP_ACCT_NO
+			              ,ACP_ACCT_DPSTR_NM
+			            </when>
+			          </choose>
+			          
+			          ,#{WRHS_CRCT_PAY_AMT}
+			          ,#{WRHS_CRCT_ACP_AMT}
+
+			          ,#{S_USER_ID}
+			          ,SYSDATE
+			          
+			          ,BIZRID
+			          ,BIZRNO
+                      ,#{MNUL_ISSU_RSN}
+                      ,'TV'	/* 조회필요 */
+		     FROM EPCN_BIZR_INFO
+		   WHERE 1=1
+		       AND BIZRID = #{BIZRID}
+		       AND BIZRNO = #{BIZRNO}
+		      
+	</update>
+	
+	<update id="epce4793931_insert2" parameterType="map">
+	
+		 INSERT INTO EPGM_EXCA_DTL_MNUL
+		  (
+		      STAC_DOC_NO
+		      ,EXCA_ISSU_SE_CD
+		      ,EXCA_DTL_CD
+              ,PAY_PLAN_AMT
+              ,ACP_PLAN_AMT
+              ,OFF_SET_AMT
+		      ,REG_PRSN_ID
+		      ,REG_DTTM
+		  )
+          VALUES (
+              #{STAC_DOC_NO}
+              ,#{EXCA_ISSU_SE_CD}
+              ,#{ETC_CD}
+              ,#{PAY_PLAN_AMT}
+              ,#{ACP_PLAN_AMT}
+              ,#{OFF_SET_AMT}
+              ,#{S_USER_ID}
+              ,SYSDATE
+          )
+	</update>
+	
+	<insert id="epce4793931_insert3" parameterType="map">
+		INSERT INTO EPGM_MFC_GTN_BAL
+	       (
+	          MFC_BIZRID
+	          ,MFC_BIZRNO
+	          ,STD_DT
+	          ,STD_YEAR
+	          ,BAL_SN
+	          ,MAPP_DOC_NO
+	          ,PLAN_GTN_BAL
+	          ,ADIT_GTN_BAL
+              ,DRCT_PAY_GTN_BAL
+	          ,GTN_INDE
+	          ,PRCS_ID
+	          ,PRCS_DTTM
+	          ,DEL_YN
+			)
+	       VALUES
+	       (
+	          #{BIZRID}
+	          ,#{BIZRNO}
+	          ,TO_CHAR(SYSDATE,'YYYYMMDD')
+	          ,#{EXCA_SE_YEAR}
+	          ,TEMP_SEQ.NEXTVAL
+	          ,#{STAC_DOC_NO}
+	          ,#{GTN_BAL_INDE_AMT}
+	          ,#{AGTN_INDE_AMT}
+              ,#{DRCT_PAY_GTN_BAL}
+	          ,#{GTN_INDE}
+	          ,#{S_USER_ID}
+	          ,SYSDATE
+	          ,'N'
+	       )
+	</insert>
+		
+</mapper>

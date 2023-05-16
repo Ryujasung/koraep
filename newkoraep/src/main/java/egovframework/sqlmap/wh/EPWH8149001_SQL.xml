@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.wh.ep.EPWH8149001Mapper">
+
+    <!-- 공지사항 총 게시글 수 조회 -->
+    <select id="epwh8149001" parameterType="map" resultType="hashmap">
+        SELECT COUNT(*) AS CNT
+          FROM EPCN_NOTI
+         WHERE 1=1
+         <if test='CONDITION == "sbj"'>
+	       AND upper(SBJ) LIKE '%' || upper(#{WORD}) || '%'
+	     </if>
+	     <if test='CONDITION == "cntn"'>
+	       AND upper(CNTN) LIKE '%' || upper(#{WORD}) || '%'
+	     </if>
+    </select>
+    
+    <!-- 공지사항 조회(Paging) -->
+	<select id="epwh8149001_select1" parameterType="map" resultType="hashmap">
+	   SELECT NOTI_SEQ,
+		       SBJ,
+		       CNTN_TP,
+		       SEL_CNT,
+		       REG_DTTM,
+		       IDX,
+		       RNUM,
+		       CASE WHEN TOP_YN = 'Y' THEN '공지' ELSE TO_CHAR(NOTI_SEQ) END AS NOTI_NO,
+		       TOP_YN
+		  FROM (SELECT NOTI_SEQ,
+		               SBJ,
+		               CNTN_TP,
+		               SEL_CNT,
+		               REG_DTTM,
+		               IDX,
+		               ROWNUM AS RNUM,
+		               TOP_YN
+		          FROM (SELECT NOTI_SEQ,
+		                       SBJ,
+		                       CNTN_TP,
+		                       SEL_CNT,
+		                       REG_DTTM,
+		                       IDX,
+		                       TOP_YN
+		                  FROM (SELECT NOTI_SEQ,
+		                               SBJ,
+		                               CNTN_TP,
+		                               SEL_CNT,
+		                               REG_DTTM,
+		                               ROWNUM AS IDX,
+		                               TOP_YN
+		                          FROM (SELECT NOTI_SEQ,
+		                                       SBJ,
+		                                       CNTN_TP,
+		                                       SEL_CNT,
+		                                       TO_CHAR(REG_DTTM, 'YYYYMMDD') AS REG_DTTM,
+		                                       TOP_YN
+		                  				  FROM EPCN_NOTI
+		                                 WHERE 1=1
+									     <if test='CONDITION == "sbj"'>
+									       AND upper(SBJ) LIKE '%' || upper(#{WORD}) || '%'
+									     </if>
+									     <if test='CONDITION == "cntn"'>
+									       AND upper(CNTN) LIKE '%' || upper(#{WORD}) || '%'
+									     </if>
+										  ORDER BY TOP_YN DESC,NOTI_SEQ ASC)
+						                         WHERE 1=1
+						                         ORDER BY NOTI_SEQ ASC)
+						                 ORDER BY TOP_YN DESC, NOTI_SEQ DESC))
+ 			WHERE 1=1
+	     <if test="PAGE != ''">
+		   AND RNUM BETWEEN #{STARTROW} AND #{ENDROW}
+	     </if>
+	</select>
+	
+	<!-- 공지사항 첨부파일 조회 -->
+	<select id="epwh8149001_select2" parameterType="map" resultType="hashmap">
+	    SELECT NOTI_SEQ
+		  FROM EPCN_NOTI_FILE
+		 GROUP BY NOTI_SEQ
+		 ORDER BY NOTI_SEQ DESC
+	</select>
+    
+</mapper>

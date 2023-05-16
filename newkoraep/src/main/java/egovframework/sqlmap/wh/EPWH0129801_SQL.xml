@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.wh.ep.EPWH0129801Mapper">
+
+	<!-- 부서관리 리스트 -->
+	<select id="epwh0129801_select" resultType="hashmap">
+	  	 
+	  	 <if test='excelYn == null or excelYn == "" '>
+		 SELECT 
+		 			PNO 
+		 			,DEPT_CD
+		 			,DEPT_NM
+		 			,UP_DEPT_CD
+			        ,STD_YN
+			        ,BIZRNM
+			        ,BIZR_TP_CD
+			        ,BIZR_TP_NM
+			        ,STAT_CD
+			        ,STAT_NM
+			        ,BIZRID
+			        ,BIZRNO
+			        ,DEPT_LVL
+		  FROM (
+		</if>
+	  	 
+	  	 SELECT ROW_NUMBER()OVER(ORDER BY B.SEL_ORD, B.BIZRNM, A.DEPT_LVL, A.DEPT_NM) AS PNO 
+	  	 			,A.DEPT_CD, A.DEPT_NM, A.UP_DEPT_CD
+			        ,EPCN_ETC_NM(A.STD_YN, 'S007') AS STD_YN
+			        ,B.BIZRNM
+			        ,B.BIZR_TP_CD
+			        ,EPCN_ETC_NM(B.BIZR_TP_CD, 'B001') AS BIZR_TP_NM
+			        ,A.STAT_CD
+			        ,EPCN_ETC_NM(A.STAT_CD, 'B007') AS STAT_NM
+			        ,A.BIZRID
+			        ,A.BIZRNO
+			        ,A.DEPT_LVL
+		   FROM EPCN_DEPT_INFO A
+		        	,EPCN_BIZR_INFO B
+		  WHERE A.BIZRID = B.BIZRID
+		      AND A.BIZRNO = B.BIZRNO
+		      AND A.BIZRID = #{BIZRID}
+		      AND A.BIZRNO = #{BIZRNO}
+		     <if test='STD_YN_SEL != null and STD_YN_SEL != "" '>
+		      AND STD_YN = #{STD_YN_SEL}
+		     </if>
+		     <if test='DEPT_NM_SEL != null and DEPT_NM_SEL != "" '>
+		      AND A.DEPT_NM LIKE '%'|| #{DEPT_NM_SEL} ||'%'
+		     </if>
+		     <if test='BIZR_TP_CD_SEL != null and BIZR_TP_CD_SEL != "" '>
+		      AND B.BIZR_TP_CD = #{BIZR_TP_CD_SEL}
+		     </if>
+		     <if test='BIZRNM_SEL != null and BIZRNM_SEL != "" '>
+		      AND B.BIZRNM LIKE '%'|| #{BIZRNM_SEL} ||'%'
+		     </if>
+		 ORDER BY B.SEL_ORD, B.BIZRNM, A.DEPT_LVL, A.DEPT_NM
+		 
+		 <if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+         </if>	
+		 
+	</select>
+	
+	<!-- 부서관리 리스트 -->
+	<select id="epwh0129801_select_cnt" resultType="int">
+	  	 
+	  	 SELECT COUNT(1)
+		   FROM EPCN_DEPT_INFO A
+		        	,EPCN_BIZR_INFO B
+		  WHERE A.BIZRID = B.BIZRID
+		      AND A.BIZRNO = B.BIZRNO
+		     <if test='STD_YN_SEL != null and STD_YN_SEL != "" '>
+		      AND STD_YN = #{STD_YN_SEL}
+		     </if>
+		     <if test='DEPT_NM_SEL != null and DEPT_NM_SEL != "" '>
+		      AND A.DEPT_NM LIKE '%'|| #{DEPT_NM_SEL} ||'%'
+		     </if>
+		     <if test='BIZR_TP_CD_SEL != null and BIZR_TP_CD_SEL != "" '>
+		      AND B.BIZR_TP_CD = #{BIZR_TP_CD_SEL}
+		     </if>
+		     <if test='BIZRNM_SEL != null and BIZRNM_SEL != "" '>
+		      AND B.BIZRNM LIKE '%'|| #{BIZRNM_SEL} ||'%'
+		     </if>
+
+	</select>
+	
+	<!-- 부서관리 상세조회 -->
+	<select id="epwh0129842_select" resultType="hashmap">
+	 	SELECT A.DEPT_CD, A.DEPT_NM, A.UP_DEPT_CD
+	 				,A.STD_YN
+			        ,EPCN_ETC_NM(A.STD_YN, 'S007') AS STD_YN_NM
+			        ,B.BIZRNM
+			        ,B.BIZR_TP_CD
+			        ,EPCN_ETC_NM(B.BIZR_TP_CD, 'B001') AS BIZR_TP_NM
+			        ,A.STAT_CD
+			        ,EPCN_ETC_NM(A.STAT_CD, 'B007') AS STAT_NM
+			        ,A.BIZRID
+			        ,A.BIZRNO
+			        ,A.DEPT_LVL
+			        ,A.UP_DEPT_CD||A.UP_STD_YN as UP_DEPT_CD
+			        ,CASE WHEN A.BIZRID = 'KORA' AND A.BIZRNO = 'a25adbd5cec406ef9e68bfcaf77c4375' THEN 'Y' ELSE 'N' END AS CE_YN
+		   FROM EPCN_DEPT_INFO A
+		        	,EPCN_BIZR_INFO B
+		  WHERE A.BIZRID = B.BIZRID
+		      AND A.BIZRNO = B.BIZRNO
+		      AND A.DEPT_CD = #{DEPT_CD}
+		      AND A.BIZRID = #{BIZRID}
+		      AND A.BIZRNO = #{BIZRNO}
+	</select>
+	
+	<!-- 부서관리 등록 -->
+	<update id="epwh0129831_insert"  parameterType="hashmap">
+		INSERT INTO EPCN_DEPT_INFO
+		 (
+		    DEPT_CD, 
+		    BIZRID, 
+		    BIZRNO, 
+		    DEPT_NM, 
+		    DEPT_LVL,
+		    UP_DEPT_CD, 
+		    STD_YN, 
+		    UP_STD_YN, 
+		    REG_PRSN_ID, 
+		    REG_DTTM,
+		    STAT_CD
+		 )
+		 VALUES
+		 (
+		    #{DEPT_CD}, 
+		    #{BIZRID},
+        	#{BIZRNO},
+		    #{DEPT_NM}, 
+		    #{DEPT_LVL}, 
+		    #{UP_DEPT_CD}, 
+		    #{STD_YN}, 
+		    #{UP_STD_YN}, 
+		    #{S_USER_ID}, 
+		    SYSDATE,
+		    'Y'
+		 )
+	</update>
+	
+	<!-- 부서정보 변경 -->
+	<update id="epwh0129842_update"  parameterType="hashmap">
+		UPDATE EPCN_DEPT_INFO SET DEPT_NM = #{DEPT_NM},
+													DEPT_LVL = #{DEPT_LVL},
+												    UP_DEPT_CD = #{UP_DEPT_CD},
+												    STD_YN = #{STD_YN},
+												    UP_STD_YN = #{UP_STD_YN},
+												    UPD_PRSN_ID = #{S_USER_ID}, 
+												    UPD_DTTM = SYSDATE
+		 WHERE 1=1
+		     AND DEPT_CD = #{DEPT_CD}
+		     AND BIZRID = #{BIZRID}
+			 AND BIZRNO = #{BIZRNO}
+	</update>
+	
+	<!-- 부서정보 변경 -->
+	<update id="epwh0129801_update"  parameterType="hashmap">
+		UPDATE EPCN_DEPT_INFO SET  STAT_CD = #{EXEC_STAT_CD},
+												    UPD_PRSN_ID = #{S_USER_ID}, 
+												    UPD_DTTM = SYSDATE
+		 WHERE 1=1
+		     AND DEPT_CD = #{DEPT_CD}
+		     AND BIZRID = #{BIZRID}
+			 AND BIZRNO = #{BIZRNO}
+	</update>
+	
+	<!-- 업체명 리스트 -->
+	<select id="epwh0129831_select2" resultType="hashmap">
+		 SELECT BIZRID||';'||BIZRNO AS BIZRCD
+		        	,BIZRNM
+		   FROM EPCN_BIZR_INFO
+		 WHERE 1=1
+		     AND BIZR_TP_CD = #{BIZR_TP_CD}
+	</select>
+	
+	<!-- 상위부서코드 리스트 -->
+	<select id="epwh0129831_select3" resultType="hashmap">
+		 SELECT DEPT_CD||';'||'N' as DEPT_STD_CD
+		        	,DEPT_NM
+		   FROM EPCN_DEPT_INFO
+		 WHERE 1=1
+		    AND BIZRID = #{BIZRID}
+		    AND BIZRNO = #{BIZRNO}
+		    AND STD_YN = 'N'
+		    AND STAT_CD = 'Y'
+		    AND DEPT_LVL = #{DEPT_LVL} - 1
+		    AND DEPT_CD != #{DEPT_CD}
+		
+		  UNION ALL
+		
+		 SELECT DEPT_CD||';'||'Y' as DEPT_STD_CD
+		        	,DEPT_NM
+		   FROM EPCN_DEPT_INFO
+		 WHERE 1=1
+		    AND STD_YN = 'Y'
+		    AND STAT_CD = 'Y'
+		    AND DEPT_LVL = #{DEPT_LVL} - 1
+		    AND DEPT_CD != #{DEPT_CD}
+	</select>
+
+</mapper>

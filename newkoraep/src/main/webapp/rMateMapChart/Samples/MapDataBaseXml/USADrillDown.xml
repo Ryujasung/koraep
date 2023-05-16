@@ -1,0 +1,3210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<State code="1000" label="Alabama" symbol="Alabama" verticalCenterGap="15">
+		<County code="1001" label="Autauga" symbol="Autauga"/>
+		<County code="1002" label="Baldwin" symbol="BaldwinAL"/>
+		<County code="1003" label="Barbour" symbol="BarbourAL"/>
+		<County code="1004" label="Bibb" symbol="BibbAL"/>
+		<County code="1005" label="Blount" symbol="BlountAL"/>
+		<County code="1006" label="Bullock" symbol="Bullock"/>
+		<County code="1007" label="Butler" symbol="ButlerAL"/>
+		<County code="1008" label="Calhoun" symbol="CalhounAL"/>
+		<County code="1009" label="Chambers" symbol="ChambersAL"/>
+		<County code="1010" label="Cherokee" symbol="CherokeeAL"/>
+		<County code="1011" label="Chilton" symbol="Chilton"/>
+		<County code="1012" label="Choctaw" symbol="ChoctawAL" horizontalCenterGap="-3"/>
+		<County code="1013" label="Clarke" symbol="ClarkeAL"/>
+		<County code="1014" label="Clay" symbol="ClayAL" horizontalCenterGap="5"/>
+		<County code="1015" label="Cleburne" symbol="CleburneAL" horizontalCenterGap="5"/>
+		<County code="1016" label="Coffee" symbol="CoffeeAL"/>
+		<County code="1017" label="Colbert" symbol="Colbert" verticalCenterGap="5"/>
+		<County code="1018" label="Conecuh" symbol="Conecuh"/>
+		<County code="1019" label="Coosa" symbol="Coosa"/>
+		<County code="1020" label="Covington" symbol="CovingtonAL"/>
+		<County code="1021" label="Crenshaw" symbol="Crenshaw"/>
+		<County code="1022" label="Cullman" symbol="Cullman" horizontalCenterGap="-10"/>
+		<County code="1023" label="Dale" symbol="Dale"/>
+		<County code="1024" label="Dallas" symbol="DallasAL"/>
+		<County code="1025" label="DeKalb" symbol="DeKalbAL"/>
+		<County code="1026" label="Elmore" symbol="ElmoreAL"/>
+		<County code="1027" label="Escambia" symbol="EscambiaAL"/>
+		<County code="1028" label="Etowah" symbol="Etowah"/>
+		<County code="1029" label="Fayette" symbol="FayetteAL"/>
+		<County code="1030" label="Franklin" symbol="FranklinAL"/>
+		<County code="1031" label="Geneva" symbol="Geneva"/>
+		<County code="1032" label="Greene" symbol="GreeneAL"/>
+		<County code="1033" label="Hale" symbol="HaleAL"/>
+		<County code="1034" label="Henry" symbol="HenryAL"/>
+		<County code="1035" label="Houston" symbol="HoustonAL"/>
+		<County code="1036" label="Jackson" symbol="JacksonAL"/>
+		<County code="1037" label="Jefferson" symbol="JeffersonAL"/>
+		<County code="1038" label="Lamar" symbol="LamarAL"/>
+		<County code="1039" label="Lauderdale" symbol="LauderdaleAL"/>
+		<County code="1040" label="Lawrence" symbol="LawrenceAL"/>
+		<County code="1041" label="Lee" symbol="LeeAL"/>
+		<County code="1042" label="Limestone" symbol="LimestoneAL"/>
+		<County code="1043" label="Lowndes" symbol="LowndesAL"/>
+		<County code="1044" label="Macon" symbol="MaconAL"/>
+		<County code="1045" label="Madison" symbol="MadisonAL"/>
+		<County code="1046" label="Marengo" symbol="Marengo"/>
+		<County code="1047" label="Marion" symbol="MarionAL"/>
+		<County code="1048" label="Marshall" symbol="MarshallAL"/>
+		<County code="1049" label="Mobile" symbol="Mobile"/>
+		<County code="1050" label="Monroe" symbol="MonroeAL"/>
+		<County code="1051" label="Montgomery" symbol="MontgomeryAL"/>
+		<County code="1052" label="Morgan" symbol="MorganAL" verticalCenterGap="5"/>
+		<County code="1053" label="Perry" symbol="PerryAL"/>
+		<County code="1054" label="Pickens" symbol="PickensAL"/>
+		<County code="1055" label="Pike" symbol="PikeAL"/>
+		<County code="1056" label="Randolph" symbol="RandolphAL"/>
+		<County code="1057" label="Russell" symbol="RussellAL"/>
+		<County code="1058" label="St. Clair" symbol="Saintclair"/>
+		<County code="1059" label="Shelby" symbol="ShelbyAL"/>
+		<County code="1060" label="Sumter" symbol="SumterAL"/>
+		<County code="1061" label="Talladega" symbol="Talladega"/>
+		<County code="1062" label="Tallapoosa" symbol="Tallapoosa"/>
+		<County code="1063" label="Tuscaloosa" symbol="Tuscaloosa"/>
+		<County code="1064" label="Walker" symbol="WalkerAL"/>
+		<County code="1065" label="Washington" symbol="WashingtonAL"/>
+		<County code="1066" label="Wilcox" symbol="WilcoxAL" verticalCenterGap="5"/>
+		<County code="1067" label="Winston" symbol="WinstonAL"/>
+	</State>
+	<State code="2000" label="Alaska" symbol="Alaska" horizontalCenterGap="20">
+		<County code="2001" label="Aleutians East Borough" symbol="Aleutianseastborough"/>
+		<County code="2002" label="Aleutians West Census Area" symbol="Aleutianswestcensusarea" horizontalCenterGap="-5" verticalCenterGap="18"/>
+		<County code="2003" label="Anchorage" symbol="Anchorage"/>
+		<County code="2004" label="Bethel Census Area" symbol="Bethelcensusarea" verticalCenterGap="-5"/>
+		<County code="2005" label="Bristol Bay Borough" symbol="Bristolbayborough"/>
+		<County code="2006" label="City and Borough of Juneau" symbol="Cityandboroughofjuneau"/>
+		<County code="2007" label="City and Borough of Wrangell" symbol="Cityandboroughofwrangell"/>
+		<County code="2008" label="The City and Borough of Yakutat" symbol="Cityandboroughofyakutat" verticalCenterGap="-2"/>
+		<County code="2009" label="Denali Borough" symbol="Denaliborough"/>
+		<County code="2010" label="Dillingham Census Area" symbol="Dillinghamcensusarea"/>
+		<County code="2011" label="Fairbanks North Star Borough" symbol="Fairbanksnorthstarborough"/>
+		<County code="2012" label="Haines Borough" symbol="Hainesborough" horizontalCenterGap="-5" verticalCenterGap="-5"/>
+		<County code="2013" label="Kenai Peninsula Borough" symbol="Kenaipeninsulaborough" horizontalCenterGap="10"/>
+		<County code="2014" label="Ketchikan Gateway Borough" symbol="Ketchikangatewayborough"/>
+		<County code="2015" label="Kodiak Island Borough" symbol="Kodiakislandborough"/>
+		<County code="2016" label="Lake and Peninsula Borough" symbol="Lakeandpeninsulaborough" horizontalCenterGap="3" verticalCenterGap="3"/>
+		<County code="2017" label="Matanuska-Susitna Borough" symbol="Matanuskasusitnaborough"/>
+		<County code="2018" label="Nome Census Area" symbol="Nomecensusarea" verticalCenterGap="-2"/>
+		<County code="2019" label="North Slope Borough" symbol="NorthslopeboroughAK"/>
+		<County code="2020" label="Northwest Arctic Borough" symbol="Northwestarcticborough"/>
+		<County code="2021" label="Petersburg Borough" symbol="Petersburgborough"/>
+		<County code="2022" label="Prince of Wales-Outer Ketchikan Census Area" symbol="Princeofwalesouterketchikancensusarea"/>
+		<County code="2023" label="Sitka" symbol="Sitkaborough"/>
+		<County code="2024" label="Skagway-Hoonah-Angoon Census Area" symbol="Skagwayhoonahangoon" horizontalCenterGap="-7" verticalCenterGap="-2"/>
+		<County code="2025" label="Southeast Fairbanks Census Area" symbol="Southeastfairbankscensusarea"/>
+		<County code="2026" label="Valdez–Cordova Census Area" symbol="Valdezcordovacensusarea"/>
+		<County code="2027" label="Kusilvak Census Area" symbol="Wadehamptoncensusarea"/>
+		<County code="2028" label="Yukon–Koyukuk Census Area" symbol="Yukonkoyukukcensusarea"/>
+	</State>
+	<State code="3000" label="Arizona" symbol="Arizona" verticalCenterGap="-5">
+		<County code="3001" label="Apache" symbol="Apache"/>
+		<County code="3002" label="Cochise" symbol="Cochise"/>
+		<County code="3003" label="Coconino" symbol="Coconino"/>
+		<County code="3004" label="Gila" symbol="Gila"/>
+		<County code="3005" label="Graham" symbol="GrahamAZ"/>
+		<County code="3006" label="Greenlee" symbol="Greenlee" verticalCenterGap="-10"/>
+		<County code="3007" label="Lapaz" symbol="Lapaz" verticalCenterGap="-10"/>
+		<County code="3008" label="Maricopa" symbol="Maricopa" horizontalCenterGap="-20"/>
+		<County code="3009" label="Mohave" symbol="Mohave" horizontalCenterGap="-20"/>
+		<County code="3010" label="Navajo" symbol="Navajo"/>
+		<County code="3011" label="Pima" symbol="Pima"/>
+		<County code="3012" label="Pinal" symbol="Pinal"/>
+		<County code="3013" label="Santa Cruz" symbol="SantacruzAZ"/>
+		<County code="3014" label="Yavapai" symbol="Yavapai"/>
+		<County code="3015" label="Yuma" symbol="YumaAZ" horizontalCenterGap="10"/>
+	</State>
+	<State code="4000" label="Arkansas" symbol="Arkansas">
+		<County code="4001" label="Arkansas County" symbol="Arkansascounty"/>
+		<County code="4002" label="Ashley" symbol="Ashley"/>
+		<County code="4003" label="Baxter" symbol="Baxter"/>
+		<County code="4004" label="Benton" symbol="BentonAR" verticalCenterGap="-3"/>
+		<County code="4005" label="Boone" symbol="BooneAR"/>
+		<County code="4006" label="Bradley" symbol="BradleyAR"/>
+		<County code="4007" label="Calhoun" symbol="CalhounAR"/>
+		<County code="4008" label="Carroll" symbol="CarrollAR"/>
+		<County code="4009" label="Chicot" symbol="Chicot"/>
+		<County code="4010" label="Clark" symbol="ClarkAR"/>
+		<County code="4011" label="Clay" symbol="ClayAR"/>
+		<County code="4012" label="Cleburne" symbol="CleburneAR"/>
+		<County code="4013" label="Cleveland" symbol="ClevelandAR"/>
+		<County code="4014" label="Columbia" symbol="ColumbiaAR"/>
+		<County code="4015" label="Conway" symbol="Conway"/>
+		<County code="4016" label="Craighead" symbol="Craighead"/>
+		<County code="4017" label="Crawford" symbol="CrawfordAR"/>
+		<County code="4018" label="Crittenden" symbol="CrittendenAR"/>
+		<County code="4019" label="Cross" symbol="Cross"/>
+		<County code="4020" label="Dallas" symbol="DallasAR"/>
+		<County code="4021" label="Desha" symbol="Desha"/>
+		<County code="4022" label="Drew" symbol="Drew"/>
+		<County code="4023" label="Faulkner" symbol="Faulkner"/>
+		<County code="4024" label="Franklin" symbol="FranklinAR"/>
+		<County code="4025" label="Fulton" symbol="FultonAR"/>
+		<County code="4026" label="Garland" symbol="Garland"/>
+		<County code="4027" label="Grant" symbol="GrantAR"/>
+		<County code="4028" label="Greene" symbol="GreeneAR"/>
+		<County code="4029" label="Hempstead" symbol="Hempstead"/>
+		<County code="4030" label="Hotspring" symbol="Hotspring" horizontalCenterGap="10"/>
+		<County code="4031" label="Howard" symbol="HowardAR"/>
+		<County code="4032" label="Independence" symbol="Independence" horizontalCenterGap="-10"/>
+		<County code="4033" label="Izard" symbol="Izard"/>
+		<County code="4034" label="Jackson" symbol="JacksonAR" horizontalCenterGap="5"/>
+		<County code="4035" label="Jefferson" symbol="JeffersonAR" horizontalCenterGap="-10"/>
+		<County code="4036" label="Johnson" symbol="JohnsonAR"/>
+		<County code="4037" label="Lafayette" symbol="LafayetteAR"/>
+		<County code="4038" label="Lawrence" symbol="LawrenceAR"/>
+		<County code="4039" label="LeeAR" symbol="LeeAR"/>
+		<County code="4040" label="Lincoln" symbol="LincolnAR"/>
+		<County code="4041" label="Littleriver" symbol="Littleriver" horizontalCenterGap="-10" verticalCenterGap="3"/>
+		<County code="4042" label="Logan" symbol="LoganAR"/>
+		<County code="4043" label="Lonoke" symbol="Lonoke"/>
+		<County code="4044" label="Madison" symbol="MadisonAR"/>
+		<County code="4045" label="Marion" symbol="MarionAR"/>
+		<County code="4046" label="Miller" symbol="MillerAR"/>
+		<County code="4047" label="Mississippi" symbol="MississippiAR" horizontalCenterGap="-7"/>
+		<County code="4048" label="Monroe" symbol="MonroeAR"/>
+		<County code="4049" label="Montgomery" symbol="MontgomeryAR"/>
+		<County code="4050" label="Nevada" symbol="NevadaAR"/>
+		<County code="4051" label="Newton" symbol="NewtonAR"/>
+		<County code="4052" label="Ouachita" symbol="Ouachita"/>
+		<County code="4053" label="Perry" symbol="PerryAR"/>
+		<County code="4054" label="Phillips" symbol="PhillipsAR"/>
+		<County code="4055" label="Pike" symbol="PikeAR"/>
+		<County code="4056" label="Poinsett" symbol="Poinsett"/>
+		<County code="4057" label="Polk" symbol="PolkAR"/>
+		<County code="4058" label="Pope" symbol="PopeAR"/>
+		<County code="4059" label="Prairie" symbol="PrairieAR"/>
+		<County code="4060" label="Pulaski" symbol="PulaskiAR"/>
+		<County code="4061" label="Randolph" symbol="RandolphAR"/>
+		<County code="4062" label="St. Francis" symbol="Saintfrancis"/>
+		<County code="4063" label="Saline" symbol="SalineAR"/>
+		<County code="4064" label="Scott" symbol="ScottAR"/>
+		<County code="4065" label="Searcy" symbol="Searcy"/>
+		<County code="4066" label="Sebastian" symbol="Sebastian"/>
+		<County code="4067" label="Sevier" symbol="SevierAR"/>
+		<County code="4068" label="Sharp" symbol="Sharp"/>
+		<County code="4069" label="Stone" symbol="StoneAR" verticalCenterGap="5"/>
+		<County code="4070" label="Union" symbol="UnionAR"/>
+		<County code="4071" label="Vanburen" symbol="VanburenAR"/>
+		<County code="4072" label="Washington" symbol="WashingtonAR"/>
+		<County code="4073" label="White" symbol="WhiteAR"/>
+		<County code="4074" label="Woodruff" symbol="Woodruff"/>
+		<County code="4075" label="Yell" symbol="Yell"/>
+	</State>
+	<State code="5000" label="California" symbol="California" horizontalCenterGap="-10">
+		<County code="5001" label="Alameda" symbol="Alameda"/>
+		<County code="5002" label="Alpine" symbol="Alpine"/>
+		<County code="5003" label="Amador" symbol="Amador"/>
+		<County code="5004" label="Butte" symbol="ButteCA"/>
+		<County code="5005" label="Calaveras" symbol="Calaveras"/>
+		<County code="5006" label="Colusa" symbol="Colusa"/>
+		<County code="5007" label="Contra Costa" symbol="Contracosta"/>
+		<County code="5008" label="Delnorte" symbol="Delnorte"/>
+		<County code="5009" label="El Dorado" symbol="Eldorado"/>
+		<County code="5010" label="Fresno" symbol="Fresno"/>
+		<County code="5011" label="Glenn" symbol="Glenn"/>
+		<County code="5012" label="Humboldt" symbol="HumboldtCA"/>
+		<County code="5013" label="Imperial" symbol="Imperial"/>
+		<County code="5014" label="Inyo" symbol="Inyo"/>
+		<County code="5015" label="Kern" symbol="Kern"/>
+		<County code="5016" label="Kings" symbol="Kings" horizontalCenterGap="2" verticalCenterGap="3"/>
+		<County code="5017" label="Lake" symbol="LakeCA"/>
+		<County code="5018" label="Lassen" symbol="Lassen" verticalCenterGap="-10"/>
+		<County code="5019" label="Los Angeles" symbol="Losangeles"/>
+		<County code="5020" label="Madera" symbol="Madera"/>
+		<County code="5021" label="Marin" symbol="Marin"/>
+		<County code="5022" label="Mariposa" symbol="Mariposa"/>
+		<County code="5023" label="Mendocino" symbol="Mendocino"/>
+		<County code="5024" label="Merced" symbol="Merced"/>
+		<County code="5025" label="Modoc" symbol="Modoc"/>
+		<County code="5026" label="Mono" symbol="Mono" horizontalCenterGap="-2" verticalCenterGap="5"/>
+		<County code="5027" label="Monterey" symbol="Monterey" horizontalCenterGap="-5" verticalCenterGap="5"/>
+		<County code="5028" label="Napa" symbol="Napa"/>
+		<County code="5029" label="Nevada" symbol="NevadaCA" horizontalCenterGap="-2" verticalCenterGap="-3"/>
+		<County code="5030" label="Orange" symbol="OrangeCA"/>
+		<County code="5031" label="Placer" symbol="Placer" horizontalCenterGap="2" verticalCenterGap="-2"/>
+		<County code="5032" label="Plumas" symbol="Plumas"/>
+		<County code="5033" label="Riverside" symbol="Riverside"/>
+		<County code="5034" label="Sacramento" symbol="Sacramento"/>
+		<County code="5035" label="San Benito" symbol="Sanbenito"/>
+		<County code="5036" label="San Bernardino" symbol="Sanbernardino"/>
+		<County code="5037" label="San Diego" symbol="Sandiego"/>
+		<County code="5038" label="San Francisco" symbol="Sanfrancisco"/>
+		<County code="5039" label="San Joaquin" symbol="Sanjoaquin"/>
+		<County code="5040" label="San Luis Obispo" symbol="Sanluisobispo"/>
+		<County code="5041" label="San Mateo" symbol="Sanmateo"/>
+		<County code="5042" label="Santa Barbara" symbol="Santabarbara"/>
+		<County code="5043" label="Santa Clara" symbol="Santaclara"/>
+		<County code="5044" label="Santa Cruz" symbol="SantacruzCA"/>
+		<County code="5045" label="Shasta" symbol="Shasta"/>
+		<County code="5046" label="Sierra" symbol="SierraCA"/>
+		<County code="5047" label="Siskiyou" symbol="Siskiyou" verticalCenterGap="-5"/>
+		<County code="5048" label="Solano" symbol="Solano"/>
+		<County code="5049" label="Sonoma" symbol="Sonoma"/>
+		<County code="5050" label="Stanislaus" symbol="Stanislaus"/>
+		<County code="5051" label="Sutter" symbol="Sutter"/>
+		<County code="5052" label="Tehama" symbol="Tehama"/>
+		<County code="5053" label="Trinity" symbol="TrinityCA"/>
+		<County code="5054" label="Tulare" symbol="Tulare"/>
+		<County code="5055" label="Tuolumne" symbol="Tuolumne"/>
+		<County code="5056" label="Ventura" symbol="Ventura"/>
+		<County code="5057" label="Yolo" symbol="Yolo"/>
+		<County code="5058" label="Yuba" symbol="Yuba"/>
+	</State>
+	<State code="6000" label="Colorado" symbol="Colorado">
+		<County code="6001" label="Adams" symbol="AdamsCO"/>
+		<County code="6002" label="Alamosa" symbol="Alamosa"/>
+		<County code="6003" label="Arapahoe" symbol="Arapahoe"/>
+		<County code="6004" label="Archuleta" symbol="Archuleta"/>
+		<County code="6005" label="Baca" symbol="Baca"/>
+		<County code="6006" label="Bent" symbol="Bent"/>
+		<County code="6007" label="Boulder" symbol="Boulder"/>
+		<County code="6008" label="Broomfield" symbol="Broomfield"/>
+		<County code="6009" label="Chaffee" symbol="Chaffee"/>
+		<County code="6010" label="Cheyenne" symbol="CheyenneCO"/>
+		<County code="6011" label="Clear Creek" symbol="Clearcreek"/>
+		<County code="6012" label="Conejo" symbol="Conejo"/>
+		<County code="6013" label="Costilla" symbol="Costilla"/>
+		<County code="6014" label="Crowley" symbol="Crowley"/>
+		<County code="6015" label="Custer" symbol="CusterCO"/>
+		<County code="6016" label="Delta" symbol="DeltaCO" verticalCenterGap="5"/>
+		<County code="6017" label="Denver" symbol="Denver"/>
+		<County code="6018" label="Dolores" symbol="Dolores"/>
+		<County code="6019" label="Douglas" symbol="DouglasCO"/>
+		<County code="6020" label="Eagle" symbol="Eagle"/>
+		<County code="6021" label="Elbert" symbol="ElbertCO" verticalCenterGap="-10"/>
+		<County code="6022" label="El Paso" symbol="ElpasoCO"/>
+		<County code="6023" label="Fremont" symbol="FremontCO"/>
+		<County code="6024" label="Garfield" symbol="GarfieldCO" verticalCenterGap="10"/>
+		<County code="6025" label="Gilpin" symbol="Gilpin" verticalCenterGap="-2"/>
+		<County code="6026" label="Grand" symbol="GrandCO"/>
+		<County code="6027" label="Gunnison" symbol="Gunnison"/>
+		<County code="6028" label="Hinsdale" symbol="Hinsdale"/>
+		<County code="6029" label="Huerfano" symbol="Huerfano"/>
+		<County code="6030" label="Jackson" symbol="JacksonCO"/>
+		<County code="6031" label="Jefferson" symbol="JeffersonCO"/>
+		<County code="6032" label="Kiowa" symbol="KiowaCO"/>
+		<County code="6033" label="Kitcarson" symbol="Kitcarson"/>
+		<County code="6034" label="Lake" symbol="LakeCO"/>
+		<County code="6035" label="La Plata" symbol="Laplata"/>
+		<County code="6036" label="Larimer" symbol="Larimer"/>
+		<County code="6037" label="Las Animas" symbol="Lasanimas"/>
+		<County code="6038" label="Lincoln" symbol="LincolnCO"/>
+		<County code="6039" label="Logan" symbol="LoganCO"/>
+		<County code="6040" label="Mesa" symbol="Mesa" horizontalCenterGap="-15"/>
+		<County code="6041" label="Mineral" symbol="MineralCO"/>
+		<County code="6042" label="Moffat" symbol="Moffat"/>
+		<County code="6043" label="Montezuma" symbol="Montezuma"/>
+		<County code="6044" label="Montrose" symbol="Montrose"/>
+		<County code="6045" label="Morgan" symbol="MorganCO"/>
+		<County code="6046" label="Otero" symbol="OteroCO"/>
+		<County code="6047" label="Ouray" symbol="Ouray"/>
+		<County code="6048" label="Park" symbol="ParkCO"/>
+		<County code="6049" label="Phillips" symbol="PhillipsCO"/>
+		<County code="6050" label="Pitkin" symbol="Pitkin"/>
+		<County code="6051" label="Prowers" symbol="Prowers"/>
+		<County code="6052" label="Pueblo" symbol="Pueblo"/>
+		<County code="6053" label="Rio Blanco" symbol="Rioblanco"/>
+		<County code="6054" label="Rio Grande" symbol="Riogrande"/>
+		<County code="6055" label="Routt" symbol="Routt"/>
+		<County code="6056" label="Saguache" symbol="Saguache"/>
+		<County code="6057" label="San Juan" symbol="SanjuanCO" horizontalCenterGap="2" verticalCenterGap="3"/>
+		<County code="6058" label="San Miguel" symbol="SanmiguelCO"/>
+		<County code="6059" label="Sedgwick" symbol="SedgwickCO"/>
+		<County code="6060" label="Summit" symbol="SummitCO"/>
+		<County code="6061" label="Teller" symbol="Teller"/>
+		<County code="6062" label="Washington" symbol="WashingtonCO"/>
+		<County code="6063" label="Weld" symbol="Weld" horizontalCenterGap="-10"/>
+		<County code="6064" label="Yuma" symbol="YumaCO"/>
+	</State>
+	<State code="7000" label="Connecticut" symbol="Connecticut">
+		<County code="7001" label="Fairfield" symbol="FairfieldCT"/>
+		<County code="7002" label="Hartford" symbol="Hartford"/>
+		<County code="7003" label="Litchfield" symbol="Litchfield"/>
+		<County code="7004" label="Middlesex" symbol="MiddlesexCT"/>
+		<County code="7005" label="New Haven" symbol="Newhaven"/>
+		<County code="7006" label="New London" symbol="Newlondon"/>
+		<County code="7007" label="Tolland" symbol="Tolland"/>
+		<County code="7008" label="Windham" symbol="WindhamCT"/>
+	</State>
+	<State code="8000" label="Delaware" symbol="Delaware">
+		<County code="8001" label="Kent" symbol="Kent"/>
+		<County code="8002" label="New Castle" symbol="Newcastle" horizontalCenterGap="-20"/>
+		<County code="8003" label="Sussex" symbol="SussexDE"/>
+	</State>
+	<State code="9000" label="Florida" symbol="Florida" horizontalCenterGap="20">
+		<County code="9001" label="Alachua" symbol="Alachua"/>
+		<County code="9002" label="Baker" symbol="BakerFL" verticalCenterGap="5"/>
+		<County code="9003" label="Bay" symbol="BayFL"/>
+		<County code="9004" label="Bradford" symbol="BradfordFL"/>
+		<County code="9005" label="Brevard" symbol="Brevard" horizontalCenterGap="-4"/>
+		<County code="9006" label="Broward" symbol="Broward"/>
+		<County code="9007" label="Calhoun" symbol="CalhounFL"/>
+		<County code="9008" label="Charlotte" symbol="CharlotteFL"/>
+		<County code="9009" label="Citrus" symbol="Citrus"/>
+		<County code="9010" label="Clay" symbol="ClayFL"/>
+		<County code="9011" label="Collier" symbol="Collier"/>
+		<County code="9012" label="Columbia" symbol="ColumbiaFL"/>
+		<County code="9013" label="Desoto" symbol="DesotoFL"/>
+		<County code="9014" label="Dixie" symbol="Dixie"/>
+		<County code="9015" label="Duval" symbol="DuvalFL"/>
+		<County code="9016" label="Escambia" symbol="EscambiaFL" horizontalCenterGap="3"/>
+		<County code="9017" label="Flagler" symbol="Flagler"/>
+		<County code="9018" label="Franklin" symbol="FranklinFL" verticalCenterGap="-3"/>
+		<County code="9019" label="Gadsden" symbol="Gadsden"/>
+		<County code="9020" label="Gilchrist" symbol="Gilchrist"/>
+		<County code="9021" label="Glades" symbol="Glades" verticalCenterGap="5"/>
+		<County code="9022" label="Gulf" symbol="Gulf"/>
+		<County code="9023" label="Hamilton" symbol="HamiltonFL"/>
+		<County code="9024" label="Hardee" symbol="Hardee"/>
+		<County code="9025" label="Hendry" symbol="Hendry" horizontalCenterGap="5"/>
+		<County code="9026" label="Hernando" symbol="Hernando"/>
+		<County code="9027" label="Highlands" symbol="Highlands"/>
+		<County code="9028" label="Hillsborough" symbol="HillsboroughFL"/>
+		<County code="9029" label="Holmes" symbol="HolmesFL"/>
+		<County code="9030" label="Indianriver" symbol="Indianriver"/>
+		<County code="9031" label="Jackson" symbol="JacksonFL"/>
+		<County code="9032" label="Jefferson" symbol="JeffersonFL" horizontalCenterGap="-3" />
+		<County code="9033" label="Lafayette" symbol="LafayetteFL" verticalCenterGap="3"/>
+		<County code="9034" label="Lake" symbol="LakeFL" horizontalCenterGap="-3"/>
+		<County code="9035" label="Lee" symbol="LeeFL"/>
+		<County code="9036" label="Leon" symbol="LeonFL"/>
+		<County code="9037" label="Levy" symbol="Levy"/>
+		<County code="9038" label="Liberty" symbol="LibertyFL"/>
+		<County code="9039" label="Madison" symbol="MadisonFL"/>
+		<County code="9040" label="Manatee" symbol="Manatee" verticalCenterGap="-5"/>
+		<County code="9041" label="Marion" symbol="MarionFL"/>
+		<County code="9042" label="Martin" symbol="MartinFL"/>
+		<County code="9043" label="Miamidade" symbol="Miamidade"/>
+		<County code="9044" label="Monroe" symbol="MonroeFL" horizontalCenterGap="3"/>
+		<County code="9045" label="Nassau" symbol="NassauFL" verticalCenterGap="-3"/>
+		<County code="9046" label="Okaloosa" symbol="Okaloosa"/>
+		<County code="9047" label="Okeechobee" symbol="Okeechobee"/>
+		<County code="9048" label="Orange" symbol="OrangeFL" verticalCenterGap="3"/>
+		<County code="9049" label="Osceola" symbol="OsceolaFL" horizontalCenterGap="5"/>
+		<County code="9050" label="Palmbeach" symbol="Palmbeach"/>
+		<County code="9051" label="Pasco" symbol="Pasco"/>
+		<County code="9052" label="Pinellas" symbol="Pinellas"/>
+		<County code="9053" label="Polk" symbol="PolkFL"/>
+		<County code="9054" label="Putnam" symbol="PutnamFL"/>
+		<County code="9055" label="St. Johns" symbol="Saintjohns"/>
+		<County code="9056" label="St. Lucie" symbol="Saintlucie"/>
+		<County code="9057" label="Santa Rosa" symbol="Santarosa"/>
+		<County code="9058" label="Sarasota" symbol="Sarasota"/>
+		<County code="9059" label="Seminole" symbol="SeminoleFL"/>
+		<County code="9060" label="Sumter" symbol="SumterFL" verticalCenterGap="-5"/>
+		<County code="9061" label="Suwannee" symbol="Suwannee"/>
+		<County code="9062" label="Taylor" symbol="TaylorFL"/>
+		<County code="9063" label="Union" symbol="UnionFL"/>
+		<County code="9064" label="Volusia" symbol="Volusia"/>
+		<County code="9065" label="Wakulla" symbol="Wakulla"/>
+		<County code="9066" label="Walton" symbol="WaltonFL"/>
+		<County code="9067" label="Washington" symbol="WashingtonFL"/>
+	</State>
+	<State code="10000" label="Georgia" symbol="Georgia" verticalCenterGap="5">
+		<County code="10001" label="Appling" symbol="Appling"/>
+		<County code="10002" label="Atkinson" symbol="Atkinson"/>
+		<County code="10003" label="Bacon" symbol="Bacon"/>
+		<County code="10004" label="Baker" symbol="BakerGA" verticalCenterGap="-3"/>
+		<County code="10005" label="Baldwin" symbol="BaldwinGA"/>
+		<County code="10006" label="Banks" symbol="Banks"/>
+		<County code="10007" label="Barrow" symbol="Barrow"/>
+		<County code="10008" label="Bartow" symbol="Bartow"/>
+		<County code="10009" label="Benhill" symbol="Benhill"/>
+		<County code="10010" label="Berrien" symbol="BerrienGA"/>
+		<County code="10011" label="Bibb" symbol="BibbGA"/>
+		<County code="10012" label="Bleckley" symbol="Bleckley"/>
+		<County code="10013" label="Brantley" symbol="Brantley"/>
+		<County code="10014" label="Brooks" symbol="BrooksGA"/>
+		<County code="10015" label="Bryan" symbol="BryanGA"/>
+		<County code="10016" label="Bulloch" symbol="Bulloch"/>
+		<County code="10017" label="Burke" symbol="BurkeGA"/>
+		<County code="10018" label="Butts" symbol="Butts"/>
+		<County code="10019" label="Calhoun" symbol="CalhounGA"/>
+		<County code="10020" label="Camden" symbol="CamdenGA"/>
+		<County code="10021" label="Candler" symbol="Candler"/>
+		<County code="10022" label="Carroll" symbol="CarrollGA"/>
+		<County code="10023" label="Catoosa" symbol="Catoosa"/>
+		<County code="10024" label="Charlton" symbol="Charlton" horizontalCenterGap="2" verticalCenterGap="10"/>
+		<County code="10025" label="Chatham" symbol="ChathamGA"/>
+		<County code="10026" label="Chattahoochee" symbol="Chattahoochee" verticalCenterGap="3"/>
+		<County code="10027" label="Chattooga" symbol="Chattooga" verticalCenterGap="-5"/>
+		<County code="10028" label="Cherokee" symbol="CherokeeGA"/>
+		<County code="10029" label="Clark" symbol="ClarkGA" horizontalCenterGap="2"/>
+		<County code="10030" label="Clay" symbol="ClayGA"/>
+		<County code="10031" label="Clayton" symbol="ClaytonGA"/>
+		<County code="10032" label="Clinch" symbol="Clinch"/>
+		<County code="10033" label="Cobb" symbol="Cobb"/>
+		<County code="10034" label="Coffee" symbol="CoffeeGA"/>
+		<County code="10035" label="Colquitt" symbol="Colquitt"/>
+		<County code="10036" label="Columbia" symbol="ColumbiaGA"/>
+		<County code="10037" label="Cook" symbol="CookGA"/>
+		<County code="10038" label="Coweta" symbol="Coweta"/>
+		<County code="10039" label="Crawford" symbol="CrawfordGA"/>
+		<County code="10040" label="Crisp" symbol="Crisp"/>
+		<County code="10041" label="Dade" symbol="DadeGA"/>
+		<County code="10042" label="Dawson" symbol="DawsonGA"/>
+		<County code="10043" label="Decatur" symbol="DecaturGA"/>
+		<County code="10044" label="Dekalb" symbol="DekalbGA"/>
+		<County code="10045" label="Dodge" symbol="DodgeGA"/>
+		<County code="10046" label="Dooly" symbol="Dooly"/>
+		<County code="10047" label="Dougherty" symbol="Dougherty"/>
+		<County code="10048" label="Douglas" symbol="DouglasGA"/>
+		<County code="10049" label="Early" symbol="Early" horizontalCenterGap="-5"/>
+		<County code="10050" label="Echols" symbol="Echols"/>
+		<County code="10051" label="Effingham" symbol="EffinghamGA"/>
+		<County code="10052" label="Elbert" symbol="ElbertGA"/>
+		<County code="10053" label="Emanuel" symbol="Emanuel"/>
+		<County code="10054" label="Evans" symbol="Evans"/>
+		<County code="10055" label="Fannin" symbol="FanninGA" verticalCenterGap="-5"/>
+		<County code="10056" label="Fayette" symbol="FayetteGA"/>
+		<County code="10057" label="Floyd" symbol="FloydGA" verticalCenterGap="5"/>
+		<County code="10058" label="Forsyth" symbol="ForsythGA"/>
+		<County code="10059" label="Franklin" symbol="FranklinGA"/>
+		<County code="10060" label="Fulton" symbol="FultonGA" verticalCenterGap="5"/>
+		<County code="10061" label="Gilmer" symbol="GilmerGA"/>
+		<County code="10062" label="Glascock" symbol="Glascock"/>
+		<County code="10063" label="Glynn" symbol="Glynn"/>
+		<County code="10064" label="Gordon" symbol="Gordon"/>
+		<County code="10065" label="Grady" symbol="GradyGA"/>
+		<County code="10066" label="Greene" symbol="GreeneGA"/>
+		<County code="10067" label="Gwinnett" symbol="Gwinnett"/>
+		<County code="10068" label="Habersham" symbol="Habersham"/>
+		<County code="10069" label="Hall" symbol="HallGA"/>
+		<County code="10070" label="Hancock" symbol="HancockGA"/>
+		<County code="10071" label="Haralson" symbol="Haralson"/>
+		<County code="10072" label="Harris" symbol="HarrisGA"/>
+		<County code="10073" label="Hart" symbol="HartGA"/>
+		<County code="10074" label="Heard" symbol="Heard"/>
+		<County code="10075" label="Henry" symbol="HenryGA"/>
+		<County code="10076" label="Houston" symbol="HoustonGA"/>
+		<County code="10077" label="Irwin" symbol="Irwin"/>
+		<County code="10078" label="Jackson" symbol="JacksonGA"/>
+		<County code="10079" label="Jasper" symbol="JasperGA"/>
+		<County code="10080" label="Jeff Davis" symbol="JeffdavisGA"/>
+		<County code="10081" label="Jefferson" symbol="JeffersonGA"/>
+		<County code="10082" label="Jenkins" symbol="Jenkins"/>
+		<County code="10083" label="Johnson" symbol="JohnsonGA" horizontalCenterGap="3"/>
+		<County code="10084" label="Jones" symbol="JonesGA"/>
+		<County code="10085" label="Lamar" symbol="LamarGA"/>
+		<County code="10086" label="Lanier" symbol="Lanier"/>
+		<County code="10087" label="Laurens" symbol="LaurensGA"/>
+		<County code="10088" label="Lee" symbol="LeeGA"/>
+		<County code="10089" label="Liberty" symbol="LibertyGA" verticalCenterGap="3"/>
+		<County code="10090" label="Lincoln" symbol="LincolnGA"/>
+		<County code="10091" label="Long" symbol="Long"/>
+		<County code="10092" label="Lowndes" symbol="LowndesGA"/>
+		<County code="10093" label="Lumpkin" symbol="Lumpkin"/>
+		<County code="10094" label="Macon" symbol="MaconGA"/>
+		<County code="10095" label="Madison" symbol="MadisonGA"/>
+		<County code="10096" label="Marion" symbol="MarionGA"/>
+		<County code="10097" label="Mcduffie" symbol="Mcduffie"/>
+		<County code="10098" label="Mcintosh" symbol="McintoshGA"/>
+		<County code="10099" label="Meriwether" symbol="Meriwether"/>
+		<County code="10100" label="Miller" symbol="MillerGA" horizontalCenterGap="-3"/>
+		<County code="10101" label="Mitchell" symbol="MitchellGA"/>
+		<County code="10102" label="Monroe" symbol="MonroeGA"/>
+		<County code="10103" label="Montgomery" symbol="MontgomeryGA"/>
+		<County code="10104" label="Morgan" symbol="MorganGA"/>
+		<County code="10105" label="Murray" symbol="MurrayGA"/>
+		<County code="10106" label="Muscogee" symbol="Muscogee"/>
+		<County code="10107" label="Newton" symbol="NewtonGA"/>
+		<County code="10108" label="Oconee" symbol="OconeeGA"/>
+		<County code="10109" label="Oglethorpe" symbol="Oglethorpe"/>
+		<County code="10110" label="Paulding" symbol="PauldingGA"/>
+		<County code="10111" label="Peach" symbol="Peach"/>
+		<County code="10112" label="Pickens" symbol="PickensGA"/>
+		<County code="10113" label="Pierce" symbol="PierceGA"/>
+		<County code="10114" label="Pike" symbol="PikeGA"/>
+		<County code="10115" label="Polk" symbol="PolkGA"/>
+		<County code="10116" label="Pulask" symbol="Pulask"/>
+		<County code="10117" label="Putnam" symbol="PutnamGA"/>
+		<County code="10118" label="Quitman" symbol="QuitmanGA"/>
+		<County code="10119" label="Rabun" symbol="Rabun" horizontalCenterGap="-5"/>
+		<County code="10120" label="Randolph" symbol="RandolphGA"/>
+		<County code="10121" label="Richmond" symbol="RichmondGA"/>
+		<County code="10122" label="Rockdale" symbol="Rockdale"/>
+		<County code="10123" label="Schley" symbol="Schley"/>
+		<County code="10124" label="Screven" symbol="Screven"/>
+		<County code="10125" label="Seminole" symbol="SeminoleGA" horizontalCenterGap="3"/>
+		<County code="10126" label="Spalding" symbol="Spalding"/>
+		<County code="10127" label="Stephens" symbol="StephensGA"/>
+		<County code="10128" label="Stewart" symbol="StewartGA"/>
+		<County code="10129" label="Sumter" symbol="SumterGA"/>
+		<County code="10130" label="Talbott" symbol="Talbott"/>
+		<County code="10131" label="Taliaferro" symbol="Taliaferro"/>
+		<County code="10132" label="Tattnall" symbol="Tattnall"/>
+		<County code="10133" label="Taylor" symbol="TaylorGA"/>
+		<County code="10134" label="Telfair" symbol="Telfair"/>
+		<County code="10135" label="Terrell" symbol="TerrellGA"/>
+		<County code="10136" label="Thomas" symbol="ThomasGA"/>
+		<County code="10137" label="Tift" symbol="Tift"/>
+		<County code="10138" label="Toombs" symbol="Toombs"/>
+		<County code="10139" label="Towns" symbol="Towns"/>
+		<County code="10140" label="Treutlen" symbol="Treutlen"/>
+		<County code="10141" label="Troup" symbol="Troup"/>
+		<County code="10142" label="Turner" symbol="TurnerGA"/>
+		<County code="10143" label="Twiggs" symbol="Twiggs"/>
+		<County code="10144" label="Union" symbol="UnionGA"/>
+		<County code="10145" label="Upson" symbol="Upson"/>
+		<County code="10146" label="Walker" symbol="WalkerGA"/>
+		<County code="10147" label="Walton" symbol="WaltonGA"/>
+		<County code="10148" label="Ware" symbol="Ware" horizontalCenterGap="-3" verticalCenterGap="-5"/>
+		<County code="10149" label="Warren" symbol="WarrenGA"/>
+		<County code="10150" label="Washington" symbol="WashingtonGA"/>
+		<County code="10151" label="Wayne" symbol="WayneGA"/>
+		<County code="10152" label="Webster" symbol="WebsterGA"/>
+		<County code="10153" label="Wheeler" symbol="WheelerGA"/>
+		<County code="10154" label="White" symbol="WhiteGA"/>
+		<County code="10155" label="Whitfield" symbol="Whitfield"/>
+		<County code="10156" label="Wilcox" symbol="WilcoxGA"/>
+		<County code="10157" label="Wilkes" symbol="WilkesGA"/>
+		<County code="10158" label="Wilkinson" symbol="WilkinsonGA"/>
+		<County code="10159" label="Worth" symbol="WorthGA"/>
+	</State>
+	<State code="11000" label="Hawaii" symbol="Hawaii" horizontalCenterGap="20">
+		<County code="11001" label="Hawaii County" symbol="Hawaiicounty"/>
+		<County code="11002" label="Honolulu" symbol="Honolulu"/>
+		<County code="11003" label="Kalawao" symbol="Kalawao"/>
+		<County code="11004" label="Kauai" symbol="Kauai" horizontalCenterGap="15"/>
+		<County code="11005" label="Maui" symbol="Maui" horizontalCenterGap="15"/>
+	</State>
+	<State code="12000" label="Idaho" symbol="Idaho" horizontalCenterGap="-5" verticalCenterGap="20">
+		<County code="12001" label="Ada" symbol="Ada"/>
+		<County code="12002" label="Adams" symbol="AdamsID"/>
+		<County code="12003" label="Bannock" symbol="Bannock"/>
+		<County code="12004" label="Bearlake" symbol="Bearlake"/>
+		<County code="12005" label="Benewah" symbol="Benewah"/>
+		<County code="12006" label="Bingham" symbol="Bingham"/>
+		<County code="12007" label="Blaine" symbol="BlaineID" verticalCenterGap="-5"/>
+		<County code="12008" label="Boise" symbol="Boise" horizontalCenterGap="-5"/>
+		<County code="12009" label="Bonner" symbol="Bonner" verticalCenterGap="5"/>
+		<County code="12010" label="Bonneville" symbol="Bonneville" horizontalCenterGap="5" verticalCenterGap="-5"/>
+		<County code="12011" label="Boundary" symbol="Boundary"/>
+		<County code="12012" label="Butte" symbol="ButteID"/>
+		<County code="12013" label="Camas" symbol="Camas" horizontalCenterGap="-2" verticalCenterGap="3"/>
+		<County code="12014" label="Canyon" symbol="Canyon" verticalCenterGap="-3"/>
+		<County code="12015" label="Caribou" symbol="Caribou"/>
+		<County code="12016" label="Cassia" symbol="CassiaID"/>
+		<County code="12017" label="Clark" symbol="ClarkID"/>
+		<County code="12018" label="Clearwater" symbol="ClearwaterID"/>
+		<County code="12019" label="Custer" symbol="CusterID"/>
+		<County code="12020" label="Elmore" symbol="ElmoreID" verticalCenterGap="5"/>
+		<County code="12021" label="Franklin" symbol="FranklinID" horizontalCenterGap="2" verticalCenterGap="2"/>
+		<County code="12022" label="Fremont" symbol="FremontID"/>
+		<County code="12023" label="Gem" symbol="Gem" horizontalCenterGap="2" verticalCenterGap="3"/>
+		<County code="12024" label="Gooding" symbol="Gooding" verticalCenterGap="-4"/>
+		<County code="12025" label="Idaho County" symbol="Idahocounty"/>
+		<County code="12026" label="Jefferson" symbol="JeffersonID"/>
+		<County code="12027" label="Jerome" symbol="Jerome"/>
+		<County code="12028" label="Kootenai" symbol="Kootenai"/>
+		<County code="12029" label="Latah" symbol="Latah"/>
+		<County code="12030" label="Lemhi" symbol="Lemhi"/>
+		<County code="12031" label="Lewis" symbol="LewisID" horizontalCenterGap="-4" verticalCenterGap="-1"/>
+		<County code="12032" label="Lincoln" symbol="LincolnID"/>
+		<County code="12033" label="Madison" symbol="MadisonID"/>
+		<County code="12034" label="Minidoka" symbol="Minidoka" horizontalCenterGap="2"/>
+		<County code="12035" label="Nezperce" symbol="Nezperce" horizontalCenterGap="-4" verticalCenterGap="-3"/>
+		<County code="12036" label="Oneida" symbol="OneidaID"/>
+		<County code="12037" label="Owyhee" symbol="Owyhee" verticalCenterGap="15"/>
+		<County code="12038" label="Payette" symbol="Payette" horizontalCenterGap="-2"/>
+		<County code="12039" label="Power" symbol="Power"/>
+		<County code="12040" label="Shoshone" symbol="Shoshone" horizontalCenterGap="-10" verticalCenterGap="15"/>
+		<County code="12041" label="Teton" symbol="TetonID"/>
+		<County code="12042" label="Twinfalls" symbol="Twinfalls" horizontalCenterGap="-2" verticalCenterGap="5"/>
+		<County code="12043" label="Valley" symbol="ValleyID" horizontalCenterGap="-5"/>
+		<County code="12044" label="Washington" symbol="WashingtonID"/>
+	</State>
+	<State code="13000" label="Illinois" symbol="Illinois" verticalCenterGap="-5">
+		<County code="13001" label="Adams" symbol="AdamsIL"/>
+		<County code="13002" label="Alexander" symbol="AlexanderIL"/>
+		<County code="13003" label="Bond" symbol="Bond"/>
+		<County code="13004" label="Boone" symbol="BooneIL"/>
+		<County code="13005" label="Brown" symbol="BrownIL"/>
+		<County code="13006" label="Bureau" symbol="Bureau"/>
+		<County code="13007" label="Calhoun" symbol="CalhounIL" horizontalCenterGap="2"/>
+		<County code="13008" label="Carroll" symbol="CarrollIL"/>
+		<County code="13009" label="Cass" symbol="CassIL"/>
+		<County code="13010" label="Champaign" symbol="ChampaignIL"/>
+		<County code="13011" label="Christian" symbol="ChristianIL"/>
+		<County code="13012" label="Clark" symbol="ClarkIL"/>
+		<County code="13013" label="Clay" symbol="ClayIL"/>
+		<County code="13014" label="Clinton" symbol="ClintonIL"/>
+		<County code="13015" label="Coles" symbol="Coles"/>
+		<County code="13016" label="Cook" symbol="CookIL" horizontalCenterGap="3"/>
+		<County code="13017" label="Crawford" symbol="CrawfordIL"/>
+		<County code="13018" label="Cumberland" symbol="CumberlandIL"/>
+		<County code="13019" label="DeKalb" symbol="DeKalbIL"/>
+		<County code="13020" label="Dewitt" symbol="DewittIL"/>
+		<County code="13021" label="Douglas" symbol="DouglasIL"/>
+		<County code="13022" label="DuPage" symbol="DuPage"/>
+		<County code="13023" label="Edgar" symbol="Edgar"/>
+		<County code="13024" label="Edwards" symbol="EdwardsIL"/>
+		<County code="13025" label="Effingham" symbol="EffinghamIL"/>
+		<County code="13026" label="Fayette" symbol="FayetteIL"/>
+		<County code="13027" label="Ford" symbol="FordIL"/>
+		<County code="13028" label="Franklin" symbol="FranklinIL"/>
+		<County code="13029" label="Fulton" symbol="FultonIL" horizontalCenterGap="-5"/>
+		<County code="13030" label="Gallatin" symbol="GallatinIL"/>
+		<County code="13031" label="Greene" symbol="GreeneIL"/>
+		<County code="13032" label="Grundy" symbol="GrundyIL"/>
+		<County code="13033" label="Hamilton" symbol="HamiltonIL"/>
+		<County code="13034" label="Hancock" symbol="HancockIL"/>
+		<County code="13035" label="Hardin" symbol="HardinIL"/>
+		<County code="13036" label="Henderson" symbol="HendersonIL" horizontalCenterGap="2"/>
+		<County code="13037" label="Henry" symbol="HenryIL"/>
+		<County code="13038" label="Iroquois" symbol="Iroquois"/>
+		<County code="13039" label="Jackson" symbol="JacksonIL"/>
+		<County code="13040" label="Jasper" symbol="JasperIL"/>
+		<County code="13041" label="Jefferson" symbol="JeffersonIL"/>
+		<County code="13042" label="Jersey" symbol="Jersey"/>
+		<County code="13043" label="Jo Daviess" symbol="Jodaviess"/>
+		<County code="13044" label="Johnson" symbol="JohnsonIL"/>
+		<County code="13045" label="Kane" symbol="KaneIL"/>
+		<County code="13046" label="Kankakee" symbol="Kankakee"/>
+		<County code="13047" label="Kendall" symbol="KendallIL"/>
+		<County code="13048" label="Knox" symbol="KnoxIL"/>
+		<County code="13049" label="Lake" symbol="LakeIL"/>
+		<County code="13050" label="Lasalle" symbol="LasalleIL"/>
+		<County code="13051" label="Lawrence" symbol="LawrenceIL"/>
+		<County code="13052" label="Lee" symbol="LeeIL"/>
+		<County code="13053" label="Livingston" symbol="LivingstonIL"/>
+		<County code="13054" label="Logan" symbol="LoganIL"/>
+		<County code="13055" label="Macon" symbol="MaconIL"/>
+		<County code="13056" label="Macoupin" symbol="Macoupin"/>
+		<County code="13057" label="Madison" symbol="MadisonIL"/>
+		<County code="13058" label="Marion" symbol="MarionIL"/>
+		<County code="13059" label="Marshall" symbol="MarshallIL"/>
+		<County code="13060" label="Mason" symbol="MasonIL"/>
+		<County code="13061" label="Massac" symbol="Massac"/>
+		<County code="13062" label="Mcdonough" symbol="Mcdonough"/>
+		<County code="13063" label="McHenry" symbol="McHenryIL"/>
+		<County code="13064" label="McLean" symbol="McLeanIL"/>
+		<County code="13065" label="Menard" symbol="MenardIL"/>
+		<County code="13066" label="Mercer" symbol="MercerIL"/>
+		<County code="13067" label="Monroe" symbol="MonroeIL"/>
+		<County code="13068" label="Montgomery" symbol="MontgomeryIL"/>
+		<County code="13069" label="Morgan" symbol="MorganIL"/>
+		<County code="13070" label="Moultrie" symbol="Moultrie"/>
+		<County code="13071" label="Ogle" symbol="Ogle"/>
+		<County code="13072" label="Peoria" symbol="Peoria"/>
+		<County code="13073" label="Perry" symbol="PerryIL"/>
+		<County code="13074" label="Piatt" symbol="Piatt"/>
+		<County code="13075" label="Pike" symbol="PikeIL"/>
+		<County code="13076" label="Pope" symbol="PopeIL"/>
+		<County code="13077" label="Pulaski" symbol="PulaskiIL"/>
+		<County code="13078" label="Putnam" symbol="PutnamIL"/>
+		<County code="13079" label="Randolph" symbol="RandolphIL"/>
+		<County code="13080" label="Richland" symbol="RichlandIL"/>
+		<County code="13081" label="Rockisland" symbol="Rockisland" verticalCenterGap="7"/>
+		<County code="13082" label="St. Clair" symbol="SaintclairIL"/>
+		<County code="13083" label="Saline" symbol="SalineIL"/>
+		<County code="13084" label="Sangamon" symbol="Sangamon"/>
+		<County code="13085" label="Schuyler" symbol="SchuylerIL"/>
+		<County code="13086" label="Scott" symbol="ScottIL"/>
+		<County code="13087" label="Shelby" symbol="ShelbyIL"/>
+		<County code="13088" label="Starke" symbol="StarkeIL"/>
+		<County code="13089" label="Stephenson" symbol="Stephenson"/>
+		<County code="13090" label="Tazewell" symbol="TazewellIL" horizontalCenterGap="5"/>
+		<County code="13091" label="Union" symbol="UnionIL"/>
+		<County code="13092" label="Vermilion" symbol="Vermilion"/>
+		<County code="13093" label="Wabash" symbol="WabashIL"/>
+		<County code="13094" label="Warren" symbol="WarrenIL"/>
+		<County code="13095" label="Washington" symbol="WashingtonIL"/>
+		<County code="13096" label="Wayne" symbol="WayneIL"/>
+		<County code="13097" label="White" symbol="WhiteIL"/>
+		<County code="13098" label="Whiteside" symbol="Whiteside"/>
+		<County code="13099" label="Will" symbol="Will"/>
+		<County code="13100" label="Williamson" symbol="WilliamsonIL"/>
+		<County code="13101" label="Winnebago" symbol="WinnebagoIL"/>
+		<County code="13102" label="Woodford" symbol="WoodfordIL"/>
+	</State>
+	<State code="14000" label="Indiana" symbol="Indiana" verticalCenterGap="5">
+		<County code="14001" label="Adams" symbol="AdamsIN"/>
+		<County code="14002" label="Allen" symbol="AllenIN"/>
+		<County code="14003" label="Bartholomew" symbol="Bartholomew"/>
+		<County code="14004" label="Benton" symbol="BentonIN"/>
+		<County code="14005" label="Blackford" symbol="Blackford"/>
+		<County code="14006" label="Boone" symbol="BooneIN"/>
+		<County code="14007" label="Brown" symbol="BrownIN"/>
+		<County code="14008" label="Carroll" symbol="CarrollIN"/>
+		<County code="14009" label="Cass" symbol="CassIN"/>
+		<County code="14010" label="Clark" symbol="ClarkIN"/>
+		<County code="14011" label="Clay" symbol="ClayIN"/>
+		<County code="14012" label="Clinton" symbol="ClintonIN"/>
+		<County code="14013" label="Crawford" symbol="CrawfordIN"/>
+		<County code="14014" label="Daviess" symbol="DaviessIN"/>
+		<County code="14015" label="Dearborn" symbol="Dearborn"/>
+		<County code="14016" label="Decatur" symbol="DecaturIN"/>
+		<County code="14017" label="DeKalb" symbol="DeKalbIN"/>
+		<County code="14018" label="Delaware" symbol="DelawareIN"/>
+		<County code="14019" label="Dubois" symbol="Dubois"/>
+		<County code="14020" label="Elkhart" symbol="Elkhart"/>
+		<County code="14021" label="Fayette" symbol="FayetteIN"/>
+		<County code="14022" label="Floyd" symbol="FloydIN"/>
+		<County code="14023" label="Fountain" symbol="Fountain"/>
+		<County code="14024" label="Franklin" symbol="FranklinIN"/>
+		<County code="14025" label="Fulton" symbol="FultonIN"/>
+		<County code="14026" label="Gibson" symbol="GibsonIN"/>
+		<County code="14027" label="Grant" symbol="GrantIN"/>
+		<County code="14028" label="Greene" symbol="GreeneIN"/>
+		<County code="14029" label="Hamilton" symbol="HamiltonIN"/>
+		<County code="14030" label="Hancock" symbol="HancockIN"/>
+		<County code="14031" label="Harrison" symbol="HarrisonIN"/>
+		<County code="14032" label="Hendricks" symbol="Hendricks"/>
+		<County code="14033" label="Henry" symbol="HenryIN"/>
+		<County code="14034" label="Howard" symbol="HowardIN"/>
+		<County code="14035" label="Huntington" symbol="Huntington"/>
+		<County code="14036" label="Jackson" symbol="JacksonIN"/>
+		<County code="14037" label="Jasper" symbol="JasperIN"/>
+		<County code="14038" label="Jay" symbol="Jay"/>
+		<County code="14039" label="Jefferson" symbol="JeffersonIN"/>
+		<County code="14040" label="Jennings" symbol="Jennings"/>
+		<County code="14041" label="Johnson" symbol="JohnsonIN"/>
+		<County code="14042" label="Knox" symbol="KnoxIN"/>
+		<County code="14043" label="Kosciusko" symbol="Kosciusko"/>
+		<County code="14044" label="Lagrange" symbol="Lagrange"/>
+		<County code="14045" label="Lake" symbol="LakeIN"/>
+		<County code="14046" label="LaPorte" symbol="LaPorte"/>
+		<County code="14047" label="Lawrence" symbol="LawrenceIN"/>
+		<County code="14048" label="Madison" symbol="MadisonIN"/>
+		<County code="14049" label="Marion" symbol="MarionIN"/>
+		<County code="14050" label="Marshall" symbol="MarshallIN"/>
+		<County code="14051" label="Martin" symbol="MartinIN"/>
+		<County code="14052" label="Miami" symbol="MiamiIN"/>
+		<County code="14053" label="Monroe" symbol="MonroeIN"/>
+		<County code="14054" label="Montgomery" symbol="MontgomeryIN"/>
+		<County code="14055" label="Morgan" symbol="MorganIN"/>
+		<County code="14056" label="Newton" symbol="NewtonIN"/>
+		<County code="14057" label="Noble" symbol="NobleIN"/>
+		<County code="14058" label="Ohio" symbol="OhioIN" horizontalCenterGap="3" verticalCenterGap="3"/>
+		<County code="14059" label="Orange" symbol="OrangeIN"/>
+		<County code="14060" label="Owen" symbol="OwenIN"/>
+		<County code="14061" label="Parke" symbol="Parke"/>
+		<County code="14062" label="Perry" symbol="PerryIN"/>
+		<County code="14063" label="Pike" symbol="PikeIN"/>
+		<County code="14064" label="Porter" symbol="Porter"/>
+		<County code="14065" label="Posey" symbol="Posey"/>
+		<County code="14066" label="Pulaski" symbol="PulaskiIN"/>
+		<County code="14067" label="Putnam" symbol="PutnamIN"/>
+		<County code="14068" label="Randolph" symbol="RandolphIN"/>
+		<County code="14069" label="Ripley" symbol="RipleyIN"/>
+		<County code="14070" label="Rush" symbol="RushIN"/>
+		<County code="14071" label="St. Joseph" symbol="SaintjosephIN"/>
+		<County code="14072" label="Scott" symbol="ScottIN"/>
+		<County code="14073" label="Shelby" symbol="ShelbyIN"/>
+		<County code="14074" label="Spencer" symbol="SpencerIN"/>
+		<County code="14075" label="Starke" symbol="StarkeIN" verticalCenterGap="5"/>
+		<County code="14076" label="Steuben" symbol="SteubenIN"/>
+		<County code="14077" label="Sullivan" symbol="SullivanIN"/>
+		<County code="14078" label="Switzerland" symbol="Switzerland"/>
+		<County code="14079" label="Tippecanoe" symbol="Tippecanoe"/>
+		<County code="14080" label="TiptonIN" symbol="TiptonIN"/>
+		<County code="14081" label="Union" symbol="UnionIN"/>
+		<County code="14082" label="Vanderburgh" symbol="Vanderburgh"/>
+		<County code="14083" label="Vermillion" symbol="Vermillion"/>
+		<County code="14084" label="Vigo" symbol="Vigo"/>
+		<County code="14085" label="Wabash" symbol="WabashIN"/>
+		<County code="14086" label="Warren" symbol="WarrenIN" verticalCenterGap="-5"/>
+		<County code="14087" label="Warrick" symbol="Warrick"/>
+		<County code="14088" label="Washington" symbol="WashingtonIN"/>
+		<County code="14089" label="Wayne" symbol="WayneIN"/>
+		<County code="14090" label="Wells" symbol="WellsIN"/>
+		<County code="14091" label="White" symbol="WhiteIN"/>
+		<County code="14092" label="Whitley" symbol="WhitleyIN"/>
+	</State>
+	<State code="15000" label="Iowa" symbol="Iowa">
+		<County code="15001" label="Adair" symbol="AdairIA"/>
+		<County code="15002" label="Adams" symbol="AdamsIA"/>
+		<County code="15003" label="Allamakee" symbol="Allamakee"/>
+		<County code="15004" label="Appanoose" symbol="Appanoose"/>
+		<County code="15005" label="Audubon" symbol="Audubon"/>
+		<County code="15006" label="Benton" symbol="BentonIA"/>
+		<County code="15007" label="Blackhawk" symbol="Blackhawk"/>
+		<County code="15008" label="Boone" symbol="BooneIA"/>
+		<County code="15009" label="Bremer" symbol="Bremer"/>
+		<County code="15010" label="Buchanan" symbol="BuchananIA"/>
+		<County code="15011" label="Buenavista" symbol="Buenavista"/>
+		<County code="15012" label="Butler" symbol="ButlerIA"/>
+		<County code="15013" label="Calhoun" symbol="CalhounIA"/>
+		<County code="15014" label="Carroll" symbol="CarrollIA"/>
+		<County code="15015" label="Cass" symbol="CassIA"/>
+		<County code="15016" label="Cedar" symbol="CedarIA"/>
+		<County code="15017" label="Cerrogordo" symbol="Cerrogordo"/>
+		<County code="15018" label="Cherokee" symbol="CherokeeIA"/>
+		<County code="15019" label="Chickasaw" symbol="ChickasawIA"/>
+		<County code="15020" label="Clarke" symbol="ClarkeIA"/>
+		<County code="15021" label="Clay" symbol="ClayIA"/>
+		<County code="15022" label="Clayton" symbol="ClaytonIA"/>
+		<County code="15023" label="Clinton" symbol="ClintonIA"/>
+		<County code="15024" label="Crawford" symbol="CrawfordIA"/>
+		<County code="15025" label="Dallas" symbol="DallasIA"/>
+		<County code="15026" label="Davis" symbol="DavisIA"/>
+		<County code="15027" label="Decatur" symbol="DecaturIA"/>
+		<County code="15028" label="Delaware" symbol="DelawareIA"/>
+		<County code="15029" label="Desmoines" symbol="Desmoines"/>
+		<County code="15030" label="Dickinson" symbol="DickinsonIA"/>
+		<County code="15031" label="Dubuque" symbol="Dubuque" horizontalCenterGap="-2"/>
+		<County code="15032" label="Emmet" symbol="EmmetIA"/>
+		<County code="15033" label="Fayette" symbol="FayetteIA"/>
+		<County code="15034" label="Floyd" symbol="FloydIA"/>
+		<County code="15035" label="Franklin" symbol="FranklinIA"/>
+		<County code="15036" label="Fremont" symbol="FremontIA" verticalCenterGap="3"/>
+		<County code="15037" label="Greene" symbol="GreeneIA"/>
+		<County code="15038" label="Grundy" symbol="GrundyIA"/>
+		<County code="15039" label="Guthrie" symbol="Guthrie"/>
+		<County code="15040" label="Hamilton" symbol="HamiltonIA"/>
+		<County code="15041" label="Hancock" symbol="HancockIA"/>
+		<County code="15042" label="Hardin" symbol="HardinIA"/>
+		<County code="15043" label="Harrison" symbol="HarrisonIA"/>
+		<County code="15044" label="Henry" symbol="HenryIA"/>
+		<County code="15045" label="Howard" symbol="HowardIA"/>
+		<County code="15046" label="Humboldt" symbol="HumboldtIA"/>
+		<County code="15047" label="Ida" symbol="Ida"/>
+		<County code="15048" label="Iowa" symbol="IowaIA"/>
+		<County code="15049" label="Jackson" symbol="JacksonIA"/>
+		<County code="15050" label="Jasper" symbol="JasperIA"/>
+		<County code="15051" label="Jefferson" symbol="JeffersonIA"/>
+		<County code="15052" label="Johnson" symbol="JohnsonIA"/>
+		<County code="15053" label="Jones" symbol="JonesIA"/>
+		<County code="15054" label="Keokuk" symbol="Keokuk"/>
+		<County code="15055" label="Kossuth" symbol="Kossuth"/>
+		<County code="15056" label="Lee" symbol="LeeIA" horizontalCenterGap="-2"/>
+		<County code="15057" label="Linn" symbol="LinnIA"/>
+		<County code="15058" label="Louisa" symbol="LouisaIA"/>
+		<County code="15059" label="Lucas" symbol="LucasIA"/>
+		<County code="15060" label="Lyon" symbol="LyonIA"/>
+		<County code="15061" label="Madison" symbol="MadisonIA"/>
+		<County code="15062" label="Mahaska" symbol="Mahaska"/>
+		<County code="15063" label="Marion" symbol="MarionIA"/>
+		<County code="15064" label="Marshall" symbol="MarshallIA"/>
+		<County code="15065" label="Mills" symbol="MillsIA"/>
+		<County code="15066" label="Mitchell" symbol="MitchellIA"/>
+		<County code="15067" label="Monona" symbol="Monona"/>
+		<County code="15068" label="Monroe" symbol="MonroeIA"/>
+		<County code="15069" label="Montgomery" symbol="MontgomeryIA"/>
+		<County code="15070" label="Muscatine" symbol="Muscatine" horizontalCenterGap="-3" verticalCenterGap="-2"/>
+		<County code="15071" label="Obrien" symbol="Obrien"/>
+		<County code="15072" label="Osceola" symbol="OsceolaIA"/>
+		<County code="15073" label="Page" symbol="PageIA"/>
+		<County code="15074" label="Paloalto" symbol="Paloalto"/>
+		<County code="15075" label="Plymouth" symbol="PlymouthIA"/>
+		<County code="15076" label="Pocahontas" symbol="PocahontasIA"/>
+		<County code="15077" label="Polk" symbol="PolkIA"/>
+		<County code="15078" label="Pottawattamie" symbol="Pottawattamie"/>
+		<County code="15079" label="Poweshiek" symbol="Poweshiek"/>
+		<County code="15080" label="Ringgold" symbol="Ringgold"/>
+		<County code="15081" label="Sac" symbol="Sac"/>
+		<County code="15082" label="Scott" symbol="ScottIA"/>
+		<County code="15083" label="Shelby" symbol="ShelbyIA"/>
+		<County code="15084" label="Sioux" symbol="SiouxIA"/>
+		<County code="15085" label="Story" symbol="Story"/>
+		<County code="15086" label="Tama" symbol="Tama"/>
+		<County code="15087" label="Taylor" symbol="TaylorIA"/>
+		<County code="15088" label="Union" symbol="UnionIA"/>
+		<County code="15089" label="Vanburen" symbol="VanburenIA"/>
+		<County code="15090" label="Wapello" symbol="Wapello"/>
+		<County code="15091" label="Warren" symbol="WarrenIA"/>
+		<County code="15092" label="Washington" symbol="WashingtonIA"/>
+		<County code="15093" label="Wayne" symbol="WayneIA"/>
+		<County code="15094" label="Webster" symbol="WebsterIA"/>
+		<County code="15095" label="Winnebago" symbol="WinnebagoIA"/>
+		<County code="15096" label="Winneshiek" symbol="Winneshiek"/>
+		<County code="15097" label="Woodbury" symbol="Woodbury"/>
+		<County code="15098" label="Worth" symbol="WorthIA"/>
+		<County code="15099" label="Wright" symbol="Wright"/>
+	</State>
+	<State code="16000" label="Kansas" symbol="Kansas">
+		<County code="16001" label="Allen" symbol="AllenKS"/>
+		<County code="16002" label="Anderson" symbol="AndersonKS"/>
+		<County code="16003" label="Atchison" symbol="AtchisonKS" horizontalCenterGap="-2"/>
+		<County code="16004" label="Barber" symbol="Barber"/>
+		<County code="16005" label="Barton" symbol="BartonKS"/>
+		<County code="16006" label="Bourbon" symbol="BourbonKS"/>
+		<County code="16007" label="Brown" symbol="BrownKS"/>
+		<County code="16008" label="Butler" symbol="ButlerKS"/>
+		<County code="16009" label="Chase" symbol="ChaseKS"/>
+		<County code="16010" label="Chautauqua" symbol="ChautauquaKS"/>
+		<County code="16011" label="Cherokee" symbol="CherokeeKS"/>
+		<County code="16012" label="Cheyenne" symbol="Cheyenne"/>
+		<County code="16013" label="Clark" symbol="ClarkKS"/>
+		<County code="16014" label="Clay" symbol="ClayKS"/>
+		<County code="16015" label="Cloud" symbol="Cloud"/>
+		<County code="16016" label="Coffey" symbol="Coffey"/>
+		<County code="16017" label="Comanche" symbol="ComancheKS"/>
+		<County code="16018" label="Cowley" symbol="Cowley"/>
+		<County code="16019" label="Crawford" symbol="CrawfordKS"/>
+		<County code="16020" label="Decatur" symbol="Decatur"/>
+		<County code="16021" label="Dickinson" symbol="DickinsonKS"/>
+		<County code="16022" label="Doniphan" symbol="Doniphan"/>
+		<County code="16023" label="Douglas" symbol="Douglas"/>
+		<County code="16024" label="Edwards" symbol="EdwardsKS"/>
+		<County code="16025" label="ElkKS" symbol="ElkKS"/>
+		<County code="16026" label="Ellis" symbol="EllisKS"/>
+		<County code="16027" label="Ellsworth" symbol="Ellsworth"/>
+		<County code="16028" label="Finney" symbol="Finney" horizontalCenterGap="-5" verticalCenterGap="-3"/>
+		<County code="16029" label="Ford" symbol="FordKS"/>
+		<County code="16030" label="Franklin" symbol="FranklinKS"/>
+		<County code="16031" label="Geary" symbol="Geary" verticalCenterGap="3"/>
+		<County code="16032" label="Gove" symbol="Gove"/>
+		<County code="16033" label="Graham" symbol="GrahamKS"/>
+		<County code="16034" label="Grant" symbol="GrantKS"/>
+		<County code="16035" label="Gray" symbol="GrayKS"/>
+		<County code="16036" label="Greeley" symbol="GreeleyKS"/>
+		<County code="16037" label="Greenwood" symbol="GreenwoodKS"/>
+		<County code="16038" label="Hamilton" symbol="HamiltonKS"/>
+		<County code="16039" label="Harper" symbol="HarperKS"/>
+		<County code="16040" label="Harvey" symbol="Harvey"/>
+		<County code="16041" label="Haskell" symbol="HaskellKS"/>
+		<County code="16042" label="Hodgeman" symbol="Hodgeman"/>
+		<County code="16043" label="Jackson" symbol="JacksonKS"/>
+		<County code="16044" label="Jefferson" symbol="JeffersonKS"/>
+		<County code="16045" label="Jewell" symbol="Jewell"/>
+		<County code="16046" label="Johnson" symbol="JohnsonKS"/>
+		<County code="16047" label="Kearny" symbol="Kearny"/>
+		<County code="16048" label="Kingman" symbol="Kingman"/>
+		<County code="16049" label="Kiowa" symbol="KiowaKS"/>
+		<County code="16050" label="Labette" symbol="Labette"/>
+		<County code="16051" label="LaneKS" symbol="LaneKS"/>
+		<County code="16052" label="Leavenworth" symbol="Leavenworth"/>
+		<County code="16053" label="Lincoln" symbol="LincolnKS"/>
+		<County code="16054" label="LinnKS" symbol="LinnKS"/>
+		<County code="16055" label="Logan" symbol="LoganKS"/>
+		<County code="16056" label="Lyon" symbol="LyonKS"/>
+		<County code="16057" label="Marion" symbol="MarionKS"/>
+		<County code="16058" label="Marshall" symbol="MarshallKS"/>
+		<County code="16059" label="Mcpherson" symbol="McphersonKS"/>
+		<County code="16060" label="Meade" symbol="MeadeKS"/>
+		<County code="16061" label="Miami" symbol="MiamiKS"/>
+		<County code="16062" label="Mitchell" symbol="MitchellKS"/>
+		<County code="16063" label="Montgomery" symbol="MontgomeryKS"/>
+		<County code="16064" label="Morris" symbol="MorrisKS"/>
+		<County code="16065" label="Morton" symbol="MortonKS"/>
+		<County code="16066" label="Nemaha" symbol="NemahaKS"/>
+		<County code="16067" label="Neosho" symbol="Neosho"/>
+		<County code="16068" label="Ness" symbol="Ness"/>
+		<County code="16069" label="Norton" symbol="Norton"/>
+		<County code="16070" label="Osage" symbol="OsageKS"/>
+		<County code="16071" label="Osborne" symbol="Osborne"/>
+		<County code="16072" label="Ottawa" symbol="OttawaKS"/>
+		<County code="16073" label="Pawnee" symbol="PawneeKS"/>
+		<County code="16074" label="Phillips" symbol="PhillipsKS"/>
+		<County code="16075" label="Pottawattamie" symbol="PottawatomieKS"/>
+		<County code="16076" label="Pratt" symbol="Pratt"/>
+		<County code="16077" label="Rawlins" symbol="Rawlins"/>
+		<County code="16078" label="Reno" symbol="Reno"/>
+		<County code="16079" label="Republic" symbol="Republic"/>
+		<County code="16080" label="Rice" symbol="RiceKS"/>
+		<County code="16081" label="Riley" symbol="Riley" horizontalCenterGap="-3"/>
+		<County code="16082" label="Rooks" symbol="Rooks"/>
+		<County code="16083" label="Rush" symbol="RushKS"/>
+		<County code="16084" label="Russell" symbol="RussellKS"/>
+		<County code="16085" label="Saline" symbol="SalineKS"/>
+		<County code="16086" label="Scott" symbol="ScottKS"/>
+		<County code="16087" label="Sedgwick" symbol="SedgwickKS"/>
+		<County code="16088" label="Seward" symbol="SewardKS"/>
+		<County code="16089" label="Shawnee" symbol="Shawnee"/>
+		<County code="16090" label="Sheridan" symbol="SheridanKS"/>
+		<County code="16091" label="Sherman" symbol="ShermanKS"/>
+		<County code="16092" label="Smith" symbol="SmithKS"/>
+		<County code="16093" label="Stafford" symbol="StaffordKS"/>
+		<County code="16094" label="Stanton" symbol="StantonKS"/>
+		<County code="16095" label="Stevens" symbol="StevensKS"/>
+		<County code="16096" label="Sumner" symbol="SumnerKS"/>
+		<County code="16097" label="Thomas" symbol="ThomasKS"/>
+		<County code="16098" label="Trego" symbol="Trego"/>
+		<County code="16099" label="Wabaunsee" symbol="Wabaunsee"/>
+		<County code="16100" label="Wallace" symbol="Wallace"/>
+		<County code="16101" label="Washington" symbol="WashingtonKS"/>
+		<County code="16102" label="Wichita" symbol="WichitaKS"/>
+		<County code="16103" label="Wilson" symbol="WilsonKS"/>
+		<County code="16104" label="Woodson" symbol="Woodson"/>
+		<County code="16105" label="Wyandotte" symbol="Wyandotte"/>
+	</State>
+	<State code="17000" label="Kentucky" symbol="Kentucky">
+		<County code="17001" label="Adair" symbol="AdairKY"/>
+		<County code="17002" label="Allen" symbol="AllenKY"/>
+		<County code="17003" label="Anderson" symbol="AndersonKY"/>
+		<County code="17004" label="Ballard" symbol="Ballard"/>
+		<County code="17005" label="Barren" symbol="Barren"/>
+		<County code="17006" label="Bath" symbol="BathKY"/>
+		<County code="17007" label="Bell" symbol="BellKY" horizontalCenterGap="5"/>
+		<County code="17008" label="Boone" symbol="BooneKY"/>
+		<County code="17009" label="Bourbon" symbol="BourbonKY"/>
+		<County code="17010" label="Boyd" symbol="BoydKY"/>
+		<County code="17011" label="Boyle" symbol="Boyle"/>
+		<County code="17012" label="Bracken" symbol="Bracken"/>
+		<County code="17013" label="Breathitt" symbol="Breathitt"/>
+		<County code="17014" label="Breckinridge" symbol="Breckinridge"/>
+		<County code="17015" label="Bullitt" symbol="Bullitt"/>
+		<County code="17016" label="Butler" symbol="ButlerKY" verticalCenterGap="-5"/>
+		<County code="17017" label="Caldwell" symbol="CaldwellKY"/>
+		<County code="17018" label="Calloway" symbol="Calloway"/>
+		<County code="17019" label="Campbell" symbol="CampbellKY"/>
+		<County code="17020" label="Carlisle" symbol="Carlisle"/>
+		<County code="17021" label="Carroll" symbol="CarrollKY"/>
+		<County code="17022" label="Carter" symbol="CarterKY"/>
+		<County code="17023" label="Casey" symbol="Casey"/>
+		<County code="17024" label="Christian" symbol="ChristianKY"/>
+		<County code="17025" label="Clark" symbol="ClarkKY"/>
+		<County code="17026" label="Clay" symbol="ClayKY"/>
+		<County code="17027" label="Clinton" symbol="ClintonKY"/>
+		<County code="17028" label="Crittenden" symbol="CrittendenKY"/>
+		<County code="17029" label="Cumberland" symbol="CumberlandKY"/>
+		<County code="17030" label="Daviess" symbol="DaviessKY"/>
+		<County code="17031" label="Edmonson" symbol="Edmonson"/>
+		<County code="17032" label="Elliott" symbol="Elliott"/>
+		<County code="17033" label="Estill" symbol="Estill"/>
+		<County code="17034" label="Fayette" symbol="FayetteKY"/>
+		<County code="17035" label="Flemin" symbol="Flemin"/>
+		<County code="17036" label="Floyd" symbol="FloydKY"/>
+		<County code="17037" label="Franklin" symbol="FranklinKY"/>
+		<County code="17038" label="Fulton" symbol="FultonKY"/>
+		<County code="17039" label="Gallatin" symbol="GallatinKY"/>
+		<County code="17040" label="Garrard" symbol="Garrard"/>
+		<County code="17041" label="Grant" symbol="GrantKY"/>
+		<County code="17042" label="Graves" symbol="Graves"/>
+		<County code="17043" label="Grayson" symbol="GraysonKY"/>
+		<County code="17044" label="Green" symbol="GreenKY"/>
+		<County code="17045" label="Greenup" symbol="Greenup"/>
+		<County code="17046" label="Hancock" symbol="HancockKY" horizontalCenterGap="5"/>
+		<County code="17047" label="Hardin" symbol="HardinKY"/>
+		<County code="17048" label="Harlan" symbol="HarlanKY"/>
+		<County code="17049" label="Harrison" symbol="HarrisonKY"/>
+		<County code="17050" label="Hart" symbol="HartKY"/>
+		<County code="17051" label="Henderson" symbol="HendersonKY"/>
+		<County code="17052" label="Henry" symbol="HenryKY"/>
+		<County code="17053" label="Hickman" symbol="HickmanKY"/>
+		<County code="17054" label="Hopkins" symbol="HopkinsKY"/>
+		<County code="17055" label="Jackson" symbol="JacksonKY"/>
+		<County code="17056" label="Jefferson" symbol="JeffersonKY"/>
+		<County code="17057" label="Jessamine" symbol="Jessamine"/>
+		<County code="17058" label="Johnson" symbol="JohnsonKY"/>
+		<County code="17059" label="Kenton" symbol="Kenton"/>
+		<County code="17060" label="Knott" symbol="Knott"/>
+		<County code="17061" label="Knox" symbol="KnoxKY"/>
+		<County code="17062" label="Larue" symbol="Larue"/>
+		<County code="17063" label="Laurel" symbol="Laurel"/>
+		<County code="17064" label="Lawrence" symbol="LawrenceKY"/>
+		<County code="17065" label="Lee" symbol="LeeKY"/>
+		<County code="17066" label="Leslie" symbol="Leslie"/>
+		<County code="17067" label="Letcher" symbol="Letcher"/>
+		<County code="17068" label="Lewis" symbol="LewisKY"/>
+		<County code="17069" label="Lincoln" symbol="LincolnKY"/>
+		<County code="17070" label="Livingston" symbol="LivingstonKY"/>
+		<County code="17071" label="Logan" symbol="LoganKY"/>
+		<County code="17072" label="Lyon" symbol="LyonKY"/>
+		<County code="17073" label="Madison" symbol="MadisonKY"/>
+		<County code="17074" label="Magoffin" symbol="Magoffin"/>
+		<County code="17075" label="Marion" symbol="MarionKY"/>
+		<County code="17076" label="Marshall" symbol="MarshallKY"/>
+		<County code="17077" label="Martin" symbol="MartinKY"/>
+		<County code="17078" label="Mason" symbol="MasonKY"/>
+		<County code="17079" label="Mccracken" symbol="Mccracken"/>
+		<County code="17080" label="Mccreary" symbol="Mccreary"/>
+		<County code="17081" label="Mclean" symbol="McleanKY"/>
+		<County code="17082" label="Meade" symbol="MeadeKY"/>
+		<County code="17083" label="Menifee" symbol="Menifee"/>
+		<County code="17084" label="Mercer" symbol="MercerKY"/>
+		<County code="17085" label="Metcalfe" symbol="Metcalfe"/>
+		<County code="17086" label="Monroe" symbol="MonroeKY"/>
+		<County code="17087" label="Montgomery" symbol="MontgomeryKY"/>
+		<County code="17088" label="Morgan" symbol="MorganKY"/>
+		<County code="17089" label="Muhlenberg" symbol="Muhlenberg"/>
+		<County code="17090" label="Nelson" symbol="NelsonKY"/>
+		<County code="17091" label="Nicholas" symbol="NicholasKY"/>
+		<County code="17092" label="Ohio" symbol="OhioKY"/>
+		<County code="17093" label="Oldham" symbol="OldhamKY"/>
+		<County code="17094" label="Owen" symbol="OwenKY"/>
+		<County code="17095" label="Owsley" symbol="Owsley"/>
+		<County code="17096" label="Pendleton" symbol="PendletonKY"/>
+		<County code="17097" label="Perry" symbol="PerryKY"/>
+		<County code="17098" label="Pike" symbol="PikeKY"/>
+		<County code="17099" label="Powell" symbol="PowellKY"/>
+		<County code="17100" label="Pulaski" symbol="PulaskiKY"/>
+		<County code="17101" label="Robertson" symbol="RobertsonKY"/>
+		<County code="17102" label="Rockcastle" symbol="Rockcastle"/>
+		<County code="17103" label="Rowan" symbol="RowanKY"/>
+		<County code="17104" label="Russell" symbol="RussellKY"/>
+		<County code="17105" label="Scott" symbol="ScottKY"/>
+		<County code="17106" label="Shelby" symbol="ShelbyKY"/>
+		<County code="17107" label="Simpson" symbol="SimpsonKY"/>
+		<County code="17108" label="Spencer" symbol="SpencerKY"/>
+		<County code="17109" label="Taylor" symbol="TaylorKY"/>
+		<County code="17110" label="Todd" symbol="ToddKY"/>
+		<County code="17111" label="Trigg" symbol="Trigg"/>
+		<County code="17112" label="Trimble" symbol="Trimble"/>
+		<County code="17113" label="Union" symbol="UnionKY"/>
+		<County code="17114" label="Warren" symbol="WarrenKY"/>
+		<County code="17115" label="Washington" symbol="WashingtonKY"/>
+		<County code="17116" label="Wayne" symbol="WayneKY"/>
+		<County code="17117" label="Webster" symbol="WebsterKY"/>
+		<County code="17118" label="Whitley" symbol="WhitleyKY"/>
+		<County code="17119" label="Wolfe" symbol="Wolfe"/>
+		<County code="17120" label="Woodford" symbol="WoodfordKY"/>
+	</State>
+	<State code="18000" label="Louisiana" symbol="Louisiana" verticalCenterGap="10">
+		<County code="18001" label="Acadia Parish" symbol="Acadiaparish"/>
+		<County code="18002" label="Allen Parish" symbol="Allenparish"/>
+		<County code="18003" label="Ascension Parish" symbol="Ascensionparish"/>
+		<County code="18004" label="Assumption Parish" symbol="Assumptionparish"/>
+		<County code="18005" label="Avoyelles Parish" symbol="Avoyellesparish"/>
+		<County code="18006" label="Beauregard Parish" symbol="Beauregardparish"/>
+		<County code="18007" label="Bienville Parish" symbol="Bienvilleparish"/>
+		<County code="18008" label="Bossier Parish" symbol="Bossierparish"/>
+		<County code="18009" label="Caddo Parish" symbol="Caddoparish" horizontalCenterGap="-5"/>
+		<County code="18010" label="Calcasieu Parish" symbol="Calcasieuparish"/>
+		<County code="18011" label="Caldwell Parish" symbol="Caldwellparish"/>
+		<County code="18012" label="Cameron Parish" symbol="Cameronparish"/>
+		<County code="18013" label="Catahoula Parish" symbol="Catahoulaparish" horizontalCenterGap="-5"/>
+		<County code="18014" label="Claiborne Parish" symbol="Claiborneparish"/>
+		<County code="18015" label="Concordia Parish" symbol="Concordiaparish"/>
+		<County code="18016" label="DeSoto Parish" symbol="Desotoparish"/>
+		<County code="18017" label="East Baton Rouge Parish" symbol="Eastbatonrougeparish"/>
+		<County code="18018" label="East Carroll Parish" symbol="Eastcarrollparish" verticalCenterGap="5"/>
+		<County code="18019" label="East Feliciana Parish" symbol="Eastfelicianaparish"/>
+		<County code="18020" label="Evangeline Parish" symbol="Evangelineparish"/>
+		<County code="18021" label="Franklin Parish" symbol="Franklinparish"/>
+		<County code="18022" label="Grant Parish" symbol="Grantparish"/>
+		<County code="18023" label="Iberia Parish" symbol="Iberiaparish" horizontalCenterGap="-10"/>
+		<County code="18024" label="Iberville Parish" symbol="Ibervilleparish"/>
+		<County code="18025" label="Jackson Parish" symbol="Jacksonparish"/>
+		<County code="18026" label="Jefferson Davis Parish" symbol="Jeffersondavisparish"/>
+		<County code="18027" label="Jefferson Parish" symbol="Jeffersonparish"/>
+		<County code="18028" label="Lafayette Parish" symbol="Lafayetteparish"/>
+		<County code="18029" label="Lafourche Parish" symbol="Lafourcheparish"/>
+		<County code="18030" label="La Salle Parish" symbol="Lasalleparish"/>
+		<County code="18031" label="Lincoln Parish" symbol="Lincolnparish"/>
+		<County code="18032" label="Livingston Parish" symbol="Livingstonparish"/>
+		<County code="18033" label="Madison Parish," symbol="Madisonparish"/>
+		<County code="18034" label="Morehouse Parish" symbol="Morehouseparish" horizontalCenterGap="-5"/>
+		<County code="18035" label="Natchitoches Parish" symbol="Natchitochesparish"/>
+		<County code="18036" label="New Orleans" symbol="Neworleans" horizontalCenterGap="-5" verticalCenterGap="-3"/>
+		<County code="18037" label="Ouachita Parish" symbol="Ouachitaparish"/>
+		<County code="18038" label="Plaquemines Parish" symbol="Plaqueminesparish" horizontalCenterGap="-10"/>
+		<County code="18039" label="Pointe Coupee Parish" symbol="Pointecoupeeparish" verticalCenterGap="10"/>
+		<County code="18040" label="Rapides Parish" symbol="Rapidesparish"/>
+		<County code="18041" label="Red River Parish" symbol="Redriverparish"/>
+		<County code="18042" label="Richland Parish" symbol="Richlandparish" horizontalCenterGap="-3"/>
+		<County code="18043" label="Sabine Parish" symbol="Sabineparish"/>
+		<County code="18044" label="St. Bernard Parish" symbol="Saintbernardparish" verticalCenterGap="5"/>
+		<County code="18045" label="St. Charles Parish" symbol="Saintcharlesparish"/>
+		<County code="18046" label="St. Helena Parish" symbol="Sainthelenaparish"/>
+		<County code="18047" label="St. James Parish" symbol="Saintjamesparish"/>
+		<County code="18048" label="St. John the Baptist Parish" symbol="Saintjohnthebaptistparish"/>
+		<County code="18049" label="St. Landry Parish" symbol="Saintlandryparish"/>
+		<County code="18050" label="St. Martin Parish" symbol="SaintmartinparishLA" horizontalCenterGap="-10" verticalCenterGap="-10"/>
+		<County code="18052" label="St. Mary Parish" symbol="Saintmaryparish"/>
+		<County code="18053" label="St. Tammany Parish" symbol="Sainttammanyparish"/>
+		<County code="18054" label="Tangipahoa Parish" symbol="Tangipahoaparish"/>
+		<County code="18055" label="Tensas Parish" symbol="Tensasparish"/>
+		<County code="18056" label="Terrebonne Parish" symbol="Terrebonneparish"/>
+		<County code="18057" label="Union Parish" symbol="Unionparish"/>
+		<County code="18058" label="Vermilion Parish" symbol="Vermilionparish"/>
+		<County code="18059" label="Vernon Parish" symbol="Vernonparish"/>
+		<County code="18060" label="Washington Parish" symbol="Washingtonparish"/>
+		<County code="18061" label="Webster Parish" symbol="Websterparish"/>
+		<County code="18062" label="West Baton Rouge Parish" symbol="Westbatonrougeparish"/>
+		<County code="18063" label="West Carroll Parish" symbol="Westcarrollparish"/>
+		<County code="18064" label="West Feliciana Parish" symbol="Westfelicianaparish"/>
+		<County code="18065" label="Winn Parish" symbol="Winnparish"/>
+	</State>
+	<State code="19000" label="Maine" symbol="Maine">
+		<County code="19001" label="Androscoggin" symbol="Androscoggin"/>
+		<County code="19002" label="Aroostook" symbol="Aroostook" horizontalCenterGap="10" verticalCenterGap="-10"/>
+		<County code="19003" label="Cumberland" symbol="CumberlandME"/>
+		<County code="19004" label="Franklin" symbol="FranklinME"/>
+		<County code="19005" label="Hancock" symbol="HancockME" verticalCenterGap="10"/>
+		<County code="19006" label="Kennebec" symbol="Kennebec"/>
+		<County code="19007" label="Knox" symbol="KnoxME"/>
+		<County code="19008" label="Lincoln" symbol="LincolnME"/>
+		<County code="19009" label="Oxford" symbol="Oxford" verticalCenterGap="10"/>
+		<County code="19010" label="Penobscot" symbol="Penobscot"/>
+		<County code="19011" label="Piscataquis" symbol="Piscataquis"/>
+		<County code="19012" label="Sagadahoc" symbol="Sagadahoc"/>
+		<County code="19013" label="Somerset" symbol="SomersetME"/>
+		<County code="19014" label="Waldo" symbol="Waldo"/>
+		<County code="19015" label="Washington" symbol="WashingtonME"/>
+		<County code="19016" label="York" symbol="YorkME"/>
+	</State>
+	<State code="20000" label="Maryland" symbol="Maryland" verticalCenterGap="10">
+		<County code="20001" label="Allegany" symbol="AlleganyMD" verticalCenterGap="-5"/>
+		<County code="20002" label="Annearundel" symbol="Annearundel"/>
+		<County code="20003" label="Baltimore" symbol="Baltimore"/>
+		<County code="20004" label="Baltimore" symbol="Baltimorecity"/>
+		<County code="20005" label="Calvert" symbol="Calvert"/>
+		<County code="20006" label="Caroline" symbol="CarolineMD"/>
+		<County code="20007" label="Carroll" symbol="CarrollMD"/>
+		<County code="20008" label="Cecil" symbol="Cecil"/>
+		<County code="20009" label="Charles" symbol="Charles"/>
+		<County code="20010" label="Dorchester" symbol="DorchesterMD" verticalCenterGap="-5"/>
+		<County code="20011" label="Frederick" symbol="FrederickMD"/>
+		<County code="20012" label="Garrett" symbol="Garrett" verticalCenterGap="-15"/>
+		<County code="20013" label="Harford" symbol="Harford"/>
+		<County code="20014" label="Howard" symbol="HowardMD"/>
+		<County code="20015" label="Kent" symbol="KentMD" verticalCenterGap="-5"/>
+		<County code="20016" label="Montgomery" symbol="MontgomeryMD"/>
+		<County code="20017" label="Prince George" symbol="Princegeorges" horizontalCenterGap="5"/>
+		<County code="20018" label="Queen Anne" symbol="Queenannes"/>
+		<County code="20019" label="St. Mary" symbol="Saintmarys" verticalCenterGap="5"/>
+		<County code="20020" label="Somerset" symbol="SomersetMD"/>
+		<County code="20021" label="Talbot" symbol="Talbot"/>
+		<County code="20022" label="Washington" symbol="WashingtonMD" horizontalCenterGap="10"/>
+		<County code="20023" label="Wicomico" symbol="Wicomico" verticalCenterGap="-5"/>
+		<County code="20024" label="Worcester" symbol="WorcesterMD" horizontalCenterGap="-5"/>
+	</State>
+	<State code="21000" label="Massachusetts" symbol="Massachusetts">
+		<County code="21001" label="Barnstable" symbol="Barnstable" verticalCenterGap="10"/>
+		<County code="21002" label="Berkshire" symbol="Berkshire"/>
+		<County code="21003" label="Bristol" symbol="BristolMA"/>
+		<County code="21004" label="Dukes" symbol="Dukes"/>
+		<County code="21005" label="Essex" symbol="EssexMA"/>
+		<County code="21006" label="Franklin" symbol="FranklinMA"/>
+		<County code="21007" label="Hampden" symbol="Hampden" verticalCenterGap="10"/>
+		<County code="21008" label="Hampshire" symbol="HampshireMA"/>
+		<County code="21009" label="Middlesex" symbol="MiddlesexMA"/>
+		<County code="21010" label="Nantucket" symbol="Nantucket"/>
+		<County code="21011" label="Norfolk" symbol="Norfolk"/>
+		<County code="21012" label="Plymouth" symbol="PlymouthMA"/>
+		<County code="21013" label="Suffolk" symbol="SuffolkMA"/>
+		<County code="21014" label="Worcester" symbol="WorcesterMA"/>
+	</State>
+	<State code="22000" label="Michigan" symbol="Michigan" horizontalCenterGap="15" verticalCenterGap="10">
+		<County code="22001" label="Alcona" symbol="Alcona"/>
+		<County code="22002" label="Alger" symbol="Alger"/>
+		<County code="22003" label="Allegan" symbol="Allegan"/>
+		<County code="22004" label="Alpena" symbol="Alpena"/>
+		<County code="22005" label="Antrim" symbol="Antrim"/>
+		<County code="22006" label="Arenac" symbol="Arenac"/>
+		<County code="22007" label="Baraga" symbol="Baraga"/>
+		<County code="22008" label="Barry" symbol="BarryMI"/>
+		<County code="22009" label="Bay" symbol="BayMI" horizontalCenterGap="-5"/>
+		<County code="22010" label="Benzie" symbol="Benzie"/>
+		<County code="22011" label="Berrien" symbol="BerrienMI" horizontalCenterGap="10"/>
+		<County code="22012" label="Branch" symbol="Branch"/>
+		<County code="22013" label="Calhoun" symbol="CalhounMI"/>
+		<County code="22014" label="Cass" symbol="CassMI"/>
+		<County code="22015" label="Charlevoix" symbol="Charlevoix" horizontalCenterGap="3" verticalCenterGap="7"/>
+		<County code="22016" label="Cheboygan" symbol="Cheboygan"/>
+		<County code="22017" label="Chippewa" symbol="ChippewaMI"/>
+		<County code="22018" label="Clare" symbol="Clare"/>
+		<County code="22019" label="Clinton" symbol="ClintonMI"/>
+		<County code="22020" label="Crawford" symbol="CrawfordMI"/>
+		<County code="22021" label="Delta" symbol="DeltaMI" verticalCenterGap="-10"/>
+		<County code="22022" label="Dickinson" symbol="DickinsonMI"/>
+		<County code="22023" label="Eaton" symbol="Eaton"/>
+		<County code="22024" label="Emmet" symbol="EmmetMI"/>
+		<County code="22025" label="Genesee" symbol="GeneseeMI"/>
+		<County code="22026" label="Gladwin" symbol="Gladwin"/>
+		<County code="22027" label="Gogebic" symbol="Gogebic"/>
+		<County code="22028" label="Grandtraverse" symbol="Grandtraverse"/>
+		<County code="22029" label="Gratiot" symbol="Gratiot"/>
+		<County code="22030" label="Hillsdale" symbol="Hillsdale"/>
+		<County code="22031" label="Houghton" symbol="Houghton" horizontalCenterGap="-5"/>
+		<County code="22032" label="Huron" symbol="HuronMI"/>
+		<County code="22033" label="Ingham" symbol="Ingham"/>
+		<County code="22034" label="Ionia" symbol="Ionia"/>
+		<County code="22035" label="Iosco" symbol="Iosco"/>
+		<County code="22036" label="Iron" symbol="IronMI"/>
+		<County code="22037" label="Isabella" symbol="Isabella"/>
+		<County code="22038" label="Jackson" symbol="JacksonMI"/>
+		<County code="22039" label="Kalamazoo" symbol="Kalamazoo"/>
+		<County code="22040" label="Kalkaska" symbol="Kalkaska"/>
+		<County code="22041" label="Kent" symbol="KentMI"/>
+		<County code="22042" label="Keweenaw" symbol="Keweenaw"/>
+		<County code="22043" label="Lake" symbol="LakeMI"/>
+		<County code="22044" label="Lapeer" symbol="Lapeer"/>
+		<County code="22045" label="Leelanau" symbol="Leelanau" verticalCenterGap="5"/>
+		<County code="22046" label="Lenawee" symbol="Lenawee"/>
+		<County code="22047" label="Livingston" symbol="LivingstonMI"/>
+		<County code="22048" label="Luce" symbol="Luce"/>
+		<County code="22049" label="Mackinac" symbol="Mackinac"/>
+		<County code="22050" label="Macomb" symbol="Macomb"/>
+		<County code="22051" label="Manistee" symbol="Manistee"/>
+		<County code="22052" label="Marquette" symbol="MarquetteMI"/>
+		<County code="22053" label="Mason" symbol="MasonMI"/>
+		<County code="22054" label="Mecosta" symbol="Mecosta"/>
+		<County code="22055" label="Menominee" symbol="MenomineeMI"/>
+		<County code="22056" label="Midland" symbol="MidlandMI"/>
+		<County code="22057" label="Missaukee" symbol="Missaukee"/>
+		<County code="22058" label="Monroe" symbol="MonroeMI"/>
+		<County code="22059" label="Montcalm" symbol="Montcalm"/>
+		<County code="22060" label="Montmorency" symbol="Montmorency"/>
+		<County code="22061" label="Muskegon" symbol="Muskegon"/>
+		<County code="22062" label="Newaygo" symbol="Newaygo"/>
+		<County code="22063" label="Oakland" symbol="Oakland"/>
+		<County code="22064" label="Oceana" symbol="Oceana"/>
+		<County code="22065" label="Ogemaw" symbol="Ogemaw"/>
+		<County code="22066" label="Ontonagon" symbol="Ontonago"/>
+		<County code="22067" label="Osceola" symbol="OsceolaMI"/>
+		<County code="22068" label="Oscoda" symbol="Oscoda"/>
+		<County code="22069" label="Otsego" symbol="OtsegoMI"/>
+		<County code="22070" label="Ottawa" symbol="OttawaMI"/>
+		<County code="22071" label="Presque Isle" symbol="Presqueisle" verticalCenterGap="5"/>
+		<County code="22072" label="Roscommon" symbol="Roscommon"/>
+		<County code="22073" label="Saginaw" symbol="Saginaw"/>
+		<County code="22074" label="St. Clair" symbol="SaintclairMI"/>
+		<County code="22075" label="St. Joseph" symbol="SaintjosephMI"/>
+		<County code="22076" label="Sanilac" symbol="Sanilac"/>
+		<County code="22077" label="Schoolcraft" symbol="Schoolcraft"/>
+		<County code="22078" label="Shiawassee" symbol="Shiawassee"/>
+		<County code="22079" label="Tuscola" symbol="Tuscola"/>
+		<County code="22080" label="Vanburen" symbol="VanburenMI"/>
+		<County code="22081" label="Washtenaw" symbol="Washtenaw"/>
+		<County code="22082" label="Wayne" symbol="WayneMI"/>
+		<County code="22083" label="Wexford" symbol="Wexford"/>
+	</State>
+	<State code="23000" label="Minnesota" symbol="Minnesota">
+		<County code="23001" label="Aitkin" symbol="Aitkin"/>
+		<County code="23002" label="Anoka" symbol="Anoka"/>
+		<County code="23003" label="Becker" symbol="Becker"/>
+		<County code="23004" label="Beltrami" symbol="Beltrami" horizontalCenterGap="5"/>
+		<County code="23005" label="Benton" symbol="BentonMN"/>
+		<County code="23006" label="Bigstone" symbol="Bigstone"/>
+		<County code="23007" label="Blueearth" symbol="Blueearth"/>
+		<County code="23008" label="Brown" symbol="BrownMN"/>
+		<County code="23009" label="Carlton" symbol="Carlton"/>
+		<County code="23010" label="Carver" symbol="Carver"/>
+		<County code="23011" label="Cass" symbol="CassMN" verticalCenterGap="-5"/>
+		<County code="23012" label="Chippewa" symbol="ChippewaMN"/>
+		<County code="23013" label="Chisago" symbol="Chisago"/>
+		<County code="23014" label="Clay" symbol="ClayMN"/>
+		<County code="23015" label="Clearwater" symbol="ClearwaterMN"/>
+		<County code="23016" label="Cook" symbol="CookMN"/>
+		<County code="23017" label="Cottonwood" symbol="Cottonwood"/>
+		<County code="23018" label="Crowwing" symbol="Crowwing"/>
+		<County code="23019" label="Dakota" symbol="DakotaMN"/>
+		<County code="23020" label="Dodge" symbol="DodgeMN"/>
+		<County code="23021" label="Douglas" symbol="DouglasMN"/>
+		<County code="23022" label="Faribault" symbol="Faribault"/>
+		<County code="23023" label="Fillmore" symbol="FillmoreMN"/>
+		<County code="23024" label="Freeborn" symbol="Freeborn"/>
+		<County code="23025" label="Goodhue" symbol="Goodhue"/>
+		<County code="23026" label="Grant" symbol="GrantMN"/>
+		<County code="23027" label="Hennepin" symbol="Hennepin"/>
+		<County code="23028" label="Houston" symbol="HoustonMN"/>
+		<County code="23029" label="Hubbard" symbol="Hubbard"/>
+		<County code="23030" label="Isanti" symbol="Isanti"/>
+		<County code="23031" label="Itasca" symbol="Itasca"/>
+		<County code="23032" label="Jackson" symbol="JacksonMN"/>
+		<County code="23033" label="Kanabec" symbol="Kanabec"/>
+		<County code="23034" label="Kandiyohi" symbol="Kandiyohi"/>
+		<County code="23035" label="Kittson" symbol="Kittson"/>
+		<County code="23036" label="Koochiching" symbol="Koochiching"/>
+		<County code="23037" label="Lac qui Parle" symbol="Lacquiparle" verticalCenterGap="5"/>
+		<County code="23038" label="Lake" symbol="LakeMN"/>
+		<County code="23039" label="Lake of the Woods" symbol="Lakeofthewoods" verticalCenterGap="5"/>
+		<County code="23040" label="Le Sueur" symbol="Lesueur"/>
+		<County code="23041" label="Lincoln" symbol="LincolnMN"/>
+		<County code="23042" label="Lyon" symbol="LyonMN"/>
+		<County code="23043" label="Mahnomen" symbol="Mahnomen"/>
+		<County code="23044" label="Marshall" symbol="MarshallMN"/>
+		<County code="23045" label="Martin" symbol="MartinMN"/>
+		<County code="23046" label="McLeod" symbol="McLeod"/>
+		<County code="23047" label="Meeker" symbol="Meeker"/>
+		<County code="23048" label="Mille Lacs" symbol="Millelacs"/>
+		<County code="23049" label="Morrison" symbol="Morrison"/>
+		<County code="23050" label="Mower" symbol="Mower"/>
+		<County code="23051" label="Murray" symbol="MurrayMN"/>
+		<County code="23052" label="Nicollet" symbol="Nicollet" horizontalCenterGap="5" verticalCenterGap="-2"/>
+		<County code="23053" label="Nobles" symbol="Nobles"/>
+		<County code="23054" label="Norman" symbol="Norman"/>
+		<County code="23055" label="Olmsted" symbol="Olmsted"/>
+		<County code="23056" label="Ottertail" symbol="Ottertail"/>
+		<County code="23057" label="Pennington" symbol="PenningtonMN"/>
+		<County code="23058" label="Pine" symbol="Pine"/>
+		<County code="23059" label="Pipestone" symbol="Pipestone"/>
+		<County code="23060" label="Polk" symbol="PolkMN" verticalCenterGap="9"/>
+		<County code="23061" label="Pope" symbol="PopeMN"/>
+		<County code="23062" label="Ramsey" symbol="RamseyMN"/>
+		<County code="23063" label="Redlake" symbol="Redlake"/>
+		<County code="23064" label="Redwood" symbol="Redwood"/>
+		<County code="23065" label="Renville" symbol="RenvilleMN"/>
+		<County code="23066" label="Rice" symbol="RiceMN"/>
+		<County code="23067" label="Rock" symbol="RockMN"/>
+		<County code="23068" label="Roseau" symbol="Roseau"/>
+		<County code="23069" label="St. Louis" symbol="SaintlouisMN"/>
+		<County code="23070" label="Scott" symbol="ScottMN"/>
+		<County code="23071" label="Sherburne" symbol="Sherburne"/>
+		<County code="23072" label="Sibley" symbol="Sibley"/>
+		<County code="23073" label="Stearns" symbol="Stearns"/>
+		<County code="23074" label="Steele" symbol="SteeleMN"/>
+		<County code="23075" label="Stevens" symbol="StevensMN"/>
+		<County code="23076" label="Swift" symbol="Swift"/>
+		<County code="23077" label="Todd" symbol="ToddMN"/>
+		<County code="23078" label="Traverse" symbol="Traverse"/>
+		<County code="23079" label="Wabasha" symbol="Wabasha"/>
+		<County code="23080" label="Wadena" symbol="Wadena"/>
+		<County code="23081" label="Waseca" symbol="Waseca"/>
+		<County code="23082" label="Washington" symbol="WashingtonMN"/>
+		<County code="23083" label="Watonwan" symbol="Watonwan"/>
+		<County code="23084" label="Wilkin" symbol="Wilkin"/>
+		<County code="23085" label="Winona" symbol="Winona"/>
+		<County code="23086" label="Wright" symbol="WrightMN"/>
+		<County code="23087" label="Yellow Medicine" symbol="Yellowmedicine"/>
+	</State>
+	<State code="24000" label="Mississippi" symbol="Mississippi">
+		<County code="24001" label="Adams" symbol="AdamsMS"/>
+		<County code="24002" label="Alcorn" symbol="Alcorn"/>
+		<County code="24003" label="Amite" symbol="Amite"/>
+		<County code="24004" label="Attala" symbol="Attala"/>
+		<County code="24005" label="Benton" symbol="BentonMS"/>
+		<County code="24006" label="Bolivar" symbol="Bolivar"/>
+		<County code="24007" label="Calhoun" symbol="CalhounMS"/>
+		<County code="24008" label="Carroll" symbol="CarrollMS"/>
+		<County code="24009" label="Chickasaw" symbol="ChickasawMS"/>
+		<County code="24010" label="Choctaw" symbol="ChoctawMS"/>
+		<County code="24011" label="Claiborne" symbol="ClaiborneMS"/>
+		<County code="24012" label="Clarke" symbol="ClarkeMS"/>
+		<County code="24013" label="Clay" symbol="ClayMS"/>
+		<County code="24014" label="Coahoma" symbol="Coahoma"/>
+		<County code="24015" label="Copiah" symbol="Copiah"/>
+		<County code="24016" label="Covington" symbol="CovingtonMS"/>
+		<County code="24017" label="Desoto" symbol="DesotoMS"/>
+		<County code="24018" label="Forrest" symbol="Forrest"/>
+		<County code="24019" label="Franklin" symbol="FranklinMS"/>
+		<County code="24020" label="George" symbol="George"/>
+		<County code="24021" label="Greene" symbol="GreeneMS"/>
+		<County code="24022" label="Grenada" symbol="Grenada"/>
+		<County code="24023" label="Hancock" symbol="HancockMS"/>
+		<County code="24024" label="Harrison" symbol="HarrisonMS"/>
+		<County code="24025" label="Hinds" symbol="Hinds"/>
+		<County code="24026" label="Holmes" symbol="HolmesMS"/>
+		<County code="24027" label="Humphreys" symbol="HumphreysMS"/>
+		<County code="24028" label="Issaquena" symbol="Issaquena" horizontalCenterGap="-2"/>
+		<County code="24029" label="Itawamba" symbol="Itawamba"/>
+		<County code="24030" label="Jackson" symbol="JacksonMS"/>
+		<County code="24031" label="Jasper" symbol="JasperMS"/>
+		<County code="24032" label="Jefferson Davis" symbol="Jeffersondavis"/>
+		<County code="24033" label="Jefferson" symbol="JeffersonMS"/>
+		<County code="24034" label="Jones" symbol="JonesMS"/>
+		<County code="24035" label="Kemper" symbol="Kemper"/>
+		<County code="24036" label="Lafayette" symbol="LafayetteMS"/>
+		<County code="24037" label="Lamar" symbol="LamarMS"/>
+		<County code="24038" label="Lauderdale" symbol="LauderdaleMS"/>
+		<County code="24039" label="Lawrence" symbol="LawrenceMS"/>
+		<County code="24040" label="Leake" symbol="Leake"/>
+		<County code="24041" label="Lee" symbol="LeeMS"/>
+		<County code="24042" label="Leflore" symbol="LefloreMS"/>
+		<County code="24043" label="Lincoln" symbol="LincolnMS"/>
+		<County code="24044" label="Lowndes" symbol="Lowndes" horizontalCenterGap="10" verticalCenterGap="5"/>
+		<County code="24045" label="Madison" symbol="MadisonMS"/>
+		<County code="24046" label="Marion" symbol="MarionMS"/>
+		<County code="24047" label="Marshall" symbol="MarshallMS"/>
+		<County code="24048" label="Monroe" symbol="MonroeMS"/>
+		<County code="24049" label="Montgomery" symbol="MontgomeryMS"/>
+		<County code="24050" label="Neshoba" symbol="Neshoba"/>
+		<County code="24051" label="Newton" symbol="NewtonMS"/>
+		<County code="24052" label="Noxubee" symbol="Noxubee"/>
+		<County code="24053" label="Oktibbeha" symbol="Oktibbeha"/>
+		<County code="24054" label="Panola" symbol="PanolaMS"/>
+		<County code="24055" label="Pearl River" symbol="Pearlriver"/>
+		<County code="24056" label="Perry" symbol="PerryMS"/>
+		<County code="24057" label="Pike" symbol="PikeMS"/>
+		<County code="24058" label="Pontotoc" symbol="PontotocMS"/>
+		<County code="24059" label="Prentiss" symbol="Prentiss"/>
+		<County code="24060" label="Quitman" symbol="QuitmanMS"/>
+		<County code="24061" label="Rankin" symbol="Rankin"/>
+		<County code="24062" label="Scott" symbol="ScottMS"/>
+		<County code="24063" label="Sharkey" symbol="Sharkey"/>
+		<County code="24064" label="Simpson" symbol="SimpsonMS"/>
+		<County code="24065" label="Smith" symbol="SmithMS"/>
+		<County code="24066" label="Stone" symbol="StoneMS"/>
+		<County code="24067" label="Sunflower" symbol="Sunflower"/>
+		<County code="24068" label="Tallahatchie" symbol="Tallahatchie"/>
+		<County code="24069" label="Tate" symbol="Tate"/>
+		<County code="24070" label="Tippah" symbol="Tippah"/>
+		<County code="24071" label="Tishomingo" symbol="Tishomingo"/>
+		<County code="24072" label="Tunica" symbol="Tunica"/>
+		<County code="24073" label="Union" symbol="UnionMS"/>
+		<County code="24074" label="Walthall" symbol="Walthall" horizontalCenterGap="-5"/>
+		<County code="24075" label="Warren" symbol="WarrenMS"/>
+		<County code="24076" label="Washington" symbol="WashingtonMS"/>
+		<County code="24077" label="Wayne" symbol="WayneMS"/>
+		<County code="24078" label="Webster" symbol="WebsterMS"/>
+		<County code="24079" label="Wilkinson" symbol="WilkinsonMS"/>
+		<County code="24080" label="Winston" symbol="WinstonMS"/>
+		<County code="24081" label="Yalobusha" symbol="Yalobusha"/>
+		<County code="24082" label="Yazoo" symbol="Yazoo"/>
+	</State>
+	<State code="25000" label="Missouri" symbol="Missouri">
+		<County code="25001" label="Adair" symbol="AdairMO"/>
+		<County code="25002" label="Andrew" symbol="Andrew"/>
+		<County code="25003" label="Atchison" symbol="AtchisonMO"/>
+		<County code="25004" label="Audrain" symbol="Audrain"/>
+		<County code="25005" label="Barry" symbol="BarryMO"/>
+		<County code="25006" label="Barton" symbol="BartonMO"/>
+		<County code="25007" label="Bates" symbol="Bates"/>
+		<County code="25008" label="Benton" symbol="BentonMO"/>
+		<County code="25009" label="Bollinger" symbol="Bollinger"/>
+		<County code="25010" label="Boone" symbol="BooneMO"/>
+		<County code="25011" label="Buchanan" symbol="BuchananMO"/>
+		<County code="25012" label="Butler" symbol="ButlerMO"/>
+		<County code="25013" label="Caldwell" symbol="CaldwellMO"/>
+		<County code="25014" label="Callaway" symbol="Callaway"/>
+		<County code="25015" label="Camden" symbol="CamdenMO"/>
+		<County code="25016" label="Cape Girardeau" symbol="Capegirardeau"/>
+		<County code="25017" label="Carroll" symbol="CarrollMO"/>
+		<County code="25018" label="Carter" symbol="CarterMO"/>
+		<County code="25019" label="Cass" symbol="CassMO"/>
+		<County code="25020" label="Cedar" symbol="CedarMO"/>
+		<County code="25021" label="Chariton" symbol="Chariton"/>
+		<County code="25022" label="Christian" symbol="ChristianMO"/>
+		<County code="25023" label="Clark" symbol="ClarkMO"/>
+		<County code="25024" label="Clay" symbol="ClayMO"/>
+		<County code="25025" label="Clinton" symbol="ClintonMO"/>
+		<County code="25026" label="Coal" symbol="CoalMO"/>
+		<County code="25027" label="Cooper" symbol="Cooper"/>
+		<County code="25028" label="Crawford" symbol="CrawfordMO"/>
+		<County code="25029" label="Dade" symbol="DadeMO"/>
+		<County code="25030" label="Dallas" symbol="DallasMO"/>
+		<County code="25031" label="Daviess" symbol="DaviessMO"/>
+		<County code="25032" label="DeKalb" symbol="DeKalbMO"/>
+		<County code="25033" label="Dent" symbol="Dent"/>
+		<County code="25034" label="Douglas" symbol="DouglasMO"/>
+		<County code="25035" label="Dunklin" symbol="Dunklin" horizontalCenterGap="5"/>
+		<County code="25036" label="Franklin" symbol="FranklinMO"/>
+		<County code="25037" label="Gasconade" symbol="Gasconade"/>
+		<County code="25038" label="Gentry" symbol="Gentry"/>
+		<County code="25039" label="Greene" symbol="GreeneMO"/>
+		<County code="25040" label="Grundy" symbol="GrundyMO"/>
+		<County code="25041" label="Worth" symbol="WorthMO"/>
+		<County code="25042" label="Harrison" symbol="HarrisonMO"/>
+		<County code="25043" label="Henry" symbol="HenryMO"/>
+		<County code="25044" label="Hickory" symbol="Hickory"/>
+		<County code="25045" label="Holt" symbol="HoltMO" horizontalCenterGap="2" verticalCenterGap="-2"/>
+		<County code="25046" label="Howard" symbol="HowardMO"/>
+		<County code="25047" label="Howell" symbol="Howell"/>
+		<County code="25048" label="Iron" symbol="IronMO" verticalCenterGap="-8"/>
+		<County code="25049" label="Jackson" symbol="JacksonMO"/>
+		<County code="25050" label="Jasper" symbol="JasperMO"/>
+		<County code="25051" label="Jefferson" symbol="JeffersonMO"/>
+		<County code="25052" label="Johnson" symbol="JohnsonMO"/>
+		<County code="25053" label="Knox" symbol="KnoxMO"/>
+		<County code="25054" label="Laclede" symbol="Laclede"/>
+		<County code="25055" label="Lafayette" symbol="LafayetteMO"/>
+		<County code="25056" label="Lawrence" symbol="LawrenceMO"/>
+		<County code="25057" label="Lewis" symbol="LewisMO"/>
+		<County code="25058" label="Lincoln" symbol="LincolnMO"/>
+		<County code="25059" label="Linn" symbol="LinnMO"/>
+		<County code="25060" label="Livingston" symbol="LivingstonMO"/>
+		<County code="25061" label="Macon" symbol="MaconMO"/>
+		<County code="25062" label="Madison" symbol="MadisonMO"/>
+		<County code="25063" label="Maries" symbol="Maries"/>
+		<County code="25064" label="Marion" symbol="MarionMO"/>
+		<County code="25065" label="McDonald" symbol="McDonald"/>
+		<County code="25066" label="Mercer" symbol="MercerMO"/>
+		<County code="25067" label="Miller" symbol="MillerMO"/>
+		<County code="25068" label="Mississippi" symbol="MississippiMO"/>
+		<County code="25069" label="Moniteau" symbol="Moniteau"/>
+		<County code="25070" label="Monroe" symbol="MonroeMO"/>
+		<County code="25071" label="Montgomery" symbol="MontgomeryMO"/>
+		<County code="25072" label="Morgan" symbol="MorganMO"/>
+		<County code="25073" label="New Madrid" symbol="Newmadrid"/>
+		<County code="25074" label="Newton" symbol="NewtonMO"/>
+		<County code="25075" label="Nodaway" symbol="Nodaway"/>
+		<County code="25076" label="Oregon" symbol="OregonMO"/>
+		<County code="25077" label="Osage" symbol="OsageMO"/>
+		<County code="25078" label="Ozark" symbol="Ozark"/>
+		<County code="25079" label="Pemiscot" symbol="Pemiscot"/>
+		<County code="25080" label="Perry" symbol="PerryMO"/>
+		<County code="25081" label="Pettis" symbol="Pettis"/>
+		<County code="25082" label="Phelps" symbol="PhelpsMO"/>
+		<County code="25083" label="Pike" symbol="PikeMO"/>
+		<County code="25084" label="Platte" symbol="PlatteMO" verticalCenterGap="-15"/>
+		<County code="25085" label="Polk" symbol="PolkMO"/>
+		<County code="25086" label="Pulaski" symbol="PulaskiMO"/>
+		<County code="25087" label="Putnam" symbol="PutnamMO"/>
+		<County code="25088" label="Ralls" symbol="Ralls" horizontalCenterGap="-3"/>
+		<County code="25089" label="Randolph" symbol="RandolphMO"/>
+		<County code="25090" label="Ray" symbol="Ray"/>
+		<County code="25091" label="Reynolds" symbol="Reynolds"/>
+		<County code="25092" label="Ripley" symbol="RipleyMO"/>
+		<County code="25093" label="St. Charles" symbol="Saintcharles"/>
+		<County code="25094" label="St. Clair" symbol="SaintclairMO"/>
+		<County code="25095" label="St. Genevieve" symbol="Saintesgenevieve"/>
+		<County code="25096" label="St. Francois" symbol="Saintfrancois" horizontalCenterGap="-3"/>
+		<County code="25097" label="City of St. Louis" symbol="Saintlouiscity"/>
+		<County code="25098" label="St. Louis" symbol="SaintlouisMO"/>
+		<County code="25099" label="Saline" symbol="SalineMO"/>
+		<County code="25100" label="Schuyler" symbol="SchuylerMO"/>
+		<County code="25101" label="Scotland" symbol="ScotlandMO"/>
+		<County code="25102" label="Scott" symbol="ScottMO"/>
+		<County code="25103" label="Shannon" symbol="ShannonMO"/>
+		<County code="25104" label="Shelby" symbol="ShelbyMO"/>
+		<County code="25105" label="Stoddard" symbol="Stoddard"/>
+		<County code="25106" label="Stone" symbol="StoneMO"/>
+		<County code="25107" label="Sullivan" symbol="SullivanMO"/>
+		<County code="25108" label="Taney" symbol="Taney"/>
+		<County code="25109" label="Texas" symbol="TexasMO"/>
+		<County code="25110" label="Vernon" symbol="VernonMO"/>
+		<County code="25111" label="Warren" symbol="WarrenMO"/>
+		<County code="25112" label="Washington" symbol="WashingtonMO"/>
+		<County code="25113" label="Wayne" symbol="WayneMO"/>
+		<County code="25114" label="Webster" symbol="WebsterMO"/>
+		<County code="25115" label="Wright" symbol="WrightMO"/>
+	</State>
+	<State code="26000" label="Montana" symbol="Montana" verticalCenterGap="-5">
+		<County code="26001" label="Beaverhead" symbol="Beaverhead" horizontalCenterGap="-10"/>
+		<County code="26002" label="Bighorn" symbol="BighornMT"/>
+		<County code="26003" label="Blaine" symbol="BlaineMT"/>
+		<County code="26004" label="Broadwater" symbol="Broadwater"/>
+		<County code="26005" label="Carbon" symbol="CarbonMT"/>
+		<County code="26006" label="Carter" symbol="CarterMT"/>
+		<County code="26007" label="Cascade" symbol="Cascade"/>
+		<County code="26008" label="Chouteau" symbol="Chouteau"/>
+		<County code="26009" label="Custer" symbol="CusterMT"/>
+		<County code="26010" label="Daniels" symbol="Daniels"/>
+		<County code="26011" label="Dawson" symbol="DawsonMT"/>
+		<County code="26012" label="Deerlodge" symbol="Deerlodge"/>
+		<County code="26013" label="Fallon" symbol="Fallon"/>
+		<County code="26014" label="Fergus" symbol="Fergus"/>
+		<County code="26015" label="Flathead" symbol="Flathead"/>
+		<County code="26016" label="Gallatin" symbol="GallatinMT"/>
+		<County code="26017" label="Garfield" symbol="GarfieldMT"/>
+		<County code="26018" label="Glacier" symbol="Glacier"/>
+		<County code="26019" label="Golden Valley" symbol="GoldenvalleyMT"/>
+		<County code="26020" label="Granite" symbol="Granite"/>
+		<County code="26021" label="Hill" symbol="HillMT"/>
+		<County code="26022" label="Jefferson" symbol="JeffersonMT"/>
+		<County code="26023" label="Judith Basin" symbol="Judithbasin"/>
+		<County code="26024" label="Lake" symbol="LakeMT"/>
+		<County code="26025" label="Lewis and Clark" symbol="Lewisandclark"/>
+		<County code="26026" label="Liberty" symbol="LibertyMT"/>
+		<County code="26027" label="Lincoln" symbol="LincolnMT"/>
+		<County code="26028" label="Madison" symbol="MadisonMT"/>
+		<County code="26029" label="McCone" symbol="McCone"/>
+		<County code="26030" label="Meagher" symbol="Meagher"/>
+		<County code="26031" label="Mineral" symbol="MineralMT" horizontalCenterGap="3"/>
+		<County code="26032" label="Missoula" symbol="Missoula" verticalCenterGap="10"/>
+		<County code="26033" label="Musselshell" symbol="Musselshell"/>
+		<County code="26034" label="Park" symbol="ParkMT"/>
+		<County code="26035" label="Petroleum" symbol="Petroleum"/>
+		<County code="26036" label="Phillips" symbol="PhillipsMT"/>
+		<County code="26037" label="Pondera" symbol="Pondera"/>
+		<County code="26038" label="Powder River" symbol="Powderriver"/>
+		<County code="26039" label="Powell" symbol="PowellMT"/>
+		<County code="26040" label="Prairie" symbol="PrairieMT"/>
+		<County code="26041" label="Ravalli" symbol="Ravalli"/>
+		<County code="26042" label="Richland" symbol="RichlandMT"/>
+		<County code="26043" label="Roosevelt" symbol="RooseveltMT"/>
+		<County code="26044" label="Rosebud" symbol="Rosebud" horizontalCenterGap="10" verticalCenterGap="-10"/>
+		<County code="26045" label="Sanders" symbol="Sanders"/>
+		<County code="26046" label="Sheridan" symbol="SheridanMT"/>
+		<County code="26047" label="Silverbow" symbol="Silverbow"/>
+		<County code="26048" label="Stillwater" symbol="Stillwater"/>
+		<County code="26049" label="Sweet Grass" symbol="Sweetgrass"/>
+		<County code="26050" label="Teton" symbol="TetonMT"/>
+		<County code="26051" label="Toole" symbol="Toole"/>
+		<County code="26052" label="Treasure" symbol="Treasure"/>
+		<County code="26053" label="Valley" symbol="ValleyMT"/>
+		<County code="26054" label="Wheatland" symbol="Wheatland"/>
+		<County code="26055" label="Wibaux" symbol="Wibaux" horizontalCenterGap="3"/>
+		<County code="26056" label="Yellowstone" symbol="Yellowstone"/>
+	</State>
+	<State code="27000" label="Nebraska" symbol="Nebraska">
+		<County code="27001" label="Adams" symbol="AdamsNE"/>
+		<County code="27002" label="Antelope" symbol="Antelope"/>
+		<County code="27003" label="Arthur" symbol="Arthur"/>
+		<County code="27004" label="Banner" symbol="Banner"/>
+		<County code="27005" label="Blaine" symbol="BlaineNE"/>
+		<County code="27006" label="Boone" symbol="BooneNE"/>
+		<County code="27007" label="Box Butte" symbol="BoxButte"/>
+		<County code="27008" label="Boyd" symbol="BoydNE" verticalCenterGap="-3"/>
+		<County code="27009" label="Brown" symbol="BrownNE"/>
+		<County code="27010" label="Buffalo" symbol="BuffaloNE"/>
+		<County code="27011" label="Burt" symbol="Burt"/>
+		<County code="27012" label="Butler" symbol="ButlerNE"/>
+		<County code="27013" label="Cass" symbol="CassNE"/>
+		<County code="27014" label="Cedar" symbol="CedarNE"/>
+		<County code="27015" label="Chase" symbol="ChaseNE"/>
+		<County code="27016" label="Cherry" symbol="Cherry"/>
+		<County code="27017" label="Cheyenne" symbol="CheyenneNE"/>
+		<County code="27018" label="Clay" symbol="ClayNE"/>
+		<County code="27019" label="Colfax" symbol="ColfaxNE"/>
+		<County code="27020" label="Cuming" symbol="Cuming"/>
+		<County code="27021" label="Custer" symbol="CusterNE"/>
+		<County code="27022" label="Dakota" symbol="DakotaNE"/>
+		<County code="27023" label="Dawes" symbol="Dawes"/>
+		<County code="27024" label="Dawson" symbol="DawsonNE"/>
+		<County code="27025" label="Deuel" symbol="DeuelNE"/>
+		<County code="27026" label="Dixon" symbol="Dixon"/>
+		<County code="27027" label="Dodge" symbol="DodgeNE"/>
+		<County code="27028" label="Douglas" symbol="DouglasNE"/>
+		<County code="27029" label="Dundy" symbol="Dundy"/>
+		<County code="27030" label="Fillmore" symbol="FillmoreNE"/>
+		<County code="27031" label="Franklin" symbol="FranklinNE"/>
+		<County code="27032" label="Frontier" symbol="Frontier"/>
+		<County code="27033" label="Furnas" symbol="Furnas"/>
+		<County code="27034" label="Gage" symbol="Gage"/>
+		<County code="27035" label="Garden" symbol="Garden"/>
+		<County code="27036" label="Garfield" symbol="GarfieldNE"/>
+		<County code="27037" label="Gosper" symbol="Gosper"/>
+		<County code="27038" label="Grant" symbol="GrantNE"/>
+		<County code="27039" label="Greeley" symbol="GreeleyNE"/>
+		<County code="27040" label="Hall" symbol="HallNE"/>
+		<County code="27041" label="Hamilton" symbol="HamiltonNE" verticalCenterGap="5"/>
+		<County code="27042" label="Harlan" symbol="HarlanNE"/>
+		<County code="27043" label="Hayes" symbol="Hayes"/>
+		<County code="27044" label="Hitchcock" symbol="Hitchcock"/>
+		<County code="27045" label="Holt" symbol="HoltNE"/>
+		<County code="27046" label="Hooker" symbol="Hooker"/>
+		<County code="27047" label="Howard" symbol="HowardNE"/>
+		<County code="27048" label="Jefferson" symbol="JeffersonNE"/>
+		<County code="27049" label="Johnson" symbol="JohnsonNE"/>
+		<County code="27050" label="Kearney" symbol="Kearney"/>
+		<County code="27051" label="Keith" symbol="Keith"/>
+		<County code="27052" label="Keyapaha" symbol="Keyapaha"/>
+		<County code="27053" label="Kimball" symbol="Kimball"/>
+		<County code="27054" label="Knox" symbol="KnoxNE"/>
+		<County code="27055" label="Lancaster" symbol="LancasterNE"/>
+		<County code="27056" label="Lincoln" symbol="LincolnNE"/>
+		<County code="27057" label="Logan" symbol="LoganNE"/>
+		<County code="27058" label="Loup" symbol="Loup"/>
+		<County code="27059" label="Madison" symbol="MadisonNE"/>
+		<County code="27060" label="McPherson" symbol="McPhersonNE"/>
+		<County code="27061" label="Merrick" symbol="Merrick" horizontalCenterGap="-5"/>
+		<County code="27062" label="Morrill" symbol="Morrill"/>
+		<County code="27063" label="Nance" symbol="Nance"/>
+		<County code="27064" label="Nemaha" symbol="NemahaNE"/>
+		<County code="27065" label="Nuckolls" symbol="Nuckolls"/>
+		<County code="27066" label="Otoe" symbol="Otoe"/>
+		<County code="27067" label="Pawnee" symbol="PawneeNE"/>
+		<County code="27068" label="Perkins" symbol="PerkinsNE"/>
+		<County code="27069" label="Phelps" symbol="PhelpsNE"/>
+		<County code="27070" label="Pierce" symbol="PierceNE"/>
+		<County code="27071" label="Platte" symbol="PlatteNE"/>
+		<County code="27072" label="Polk" symbol="Polk"/>
+		<County code="27073" label="Red Willow" symbol="Redwillow"/>
+		<County code="27074" label="Richardson" symbol="Richardson"/>
+		<County code="27075" label="Rock" symbol="RockNE"/>
+		<County code="27076" label="Saline" symbol="SalineNE"/>
+		<County code="27077" label="Sarpy" symbol="Sarpy"/>
+		<County code="27078" label="Saunders" symbol="Saunders"/>
+		<County code="27079" label="Scotts Bluff" symbol="ScottsBluff"/>
+		<County code="27080" label="Seward" symbol="SewardNE"/>
+		<County code="27081" label="Sheridan" symbol="SheridanNE"/>
+		<County code="27082" label="Sherman" symbol="ShermanNE"/>
+		<County code="27083" label="Sioux" symbol="SiouxNE"/>
+		<County code="27084" label="Stanton" symbol="StantonNE"/>
+		<County code="27085" label="Thayer" symbol="Thayer"/>
+		<County code="27086" label="Thomas" symbol="ThomasNE"/>
+		<County code="27087" label="Thurston" symbol="ThurstonNE"/>
+		<County code="27088" label="Valley" symbol="ValleyNE"/>
+		<County code="27089" label="Washington" symbol="WashingtonNE"/>
+		<County code="27090" label="Wayne" symbol="WayneNE"/>
+		<County code="27091" label="Webster" symbol="WebsterNE"/>
+		<County code="27092" label="Wheeler" symbol="WheelerNE"/>
+		<County code="27093" label="York" symbol="YorkNE"/>
+	</State>
+	<State code="28000" label="Nevada" symbol="Nevada">
+		<County code="28001" label="Carson City" symbol="Carsoncity"/>
+		<County code="28002" label="Churchill" symbol="Churchill"/>
+		<County code="28003" label="Clark" symbol="ClarkNV" horizontalCenterGap="-10" verticalCenterGap="-10"/>
+		<County code="28004" label="Douglas" symbol="DouglasNV"/>
+		<County code="28005" label="Elko" symbol="Elko"/>
+		<County code="28006" label="Esmeralda" symbol="Esmeralda"/>
+		<County code="28007" label="Eureka" symbol="Eureka"/>
+		<County code="28008" label="Humboldt" symbol="HumboldtNV"/>
+		<County code="28009" label="Lander" symbol="Lander"/>
+		<County code="28010" label="Lincoln" symbol="LincolnNV" verticalCenterGap="20"/>
+		<County code="28011" label="Lyon" symbol="LyonNV"/>
+		<County code="28012" label="Mineral" symbol="MineralNV"/>
+		<County code="28013" label="Nye" symbol="Nye"/>
+		<County code="28014" label="Pershing" symbol="Pershing"/>
+		<County code="28015" label="Storey" symbol="Storey"/>
+		<County code="28016" label="Washoe" symbol="Washoe" horizontalCenterGap="-2"/>
+		<County code="28017" label="Whitepine" symbol="Whitepine"/>
+	</State>
+	<State code="29000" label="Newhampshire" symbol="Newhampshire">
+		<County code="29001" label="Belknap" symbol="Belknap"/>
+		<County code="29002" label="Carroll" symbol="CarrollNH"/>
+		<County code="29003" label="Cheshire" symbol="Cheshire"/>
+		<County code="29004" label="Coos" symbol="CoosNH"/>
+		<County code="29005" label="Grafton" symbol="Grafton"/>
+		<County code="29006" label="Hillsborough" symbol="HillsboroughNH"/>
+		<County code="29007" label="Merrimack" symbol="Merrimack"/>
+		<County code="29008" label="Rockingham" symbol="RockinghamNH"/>
+		<County code="29009" label="Strafford" symbol="Strafford"/>
+		<County code="29010" label="Sullivan" symbol="SullivanNH"/>
+	</State>
+	<State code="30000" label="Newjersey" symbol="Newjersey">
+		<County code="30001" label="Atlantic" symbol="Atlantic"/>
+		<County code="30002" label="Bergen" symbol="Bergen"/>
+		<County code="30003" label="Burlington" symbol="Burlington"/>
+		<County code="30004" label="Camden" symbol="CamdenNJ" horizontalCenterGap="-3"/>
+		<County code="30005" label="Capemay" symbol="Capemay" horizontalCenterGap="-8"/>
+		<County code="30006" label="Cumberland" symbol="CumberlandNJ"/>
+		<County code="30007" label="Essex" symbol="EssexNJ" horizontalCenterGap="-5"/>
+		<County code="30008" label="Gloucester" symbol="GloucesterNJ"/>
+		<County code="30009" label="Hudson" symbol="Hudson"/>
+		<County code="30010" label="Hunterdon" symbol="Hunterdon"/>
+		<County code="30011" label="Mercer" symbol="MercerNJ"/>
+		<County code="30012" label="Middlesex" symbol="MiddlesexNJ"/>
+		<County code="30013" label="Monmouth" symbol="Monmouth"/>
+		<County code="30014" label="Morris" symbol="MorrisNJ"/>
+		<County code="30015" label="Ocean" symbol="Ocean"/>
+		<County code="30016" label="Passaic" symbol="Passaic"/>
+		<County code="30017" label="Salem" symbol="Salem"/>
+		<County code="30018" label="Somerset" symbol="SomersetNJ"/>
+		<County code="30019" label="Sussex" symbol="SussexNJ"/>
+		<County code="30020" label="Union" symbol="UnionNJ"/>
+		<County code="30021" label="Warren" symbol="WarrenNJ"/>
+	</State>
+	<State code="31000" label="New Mexico" symbol="Newmexico" verticalCenterGap="5">
+		<County code="31001" label="Bernalillo" symbol="Bernalillo"/>
+		<County code="31002" label="Catron" symbol="Catron"/>
+		<County code="31003" label="Chaves" symbol="Chaves"/>
+		<County code="31004" label="Cibola" symbol="Cibola"/>
+		<County code="31005" label="Colfax" symbol="ColfaxNM"/>
+		<County code="31006" label="Curry" symbol="CurryNM"/>
+		<County code="31007" label="Debaca" symbol="Debaca"/>
+		<County code="31008" label="Donaana" symbol="Donaana"/>
+		<County code="31009" label="Eddy" symbol="EddyNM"/>
+		<County code="31010" label="Grant" symbol="Grant" verticalCenterGap="-10"/>
+		<County code="31011" label="Guadalupe" symbol="GuadalupeNM"/>
+		<County code="31012" label="Harding" symbol="HardingNM" verticalCenterGap="-10"/>
+		<County code="31013" label="Hidalgo" symbol="HidalgoNM" horizontalCenterGap="-5" />
+		<County code="31014" label="Lea" symbol="Lea"/>
+		<County code="31015" label="Lincoln" symbol="Lincoln"/>
+		<County code="31016" label="Losalamos" symbol="Losalamos"/>
+		<County code="31017" label="Luna" symbol="Luna"/>
+		<County code="31018" label="McKinley" symbol="McKinley" verticalCenterGap="-10"/>
+		<County code="31019" label="Mora" symbol="Mora"/>
+		<County code="31020" label="Otero" symbol="OteroNM" horizontalCenterGap="-10"/>
+		<County code="31021" label="Quay" symbol="Quay" horizontalCenterGap="5"/>
+		<County code="31022" label="Rio Arriba" symbol="Rioarriba"/>
+		<County code="31023" label="Roosevelt" symbol="RooseveltNM"/>
+		<County code="31024" label="Sandoval" symbol="Sandoval"/>
+		<County code="31025" label="San Juan" symbol="SanjuanNM"/>
+		<County code="31026" label="San Miguel" symbol="SanmiguelNM"/>
+		<County code="31027" label="Santa Fe" symbol="Santafe"/>
+		<County code="31028" label="Sierra" symbol="SierraNM"/>
+		<County code="31029" label="Socorro" symbol="Socorro"/>
+		<County code="31030" label="Taos" symbol="Taos"/>
+		<County code="31031" label="Torrance" symbol="Torrance"/>
+		<County code="31032" label="Union" symbol="Union"/>
+		<County code="31033" label="Valencia" symbol="Valencia"/>
+	</State>
+	<State code="32000" label="New York" symbol="Newyork">
+		<County code="32001" label="Albany" symbol="AlbanyNY"/>
+		<County code="32002" label="Allegany" symbol="AlleganyNY"/>
+		<County code="32003" label="Bronx" symbol="Bronx"/>
+		<County code="32004" label="Brooklyn" symbol="Brooklyn"/>
+		<County code="32005" label="Broome" symbol="Broome" verticalCenterGap="5"/>
+		<County code="32006" label="Cattaraugus" symbol="Cattaraugus"/>
+		<County code="32007" label="Cayuga" symbol="Cayuga" horizontalCenterGap="-3"/>
+		<County code="32008" label="Chautauqua" symbol="ChautauquaNY" verticalCenterGap="5"/>
+		<County code="32009" label="Chemung" symbol="Chemung"/>
+		<County code="32010" label="Chenango" symbol="Chenango"/>
+		<County code="32011" label="Clinton" symbol="ClintonNY"/>
+		<County code="32012" label="Columbia" symbol="ColumbiaNY"/>
+		<County code="32013" label="Cortland" symbol="Cortland"/>
+		<County code="32014" label="Delaware" symbol="DelawareNY"/>
+		<County code="32015" label="Dutchess" symbol="Dutchess"/>
+		<County code="32016" label="Erie" symbol="ErieNY"/>
+		<County code="32017" label="Essex" symbol="EssexNY"/>
+		<County code="32018" label="Franklin" symbol="FranklinNY"/>
+		<County code="32019" label="Fulton" symbol="FultonNY"/>
+		<County code="32020" label="Genesee" symbol="GeneseeNY"/>
+		<County code="32021" label="Greene" symbol="GreeneNY"/>
+		<County code="32022" label="Hamilton" symbol="HamiltonNY"/>
+		<County code="32023" label="Herkimer" symbol="Herkimer"/>
+		<County code="32024" label="Jefferson" symbol="JeffersonNY"/>
+		<County code="32025" label="Lewis" symbol="LewisNY"/>
+		<County code="32026" label="Livingston" symbol="LivingstonNY"/>
+		<County code="32027" label="Madison" symbol="MadisonNY"/>
+		<County code="32028" label="Manhattan" symbol="Manhattan"/>
+		<County code="32029" label="Monroe" symbol="MonroeNY"/>
+		<County code="32030" label="Montgomery" symbol="MontgomeryNY"/>
+		<County code="32031" label="Nassau" symbol="NassauNY"/>
+		<County code="32032" label="Niagara" symbol="Niagara"/>
+		<County code="32033" label="Oneida" symbol="OneidaNY"/>
+		<County code="32034" label="Onondaga" symbol="Onondaga"/>
+		<County code="32035" label="Ontario" symbol="Ontario"/>
+		<County code="32036" label="Orange" symbol="OrangeNY"/>
+		<County code="32037" label="Orleans" symbol="OrleansNY"/>
+		<County code="32038" label="Oswego" symbol="Oswego"/>
+		<County code="32039" label="Otsego" symbol="OtsegoNY"/>
+		<County code="32040" label="Putnam" symbol="PutnamNY"/>
+		<County code="32041" label="Queens" symbol="Queens"/>
+		<County code="32042" label="Rensselaer" symbol="Rensselaer"/>
+		<County code="32043" label="Rockland" symbol="Rockland"/>
+		<County code="32044" label="St. Lawrence" symbol="Saintlawrence"/>
+		<County code="32045" label="Saratoga" symbol="Saratoga"/>
+		<County code="32046" label="Schenectady" symbol="Schenectady"/>
+		<County code="32047" label="Schoharie" symbol="Schoharie"/>
+		<County code="32048" label="Schuyler" symbol="SchuylerNY"/>
+		<County code="32049" label="Seneca" symbol="SenecaNY"/>
+		<County code="32050" label="Staten Island" symbol="Statenisland"/>
+		<County code="32051" label="Steuben" symbol="SteubenNY"/>
+		<County code="32052" label="Suffolk" symbol="SuffolkNY"/>
+		<County code="32053" label="Sullivan" symbol="SullivanNY"/>
+		<County code="32054" label="Tioga" symbol="TiogaNY"/>
+		<County code="32055" label="Tompkins" symbol="Tompkins"/>
+		<County code="32056" label="Ulster" symbol="Ulster"/>
+		<County code="32057" label="Warren" symbol="WarrenNY"/>
+		<County code="32058" label="Washington" symbol="WashingtonNY"/>
+		<County code="32059" label="Wayne" symbol="WayneNY" verticalCenterGap="3"/>
+		<County code="32060" label="Westcheste" symbol="Westcheste" verticalCenterGap="-5"/>
+		<County code="32061" label="Wyoming" symbol="WyomingNY"/>
+		<County code="32062" label="Yeats" symbol="Yeats"/>
+	</State>
+	<State code="33000" label="North Carolina" symbol="Northcarolina" horizontalCenterGap="15">
+		<County code="33001" label="Alamance" symbol="Alamance"/>
+		<County code="33002" label="Alexander" symbol="AlexanderNC"/>
+		<County code="33003" label="Alleghany" symbol="AlleghanyNC"/>
+		<County code="33004" label="Anson" symbol="Anson"/>
+		<County code="33005" label="Ashe" symbol="Ashe"/>
+		<County code="33006" label="Avery" symbol="Avery"/>
+		<County code="33007" label="Beaufort" symbol="BeaufortNC"/>
+		<County code="33008" label="Bertie" symbol="Bertie"/>
+		<County code="33009" label="Bladen" symbol="Bladen"/>
+		<County code="33010" label="Brunswick" symbol="BrunswickNC"/>
+		<County code="33011" label="Buncombe" symbol="Buncombe"/>
+		<County code="33012" label="Burke" symbol="BurkeNC"/>
+		<County code="33013" label="Cabarrus" symbol="Cabarrus"/>
+		<County code="33014" label="Caldwell" symbol="CaldwellNC"/>
+		<County code="33015" label="Camden" symbol="CamdenNC"/>
+		<County code="33016" label="Carteret" symbol="Carteret"/>
+		<County code="33017" label="Caswell" symbol="Caswell"/>
+		<County code="33018" label="Catawba" symbol="Catawba"/>
+		<County code="33019" label="Chatham" symbol="ChathamNC"/>
+		<County code="33020" label="Cherokee" symbol="CherokeeNC"/>
+		<County code="33021" label="Chowan" symbol="Chowan"/>
+		<County code="33022" label="Clay" symbol="ClayNC"/>
+		<County code="33023" label="Cleveland" symbol="ClevelandNC"/>
+		<County code="33024" label="Columbus" symbol="Columbus"/>
+		<County code="33025" label="Craven" symbol="Craven"/>
+		<County code="33026" label="Cumberland" symbol="Cumberland"/>
+		<County code="33027" label="Currituck" symbol="Currituck"/>
+		<County code="33028" label="Dare" symbol="Dare"/>
+		<County code="33029" label="Davidson" symbol="DavidsonNC"/>
+		<County code="33030" label="Davie" symbol="Davie"/>
+		<County code="33031" label="Duplin" symbol="Duplin"/>
+		<County code="33032" label="Durham" symbol="Durham"/>
+		<County code="33033" label="Edgecombe" symbol="Edgecombe"/>
+		<County code="33034" label="Forsyth" symbol="ForsythNC"/>
+		<County code="33035" label="Franklin" symbol="FranklinNC"/>
+		<County code="33036" label="Gaston" symbol="Gaston"/>
+		<County code="33037" label="Gates" symbol="Gates"/>
+		<County code="33038" label="Graham" symbol="Graham"/>
+		<County code="33039" label="Granville" symbol="Granville"/>
+		<County code="33040" label="Greene" symbol="Greene"/>
+		<County code="33041" label="Guilford" symbol="Guilford"/>
+		<County code="33042" label="Halifax" symbol="HalifaxNC"/>
+		<County code="33043" label="Harnett" symbol="Harnett"/>
+		<County code="33044" label="Haywood" symbol="HaywoodNC"/>
+		<County code="33045" label="Henderson" symbol="HendersonNC"/>
+		<County code="33046" label="Hertford" symbol="Hertford"/>
+		<County code="33047" label="Hoke" symbol="Hoke"/>
+		<County code="33048" label="Hyde" symbol="HydeNC"/>
+		<County code="33049" label="Iredell" symbol="Iredell"/>
+		<County code="33050" label="Jackson" symbol="JacksonNC"/>
+		<County code="33051" label="Johns" symbol="Johns"/>
+		<County code="33052" label="Johnston" symbol="JohnstonNC"/>
+		<County code="33053" label="Lee" symbol="LeeNC"/>
+		<County code="33054" label="Lenoir" symbol="Lenoir"/>
+		<County code="33055" label="Lincoln" symbol="LincolnNC"/>
+		<County code="33056" label="Macon" symbol="MaconNC"/>
+		<County code="33057" label="Madison" symbol="MadisonNC"/>
+		<County code="33058" label="Martin" symbol="Martin"/>
+		<County code="33059" label="Mcdowell" symbol="McdowellNC"/>
+		<County code="33060" label="Mecklenburg" symbol="MecklenburgNC"/>
+		<County code="33061" label="Mitchell" symbol="MitchellNC"/>
+		<County code="33062" label="Montgomery" symbol="MontgomeryNC"/>
+		<County code="33063" label="Moore" symbol="MooreNC"/>
+		<County code="33064" label="Nash" symbol="Nash"/>
+		<County code="33065" label="New Hanover" symbol="Newhanover"/>
+		<County code="33066" label="Northampton" symbol="Northampton"/>
+		<County code="33067" label="Onslow" symbol="Onslow"/>
+		<County code="33068" label="Orange" symbol="OrangeNC"/>
+		<County code="33069" label="Pamlico" symbol="Pamlico"/>
+		<County code="33070" label="Pasquotank" symbol="Pasquotank"/>
+		<County code="33071" label="Pender" symbol="Pender"/>
+		<County code="33072" label="Perquimans" symbol="Perquimans"/>
+		<County code="33073" label="Person" symbol="Person"/>
+		<County code="33074" label="Pitt" symbol="Pitt"/>
+		<County code="33075" label="Polk" symbol="PolkNC"/>
+		<County code="33076" label="Randolph" symbol="RandolphNC"/>
+		<County code="33077" label="Richmond" symbol="RichmondNC"/>
+		<County code="33078" label="Robeson" symbol="Robeson"/>
+		<County code="33079" label="Rockingham" symbol="RockinghamNC"/>
+		<County code="33080" label="Rowan" symbol="RowanNC"/>
+		<County code="33081" label="Rutherford" symbol="RutherfordNC"/>
+		<County code="33082" label="Sampson" symbol="Sampson"/>
+		<County code="33083" label="Scotland" symbol="ScotlandNC"/>
+		<County code="33084" label="Stanly" symbol="Stanly"/>
+		<County code="33085" label="Stokes" symbol="Stokes"/>
+		<County code="33086" label="Surry" symbol="SurryNC"/>
+		<County code="33087" label="Swain" symbol="Swain"/>
+		<County code="33088" label="Transylvania" symbol="Transylvania"/>
+		<County code="33089" label="Tyrrell" symbol="Tyrrell"/>
+		<County code="33090" label="Union" symbol="UnionNC"/>
+		<County code="33091" label="Vance" symbol="Vance"/>
+		<County code="33092" label="Wake" symbol="Wake"/>
+		<County code="33093" label="Warren" symbol="WarrenNC"/>
+		<County code="33094" label="Washington" symbol="WashingtonNC"/>
+		<County code="33095" label="Watauga" symbol="Watauga"/>
+		<County code="33096" label="Wayne" symbol="Wayne"/>
+		<County code="33097" label="Wilkes" symbol="WilkesNC"/>
+		<County code="33098" label="Wilson" symbol="Wilson"/>
+		<County code="33099" label="Yadkin" symbol="YadkinNC"/>
+		<County code="33100" label="Yancey" symbol="Yancey"/>
+	</State>
+	<State code="34000" label="North Dakota" symbol="Northdakota">
+		<County code="34001" label="Adams" symbol="AdamsND"/>
+		<County code="34002" label="Barnes" symbol="Barnes"/>
+		<County code="34003" label="Benson" symbol="Benson" horizontalCenterGap="-10"/>
+		<County code="34004" label="Billings" symbol="Billings"/>
+		<County code="34005" label="Bottineau" symbol="Bottineau"/>
+		<County code="34006" label="Bowman" symbol="Bowman"/>
+		<County code="34007" label="Burke" symbol="BurkeND"/>
+		<County code="34008" label="Burleigh" symbol="Burleigh"/>
+		<County code="34009" label="Cass" symbol="CassND"/>
+		<County code="34010" label="Cavalier" symbol="Cavalier"/>
+		<County code="34011" label="Dickey" symbol="Dickey"/>
+		<County code="34012" label="Divide" symbol="Divide"/>
+		<County code="34013" label="Dunn" symbol="DunnND"/>
+		<County code="34014" label="Eddy" symbol="EddyND"/>
+		<County code="34015" label="Emmons" symbol="Emmons"/>
+		<County code="34016" label="Foster" symbol="Foster"/>
+		<County code="34017" label="Golden Valley" symbol="GoldenvalleyND"/>
+		<County code="34018" label="Grand Forks" symbol="Grandforks"/>
+		<County code="34019" label="Grant" symbol="GrantND"/>
+		<County code="34020" label="Griggs" symbol="Griggs"/>
+		<County code="34021" label="Hettinger" symbol="Hettinger"/>
+		<County code="34022" label="Kidder" symbol="Kidder"/>
+		<County code="34023" label="Lamoure" symbol="Lamoure"/>
+		<County code="34024" label="Logan" symbol="LoganND"/>
+		<County code="34025" label="Mchenry" symbol="MchenryND"/>
+		<County code="34026" label="Mcintosh" symbol="McintoshND"/>
+		<County code="34027" label="Mckenzie" symbol="Mckenzie"/>
+		<County code="34028" label="McLean" symbol="McLeanND" horizontalCenterGap="15"/>
+		<County code="34029" label="Mercer" symbol="MercerND"/>
+		<County code="34030" label="Morton" symbol="MortonND" verticalCenterGap="-10"/>
+		<County code="34031" label="Mountrail" symbol="Mountrail"/>
+		<County code="34032" label="Nelson" symbol="NelsonND"/>
+		<County code="34033" label="Oliver" symbol="Oliver"/>
+		<County code="34034" label="Pembina" symbol="Pembina"/>
+		<County code="34035" label="Pierce" symbol="PierceND" horizontalCenterGap="-5"/>
+		<County code="34036" label="Ramsey" symbol="RamseyND"/>
+		<County code="34037" label="Ransom" symbol="Ransom"/>
+		<County code="34038" label="Renville" symbol="RenvilleND" horizontalCenterGap="-5"/>
+		<County code="34039" label="Richland" symbol="RichlandND"/>
+		<County code="34040" label="Rolette" symbol="Rolette"/>
+		<County code="34041" label="Sargent" symbol="Sargent"/>
+		<County code="34042" label="Sheridan" symbol="SheridanND"/>
+		<County code="34043" label="Sioux" symbol="SiouxND" horizontalCenterGap="5" verticalCenterGap="5"/>
+		<County code="34044" label="Slope" symbol="Slope"/>
+		<County code="34045" label="Stark" symbol="StarkND"/>
+		<County code="34046" label="Steele" symbol="SteeleND"/>
+		<County code="34047" label="Stutsman" symbol="Stutsman"/>
+		<County code="34048" label="Towner" symbol="Towner"/>
+		<County code="34049" label="Traill" symbol="Traill"/>
+		<County code="34050" label="Walsh" symbol="Walsh"/>
+		<County code="34051" label="Ward" symbol="WardND" verticalCenterGap="10"/>
+		<County code="34052" label="Wells" symbol="WellsND"/>
+		<County code="34053" label="Williams" symbol="WilliamsND"/>
+	</State>
+	<State code="35000" label="Ohio" symbol="Ohio">
+		<County code="35001" label="Adams" symbol="AdamsOH"/>
+		<County code="35002" label="Allen" symbol="AllenOH"/>
+		<County code="35003" label="Ashland" symbol="AshlandOH"/>
+		<County code="35004" label="Ashtabula" symbol="Ashtabula"/>
+		<County code="35005" label="Athens" symbol="Athens"/>
+		<County code="35006" label="Auglaize" symbol="Auglaize"/>
+		<County code="35007" label="Belmont" symbol="Belmont"/>
+		<County code="35008" label="Brown" symbol="BrownOH" verticalCenterGap="5"/>
+		<County code="35009" label="Butler" symbol="ButlerOH"/>
+		<County code="35010" label="Carroll" symbol="CarrollOH"/>
+		<County code="35011" label="Champaign" symbol="ChampaignOH"/>
+		<County code="35012" label="Clark" symbol="ClarkOH"/>
+		<County code="35013" label="Clermont" symbol="Clermont"/>
+		<County code="35014" label="Clinton" symbol="ClintonOH"/>
+		<County code="35015" label="Columbiana" symbol="Columbiana"/>
+		<County code="35016" label="Coshocton" symbol="Coshocton"/>
+		<County code="35017" label="Crawford" symbol="CrawfordOH"/>
+		<County code="35018" label="Cuyahoga" symbol="Cuyahoga"/>
+		<County code="35019" label="Darke" symbol="Darke"/>
+		<County code="35020" label="Defiance" symbol="Defiance"/>
+		<County code="35021" label="Delaware" symbol="DelawareOH"/>
+		<County code="35022" label="Erie" symbol="ErieOH"/>
+		<County code="35023" label="Fairfield" symbol="FairfieldOH"/>
+		<County code="35024" label="Fayette" symbol="FayetteOH"/>
+		<County code="35025" label="Franklin" symbol="FranklinOH"/>
+		<County code="35026" label="Fulton" symbol="FultonOH"/>
+		<County code="35027" label="Gallia" symbol="Gallia"/>
+		<County code="35028" label="Geauga" symbol="Geauga"/>
+		<County code="35029" label="Greene" symbol="GreeneOH"/>
+		<County code="35030" label="Guernsey" symbol="Guernsey"/>
+		<County code="35031" label="Hamilton" symbol="HamiltonOH"/>
+		<County code="35032" label="Hancock" symbol="HancockOH"/>
+		<County code="35033" label="Hardin" symbol="HardinOH"/>
+		<County code="35034" label="Harrison" symbol="HarrisonOH"/>
+		<County code="35035" label="Henry" symbol="HenryOH"/>
+		<County code="35036" label="Highland" symbol="HighlandOH"/>
+		<County code="35037" label="Hockin" symbol="Hockin"/>
+		<County code="35038" label="Holmes" symbol="HolmesOH"/>
+		<County code="35039" label="Huron" symbol="HuronOH"/>
+		<County code="35040" label="Jackson" symbol="JacksonOH"/>
+		<County code="35041" label="Jefferso" symbol="Jefferso"/>
+		<County code="35042" label="Knox" symbol="KnoxOH"/>
+		<County code="35043" label="Lake" symbol="LakeOH"/>
+		<County code="35044" label="Lawrence" symbol="LawrenceOH"/>
+		<County code="35045" label="Licking" symbol="Licking"/>
+		<County code="35046" label="Logan" symbol="LoganOH"/>
+		<County code="35047" label="Lorain" symbol="Lorain"/>
+		<County code="35048" label="Lucas" symbol="LucasOH" horizontalCenterGap="-10" verticalCenterGap="-5"/>
+		<County code="35049" label="Madison" symbol="MadisonOH"/>
+		<County code="35050" label="Mahoning" symbol="Mahoning"/>
+		<County code="35051" label="Marion" symbol="MarionOH"/>
+		<County code="35052" label="Medina" symbol="MedinaOH"/>
+		<County code="35053" label="Meigs" symbol="MeigsOH" verticalCenterGap="-5"/>
+		<County code="35054" label="Mercer" symbol="MercerOH"/>
+		<County code="35055" label="Miami" symbol="MiamiOH"/>
+		<County code="35056" label="Monroe" symbol="MonroeOH"/>
+		<County code="35057" label="Montgomery" symbol="MontgomeryOH"/>
+		<County code="35058" label="Morgan" symbol="MorganOH"/>
+		<County code="35059" label="Morro" symbol="Morro"/>
+		<County code="35060" label="Muskingum" symbol="Muskingum"/>
+		<County code="35061" label="Noble" symbol="NobleOH"/>
+		<County code="35062" label="Ottawa" symbol="OttawaOH"/>
+		<County code="35063" label="Paulding" symbol="PauldingOH"/>
+		<County code="35064" label="Perry" symbol="PerryOH"/>
+		<County code="35065" label="Pickaway" symbol="Pickaway"/>
+		<County code="35066" label="Pike" symbol="PikeOH"/>
+		<County code="35067" label="Portage" symbol="PortageOH"/>
+		<County code="35068" label="Preble" symbol="Preble"/>
+		<County code="35069" label="Putnam" symbol="PutnamOH"/>
+		<County code="35070" label="Richland" symbol="RichlandOH"/>
+		<County code="35071" label="Ross" symbol="Ross"/>
+		<County code="35072" label="Sandusky" symbol="Sandusky"/>
+		<County code="35073" label="Scioto" symbol="Scioto"/>
+		<County code="35074" label="Seneca" symbol="SenecaOH"/>
+		<County code="35075" label="Shelby" symbol="ShelbyOH"/>
+		<County code="35076" label="Stark" symbol="StarkOH"/>
+		<County code="35077" label="Summit" symbol="SummitOH"/>
+		<County code="35078" label="Trumbull" symbol="Trumbull"/>
+		<County code="35079" label="Tuscarawas" symbol="Tuscarawas"/>
+		<County code="35080" label="Union" symbol="UnionOH"/>
+		<County code="35081" label="Vanwert" symbol="Vanwert"/>
+		<County code="35082" label="Vinton" symbol="Vinton"/>
+		<County code="35083" label="Warren" symbol="WarrenOH"/>
+		<County code="35084" label="Washington" symbol="WashingtonOH"/>
+		<County code="35085" label="Wayne" symbol="WayneOH"/>
+		<County code="35086" label="Williams" symbol="WilliamsOH"/>
+		<County code="35087" label="Wood" symbol="WoodOH"/>
+		<County code="35088" label="Wyandot" symbol="Wyandot"/>
+	</State>
+	<State code="36000" label="Oklahoma" symbol="Oklahoma" verticalCenterGap="-5" horizontalCenterGap="10">
+		<County code="36001" label="Adair" symbol="AdairOK"/>
+		<County code="36002" label="Alfalfa" symbol="Alfalfa"/>
+		<County code="36003" label="Atoka" symbol="Atoka"/>
+		<County code="36004" label="Beaver" symbol="BeaverOK"/>
+		<County code="36005" label="Beckham" symbol="Beckham"/>
+		<County code="36006" label="Blaine" symbol="BlaineOK"/>
+		<County code="36007" label="Bryan" symbol="BryanOK"/>
+		<County code="36008" label="Caddo" symbol="Caddo"/>
+		<County code="36009" label="Canadian" symbol="Canadian"/>
+		<County code="36010" label="Carter" symbol="CarterOK"/>
+		<County code="36011" label="Cherokee" symbol="CherokeeOK"/>
+		<County code="36012" label="Choctaw" symbol="ChoctawOK"/>
+		<County code="36013" label="Cimarron" symbol="Cimarron"/>
+		<County code="36014" label="Cleveland" symbol="ClevelandOK" verticalCenterGap="-5"/>
+		<County code="36015" label="Coal" symbol="CoalOK"/>
+		<County code="36016" label="Comanche" symbol="ComancheOK"/>
+		<County code="36017" label="Cotton" symbol="Cotton"/>
+		<County code="36018" label="Craig" symbol="CraigOK"/>
+		<County code="36019" label="Creek" symbol="Creek"/>
+		<County code="36020" label="Custer" symbol="CusterOK"/>
+		<County code="36021" label="Delaware" symbol="DelawareOK"/>
+		<County code="36022" label="Dewey" symbol="DeweyOK"/>
+		<County code="36023" label="Ellis" symbol="EllisOK"/>
+		<County code="36024" label="Garfield" symbol="GarfieldOK"/>
+		<County code="36025" label="Garvin" symbol="Garvin"/>
+		<County code="36026" label="Grady" symbol="GradyOK"/>
+		<County code="36027" label="Grant" symbol="GrantOK"/>
+		<County code="36028" label="Greer" symbol="Greer"/>
+		<County code="36029" label="Harmon" symbol="Harmon"/>
+		<County code="36030" label="Harper" symbol="HarperOK"/>
+		<County code="36031" label="Haskell" symbol="HaskellOK"/>
+		<County code="36032" label="Hughes" symbol="HughesOK"/>
+		<County code="36033" label="Jackson" symbol="JacksonOK"/>
+		<County code="36034" label="Jefferson" symbol="JeffersonOK"/>
+		<County code="36035" label="Johnston" symbol="JohnstonOK"/>
+		<County code="36036" label="Kay" symbol="Kay" horizontalCenterGap="-2"/>
+		<County code="36037" label="Kingfisher" symbol="Kingfisher"/>
+		<County code="36038" label="Kiowa" symbol="KiowaOK"/>
+		<County code="36039" label="Latimer" symbol="Latimer"/>
+		<County code="36040" label="Leflore" symbol="LefloreOK"/>
+		<County code="36041" label="Lincoln" symbol="LincolnOK"/>
+		<County code="36042" label="Logan" symbol="LoganOK"/>
+		<County code="36043" label="Love" symbol="Love"/>
+		<County code="36044" label="Major" symbol="Major" verticalCenterGap="3"/>
+		<County code="36045" label="Marshall" symbol="MarshallOK"/>
+		<County code="36046" label="Mayes" symbol="Mayes"/>
+		<County code="36047" label="Mcclain" symbol="Mcclain" horizontalCenterGap="-5" verticalCenterGap="5"/>
+		<County code="36048" label="Mccurtain" symbol="Mccurtain"/>
+		<County code="36049" label="McIntosh" symbol="McIntoshOK"/>
+		<County code="36050" label="Murray" symbol="MurrayOK"/>
+		<County code="36051" label="Muskogee" symbol="Muskogee" horizontalCenterGap="3" verticalCenterGap="-2"/>
+		<County code="36052" label="Noble" symbol="NobleOK"/>
+		<County code="36053" label="Nowata" symbol="Nowata"/>
+		<County code="36054" label="Okfuskee" symbol="Okfuskee"/>
+		<County code="36055" label="Oklahoma" symbol="Oklahomacounty"/>
+		<County code="36056" label="Okmulgee" symbol="Okmulgee"/>
+		<County code="36057" label="Osage" symbol="OsageOK"/>
+		<County code="36058" label="Ottawa" symbol="OttawaOK"/>
+		<County code="36059" label="Pawnee" symbol="PawneeOK" horizontalCenterGap="-2" verticalCenterGap="3"/>
+		<County code="36060" label="Payne" symbol="Payne"/>
+		<County code="36061" label="Pittsburg" symbol="Pittsburg"/>
+		<County code="36062" label="Pontotoc" symbol="PontotocOK"/>
+		<County code="36063" label="Pottawatomie" symbol="PottawatomieOK"/>
+		<County code="36064" label="Pushmataha" symbol="Pushmataha"/>
+		<County code="36065" label="Roger Mills" symbol="Rogermills"/>
+		<County code="36066" label="Rogers" symbol="Rogers"/>
+		<County code="36067" label="Seminole" symbol="SeminoleOK"/>
+		<County code="36068" label="Sequoyah" symbol="Sequoyah"/>
+		<County code="36069" label="Stephens" symbol="StephensOK"/>
+		<County code="36070" label="Texas" symbol="TexasOK"/>
+		<County code="36071" label="Tillman" symbol="Tillman"/>
+		<County code="36072" label="Tulsa" symbol="Tulsa" horizontalCenterGap="3"/>
+		<County code="36073" label="Wagoner" symbol="Wagoner"/>
+		<County code="36074" label="Washington" symbol="WashingtonOK"/>
+		<County code="36075" label="Washita" symbol="Washita"/>
+		<County code="36076" label="Woods" symbol="Woods" horizontalCenterGap="5"/>
+		<County code="36077" label="Woodward" symbol="Woodward"/>
+	</State>
+	<State code="37000" label="Oregon" symbol="Oregon">
+		<County code="37001" label="Baker" symbol="BakerOR"/>
+		<County code="37002" label="Benton" symbol="BentonOR"/>
+		<County code="37003" label="Clackamas" symbol="Clackamas"/>
+		<County code="37004" label="Clatsop" symbol="Clatsop"/>
+		<County code="37005" label="Columbia" symbol="ColumbiaOR"/>
+		<County code="37006" label="Coos" symbol="CoosOR"/>
+		<County code="37007" label="Crook" symbol="CrookOR"/>
+		<County code="37008" label="Curry" symbol="CurryOR"/>
+		<County code="37009" label="Deschutes" symbol="Deschutes" horizontalCenterGap="-15"/>
+		<County code="37010" label="Douglas" symbol="DouglasOR"/>
+		<County code="37011" label="Gilliam" symbol="Gilliam"/>
+		<County code="37012" label="Grant" symbol="GrantOR"/>
+		<County code="37013" label="Harney" symbol="Harney"/>
+		<County code="37014" label="Hoodriver" symbol="Hoodriver"/>
+		<County code="37015" label="Jackson" symbol="JacksonOR"/>
+		<County code="37016" label="Jefferson" symbol="JeffersonOR"/>
+		<County code="37017" label="Josephine" symbol="Josephine"/>
+		<County code="37018" label="Klamath" symbol="Klamath"/>
+		<County code="37019" label="Lake" symbol="LakeOR"/>
+		<County code="37020" label="Lane" symbol="LaneOR" horizontalCenterGap="10" verticalCenterGap="-5"/>
+		<County code="37021" label="Lincoln" symbol="LincolnOR"/>
+		<County code="37022" label="Linn" symbol="LinnOR"/>
+		<County code="37023" label="Malheur" symbol="Malheur"/>
+		<County code="37024" label="Marion" symbol="MarionOR" horizontalCenterGap="-15" verticalCenterGap="3"/>
+		<County code="37025" label="Morrow" symbol="Morrow"/>
+		<County code="37026" label="Multnomah" symbol="Multnomah" verticalCenterGap="7"/>
+		<County code="37027" label="Polk" symbol="PolkOR"/>
+		<County code="37028" label="Sherman" symbol="ShermanOR" horizontalCenterGap="-10"/>
+		<County code="37029" label="Tillamook" symbol="Tillamook"/>
+		<County code="37030" label="Umatilla" symbol="Umatilla"/>
+		<County code="37031" label="Union" symbol="UnionOR"/>
+		<County code="37032" label="Wallowa" symbol="Wallowa"/>
+		<County code="37033" label="Wasco" symbol="Wasco" horizontalCenterGap="-5" verticalCenterGap="5"/>
+		<County code="37034" label="Washington" symbol="WashingtonOR"/>
+		<County code="37035" label="Wheeler" symbol="WheelerOR"/>
+		<County code="37036" label="Yamhill" symbol="Yamhill"/>
+	</State>
+	<State code="38000" label="Pennsylvania" symbol="Pennsylvania">
+		<County code="38001" label="Adams" symbol="AdamsPA"/>
+		<County code="38002" label="Allegany" symbol="AlleganyPA"/>
+		<County code="38003" label="Armstrong" symbol="ArmstrongPA"/>
+		<County code="38004" label="Beaver" symbol="BeaverPA"/>
+		<County code="38005" label="Bedford" symbol="BedfordPA"/>
+		<County code="38006" label="Berks" symbol="Berks"/>
+		<County code="38007" label="Blai" symbol="Blai"/>
+		<County code="38008" label="Bradford" symbol="BradfordPA"/>
+		<County code="38009" label="Bucks" symbol="Bucks"/>
+		<County code="38010" label="Butler" symbol="ButlerPA"/>
+		<County code="38011" label="Cambria" symbol="Cambria"/>
+		<County code="38012" label="Cameron" symbol="CameronPA" verticalCenterGap="-3"/>
+		<County code="38013" label="Carbon" symbol="CarbonPA"/>
+		<County code="38014" label="Centre" symbol="Centre"/>
+		<County code="38015" label="Chester" symbol="ChesterPA"/>
+		<County code="38016" label="Clarion" symbol="Clarion"/>
+		<County code="38017" label="Clearfield" symbol="Clearfield"/>
+		<County code="38018" label="Clinton" symbol="ClintonPA"/>
+		<County code="38019" label="Columbia" symbol="ColumbiaPA"/>
+		<County code="38020" label="Crawford" symbol="CrawfordPA"/>
+		<County code="38021" label="Cumberlan" symbol="Cumberlan"/>
+		<County code="38022" label="Dauphin" symbol="Dauphin"/>
+		<County code="38023" label="Delaware" symbol="DelawarePA"/>
+		<County code="38024" label="Elk" symbol="ElkPA"/>
+		<County code="38025" label="Erie" symbol="EriePA" verticalCenterGap="5"/>
+		<County code="38026" label="Fayette" symbol="FayettePA"/>
+		<County code="38027" label="Forest" symbol="ForestPA"/>
+		<County code="38028" label="Franklin" symbol="FranklinPA"/>
+		<County code="38029" label="Fulton" symbol="FultonPA"/>
+		<County code="38030" label="Greene" symbol="GreenePA"/>
+		<County code="38031" label="Huntingdon" symbol="Huntingdon"/>
+		<County code="38032" label="Indiana" symbol="IndianaPA"/>
+		<County code="38033" label="Jefferson" symbol="JeffersonPA"/>
+		<County code="38034" label="Juniata" symbol="Juniata"/>
+		<County code="38035" label="Lackawanna" symbol="Lackawanna"/>
+		<County code="38036" label="Lancaster" symbol="LancasterPA"/>
+		<County code="38037" label="Lawrence" symbol="LawrencePA"/>
+		<County code="38038" label="Lebanon" symbol="Lebanon"/>
+		<County code="38039" label="Lehigh" symbol="Lehigh"/>
+		<County code="38040" label="Luzern" symbol="Luzern"/>
+		<County code="38041" label="Lycoming" symbol="Lycoming"/>
+		<County code="38042" label="McKean" symbol="McKean"/>
+		<County code="38043" label="Mercer" symbol="MercerPA"/>
+		<County code="38044" label="Mifflin" symbol="Mifflin"/>
+		<County code="38045" label="Monroe" symbol="MonroePA"/>
+		<County code="38046" label="Montgomery" symbol="MontgomeryPA"/>
+		<County code="38047" label="Montour" symbol="Montour"/>
+		<County code="38048" label="Northampton" symbol="NorthamptonPA"/>
+		<County code="38049" label="Northumberland" symbol="NorthumberlandPA" horizontalCenterGap="-3" verticalCenterGap="5"/>
+		<County code="38050" label="Perry" symbol="PerryPA"/>
+		<County code="38051" label="Philadelphia" symbol="Philadelphia"/>
+		<County code="38052" label="Pike" symbol="PikePA"/>
+		<County code="38053" label="Potter" symbol="PotterPA"/>
+		<County code="38054" label="Schuylkill" symbol="Schuylkill"/>
+		<County code="38055" label="Snyder" symbol="Snyder"/>
+		<County code="38056" label="Somerset" symbol="SomersetPA"/>
+		<County code="38057" label="Sullivan" symbol="SullivanPA"/>
+		<County code="38058" label="Susquehanna" symbol="Susquehanna"/>
+		<County code="38059" label="Tioga" symbol="TiogaPA"/>
+		<County code="38060" label="Union" symbol="UnionPA" verticalCenterGap="5"/>
+		<County code="38061" label="Venango" symbol="Venango"/>
+		<County code="38062" label="Warren" symbol="WarrenPA"/>
+		<County code="38063" label="Washington" symbol="WashingtonPA"/>
+		<County code="38064" label="Wayne" symbol="WaynePA"/>
+		<County code="38065" label="WestmorelandPA" symbol="WestmorelandPA"/>
+		<County code="38066" label="Wyoming" symbol="WyomingPA"/>
+		<County code="38067" label="York" symbol="YorkPA"/>
+	</State>
+	<State code="39000" label="Rhodeisland" symbol="Rhodeisland">
+		<County code="39001" label="Bristol" symbol="BristolRI"/>
+		<County code="39002" label="Kent" symbol="KentRI"/>
+		<County code="39003" label="Newport" symbol="Newport"/>
+		<County code="39004" label="Providence" symbol="Providence"/>
+		<County code="39005" label="Washington" symbol="WashingtonRI"/>
+	</State>
+	<State code="40000" label="South Carolina" symbol="Southcarolina" horizontalCenterGap="10">
+		<County code="40001" label="Abbeville" symbol="Abbeville"/>
+		<County code="40002" label="Aiken" symbol="Aiken"/>
+		<County code="40003" label="Allendale" symbol="Allendale"/>
+		<County code="40004" label="Anderson" symbol="AndersonSC"/>
+		<County code="40005" label="Bamberg" symbol="Bamberg"/>
+		<County code="40006" label="Barnwell" symbol="Barnwell"/>
+		<County code="40007" label="Beaufort" symbol="BeaufortSC" horizontalCenterGap="5"/>
+		<County code="40008" label="Berkeley" symbol="BerkeleySC"/>
+		<County code="40009" label="Calhoun" symbol="CalhounSC"/>
+		<County code="40010" label="Charleston" symbol="Charleston" horizontalCenterGap="2"/>
+		<County code="40011" label="Cherokee" symbol="CherokeeSC"/>
+		<County code="40012" label="Chesterfield" symbol="ChesterfieldSC"/>
+		<County code="40013" label="Chester" symbol="ChesterSC"/>
+		<County code="40014" label="Clarendon" symbol="Clarendon"/>
+		<County code="40015" label="Colleton" symbol="Colleton"/>
+		<County code="40016" label="Darlington" symbol="Darlington"/>
+		<County code="40017" label="Dillon" symbol="Dillon"/>
+		<County code="40018" label="Dorchester" symbol="DorchesterSC" horizontalCenterGap="5"/>
+		<County code="40019" label="Edgefield" symbol="Edgefield"/>
+		<County code="40020" label="Fairfield" symbol="FairfieldSC"/>
+		<County code="40021" label="Florence" symbol="FlorenceSC"/>
+		<County code="40022" label="Georgetown" symbol="Georgetown"/>
+		<County code="40023" label="Greenville" symbol="Greenville"/>
+		<County code="40024" label="Greenwood" symbol="GreenwoodSC"/>
+		<County code="40025" label="Hampton" symbol="Hampton"/>
+		<County code="40026" label="Horry" symbol="Horry"/>
+		<County code="40027" label="Jasper" symbol="JasperSC"/>
+		<County code="40028" label="Kershaw" symbol="Kershaw"/>
+		<County code="40029" label="Lancaster" symbol="LancasterSC"/>
+		<County code="40030" label="Laurens" symbol="LaurensSC"/>
+		<County code="40031" label="Lee" symbol="LeeSC"/>
+		<County code="40032" label="Lexington" symbol="Lexington"/>
+		<County code="40033" label="Marion" symbol="MarionSC"/>
+		<County code="40034" label="Marlboro" symbol="Marlboro"/>
+		<County code="40035" label="Mccormick" symbol="Mccormick" verticalCenterGap="-5"/>
+		<County code="40036" label="Newberry" symbol="Newberry"/>
+		<County code="40037" label="Oconee" symbol="OconeeSC"/>
+		<County code="40038" label="Orangeburg" symbol="Orangeburg"/>
+		<County code="40039" label="Pickens" symbol="PickensSC"/>
+		<County code="40040" label="Richland" symbol="RichlandSC" horizontalCenterGap="10"/>
+		<County code="40041" label="Saluda" symbol="Saluda"/>
+		<County code="40042" label="Spartanburg" symbol="Spartanburg"/>
+		<County code="40043" label="Sumter" symbol="SumterSC"/>
+		<County code="40044" label="Union" symbol="UnionSC"/>
+		<County code="40045" label="Williamsburg" symbol="Williamsburg"/>
+		<County code="40046" label="York" symbol="YorkSC"/>
+	</State>
+	<State code="41000" label="South Dakota" symbol="Southdakota">
+		<County code="41001" label="Aurora" symbol="Aurora"/>
+		<County code="41002" label="Beadle" symbol="Beadle"/>
+		<County code="41003" label="Bennett" symbol="Bennett"/>
+		<County code="41004" label="Bonhomme" symbol="Bonhomme"/>
+		<County code="41005" label="Brookings" symbol="Brookings"/>
+		<County code="41006" label="Brown" symbol="BrownSD"/>
+		<County code="41007" label="Brule" symbol="Brule"/>
+		<County code="41008" label="Buffalo" symbol="BuffaloSD"/>
+		<County code="41009" label="Butte" symbol="ButteSD"/>
+		<County code="41010" label="Campbell" symbol="CampbellSD"/>
+		<County code="41011" label="Charles Mix" symbol="Charlesmix"/>
+		<County code="41012" label="Clark" symbol="ClarkSD"/>
+		<County code="41013" label="Clay" symbol="ClaySD"/>
+		<County code="41014" label="Codington" symbol="Codington"/>
+		<County code="41015" label="Corson" symbol="Corson"/>
+		<County code="41016" label="Custer" symbol="CusterSD"/>
+		<County code="41017" label="Davison" symbol="Davison"/>
+		<County code="41018" label="Day" symbol="Day"/>
+		<County code="41019" label="Deuel" symbol="DeuelSD"/>
+		<County code="41020" label="Dewey" symbol="DeweySD"/>
+		<County code="41021" label="Douglas" symbol="DouglasSD"/>
+		<County code="41022" label="Edmunds" symbol="Edmunds"/>
+		<County code="41023" label="Fallriver" symbol="Fallriver"/>
+		<County code="41024" label="Faulk" symbol="Faulk"/>
+		<County code="41025" label="Grant" symbol="GrantSD"/>
+		<County code="41026" label="Gregory" symbol="Gregory" horizontalCenterGap="-5"/>
+		<County code="41027" label="Haakon" symbol="Haakon"/>
+		<County code="41028" label="Hamlin" symbol="Hamlin"/>
+		<County code="41029" label="Hand" symbol="Hand"/>
+		<County code="41030" label="Hanson" symbol="Hanson"/>
+		<County code="41031" label="Harding" symbol="HardingSD"/>
+		<County code="41032" label="Hughes" symbol="HughesSD" horizontalCenterGap="3" verticalCenterGap="-3"/>
+		<County code="41033" label="Hutchinson" symbol="HutchinsonSD"/>
+		<County code="41034" label="Hyde" symbol="HydeSD"/>
+		<County code="41035" label="Jackson" symbol="JacksonSD"/>
+		<County code="41036" label="Jerauld" symbol="Jerauld"/>
+		<County code="41037" label="Jones" symbol="JonesSD"/>
+		<County code="41038" label="Kingsbury" symbol="Kingsbury"/>
+		<County code="41039" label="Lake" symbol="LakeSD"/>
+		<County code="41040" label="Lawrence" symbol="LawrenceSD"/>
+		<County code="41041" label="Lincoln" symbol="LincolnSD"/>
+		<County code="41042" label="Lyman" symbol="Lyman" verticalCenterGap="-5"/>
+		<County code="41043" label="Marshall" symbol="MarshallSD"/>
+		<County code="41044" label="McCook" symbol="McCook"/>
+		<County code="41045" label="Mcpherson" symbol="McphersonSD"/>
+		<County code="41046" label="Meade" symbol="MeadeSD"/>
+		<County code="41047" label="Mellette" symbol="Mellette"/>
+		<County code="41048" label="Miner" symbol="Miner"/>
+		<County code="41049" label="Minnehaha" symbol="Minnehaha"/>
+		<County code="41050" label="Moody" symbol="Moody"/>
+		<County code="41051" label="Pennington" symbol="PenningtonSD" verticalCenterGap="5"/>
+		<County code="41052" label="Perkins" symbol="PerkinsSD"/>
+		<County code="41053" label="Potter" symbol="PotterSD"/>
+		<County code="41054" label="Roberts" symbol="RobertsSD" horizontalCenterGap="-3"/>
+		<County code="41055" label="Sanborn" symbol="Sanborn"/>
+		<County code="41056" label="Shannon" symbol="ShannonSD"/>
+		<County code="41057" label="Spink" symbol="Spink"/>
+		<County code="41058" label="Stanley" symbol="Stanley" horizontalCenterGap="-15"/>
+		<County code="41059" label="Sully" symbol="Sully"/>
+		<County code="41060" label="Todd" symbol="ToddSD"/>
+		<County code="41061" label="Tripp" symbol="Tripp"/>
+		<County code="41062" label="Turner" symbol="TurnerSD"/>
+		<County code="41063" label="Union" symbol="UnionSD"/>
+		<County code="41064" label="Walworth" symbol="WalworthSD"/>
+		<County code="41065" label="Yankton" symbol="Yankton"/>
+		<County code="41066" label="Ziebach" symbol="Ziebach" horizontalCenterGap="-5"/>
+	</State>
+	<State code="42000" label="Tennessee" symbol="Tennessee">
+		<County code="42001" label="Anderson" symbol="AndersonTN"/>
+		<County code="42002" label="Bedford" symbol="BedfordTN"/>
+		<County code="42003" label="Benton" symbol="BentonTN"/>
+		<County code="42004" label="Bledsoe" symbol="Bledsoe"/>
+		<County code="42005" label="Blount" symbol="BlountTN"/>
+		<County code="42006" label="Bradley" symbol="BradleyTN"/>
+		<County code="42007" label="Campbell" symbol="CampbellTN"/>
+		<County code="42008" label="Cannon" symbol="Cannon"/>
+		<County code="42009" label="Carroll" symbol="CarrollTN"/>
+		<County code="42010" label="Carter" symbol="CarterTN"/>
+		<County code="42011" label="Cheatham" symbol="Cheatham"/>
+		<County code="42012" label="Chester" symbol="ChesterTN"/>
+		<County code="42013" label="Claiborne" symbol="ClaiborneTN" verticalCenterGap="-2"/>
+		<County code="42014" label="Clay" symbol="ClayTN" verticalCenterGap="-2"/>
+		<County code="42015" label="Cocke" symbol="Cocke"/>
+		<County code="42016" label="Coffee" symbol="CoffeeTN"/>
+		<County code="42017" label="Crockett" symbol="CrockettTN"/>
+		<County code="42018" label="Cumberland" symbol="CumberlandTN"/>
+		<County code="42019" label="Davidson" symbol="DavidsonTN"/>
+		<County code="42020" label="Decatur" symbol="DecaturTN"/>
+		<County code="42021" label="Dekalb" symbol="DekalbTN"/>
+		<County code="42022" label="Dickson" symbol="Dickson"/>
+		<County code="42023" label="Dyer" symbol="Dyer"/>
+		<County code="42024" label="Fayette" symbol="FayetteTN"/>
+		<County code="42025" label="Fentress" symbol="Fentress"/>
+		<County code="42026" label="Franklin" symbol="FranklinTN"/>
+		<County code="42027" label="Gibson" symbol="GibsonTN"/>
+		<County code="42028" label="Giles" symbol="GilesTN"/>
+		<County code="42029" label="Grainger" symbol="Grainger"/>
+		<County code="42030" label="Greene" symbol="GreeneTN"/>
+		<County code="42031" label="Grundy" symbol="GrundyTN"/>
+		<County code="42032" label="Hamblen" symbol="Hamblen"/>
+		<County code="42033" label="Hamilton" symbol="HamiltonTN"/>
+		<County code="42034" label="Hancock" symbol="HancockTN"/>
+		<County code="42035" label="Hardeman" symbol="HardemanTN"/>
+		<County code="42036" label="Hardin" symbol="HardinTN"/>
+		<County code="42037" label="Hawkins" symbol="Hawkins"/>
+		<County code="42038" label="Haywood" symbol="HaywoodTN"/>
+		<County code="42039" label="Henderson" symbol="HendersonTN"/>
+		<County code="42040" label="Henry" symbol="HenryTN"/>
+		<County code="42041" label="Hickman" symbol="HickmanTN"/>
+		<County code="42042" label="Houston" symbol="HoustonTN" verticalCenterGap="-2"/>
+		<County code="42043" label="Humphreys" symbol="HumphreysTN"/>
+		<County code="42044" label="Jackson" symbol="JacksonTN"/>
+		<County code="42045" label="Jefferson" symbol="JeffersonTN"/>
+		<County code="42046" label="Johnson" symbol="JohnsonTN"/>
+		<County code="42047" label="Knox" symbol="KnoxTN"/>
+		<County code="42048" label="Lake" symbol="LakeTN"/>
+		<County code="42049" label="Lauderdale" symbol="LauderdaleTN"/>
+		<County code="42050" label="Lawrence" symbol="LawrenceTN"/>
+		<County code="42051" label="Lewis" symbol="LewisTN"/>
+		<County code="42052" label="Lincoln" symbol="LincolnTN"/>
+		<County code="42053" label="Loudon" symbol="Loudon"/>
+		<County code="42054" label="Macon" symbol="MaconTN"/>
+		<County code="42055" label="Madison" symbol="MadisonTN"/>
+		<County code="42056" label="Marion" symbol="MarionTN"/>
+		<County code="42057" label="Marshall" symbol="MarshallTN"/>
+		<County code="42058" label="Maury" symbol="Maury"/>
+		<County code="42059" label="Mcminn" symbol="Mcminn"/>
+		<County code="42060" label="Mcnairy" symbol="Mcnairy"/>
+		<County code="42061" label="Meigs" symbol="MeigsTN"/>
+		<County code="42062" label="Monroe" symbol="MonroeTN"/>
+		<County code="42063" label="Montgomery" symbol="MontgomeryTN"/>
+		<County code="42064" label="Moore" symbol="MooreTN"/>
+		<County code="42065" label="Morgan" symbol="MorganTN"/>
+		<County code="42066" label="Obion" symbol="Obion"/>
+		<County code="42067" label="Overton" symbol="Overton"/>
+		<County code="42068" label="Perry" symbol="PerryTN"/>
+		<County code="42069" label="Pickett" symbol="Pickett"/>
+		<County code="42070" label="Polk" symbol="PolkTN"/>
+		<County code="42071" label="Putnam" symbol="PutnamTN"/>
+		<County code="42072" label="Rhea" symbol="Rhea"/>
+		<County code="42073" label="Roane" symbol="RoaneTN"/>
+		<County code="42074" label="Robertson" symbol="RobertsonTN"/>
+		<County code="42075" label="Rutherford" symbol="RutherfordTN"/>
+		<County code="42076" label="Scott" symbol="ScottTN"/>
+		<County code="42077" label="Sequatchie" symbol="Sequatchie"/>
+		<County code="42078" label="Sevier" symbol="SevierTN"/>
+		<County code="42079" label="Shelby" symbol="ShelbyTN"/>
+		<County code="42080" label="Smith" symbol="SmithTN"/>
+		<County code="42081" label="Stewart" symbol="StewartTN"/>
+		<County code="42082" label="Sullivan" symbol="SullivanTN"/>
+		<County code="42083" label="Sumner" symbol="SumnerTN"/>
+		<County code="42084" label="Tipton" symbol="TiptonTN"/>
+		<County code="42085" label="Trousdale" symbol="Trousdale"/>
+		<County code="42086" label="Unicoi" symbol="Unicoi"/>
+		<County code="42087" label="Union" symbol="UnionTN"/>
+		<County code="42088" label="Vanburen" symbol="VanburenTN"/>
+		<County code="42089" label="Warren" symbol="WarrenTN"/>
+		<County code="42090" label="Washington" symbol="WashingtonTN"/>
+		<County code="42091" label="Wayne" symbol="WayneTN"/>
+		<County code="42092" label="Weakley" symbol="Weakley"/>
+		<County code="42093" label="White" symbol="WhiteTN"/>
+		<County code="42094" label="Williamson" symbol="WilliamsonTN"/>
+		<County code="42095" label="Wilson" symbol="WilsonTN"/>
+	</State>
+	<State code="43000" label="Texas" symbol="Texas" horizontalCenterGap="10">
+		<County code="43001" label="Anderson" symbol="AndersonTX"/>
+		<County code="43002" label="Andrews" symbol="Andrews"/>
+		<County code="43003" label="Angelina" symbol="Angelina"/>
+		<County code="43004" label="Aransas" symbol="Aransas"/>
+		<County code="43005" label="Archer" symbol="Archer"/>
+		<County code="43006" label="Armstrong" symbol="ArmstrongTX"/>
+		<County code="43007" label="Atascosa" symbol="Atascosa"/>
+		<County code="43008" label="Austin" symbol="Austin"/>
+		<County code="43009" label="Bailey" symbol="Bailey"/>
+		<County code="43010" label="Bandera" symbol="Bandera"/>
+		<County code="43011" label="Bastrop" symbol="Bastrop"/>
+		<County code="43012" label="Baylor" symbol="Baylor"/>
+		<County code="43013" label="Bee" symbol="Bee"/>
+		<County code="43014" label="Bell" symbol="BellTX"/>
+		<County code="43015" label="Bexar" symbol="Bexar"/>
+		<County code="43016" label="Blanco" symbol="Blanco"/>
+		<County code="43017" label="Borden" symbol="Borden"/>
+		<County code="43018" label="Bosque" symbol="Bosque"/>
+		<County code="43019" label="Bowie" symbol="Bowie"/>
+		<County code="43020" label="Brazoria" symbol="Brazoria"/>
+		<County code="43021" label="Brazos" symbol="Brazos"/>
+		<County code="43022" label="Brewster" symbol="Brewster"/>
+		<County code="43023" label="Briscoe" symbol="Briscoe"/>
+		<County code="43024" label="Brooks" symbol="BrooksTX"/>
+		<County code="43025" label="Brown" symbol="BrownTX"/>
+		<County code="43026" label="Burleson" symbol="Burleson"/>
+		<County code="43027" label="Burnet" symbol="Burnet"/>
+		<County code="43028" label="Caldwell" symbol="CaldwellTX"/>
+		<County code="43029" label="Calhoun" symbol="CalhounTX"/>
+		<County code="43030" label="Callahan" symbol="Callahan"/>
+		<County code="43031" label="Cameron" symbol="CameronTX"/>
+		<County code="43032" label="Camp" symbol="Camp"/>
+		<County code="43033" label="Carson" symbol="Carson"/>
+		<County code="43034" label="Cass" symbol="CassTX"/>
+		<County code="43035" label="Castro" symbol="Castro"/>
+		<County code="43036" label="Chambers" symbol="ChambersTX"/>
+		<County code="43037" label="Cherokee" symbol="CherokeeTX"/>
+		<County code="43038" label="Childress" symbol="Childress"/>
+		<County code="43039" label="Clay" symbol="ClayTX"/>
+		<County code="43040" label="Cochran" symbol="Cochran"/>
+		<County code="43041" label="Coke" symbol="Coke"/>
+		<County code="43042" label="Coleman" symbol="Coleman"/>
+		<County code="43043" label="Collin" symbol="Collin"/>
+		<County code="43044" label="Collingsworth" symbol="Collingsworth"/>
+		<County code="43045" label="Colorado" symbol="ColoradoTX"/>
+		<County code="43046" label="Comal" symbol="Comal"/>
+		<County code="43047" label="Comanche" symbol="ComancheTX"/>
+		<County code="43048" label="Concho" symbol="Concho"/>
+		<County code="43049" label="Cooke" symbol="Cooke"/>
+		<County code="43050" label="Coryell" symbol="Coryell"/>
+		<County code="43051" label="Cottle" symbol="Cottle"/>
+		<County code="43052" label="Crane" symbol="Crane"/>
+		<County code="43053" label="Crockett" symbol="CrockettTX" horizontalCenterGap="5"/>
+		<County code="43054" label="Crosby" symbol="Crosby"/>
+		<County code="43055" label="Culberson" symbol="Culberson"/>
+		<County code="43056" label="Dallam" symbol="Dallam"/>
+		<County code="43057" label="Dallas" symbol="DallasTX"/>
+		<County code="43058" label="Dawson" symbol="DawsonTX"/>
+		<County code="43059" label="Deafsmith" symbol="Deafsmith"/>
+		<County code="43060" label="Delta" symbol="DeltaTX"/>
+		<County code="43061" label="Denton" symbol="Denton"/>
+		<County code="43062" label="Dewitt" symbol="DewittTX"/>
+		<County code="43063" label="Dickens" symbol="Dickens"/>
+		<County code="43064" label="Dimmit" symbol="Dimmit"/>
+		<County code="43065" label="Donley" symbol="Donley"/>
+		<County code="43066" label="Duval" symbol="DuvalTX"/>
+		<County code="43067" label="Eastland" symbol="Eastland"/>
+		<County code="43068" label="Ector" symbol="Ector"/>
+		<County code="43069" label="Edwards" symbol="EdwardsTX"/>
+		<County code="43070" label="Ellis" symbol="EllisTX"/>
+		<County code="43071" label="El Paso" symbol="ElpasoTX" horizontalCenterGap="2" verticalCenterGap="-3"/>
+		<County code="43072" label="Erath" symbol="Erath"/>
+		<County code="43073" label="Falls" symbol="Falls"/>
+		<County code="43074" label="Fannin" symbol="FanninTX"/>
+		<County code="43075" label="Fayette" symbol="FayetteTX"/>
+		<County code="43076" label="Fisher" symbol="Fisher"/>
+		<County code="43077" label="Floyd" symbol="FloydTX"/>
+		<County code="43078" label="Foard" symbol="Foard"/>
+		<County code="43079" label="Fortbend" symbol="Fortbend"/>
+		<County code="43080" label="Franklin" symbol="FranklinTX"/>
+		<County code="43081" label="Freestone" symbol="Freestone"/>
+		<County code="43082" label="Frio" symbol="Frio"/>
+		<County code="43083" label="Gaines" symbol="Gaines"/>
+		<County code="43084" label="Galveston" symbol="Galveston"/>
+		<County code="43085" label="Garza" symbol="Garza"/>
+		<County code="43086" label="Gillespie" symbol="Gillespie"/>
+		<County code="43087" label="Glasscock" symbol="Glasscock"/>
+		<County code="43088" label="Goliad" symbol="Goliad"/>
+		<County code="43089" label="Gonzales" symbol="Gonzales"/>
+		<County code="43090" label="Grayson" symbol="GraysonTX"/>
+		<County code="43091" label="Gray" symbol="GrayTX"/>
+		<County code="43092" label="Gregg" symbol="Gregg"/>
+		<County code="43093" label="Grimes" symbol="Grimes"/>
+		<County code="43094" label="GuadalupeTX" symbol="GuadalupeTX"/>
+		<County code="43095" label="Hale" symbol="HaleTX"/>
+		<County code="43096" label="Hall" symbol="HallTX"/>
+		<County code="43097" label="Hamilton" symbol="HamiltonTX"/>
+		<County code="43098" label="Hansford" symbol="Hansford"/>
+		<County code="43099" label="Hardeman" symbol="HardemanTX"/>
+		<County code="43100" label="Hardin" symbol="HardinTX"/>
+		<County code="43101" label="Harrison" symbol="HarrisonTX"/>
+		<County code="43102" label="Harris" symbol="HarrisTX"/>
+		<County code="43103" label="Hartley" symbol="Hartley"/>
+		<County code="43104" label="Haskell" symbol="HaskellTX"/>
+		<County code="43105" label="Hays" symbol="Hays"/>
+		<County code="43106" label="Hemphill" symbol="Hemphill"/>
+		<County code="43107" label="Henderson" symbol="HendersonTX"/>
+		<County code="43108" label="Hidalgo" symbol="HidalgoTX"/>
+		<County code="43109" label="Hill" symbol="HillTX"/>
+		<County code="43110" label="Hockley" symbol="Hockley"/>
+		<County code="43111" label="Hood" symbol="Hood"/>
+		<County code="43112" label="Hopkins" symbol="HopkinsTX"/>
+		<County code="43113" label="Houston" symbol="HoustonTX"/>
+		<County code="43114" label="Howard" symbol="HowardTX"/>
+		<County code="43115" label="Hudspeth" symbol="Hudspeth"/>
+		<County code="43116" label="Hunt" symbol="Hunt"/>
+		<County code="43117" label="Hutchinson" symbol="HutchinsonTX"/>
+		<County code="43118" label="Irion" symbol="Irion"/>
+		<County code="43119" label="Jack" symbol="Jack"/>
+		<County code="43120" label="Jackson" symbol="JacksonTX"/>
+		<County code="43121" label="Jasper" symbol="JasperTX"/>
+		<County code="43122" label="Jeffdavis" symbol="JeffdavisTX"/>
+		<County code="43123" label="Jefferson" symbol="JeffersonTX"/>
+		<County code="43124" label="Jimhogg" symbol="Jimhogg"/>
+		<County code="43125" label="Jimwells" symbol="Jimwells" horizontalCenterGap="-1" verticalCenterGap="-2"/>
+		<County code="43126" label="Johnson" symbol="JohnsonTX"/>
+		<County code="43127" label="Jones" symbol="JonesTX"/>
+		<County code="43128" label="Karnes" symbol="Karnes"/>
+		<County code="43129" label="Kaufman" symbol="Kaufman"/>
+		<County code="43130" label="Kendall" symbol="KendallTX"/>
+		<County code="43131" label="Kenedy" symbol="Kenedy"/>
+		<County code="43132" label="Kent" symbol="KentTX"/>
+		<County code="43133" label="Kerr" symbol="Kerr"/>
+		<County code="43134" label="Kimble" symbol="Kimble"/>
+		<County code="43135" label="King" symbol="KingTX"/>
+		<County code="43136" label="Kinney" symbol="Kinney"/>
+		<County code="43137" label="Kleberg" symbol="Kleberg"/>
+		<County code="43138" label="Knox" symbol="KnoxTX"/>
+		<County code="43139" label="Lamar" symbol="LamarTX"/>
+		<County code="43140" label="Lamb" symbol="Lamb"/>
+		<County code="43141" label="Lampasas" symbol="Lampasas"/>
+		<County code="43142" label="La Salle" symbol="LasalleTX"/>
+		<County code="43143" label="Lavaca" symbol="Lavaca"/>
+		<County code="43144" label="Lee" symbol="LeeTX"/>
+		<County code="43145" label="Leon" symbol="LeonTX"/>
+		<County code="43146" label="Liberty" symbol="LibertyTX"/>
+		<County code="43147" label="Limestone" symbol="LimestoneTX"/>
+		<County code="43148" label="Lipscomb" symbol="Lipscomb"/>
+		<County code="43149" label="Liveoak" symbol="Liveoak"/>
+		<County code="43150" label="Llano" symbol="Llano"/>
+		<County code="43151" label="Loving" symbol="Loving"/>
+		<County code="43152" label="Lubbock" symbol="Lubbock"/>
+		<County code="43153" label="Lynn" symbol="Lynn"/>
+		<County code="43154" label="Madison" symbol="MadisonTX"/>
+		<County code="43155" label="Marion" symbol="MarionTX"/>
+		<County code="43156" label="Martin" symbol="MartinTX"/>
+		<County code="43157" label="Mason" symbol="MasonTX"/>
+		<County code="43158" label="Matagorda" symbol="Matagorda"/>
+		<County code="43159" label="Maverick" symbol="Maverick"/>
+		<County code="43160" label="Mcculloch" symbol="Mcculloch"/>
+		<County code="43161" label="Mclennan" symbol="Mclennan"/>
+		<County code="43162" label="Mcmullen" symbol="Mcmullen"/>
+		<County code="43163" label="Medina" symbol="MedinaTX"/>
+		<County code="43164" label="Menard" symbol="MenardTX"/>
+		<County code="43165" label="Midland" symbol="MidlandTX"/>
+		<County code="43166" label="Milam" symbol="Milam"/>
+		<County code="43167" label="Mills" symbol="MillsTX"/>
+		<County code="43168" label="Mitchell" symbol="MitchellTX"/>
+		<County code="43169" label="Montague" symbol="Montague"/>
+		<County code="43170" label="Montgomery" symbol="MontgomeryTX"/>
+		<County code="43171" label="Moore" symbol="MooreTX"/>
+		<County code="43172" label="Morris" symbol="MorrisTX"/>
+		<County code="43173" label="Motley" symbol="Motley"/>
+		<County code="43174" label="Nacogdoches" symbol="Nacogdoches"/>
+		<County code="43175" label="Navarro" symbol="Navarro"/>
+		<County code="43176" label="Newton" symbol="NewtonTX"/>
+		<County code="43177" label="Nolan" symbol="Nolan"/>
+		<County code="43178" label="Nueces" symbol="Nueces"/>
+		<County code="43179" label="Ochiltree" symbol="Ochiltree"/>
+		<County code="43180" label="Oldham" symbol="OldhamTX"/>
+		<County code="43181" label="Orange" symbol="OrangeTX"/>
+		<County code="43182" label="Palopinto" symbol="Palopinto"/>
+		<County code="43183" label="Panola" symbol="PanolaTX"/>
+		<County code="43184" label="Parker" symbol="Parker"/>
+		<County code="43185" label="Parmer" symbol="Parmer"/>
+		<County code="43186" label="Pecos" symbol="Pecos"/>
+		<County code="43187" label="Polk" symbol="PolkTX"/>
+		<County code="43188" label="Potter" symbol="PotterTX"/>
+		<County code="43189" label="Presidio" symbol="Presidio"/>
+		<County code="43190" label="Rains" symbol="Rains"/>
+		<County code="43191" label="Randall" symbol="Randall"/>
+		<County code="43192" label="Reagan" symbol="Reagan"/>
+		<County code="43193" label="Real" symbol="Real"/>
+		<County code="43194" label="Red River" symbol="Redriver"/>
+		<County code="43195" label="Reeves" symbol="Reeves"/>
+		<County code="43196" label="Refugio" symbol="Refugio"/>
+		<County code="43197" label="Robertson" symbol="RobertsonTX"/>
+		<County code="43198" label="Roberts" symbol="RobertsTX"/>
+		<County code="43199" label="Rockwall" symbol="Rockwall"/>
+		<County code="43200" label="Runnels" symbol="Runnels"/>
+		<County code="43201" label="Rusk" symbol="RuskTX"/>
+		<County code="43202" label="Sabine" symbol="Sabine"/>
+		<County code="43203" label="San Augustine" symbol="Sanaugustine"/>
+		<County code="43204" label="San Jacinto" symbol="Sanjacinto"/>
+		<County code="43205" label="San Patricio" symbol="Sanpatricio"/>
+		<County code="43206" label="San Saba" symbol="Sansaba"/>
+		<County code="43207" label="Schleicher" symbol="Schleicher"/>
+		<County code="43208" label="Scurry" symbol="Scurry"/>
+		<County code="43209" label="Shackelford" symbol="Shackelford"/>
+		<County code="43210" label="Shelby" symbol="ShelbyTX"/>
+		<County code="43211" label="Sherman" symbol="ShermanTX"/>
+		<County code="43212" label="Smith" symbol="SmithTX"/>
+		<County code="43213" label="Somervell" symbol="Somervell"/>
+		<County code="43214" label="Starr" symbol="Starr"/>
+		<County code="43215" label="Stephens" symbol="StephensTX"/>
+		<County code="43216" label="Sterling" symbol="Sterling"/>
+		<County code="43217" label="Stonewall" symbol="Stonewall"/>
+		<County code="43218" label="Sutton" symbol="Sutton"/>
+		<County code="43219" label="Swisher" symbol="Swisher"/>
+		<County code="43220" label="Tarrant" symbol="Tarrant"/>
+		<County code="43221" label="Taylor" symbol="TaylorTX"/>
+		<County code="43222" label="Terrell" symbol="TerrellTX"/>
+		<County code="43223" label="Terry" symbol="Terry"/>
+		<County code="43224" label="Throckmorton" symbol="Throckmorton"/>
+		<County code="43225" label="Titus" symbol="Titus"/>
+		<County code="43226" label="Tom Green" symbol="Tomgreen"/>
+		<County code="43227" label="Travis" symbol="Travis"/>
+		<County code="43228" label="Trinity" symbol="TrinityTX"/>
+		<County code="43229" label="Tyler" symbol="TylerTX"/>
+		<County code="43230" label="Upshur" symbol="UpshurTX"/>
+		<County code="43231" label="Upton" symbol="Upton"/>
+		<County code="43232" label="Uvalde" symbol="Uvalde"/>
+		<County code="43233" label="Val Verde" symbol="Valverde"/>
+		<County code="43234" label="Van Zandt" symbol="Vanzandt"/>
+		<County code="43235" label="Victoria" symbol="Victoria"/>
+		<County code="43236" label="Walker" symbol="WalkerTX"/>
+		<County code="43237" label="Waller" symbol="Waller"/>
+		<County code="43238" label="Ward" symbol="WardTX"/>
+		<County code="43239" label="Washington" symbol="WashingtonTX"/>
+		<County code="43240" label="Webb" symbol="Webb"/>
+		<County code="43241" label="Wharton" symbol="Wharton"/>
+		<County code="43242" label="Wheeler" symbol="WheelerTX"/>
+		<County code="43243" label="Wichita" symbol="WichitaTX"/>
+		<County code="43244" label="Wilbarger" symbol="Wilbarger"/>
+		<County code="43245" label="Willacy" symbol="Willacy"/>
+		<County code="43246" label="Williamson" symbol="WilliamsonTX"/>
+		<County code="43247" label="Wilson" symbol="WilsonTX"/>
+		<County code="43248" label="Winkler" symbol="Winkler"/>
+		<County code="43249" label="Wise" symbol="WiseTX"/>
+		<County code="43250" label="Wood" symbol="WoodTX"/>
+		<County code="43251" label="Yoakum" symbol="Yoakum"/>
+		<County code="43252" label="Young" symbol="Young"/>
+		<County code="43253" label="Zapata" symbol="Zapata"/>
+		<County code="43254" label="Zavala" symbol="Zavala"/>
+	</State>
+	<State code="44000" label="Utah" symbol="Utah">
+		<County code="44001" label="Beaver" symbol="BeaverUT"/>
+		<County code="44002" label="Box Elder" symbol="Boxelder"/>
+		<County code="44003" label="Cache" symbol="Cache"/>
+		<County code="44004" label="Carbon" symbol="CarbonUT"/>
+		<County code="44005" label="Daggett" symbol="Daggett" verticalCenterGap="-5"/>
+		<County code="44006" label="Davis" symbol="DavisUT"/>
+		<County code="44007" label="Duchesne" symbol="Duchesne"/>
+		<County code="44008" label="Emery" symbol="Emery"/>
+		<County code="44009" label="Garfield" symbol="GarfieldUT"/>
+		<County code="44010" label="Grand" symbol="GrandUT"/>
+		<County code="44011" label="Iron" symbol="IronUT"/>
+		<County code="44012" label="Juab" symbol="Juab"/>
+		<County code="44013" label="Kane" symbol="KaneUT"/>
+		<County code="44014" label="Millard" symbol="Millard"/>
+		<County code="44015" label="Morgan" symbol="MorganUT" horizontalCenterGap="-3"/>
+		<County code="44016" label="Piute" symbol="Piute"/>
+		<County code="44017" label="Rich" symbol="Rich"/>
+		<County code="44018" label="Salt Lake" symbol="Saltlake"/>
+		<County code="44019" label="San Juan" symbol="SanjuanUT" horizontalCenterGap="20"/>
+		<County code="44020" label="Sanpete" symbol="Sanpete"/>
+		<County code="44021" label="Sevier" symbol="SevierUT"/>
+		<County code="44022" label="Summit" symbol="SummitUT"/>
+		<County code="44023" label="Tooele" symbol="Tooele"/>
+		<County code="44024" label="Uintah" symbol="Uintah"/>
+		<County code="44025" label="Utah County" symbol="Utahcounty"/>
+		<County code="44026" label="Wasatch" symbol="Wasatch"/>
+		<County code="44027" label="Washington" symbol="WashingtonUT"/>
+		<County code="44028" label="Wayne" symbol="WayneUT"/>
+		<County code="44029" label="Weber" symbol="Weber"/>
+	</State>
+	<State code="45000" label="Vermont" symbol="Vermont">
+		<County code="45001" label="Addison" symbol="Addison"/>
+		<County code="45002" label="Bennington" symbol="Bennington"/>
+		<County code="45003" label="Caledonia" symbol="Caledonia"/>
+		<County code="45004" label="Chittenden" symbol="Chittenden"/>
+		<County code="45005" label="Essex" symbol="EssexVT"/>
+		<County code="45006" label="Franklin" symbol="FranklinVT"/>
+		<County code="45007" label="Grandisle" symbol="Grandisle"/>
+		<County code="45008" label="Lamoille" symbol="Lamoille"/>
+		<County code="45009" label="Orange" symbol="OrangeVT"/>
+		<County code="45010" label="Orleans" symbol="OrleansVT" verticalCenterGap="-10"/>
+		<County code="45011" label="Rutland" symbol="Rutland"/>
+		<County code="45012" label="Washington" symbol="WashingtonVT"/>
+		<County code="45013" label="Windham" symbol="WindhamVT"/>
+		<County code="45014" label="Windsor" symbol="Windsor"/>
+	</State>
+	<State code="46000" label="Virginia" symbol="Virginia" verticalCenterGap="10" horizontalCenterGap="10">
+		<County code="46001" label="Accomack" symbol="Accomack"/>
+		<County code="46002" label="Albemarle" symbol="Albemarle"/>
+		<County code="46003" label="Alleghany" symbol="AlleghanyVA"/>
+		<County code="46004" label="Amelia" symbol="Amelia"/>
+		<County code="46005" label="Amherst" symbol="Amherst"/>
+		<County code="46006" label="Appomattox" symbol="Appomattox"/>
+		<County code="46007" label="Augusta" symbol="Augusta"/>
+		<County code="46008" label="Bath" symbol="BathVA"/>
+		<County code="46009" label="Bedford" symbol="BedfordVA"/>
+		<County code="46010" label="Bland" symbol="Bland"/>
+		<County code="46011" label="Botetourt" symbol="Botetourt"/>
+		<County code="46012" label="Brunswick" symbol="BrunswickVA"/>
+		<County code="46013" label="Buchanan" symbol="BuchananVA"/>
+		<County code="46014" label="Buckingham" symbol="Buckingham"/>
+		<County code="46015" label="Campbell" symbol="CampbellVA"/>
+		<County code="46016" label="Caroline" symbol="CarolineVA"/>
+		<County code="46017" label="Carroll" symbol="CarrollVA"/>
+		<County code="46018" label="Charles City" symbol="Charlescity"/>
+		<County code="46019" label="Charlotte" symbol="CharlotteVA" horizontalCenterGap="2" verticalCenterGap="-3"/>
+		<County code="46020" label="Chesapeake" symbol="Chesapeake"/>
+		<County code="46021" label="Chesterfield" symbol="ChesterfieldVA" verticalCenterGap="3"/>
+		<County code="46022" label="Clarke" symbol="ClarkeVA"/>
+		<County code="46023" label="Craig" symbol="CraigVA"/>
+		<County code="46024" label="Culpeper" symbol="Culpeper"/>
+		<County code="46025" label="Cumberland" symbol="CumberlandVA"/>
+		<County code="46026" label="Dickenson" symbol="Dickenson"/>
+		<County code="46027" label="Dinwiddie" symbol="Dinwiddie"/>
+		<County code="46028" label="Essex" symbol="EssexVA"/>
+		<County code="46029" label="Fairfax" symbol="Fairfax"/>
+		<County code="46030" label="Fauquier" symbol="Fauquier"/>
+		<County code="46031" label="Floyd" symbol="FloydVA"/>
+		<County code="46032" label="Fluvanna" symbol="Fluvanna"/>
+		<County code="46033" label="Franklin" symbol="FranklinVA"/>
+		<County code="46034" label="Frederick" symbol="FrederickVA"/>
+		<County code="46035" label="Giles" symbol="GilesVA"/>
+		<County code="46036" label="Gloucester" symbol="GloucesterVA"/>
+		<County code="46037" label="Goochland" symbol="Goochland" horizontalCenterGap="-3"/>
+		<County code="46038" label="Grayson" symbol="GraysonVA"/>
+		<County code="46039" label="Greene" symbol="GreeneVA"/>
+		<County code="46040" label="Greensville" symbol="Greensville"/>
+		<County code="46041" label="Halifax" symbol="HalifaxVA"/>
+		<County code="46042" label="Hanover" symbol="Hanover"/>
+		<County code="46043" label="Henrico" symbol="Henrico" horizontalCenterGap="5"/>
+		<County code="46044" label="Henry" symbol="HenryVA"/>
+		<County code="46045" label="Highland" symbol="HighlandVA"/>
+		<County code="46046" label="Isle of Wight" symbol="Isleofwight"/>
+		<County code="46047" label="James City" symbol="Jamescity"/>
+		<County code="46048" label="King and Queen" symbol="Kingandqueen"/>
+		<County code="46049" label="King George" symbol="Kinggeorge"/>
+		<County code="46050" label="King William" symbol="Kingwilliam"/>
+		<County code="46051" label="Lancaster" symbol="LancasterVA"/>
+		<County code="46052" label="Lee" symbol="LeeVA" horizontalCenterGap="10"/>
+		<County code="46053" label="Loudoun" symbol="Loudoun"/>
+		<County code="46054" label="Louisa" symbol="LouisaVA"/>
+		<County code="46055" label="Lunenburg" symbol="Lunenburg"/>
+		<County code="46056" label="Madison" symbol="MadisonVA"/>
+		<County code="46057" label="Mathews" symbol="Mathews"/>
+		<County code="46058" label="Mecklenburg" symbol="MecklenburgVA"/>
+		<County code="46059" label="Middlesex" symbol="MiddlesexVA"/>
+		<County code="46060" label="Montgomery" symbol="MontgomeryVA"/>
+		<County code="46061" label="Nelson" symbol="NelsonVA"/>
+		<County code="46062" label="New Kent" symbol="Newkent"/>
+		<County code="46063" label="Northampton" symbol="NorthamptonVA"/>
+		<County code="46064" label="Northumberland" symbol="NorthumberlandVA"/>
+		<County code="46065" label="Nottoway" symbol="Nottoway"/>
+		<County code="46066" label="Orange" symbol="OrangeVA"/>
+		<County code="46067" label="Page" symbol="PageVA"/>
+		<County code="46068" label="Patrick" symbol="Patrick" horizontalCenterGap="5"/>
+		<County code="46069" label="Pittsylvania" symbol="Pittsylvania"/>
+		<County code="46070" label="Powhatan" symbol="Powhatan"/>
+		<County code="46071" label="Prince Edward" symbol="Princeedward"/>
+		<County code="46072" label="Prince George" symbol="Princegeorge"/>
+		<County code="46073" label="Prince William" symbol="Princewilliam"/>
+		<County code="46074" label="Pulaski" symbol="PulaskiVA"/>
+		<County code="46075" label="Rappahannock" symbol="Rappahannock"/>
+		<County code="46076" label="Richmond" symbol="RichmondVA" horizontalCenterGap="8" verticalCenterGap="-13"/>
+		<County code="46077" label="Roanoke" symbol="RoanokeVA"/>
+		<County code="46078" label="Rockbridge" symbol="Rockbridge"/>
+		<County code="46079" label="Rockingham" symbol="RockinghamVA"/>
+		<County code="46080" label="Russell" symbol="RussellVA"/>
+		<County code="46081" label="Scott" symbol="ScottVA"/>
+		<County code="46082" label="Shenandoah" symbol="Shenandoah"/>
+		<County code="46083" label="Smyth" symbol="Smyth"/>
+		<County code="46084" label="Southampton" symbol="Southampton"/>
+		<County code="46085" label="Spotsylvania" symbol="Spotsylvania"/>
+		<County code="46086" label="Stafford" symbol="StaffordVA"/>
+		<County code="46087" label="Suffolk" symbol="SuffolkVA"/>
+		<County code="46088" label="Surry" symbol="SurryVA"/>
+		<County code="46089" label="Sussex" symbol="SussexVA"/>
+		<County code="46090" label="Tazewell" symbol="TazewellVA"/>
+		<County code="46091" label="Virginia Beach" symbol="Virginiabeach" horizontalCenterGap="5"/>
+		<County code="46092" label="Warren" symbol="WarrenVA"/>
+		<County code="46093" label="Washington" symbol="WashingtonVA"/>
+		<County code="46094" label="WestmorelandVA" symbol="WestmorelandVA"/>
+		<County code="46095" label="Wise" symbol="WiseVA"/>
+		<County code="46096" label="Wythe" symbol="Wythe"/>
+		<County code="46097" label="York" symbol="YorkVA" horizontalCenterGap="3"/>
+	</State>
+	<State code="47000" label="Washington" symbol="Washington">
+		<County code="47001" label="Adams" symbol="AdamsWA"/>
+		<County code="47002" label="Asotin" symbol="Asotin"/>
+		<County code="47003" label="Benton" symbol="BentonWA" horizontalCenterGap="-5"/>
+		<County code="47004" label="Chelan" symbol="Chelan"/>
+		<County code="47005" label="Clallam" symbol="Clallam" verticalCenterGap="7"/>
+		<County code="47006" label="Clark" symbol="ClarkWA"/>
+		<County code="47007" label="Columbia" symbol="ColumbiaWA"/>
+		<County code="47008" label="Cowlitz" symbol="Cowlitz" horizontalCenterGap="5" verticalCenterGap="-5"/>
+		<County code="47009" label="Douglas" symbol="DouglasWA" horizontalCenterGap="-3"/>
+		<County code="47010" label="Ferry" symbol="Ferry"/>
+		<County code="47011" label="Franklin" symbol="FranklinWA"/>
+		<County code="47012" label="Garfield" symbol="GarfieldWA" verticalCenterGap="-5"/>
+		<County code="47013" label="Grant" symbol="GrantWA" verticalCenterGap="10"/>
+		<County code="47014" label="Graysharbor" symbol="Graysharbor"/>
+		<County code="47015" label="Island" symbol="Island" verticalCenterGap="3"/>
+		<County code="47016" label="Jefferson" symbol="JeffersonWA" verticalCenterGap="5"/>
+		<County code="47017" label="King" symbol="KingWA"/>
+		<County code="47018" label="Kitsap" symbol="Kitsap"/>
+		<County code="47019" label="Kittitas" symbol="Kittitas"/>
+		<County code="47020" label="Klickitat" symbol="Klickitat"/>
+		<County code="47021" label="Lewis" symbol="LewisWA" verticalCenterGap="2"/>
+		<County code="47022" label="Lincoln" symbol="LincolnWA" verticalCenterGap="5"/>
+		<County code="47023" label="Mason" symbol="MasonWA" horizontalCenterGap="-5"/>
+		<County code="47024" label="Okanogan" symbol="Okanogan"/>
+		<County code="47025" label="Pacific" symbol="Pacific" horizontalCenterGap="2" verticalCenterGap="-5"/>
+		<County code="47026" label="Pend" symbol="Pend"/>
+		<County code="47027" label="Pierce" symbol="PierceWA"/>
+		<County code="47028" label="San Juan" symbol="SanjuanWA"/>
+		<County code="47029" label="Skagit" symbol="Skagit"/>
+		<County code="47030" label="Skamania" symbol="Skamania"/>
+		<County code="47031" label="Snohomish" symbol="Snohomish"/>
+		<County code="47032" label="Spokane" symbol="Spokane"/>
+		<County code="47033" label="Stevens" symbol="StevensWA"/>
+		<County code="47034" label="Thurston" symbol="ThurstonWA" horizontalCenterGap="-8"/>
+		<County code="47035" label="Wahkiakum" symbol="Wahkiakum"/>
+		<County code="47036" label="Walla Walla" symbol="Wallawalla"/>
+		<County code="47037" label="Whatcom" symbol="Whatcom"/>
+		<County code="47038" label="Whitman" symbol="Whitman" horizontalCenterGap="5" verticalCenterGap="-10"/>
+		<County code="47039" label="Yakima" symbol="Yakima" verticalCenterGap="10"/>
+	</State>
+	<State code="48000" label="West Virginia" symbol="Westvirginia" verticalCenterGap="-5">
+		<County code="48001" label="Barbour" symbol="BarbourWV"/>
+		<County code="48002" label="Berkeley" symbol="BerkeleyWV"/>
+		<County code="48003" label="Boone" symbol="BooneWV"/>
+		<County code="48004" label="Braxton" symbol="Braxton"/>
+		<County code="48005" label="Brooke" symbol="Brooke"/>
+		<County code="48006" label="Cabell" symbol="Cabell"/>
+		<County code="48007" label="Calhoun" symbol="CalhounWV"/>
+		<County code="48008" label="Clay" symbol="ClayWV"/>
+		<County code="48009" label="Doddridge" symbol="Doddridge"/>
+		<County code="48010" label="Fayette" symbol="FayetteWV"/>
+		<County code="48011" label="Gilmer" symbol="GilmerWV"/>
+		<County code="48012" label="Grant" symbol="GrantWV"/>
+		<County code="48013" label="Greenbrier" symbol="Greenbrier"/>
+		<County code="48014" label="Hampshire" symbol="HampshireWV"/>
+		<County code="48015" label="Hancock" symbol="HancockWV"/>
+		<County code="48016" label="Hardy" symbol="Hardy"/>
+		<County code="48017" label="Harrison" symbol="HarrisonWV"/>
+		<County code="48018" label="Jackson" symbol="JacksonWV"/>
+		<County code="48019" label="Jefferson" symbol="JeffersonWV"/>
+		<County code="48020" label="Kanawha" symbol="Kanawha"/>
+		<County code="48021" label="Lewis" symbol="LewisWV"/>
+		<County code="48022" label="Lincoln" symbol="LincolnWV"/>
+		<County code="48023" label="Logan" symbol="LoganWV"/>
+		<County code="48024" label="Marion" symbol="MarionWV"/>
+		<County code="48025" label="Marshall" symbol="MarshallWV"/>
+		<County code="48026" label="Mason" symbol="MasonWV"/>
+		<County code="48027" label="Mcdowell" symbol="McdowellWV"/>
+		<County code="48028" label="Mercer" symbol="MercerWV"/>
+		<County code="48029" label="Mineral" symbol="MineralWV"/>
+		<County code="48030" label="Mingo" symbol="Mingo" horizontalCenterGap="-5"/>
+		<County code="48031" label="Monongalia" symbol="Monongalia" verticalCenterGap="-5"/>
+		<County code="48032" label="Monroe" symbol="MonroeWV"/>
+		<County code="48033" label="Morgan" symbol="MorganWV"/>
+		<County code="48034" label="Nicholas" symbol="NicholasWV"/>
+		<County code="48035" label="Ohio" symbol="OhioWV"/>
+		<County code="48036" label="Pendleton" symbol="PendletonWV"/>
+		<County code="48037" label="Pleasants" symbol="Pleasants"/>
+		<County code="48038" label="Pocahontas" symbol="PocahontasWV"/>
+		<County code="48039" label="Preston" symbol="Preston"/>
+		<County code="48040" label="Putnam" symbol="PutnamWV"/>
+		<County code="48041" label="Raleigh" symbol="Raleigh"/>
+		<County code="48042" label="Randolph" symbol="RandolphWV"/>
+		<County code="48043" label="Ritchie" symbol="Ritchie"/>
+		<County code="48044" label="Roane" symbol="RoaneWV"/>
+		<County code="48045" label="Summers" symbol="Summers"/>
+		<County code="48046" label="Taylor" symbol="TaylorWV"/>
+		<County code="48047" label="Tucker" symbol="Tucker"/>
+		<County code="48048" label="Tyler" symbol="TylerWV"/>
+		<County code="48049" label="Upshur" symbol="UpshurWV"/>
+		<County code="48050" label="Wayne" symbol="WayneWV"/>
+		<County code="48051" label="Webster" symbol="WebsterWV"/>
+		<County code="48052" label="Wetzel" symbol="Wetzel"/>
+		<County code="48053" label="Wirt" symbol="Wirt"/>
+		<County code="48054" label="Wood" symbol="WoodWV"/>
+		<County code="48055" label="Wyoming" symbol="WyomingWV"/>
+	</State>
+	<State code="49000" label="Wisconsin" symbol="Wisconsin">
+		<County code="49001" label="Adams" symbol="AdamsWI"/>
+		<County code="49002" label="Ashland" symbol="AshlandWI" horizontalCenterGap="-5"/>
+		<County code="49003" label="Barron" symbol="Barron"/>
+		<County code="49004" label="Bayfield" symbol="Bayfield" horizontalCenterGap="-5" verticalCenterGap="5"/>
+		<County code="49005" label="Brown" symbol="BrownWI"/>
+		<County code="49006" label="Buffalo" symbol="BuffaloWI" verticalCenterGap="-3"/>
+		<County code="49007" label="Burnett" symbol="Burnett" horizontalCenterGap="10"/>
+		<County code="49008" label="Calumet" symbol="Calumet"/>
+		<County code="49009" label="Chippewa" symbol="ChippewaWI"/>
+		<County code="49010" label="Clark" symbol="ClarkWI"/>
+		<County code="49011" label="Columbia" symbol="ColumbiaWI"/>
+		<County code="49012" label="Crawford" symbol="CrawfordWI"/>
+		<County code="49013" label="Dane" symbol="Dane"/>
+		<County code="49014" label="Dodge" symbol="DodgeWI"/>
+		<County code="49015" label="Door" symbol="Door" horizontalCenterGap="3"/>
+		<County code="49016" label="Douglas" symbol="DouglasWI"/>
+		<County code="49017" label="Dunn" symbol="DunnWI"/>
+		<County code="49018" label="Eauclaire" symbol="Eauclaire"/>
+		<County code="49019" label="Florence" symbol="FlorenceWI"/>
+		<County code="49020" label="Fond du Lac" symbol="Fonddulac"/>
+		<County code="49021" label="Forest" symbol="ForestWI"/>
+		<County code="49022" label="Grant" symbol="GrantWI"/>
+		<County code="49023" label="Green Lake" symbol="Greenlake"/>
+		<County code="49024" label="Green" symbol="GreenWI"/>
+		<County code="49025" label="Iowa" symbol="IowaWI"/>
+		<County code="49026" label="Iron" symbol="IronWI"/>
+		<County code="49027" label="Jackson" symbol="JacksonWI"/>
+		<County code="49028" label="Jefferson" symbol="JeffersonWI"/>
+		<County code="49029" label="Juneau" symbol="Juneau"/>
+		<County code="49030" label="Kenosha" symbol="Kenosha"/>
+		<County code="49031" label="Kewaunee" symbol="Kewaunee"/>
+		<County code="49032" label="La Crosse" symbol="Lacrosse"/>
+		<County code="49033" label="Lafayette" symbol="LafayetteWI"/>
+		<County code="49034" label="Langlade" symbol="Langlade"/>
+		<County code="49035" label="Lincoln" symbol="LincolnWI"/>
+		<County code="49036" label="Manitowoc" symbol="Manitowoc"/>
+		<County code="49037" label="Marathon" symbol="Marathon"/>
+		<County code="49038" label="Marinette" symbol="Marinette"/>
+		<County code="49039" label="Marquette" symbol="MarquetteWI"/>
+		<County code="49040" label="Menominee" symbol="MenomineeWI"/>
+		<County code="49041" label="Milwaukee" symbol="Milwaukee"/>
+		<County code="49042" label="Monroe" symbol="MonroeWI"/>
+		<County code="49043" label="Oconto" symbol="Oconto"/>
+		<County code="49044" label="Oneida" symbol="OneidaWI"/>
+		<County code="49045" label="Outagamie" symbol="Outagamie"/>
+		<County code="49046" label="Ozaukee" symbol="Ozaukee"/>
+		<County code="49047" label="Pepin" symbol="Pepin" horizontalCenterGap="-7" />
+		<County code="49048" label="Pierce" symbol="PierceWI"/>
+		<County code="49049" label="Polk" symbol="PolkWI" horizontalCenterGap="5"/>
+		<County code="49050" label="Portage" symbol="PortageWI"/>
+		<County code="49051" label="Price" symbol="Price"/>
+		<County code="49052" label="Racine" symbol="Racine"/>
+		<County code="49053" label="Richland" symbol="RichlandWI"/>
+		<County code="49054" label="Rock" symbol="RockWI"/>
+		<County code="49055" label="Rusk" symbol="RuskWI"/>
+		<County code="49056" label="Saintcroix" symbol="Saintcroix"/>
+		<County code="49057" label="Sauk" symbol="Sauk"/>
+		<County code="49058" label="Sawyer" symbol="Sawyer"/>
+		<County code="49059" label="Shawano" symbol="Shawano"/>
+		<County code="49060" label="Sheboygan" symbol="Sheboygan"/>
+		<County code="49061" label="Taylor" symbol="TaylorWI"/>
+		<County code="49062" label="Trempealeau" symbol="Trempealeau"/>
+		<County code="49063" label="Vernon" symbol="VernonWI"/>
+		<County code="49064" label="Vilas" symbol="Vilas"/>
+		<County code="49065" label="Walworth" symbol="WalworthWI"/>
+		<County code="49066" label="Washburn" symbol="Washburn"/>
+		<County code="49067" label="Washington" symbol="WashingtonWI"/>
+		<County code="49068" label="Waukesha" symbol="Waukesha"/>
+		<County code="49069" label="Waupaca" symbol="Waupaca"/>
+		<County code="49070" label="Waushara" symbol="Waushara"/>
+		<County code="49071" label="Winnebago" symbol="WinnebagoWI"/>
+		<County code="49072" label="Wood" symbol="WoodWI"/>
+	</State>
+	<State code="50000" label="Wyoming" symbol="Wyoming">
+		<County code="50001" label="Albany" symbol="AlbanyWY"/>
+		<County code="50002" label="Bighorn" symbol="BighornWY"/>
+		<County code="50003" label="Campbell" symbol="CampbellWY"/>
+		<County code="50004" label="Carbon" symbol="CarbonWY"/>
+		<County code="50005" label="Converse" symbol="Converse"/>
+		<County code="50006" label="Crook" symbol="CrookWY"/>
+		<County code="50007" label="Fremont" symbol="FremontWY"/>
+		<County code="50008" label="Goshen" symbol="Goshen"/>
+		<County code="50009" label="Hot Spring" symbol="Hotsprings"/>
+		<County code="50010" label="Johnson" symbol="JohnsonWY"/>
+		<County code="50011" label="Laramie" symbol="Laramie"/>
+		<County code="50012" label="Lincoln" symbol="LincolnWY" horizontalCenterGap="-5" verticalCenterGap="20"/>
+		<County code="50013" label="Natrona" symbol="Natrona"/>
+		<County code="50014" label="Niobrara" symbol="Niobrara"/>
+		<County code="50015" label="Park" symbol="ParkWY" horizontalCenterGap="10"/>
+		<County code="50016" label="Platte" symbol="PlatteWY"/>
+		<County code="50017" label="Sheridan" symbol="SheridanWY"/>
+		<County code="50018" label="Sublette" symbol="Sublette"/>
+		<County code="50019" label="Sweetwater" symbol="Sweetwater"/>
+		<County code="50020" label="Teton" symbol="TetonWY"/>
+		<County code="50021" label="Uinta" symbol="Uinta"/>
+		<County code="50022" label="Washakie" symbol="Washakie" horizontalCenterGap="10" verticalCenterGap="-10"/>
+		<County code="50023" label="Weston" symbol="Weston"/>
+	</State>
+	<State code="51000" label="Washington DC" symbol="WashingtonDC">
+		<County code="51001" label="Washington DC" symbol="WashingtonDC"/>
+	</State>
+</Map>

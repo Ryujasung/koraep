@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 표준용기코드관리 -->
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3951201Mapper">
+
+     <!-- 표준용기코드 조회-->
+	<select id="epce3951201_select" parameterType="map" resultType="hashmap">
+		
+			SELECT  
+			            LANG_SE_CD 
+			           ,CTNR_CD
+			           ,CTNR_NM
+			           ,CPCT_CD
+			           ,PRPS_CD
+                       ,MFC_SE_CD
+			           ,ALKND_CD
+			           ,DECODE( USE_YN,'Y',EPCN_LANG_NM('use_y'),EPCN_LANG_NM('use_n')) AS USE_YN
+					   ,USE_YN AS USE_YN_ORI
+					   ,DECODE( DLIVY_USE_YN,'Y',EPCN_LANG_NM('use_y'),EPCN_LANG_NM('use_n')) AS DLIVY_USE_YN
+					   ,DLIVY_USE_YN AS DLIVY_USE_YN_ORI
+			           ,SEL_ORD
+			           ,EPCN_ETC_NM(CPCT_CD , 'E001') AS CPCT_NM
+			           ,EPCN_ETC_NM(PRPS_CD , 'E002') AS PRPS_NM
+			           ,EPCN_ETC_NM(MFC_SE_CD , 'E003') AS MFC_SE_NM
+			           ,EPCN_ETC_NM(ALKND_CD , 'E004') AS ALKND_NM
+			FROM   
+			           EPCN_STD_CTNR_CD           
+			WHERE  1=1
+			AND      LANG_SE_CD          =     #{LANG_SE_CD_SEL}
+			AND      USE_YN                 =     #{USE_YN_SEL}
+			AND      DLIVY_USE_YN        =     #{DLIVY_USE_YN_SEL}
+			<if test="CTNR_NM != ''">
+			 AND  CTNR_NM LIKE '%' || #{CTNR_NM_SEL} || '%'
+			</if>
+		
+	</select>
+	<!-- 표준용기코드 수정 저장 조회-->
+	<select id="epce3951201_select2" parameterType="map" resultType="int">
+	
+	    SELECT 
+	                COUNT(*) 
+	    FROM 
+	                EPCN_STD_CTNR_CD
+	    WHERE    1=1
+	    AND       LANG_SE_CD  = #{LANG_SE_CD}
+	    AND       CTNR_CD       = TRIM(#{CTNR_CD})
+	
+	</select>
+	
+	<!-- 표준용기코드 저장-->
+   <insert id="epce3951201_insert" parameterType="map">
+   
+	    INSERT 
+			    INTO EPCN_STD_CTNR_CD
+				    (
+				      CTNR_CD
+				     ,LANG_SE_CD
+				     ,CTNR_NM
+				     ,CPCT_CD
+				     ,PRPS_CD
+				     ,MFC_SE_CD
+				     ,ALKND_CD
+				     ,DLIVY_USE_YN
+				     ,USE_YN 
+				     ,SEL_ORD
+				     ,REG_PRSN_ID 
+				     ,REG_DTTM
+				     )
+			     VALUES
+			       (
+				   TRIM(#{CTNR_CD})
+				   ,#{LANG_SE_CD}
+				   ,#{CTNR_NM}
+			       ,#{CPCT_CD}
+				   ,#{PRPS_CD}
+				   ,#{MFC_SE_CD}
+				   ,#{ALKND_CD}
+				   ,#{DLIVY_USE_YN}
+				   ,#{USE_YN}
+				   ,#{SEL_ORD}
+				   ,#{RGST_PRSN_ID}
+				     ,SYSDATE
+			       )
+   </insert>
+   
+   <!-- 표준용기코드 수정-->
+   <update id="epce3951201_update" parameterType="map">
+   
+            UPDATE
+		  	        EPCN_STD_CTNR_CD
+				SET
+					 CTNR_NM        =  #{CTNR_NM}
+					,CPCT_CD         =  #{CPCT_CD}
+					,PRPS_CD         =  #{PRPS_CD}
+					,MFC_SE_CD     = #{MFC_SE_CD}
+					,ALKND_CD      = #{ALKND_CD}
+					,DLIVY_USE_YN   = #{DLIVY_USE_YN}
+					,USE_YN            =  #{USE_YN}
+					,SEL_ORD          = #{SEL_ORD}
+					,UPD_PRSN_ID   =  #{RGST_PRSN_ID}
+					,UPD_DTTM       =   SYSDATE 
+				 WHERE 1=1
+				 AND CTNR_CD       = #{CTNR_CD}
+				 AND LANG_SE_CD  = #{LANG_SE_CD}
+				 
+  </update>
+	
+	
+	
+
+
+</mapper>

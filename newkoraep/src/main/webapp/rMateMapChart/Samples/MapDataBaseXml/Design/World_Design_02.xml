@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Continent code="100" label="북아메리카" symbol="north-america" horizontalCenterGap="-30" verticalCenterGap="-20"/>
+	<Continent code="200" label="남아메리카" symbol="south-america" verticalCenterGap="-30"/>
+	<Continent code="400" label="유럽" symbol="europe" verticalCenterGap="25"/>
+	<Continent code="500" label="아프리카" symbol="africa" verticalCenterGap="-25" horizontalCenterGap="-10"/>
+	<Continent code="600" label="아시아" symbol="asia" horizontalCenterGap="-20" verticalCenterGap="-40"/>
+	<Continent code="700" label="오세아니아" symbol="oceania" horizontalCenterGap="-5" verticalCenterGap="-10"/>
+</Map>

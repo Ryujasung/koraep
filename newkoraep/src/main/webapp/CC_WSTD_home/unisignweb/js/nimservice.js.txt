@@ -1,0 +1,456 @@
+var __nimservice = function() {
+	var messageNumber = 0;
+	var sessionID = Math.random();
+	
+	this.operation = new Array();
+	this.operation[0]			= "GetTokenList";  			// gettokenlist
+	this.operation[1]			= "GetCertificateList";  			// getcertlist
+	this.operation[2]			= "GetCertificate";  				// getcert
+	this.operation[3]			= "GenerateSignature";  				// signdata
+	
+	var curIndex = 0;
+	var curOperation = this.operation[0];
+	
+	var tokenList = new Array();
+	var certList = new Array();
+	
+	var __device = 0;
+	var __drive = 0;
+	var __pin = "";
+	
+	var __callback = null;
+	var errCode = "";
+	var errMsg = "";
+	
+	var pageloaded = 0;
+	var connected = 0;
+	var iframesrc = 'https://127.0.0.1:14461';
+	
+	
+	function addEvent()
+	{
+		
+		if (typeof window.addEventListener === 'function') {
+		    // Check for addEventListener first, since IE9/10 have both,
+		    // but you should use the standard over the deprecated IE-specific one
+		    window.addEventListener('message', receivedData, false);
+		} else if (typeof window.attachEvent === 'function') {
+		    window.attachEvent('onmessage', receivedData);
+		}
+	}
+	
+	// send
+	function GetTokenIdentifier( _device, _drive )
+	{	
+		var len = tokenList.length;
+		for (var i = 0 ; i < len ; i++)
+		{
+			var objToken = tokenList[i];
+			if (objToken.device == _device && objToken.drive == _drive)
+			 	return "" + objToken.tokenIdentifier;
+		}
+		
+		return ""; 	
+	}
+	
+	function GetAllTokenList()
+	{
+		tokenList.length = 0;
+		certList.length = 0;
+		
+		curOperation = this.operation[0];
+		var jsonGetTokenList = {
+			"messageNumber": messageNumber,
+			"sessionID": "" + sessionID,
+			"operation": curOperation
+		};				
+
+		try {
+			var request = document.getElementById("hsmiframe").contentWindow;
+			request.postMessage(JSON.stringify(jsonGetTokenList), 'https://127.0.0.1:14461');
+		}
+		catch(e) {
+			connected = -1;
+			__callback(-1);
+		}
+	}
+	
+	
+	function GetAllUserCertNum()
+	{
+		var tokenIdentifier = GetTokenIdentifier( __device, __drive );
+		if ( tokenIdentifier == null || tokenIdentifier.length <= 0 )
+			return false;
+			
+		curOperation = this.operation[1];
+		var jsonGetCertList = {
+			"messageNumber": messageNumber,
+			"sessionID": "" + sessionID,
+			"operation": curOperation,
+			"tokenIdentifier": tokenIdentifier
+		};
+					
+		try {
+			var request = document.getElementById("hsmiframe").contentWindow;
+			request.postMessage(JSON.stringify(jsonGetCertList), iframesrc);
+		}
+		catch(e) {
+			connected = -1;			
+			__callback(-1);
+		}
+	}
+		
+	
+	function GetUserCert( index )
+	{	
+		var tokenIdentifier = GetTokenIdentifier( __device, __drive );
+		if ( tokenIdentifier == null || tokenIdentifier.length <= 0 )
+			return false;
+		
+		curIndex = index;
+		curOperation = this.operation[2];
+		var jsonGetCert = {
+			"messageNumber": messageNumber,
+			"sessionID": "" + sessionID,
+			"operation": curOperation,
+			"tokenIdentifier": tokenIdentifier,
+			"certIdentifier": "" + index
+		};
+					
+		try {
+			var request = document.getElementById("hsmiframe").contentWindow;
+			request.postMessage(JSON.stringify(jsonGetCert), iframesrc);		
+		}
+		catch(e) {
+			connected = -1;			
+			__callback(-1);
+		}
+	}
+	
+	function GetSignData( index, pwd, plainText )		
+	{
+		var tokenIdentifier = GetTokenIdentifier( __device, __drive );
+		if ( tokenIdentifier == null || tokenIdentifier.length <= 0 )
+			return false;
+		
+		curOperation = this.operation[3];
+		var jsonGetSignData = {
+			"messageNumber": messageNumber,
+			"sessionID": "" + sessionID,
+			"operation": curOperation,
+			"tokenIdentifier": tokenIdentifier,
+			
+			
+			"pin": pwd,
+			"certIdentifier": "" + certList[index].certIdentifier,
+			// test
+			"keyIdentifier":"" + certList[index].keyIdentifier,
+			"plain": plainText	
+		};
+		
+		try {		 	
+			var request = document.getElementById("hsmiframe").contentWindow;
+			request.postMessage(JSON.stringify(jsonGetSignData), iframesrc);							
+		}
+		catch(e) {
+			connected = -1;			
+			__callback(-1);
+		}
+	}
+	
+	function GetSignP1Data( index, pwd, plainText )		
+	{
+		var tokenIdentifier = GetTokenIdentifier( __device, __drive );
+		if ( tokenIdentifier == null || tokenIdentifier.length <= 0 )
+			return false;
+		
+		curOperation = this.operation[3];
+		var jsonGetSignData = {
+			"messageNumber": messageNumber,
+			"sessionID": "" + sessionID,
+			"operation": curOperation,
+			"tokenIdentifier": tokenIdentifier,			
+			"pin": pwd,
+			// remove certIdentifier
+			"keyIdentifier":"" + certList[index].keyIdentifier,
+			"plain": plainText	
+		};
+		
+		try {		 	
+			var request = document.getElementById("hsmiframe").contentWindow;
+			request.postMessage(JSON.stringify(jsonGetSignData), iframesrc);							
+		}
+		catch(e) {	
+			connected = -1;			
+			__callback(-1);
+		}
+	}
+	
+	
+	
+	// parse
+	function MakeTokenList( jsonData )
+	{			
+		connected = 1;
+		if ( jsonData == null || jsonData.length <= 0 )
+			return false;
+		
+		var obj = JSON.parse(jsonData);
+		messageNumber = obj.messageNumber + 1;
+		
+		if ( this.operation[0] != obj.operation || obj.sessionID != sessionID )
+			return false;
+		
+		var objToken = eval(obj.list); 
+		var len = objToken.length;
+		for (var i = 0 ; i < len ; i++)
+		{
+			var token = objToken[i];
+			var struct = new Object();
+			
+			struct['tokenIdentifier'] = token.tokenIdentifier;
+			struct['name'] = token.name;
+			struct['type'] = token.type;
+			
+			// test
+			// nim hard:0, removal:1,2,3
+			// disk: 1, hsm: 2, save:3, mobile:4, hard:5
+			struct['device'] = 0;
+			if ( token.systemDrive == true )
+				struct['device'] = 5;
+			else
+				struct['device'] = 1;				
+			
+			// 1부터 시작
+			struct['drive'] = 0;			
+			if ( token.tokenIdentifier == 1 )
+				struct['drive'] = 1;
+			if ( token.tokenIdentifier == 2 )
+				struct['drive'] = 2;
+			
+			tokenList[i] = struct;				
+		}
+	
+		return true;				
+	}
+	
+	function MakeCertList( jsonData )
+	{
+		if ( jsonData == null || jsonData.length <= 0 )
+			return false;
+		
+		var obj = JSON.parse(jsonData);
+		messageNumber = obj.messageNumber + 1;
+		
+		if ( this.operation[1] != obj.operation || obj.sessionID != sessionID )
+			__callback(-1);
+		
+		var objToken = eval(obj.list); 
+		var len = objToken.length;
+		for (var i = 0 ; i < len ; i++)
+		{
+			var token = objToken[i];
+			var struct = new Object();
+			
+			struct['subject'] = token.subject;
+			struct['issuer'] = token.issuer;
+			struct['serial'] = token.serial;
+			struct['validFrom'] = token.validFrom;			
+			struct['validTo'] = token.validTo;			
+			struct['certIdentifier'] = token.certIdentifier;			
+			struct['keyIdentifier'] = token.keyIdentifier;
+
+			// test
+			var tempPolicy = {
+				"id": "1.2.410.2000004.2.1111\n",
+				"userNotice": "이 인증서는 테스트 인증서입니다.\n"
+			};			
+			var objPolicy =  JSON.parse(JSON.stringify(tempPolicy)); // JSON.parse(token.policy); 
+			var stPolicy = new Object();
+			
+			stPolicy['id'] = objPolicy.id;
+			stPolicy['userNotice'] = objPolicy.userNotice;
+			struct['policy'] = stPolicy;
+			struct['cert'] = "";
+			
+			certList[i] = struct;
+		}
+		
+		__callback(certList.length);
+	}
+	
+	function MakeCert( jsonData )
+	{
+		if ( jsonData == null || jsonData.length <= 0 )
+			return false;
+		
+		var obj = JSON.parse(jsonData);
+		messageNumber = obj.messageNumber + 1;
+		
+		if ( this.operation[2] != obj.operation || obj.sessionID != sessionID )
+			__callback("");		
+		
+		if ( obj.resultCode != 0 && obj.resultMessage != "ok") {
+			
+			errCode = obj.resultCode;
+			errMsg = obj.resultMessage;
+			
+			__callback("");
+		}
+
+		certList[curIndex].cert = obj.certificate;
+		__callback(obj.certificate);		
+	}	
+	
+	function MakeSignData( jsonData )
+	{
+		if ( jsonData == null || jsonData.length <= 0 )
+			return false;
+		
+		var obj = JSON.parse(jsonData);
+		messageNumber = obj.messageNumber + 1;
+		
+		if ( this.operation[3] != obj.operation || obj.sessionID != sessionID )
+			__callback("");		
+		
+		__callback(obj.resultCode, obj.resultMessage, obj.signature);		
+	}
+	
+	var receivedData = function (event)
+	{
+		if(event.origin == iframesrc)
+		{
+			if (curOperation == this.operation[0]) {
+				if ( MakeTokenList( event.data ) == false )
+					return;
+					
+				GetAllUserCertNum();
+			}
+			else if (curOperation == this.operation[1])
+				MakeCertList( event.data );			
+			else if (curOperation == this.operation[2])
+				MakeCert( event.data );			
+			else if (curOperation == this.operation[3])
+				MakeSignData( event.data );	
+		}
+		else
+		{
+			alert("Cant't get message form " + iframesrc);
+			return;
+		}			
+	}
+	
+	var hsmiframe = document.getElementById("hsmiframe");
+	hsmiframe.onload= function() {	
+		pageloaded = 1;
+		alert("onload");
+		addEvent();
+	}
+	addEvent();
+	
+	return {	
+		GetLastErrorCode : function() {
+			return errCode;
+		},
+		
+		GetLastErrorMessage : function() {
+			return errMsg;
+		},		
+					
+		GetAllUserCertListNum: function( device, drive, pin, callback ) {
+			var count = 0;
+
+		    function WaitForIFrame() {
+		    	// connected == 1 은 로드 완료. connected == -1은 이미 설치 페이지 띄운상태
+		        if (connected == 0) {	
+		        	// 3 번 이상은 설치가 되지 않아서 발생하는 문제라고 판단.
+		        	if (count >= 3) {
+		        		if ( pageloaded == 1) {
+		        			GetAllTokenList();	
+		        			count = 0;
+		        		}
+		        		else		        		
+		        			callback(-1);
+		        	}
+		        	else 
+		            	setTimeout(WaitForIFrame, 1000); 
+		            	
+		            count++;
+		        } 
+		    }		   
+	
+			function GetCerts() {
+				errCode = -1;
+				errMsg = "";
+				
+				__device = device;
+				__drive = drive;
+				__pin = pin;
+			
+				__callback = callback;
+				
+				// data 획득
+				GetAllTokenList();	
+				WaitForIFrame();				
+			}
+			
+			GetCerts();
+		},
+		
+		GetUserSignCertFromCertList : function( index, callback ) {
+			errCode = -1;
+			errMsg = "";
+						
+			__callback = callback;		
+			GetUserCert( index );
+		},
+		
+		GetSignDataP7 : function( index, pwd, plainText, callback ) {	
+			errCode = -1;
+			errMsg = "";
+						
+			__callback = callback;		
+			GetSignData( index, pwd, plainText );
+		},
+		
+		GetAllUserCert : function( certsCnt, rvCallback ) {
+			var index = 0;
+			var listArr = new Array();	
+			function SetUserCert( cert ) {
+				if (cert != null && cert.length > 0) {
+				    var struct = new Object();
+					struct['index'] = index+1;
+					//nimservice Indexvalue Check! +1
+
+					struct['cert'] = cert;
+					listArr[index] = struct;
+				}
+								           																				
+				if (certsCnt == listArr.length) {
+					__callback = null;
+					rvCallback( listArr );
+				}
+				else {
+					index = index + 1;
+					GetUserCert( index );
+				}
+			}
+		
+			__callback = SetUserCert;
+			GetUserCert(index);
+		},
+		
+		GetSignDataP1: function( index, pwd, plainText, callback ) {	
+			errCode = -1;
+			errMsg = "";
+						
+			__callback = callback;		
+			GetSignP1Data( index, pwd, plainText );
+		},
+		
+		GetCert: function( index ) {	
+			return certList[index].cert;			
+		}
+	}
+};
+

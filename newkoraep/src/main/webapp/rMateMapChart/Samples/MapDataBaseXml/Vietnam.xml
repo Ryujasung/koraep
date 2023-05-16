@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Region code="100" label="TâyBắc" symbol="TâyBắc">
+		<Province code="101" label="LaiChâu" symbol="LaiChâu"/>
+		<Province code="102" label="ĐiệnBiên" symbol="ĐiệnBiên"/>
+		<Province code="103" label="SơnLa" symbol="SơnLa"/>
+		<Province code="104" label="HòaBình" symbol="HòaBình"/>
+	</Region>
+	<Region code="200" label="ĐôngBắc" symbol="ĐôngBắc">
+		<Province code="201" label="BắcGiang" symbol="BắcGiang"/>
+		<Province code="202" label="BắcKạn" symbol="BắcKạn"/>
+		<Province code="203" label="CaoBang" symbol="CaoBang"/>
+		<Province code="204" label="HàGiang" symbol="HàGiang"/>
+		<Province code="205" label="LạngSơn" symbol="LạngSơn"/>
+		<Province code="206" label="LaoCai" symbol="LaoCai"/>
+		<Province code="207" label="PhúThọ" symbol="PhúThọ"/>
+		<Province code="208" label="QuảngNinh" symbol="QuảngNinh"/>
+		<Province code="209" label="TháiNguyên" symbol="TháiNguyên"/>
+		<Province code="210" label="TuyênQuang" symbol="TuyênQuang"/>
+		<Province code="211" label="YênBái" symbol="YênBái"/>
+	</Region>
+	<Region code="300" label="ĐồngbằngsôngHồng" symbol="ĐồngbằngsôngHồng">
+		<Province code="301" label="BắcNinh" symbol="BắcNinh"/>
+		<Province code="302" label="HàNam" symbol="HàNam"/>
+		<Province code="303" label="HảiDương" symbol="HảiDương"/>
+		<Province code="304" label="HưngYên" symbol="HưngYên"/>
+		<Province code="305" label="NamĐịnh" symbol="NamĐịnh"/>
+		<Province code="306" label="NinhBình" symbol="NinhBình"/>
+		<Province code="307" label="TháiBình" symbol="TháiBình"/>
+		<Province code="308" label="VĩnhPhúc" symbol="VĩnhPhúc"/>
+		<Province code="309" label="HàNội" symbol="HàNội"/>
+		<Province code="310" label="HảiPhòng" symbol="HảiPhòng"/>
+	</Region>
+	<Region code="400" label="BắcTrungBộ" symbol="BắcTrungBộ">
+		<Province code="401" label="ThanhHóa" symbol="ThanhHóa"/>
+		<Province code="402" label="NghệAn" symbol="NghệAn"/>
+		<Province code="403" label="HàTĩnh" symbol="HàTĩnh"/>
+		<Province code="404" label="QuảngBình" symbol="QuảngBình"/>
+		<Province code="405" label="QuảngTrị" symbol="QuảngTrị"/>
+		<Province code="406" label="ThừaThiênHuế" symbol="ThừaThiênHuế"/>
+	</Region>
+	<Region code="500" label="NamTrungBộ" symbol="NamTrungBộ">
+		<Province code="501" label="ĐàNẵng" symbol="ĐàNẵng"/>
+		<Province code="502" label="QuảngNam" symbol="QuảngNam"/>
+		<Province code="503" label="QuảngNgãi" symbol="QuảngNgãi"/>
+		<Province code="504" label="BìnhĐịnh" symbol="BìnhĐịnh"/>
+		<Province code="505" label="PhúYên" symbol="PhúYên"/>
+		<Province code="506" label="KhánhHòa" symbol="KhánhHòa"/>
+	</Region>
+	<Region code="600" label="TâyNguyên" symbol="TâyNguyên">
+		<Province code="601" label="ĐắkLắk" symbol="ĐắkLắk"/>
+		<Province code="602" label="DakNông" symbol="DakNông"/>
+		<Province code="603" label="GiaLai" symbol="GiaLai"/>
+		<Province code="604" label="KonTum" symbol="KonTum"/>
+		<Province code="605" label="LâmĐồng" symbol="LâmĐồng"/>
+	</Region>
+	<Region code="700" label="ĐôngNamBộ" symbol="ĐôngNamBộ">
+		<Province code="701" label="HồChíMinh" symbol="HồChíMinh"/>
+		<Province code="702" label="BàRịaVũngTàu" symbol="BàRịaVũngTàu"/>
+		<Province code="703" label="BìnhDương" symbol="BìnhDương"/>
+		<Province code="704" label="BìnhPhước" symbol="BìnhPhước"/>
+		<Province code="705" label="BìnhThuận" symbol="BìnhThuận"/>
+		<Province code="706" label="ĐồngNai" symbol="ĐồngNai"/>
+		<Province code="707" label="TỉnhNinhThuận" symbol="NinhThuận"/>
+		<Province code="708" label="TỉnhTâyNinh" symbol="TâyNinh"/>
+	</Region>
+	<Region code="800" label="ĐồngbằngsôngCửuLong" symbol="ĐồngbằngsôngCửuLong">
+		<Province code="801" label="CanTho" symbol="CanTho"/>
+		<Province code="802" label="AnGiang" symbol="AnGiang"/>
+		<Province code="803" label="BạcLiêu" symbol="BạcLiêu"/>
+		<Province code="804" label="BếnTre" symbol="BếnTre"/>
+		<Province code="805" label="CàMau" symbol="CàMau"/>
+		<Province code="806" label="ĐồngTháp" symbol="ĐồngTháp"/>
+		<Province code="807" label="HậuGiang" symbol="HậuGiang"/>
+		<Province code="808" label="KiênGiang" symbol="KiênGiang"/>
+		<Province code="809" label="LongAn" symbol="LongAn"/>
+		<Province code="810" label="SócTrăng" symbol="SócTrăng"/>
+		<Province code="811" label="TiềnGiang" symbol="TiềnGiang"/>
+		<Province code="812" label="TràVinh" symbol="TràVinh"/>
+		<Province code="813" label="VĩnhLong" symbol="VĩnhLong"/>
+	</Region>
+</Map>

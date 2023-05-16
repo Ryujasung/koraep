@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF4759401Mapper">
+
+	<select id="epmf4759401_select" resultType="hashmap">
+		  
+		<if test='excelYn == null or excelYn == "" '>
+			SELECT 
+						  PNO,
+			   			  DLIVY_CRCT_DOC_NO, 
+				          MFC_BIZRNM, 
+				          MFC_BRCH_NM,
+				          CUST_BIZRNM, 
+				          DLIVY_DT, 
+				          CTNR_CD,
+				          CTNR_NM,
+				          CPCT_NM,
+				          PRPS_NM,
+				          DLIVY_CRCT_STAT_CD,
+				          DLIVY_CRCT_STAT_NM,
+				          DLIVY_QTY, 
+				          DLIVY_GTN,
+				          BIZR_TP_CD,
+				          MFC_BIZRID,
+					 	  MFC_BIZRNO,
+						  MFC_BRCH_ID,
+						  MFC_BRCH_NO,
+						  CUST_BIZRID,
+						  CUST_BIZRNO,
+						  CUST_BIZRNO_DE,
+						  EXCA_STD_CD,
+						  (SELECT CET_FYER_EXCA_YN FROM EXCA_STD_MGNT WHERE EXCA_STD_CD = A.EXCA_STD_CD) AS CET_FYER_EXCA_YN
+			 FROM (
+		</if>  
+		  
+<!-- 		   SELECT ROW_NUMBER()OVER(ORDER BY A.DLIVY_DT DESC) AS PNO, -->
+		   SELECT ROW_NUMBER()OVER(ORDER BY A.DLIVY_DT DESC, A.CUST_BIZRID, DLIVY_QTY  asc) AS PNO,
+		   			  DLIVY_CRCT_DOC_NO, 
+			          B.BIZRNM AS MFC_BIZRNM, 
+			          B.BRCH_NM AS MFC_BRCH_NM,
+			          C.BIZRNM AS CUST_BIZRNM, 
+			          A.DLIVY_DT, 
+			          D.CTNR_CD,
+			          D.CTNR_NM,
+			          EPCN_ETC_NM(D.CPCT_CD, 'E001') AS CPCT_NM,
+			          EPCN_ETC_NM(D.PRPS_CD, 'E002') AS PRPS_NM,
+			          DLIVY_CRCT_STAT_CD,
+			          EPCN_ETC_NM(DLIVY_CRCT_STAT_CD, 'C001') AS DLIVY_CRCT_STAT_NM,
+			          DLIVY_QTY, 
+			          DLIVY_GTN,
+			          B.BIZR_TP_CD,
+					  A.MFC_BIZRID,
+				 	  A.MFC_BIZRNO,
+					  A.MFC_BRCH_ID,
+					  A.MFC_BRCH_NO,
+					  A.CUST_BIZRID,
+					  A.CUST_BIZRNO,
+					  PI_DECRYPT(A.CUST_BIZRNO) as CUST_BIZRNO_DE,
+					  A.EXCA_STD_CD
+			          
+			 FROM EXCA_DLIVY_CRCT A
+			          ,EPCN_BRCH_INFO B
+			          ,EPCN_BIZR_INFO C
+			          ,EPCN_STD_CTNR_CD D
+			          ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+			  WHERE 1=1
+			      AND A.CUST_BIZRID = C.BIZRID
+			      AND A.CUST_BIZRNO = C.BIZRNO
+			      AND A.MFC_BIZRID = B.BIZRID
+			      AND A.MFC_BIZRNO = B.BIZRNO
+			      AND A.MFC_BRCH_ID = B.BRCH_ID
+			      AND A.MFC_BRCH_NO = B.BRCH_NO
+			      AND A.CTNR_CD = D.CTNR_CD
+			      AND D.LANG_SE_CD = F.LANG_SE_CD
+
+			      <if test='EXCA_STD_CD != null and EXCA_STD_CD != "" '>
+			      AND A.EXCA_STD_CD = #{EXCA_STD_CD}
+			      </if>
+			      <if test='DLIVY_CRCT_STAT_CD != null and DLIVY_CRCT_STAT_CD != "" '>
+			      AND A.DLIVY_CRCT_STAT_CD = #{DLIVY_CRCT_STAT_CD}
+			      </if>
+			      <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+			      AND A.MFC_BIZRID = #{MFC_BIZRID}
+			      AND A.MFC_BIZRNO = #{MFC_BIZRNO}
+			      </if>
+			      <if test='MFC_BRCH_ID != null and MFC_BRCH_ID != "" '>
+			      AND A.MFC_BRCH_ID = #{MFC_BRCH_ID}
+			      AND A.MFC_BRCH_NO = #{MFC_BRCH_NO}
+			      </if>
+			      <if test='CTNR_CD_SEL != null and CTNR_CD_SEL != "" '>
+			      AND A.CTNR_CD = #{CTNR_CD_SEL}
+			      </if>
+			      <if test='WHSDL_SE_CD_SEL != null and WHSDL_SE_CD_SEL != "" '>
+			      AND C.BIZR_TP_CD = #{WHSDL_SE_CD_SEL}
+			      </if>
+			      <if test='CUST_BIZRID != null and CUST_BIZRID != "" '>
+			      AND A.CUST_BIZRID = #{CUST_BIZRID}
+			      AND A.CUST_BIZRNO = #{CUST_BIZRNO}
+			      </if>
+			
+				  <if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+					 AND EXISTS (
+					 					   SELECT 'X'
+				                             FROM EPCN_BRCH_INFO S1
+				                           WHERE 1=1
+				                              AND A.MFC_BIZRID = S1.BIZRID
+				                              AND A.MFC_BIZRNO = S1.BIZRNO
+				                              AND A.MFC_BRCH_ID = S1.BRCH_ID
+				                              AND A.MFC_BRCH_NO = S1.BRCH_NO
+						                      AND EXISTS (    
+						                      					   SELECT 'X'
+										                             FROM EPCN_BRCH_INFO S2
+										                           WHERE 1=1
+										                              AND S1.BIZRID = S2.BIZRID
+										                              AND S1.BIZRNO = S2.BIZRNO
+										                              AND (
+											                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+											                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+										                                     ) 
+										                              AND S2.BRCH_ID = #{S_BRCH_ID}
+										                              AND S2.BRCH_NO = #{S_BRCH_NO}
+											          			)
+		                         		)
+				 </if>
+			
+			   ORDER BY A.DLIVY_DT DESC
+			
+		<if test='excelYn == null or excelYn == "" '>
+			) A
+			WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+		</if>	   
+			   
+	</select>
+	
+	<select id="epmf4759401_select_cnt" resultType="hashmap">
+		   SELECT COUNT(1) as CNT
+		   			  ,SUM(DLIVY_QTY) as DLIVY_QTY
+			          ,SUM(DLIVY_GTN) as DLIVY_GTN
+			 FROM EXCA_DLIVY_CRCT A
+			          ,EPCN_BRCH_INFO B
+			          ,EPCN_BIZR_INFO C
+			          ,EPCN_STD_CTNR_CD D
+			          ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+		  WHERE 1=1
+		      AND A.CUST_BIZRID = C.BIZRID
+		      AND A.CUST_BIZRNO = C.BIZRNO
+		      AND A.MFC_BIZRID = B.BIZRID
+		      AND A.MFC_BIZRNO = B.BIZRNO
+		      AND A.MFC_BRCH_ID = B.BRCH_ID
+		      AND A.MFC_BRCH_NO = B.BRCH_NO
+		      AND A.CTNR_CD = D.CTNR_CD
+		      AND D.LANG_SE_CD = F.LANG_SE_CD
+
+		      <if test='EXCA_STD_CD != null and EXCA_STD_CD != "" '>
+		      AND A.EXCA_STD_CD = #{EXCA_STD_CD}
+		      </if>
+		      <if test='DLIVY_CRCT_STAT_CD != null and DLIVY_CRCT_STAT_CD != "" '>
+		      AND A.DLIVY_CRCT_STAT_CD = #{DLIVY_CRCT_STAT_CD}
+		      </if>
+		      <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+		      AND A.MFC_BIZRID = #{MFC_BIZRID}
+		      AND A.MFC_BIZRNO = #{MFC_BIZRNO}
+		      </if>
+		      <if test='MFC_BRCH_ID != null and MFC_BRCH_ID != "" '>
+		      AND A.MFC_BRCH_ID = #{MFC_BRCH_ID}
+		      AND A.MFC_BRCH_NO = #{MFC_BRCH_NO}
+		      </if>
+		      <if test='CTNR_CD_SEL != null and CTNR_CD_SEL != "" '>
+		      AND A.CTNR_CD = #{CTNR_CD_SEL}
+		      </if>
+		      <if test='WHSDL_SE_CD_SEL != null and WHSDL_SE_CD_SEL != "" '>
+		      AND C.BIZR_TP_CD = #{WHSDL_SE_CD_SEL}
+		      </if>
+		      <if test='CUST_BIZRID != null and CUST_BIZRID != "" '>
+		      AND A.CUST_BIZRID = #{CUST_BIZRID}
+		      AND A.CUST_BIZRNO = #{CUST_BIZRNO}
+		      </if>
+		      
+		      <if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+				 AND EXISTS (
+				 					   SELECT 'X'
+			                             FROM EPCN_BRCH_INFO S1
+			                           WHERE 1=1
+			                              AND A.MFC_BIZRID = S1.BIZRID
+			                              AND A.MFC_BIZRNO = S1.BIZRNO
+			                              AND A.MFC_BRCH_ID = S1.BRCH_ID
+			                              AND A.MFC_BRCH_NO = S1.BRCH_NO
+					                      AND EXISTS (    
+					                      					   SELECT 'X'
+									                             FROM EPCN_BRCH_INFO S2
+									                           WHERE 1=1
+									                              AND S1.BIZRID = S2.BIZRID
+									                              AND S1.BIZRNO = S2.BIZRNO
+									                              AND (
+										                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+										                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+									                                     ) 
+									                              AND S2.BRCH_ID = #{S_BRCH_ID}
+									                              AND S2.BRCH_NO = #{S_BRCH_NO}
+										          			)
+	                         		)
+			 </if>
+		      
+	</select>
+
+	<select id="epmf4759431_select" parameterType="map" resultType="int">
+	
+		SELECT COUNT(1)
+		  FROM EXCA_DLIVY_CRCT
+		WHERE 1=1
+			AND MFC_BIZRID	= #{MFC_BIZRID}
+			AND MFC_BIZRNO = #{MFC_BIZRNO}
+			AND MFC_BRCH_ID = #{MFC_BRCH_ID}
+			AND MFC_BRCH_NO = #{MFC_BRCH_NO}
+			AND CUST_BRCH_ID = #{CUST_BRCH_ID}
+			AND CUST_BRCH_NO = #{CUST_BRCH_NO}
+			AND CUST_BIZRID = #{CUST_BIZRID}
+		
+		<choose>
+			<when test='CUST_SEL_CK == "Y"'>
+				AND	CUST_BIZRNO	 = #{CUST_BIZRNO}
+			</when>
+			<otherwise>
+				AND	CUST_BIZRNO	 = ECL_ENCRYPT(#{CUST_BIZRNO})
+			</otherwise>
+		</choose>
+		
+		AND	DLIVY_DT = REPLACE(#{DLIVY_DT}, '-')
+		AND	CTNR_CD = #{CTNR_CD}
+		AND	EXCA_STD_CD = #{EXCA_STD_CD}
+		
+	</select>
+	
+	<select id="epmf4759431_select2" parameterType="map" resultType="int">
+		  SELECT COUNT(1)
+  			FROM EXCA_STD_MGNT 
+  		  WHERE EXCA_STD_CD = #{EXCA_STD_CD}
+  		      AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN CRCT_PSBL_ST_DT AND CRCT_PSBL_END_DT
+  		      AND EXCA_STAT_CD = 'S'
+  		      AND REPLACE( #{DLIVY_DT}, '-') BETWEEN EXCA_ST_DT AND EXCA_END_DT
+	</select>
+	
+	<insert id="epmf4759431_insert" parameterType="map">
+		INSERT
+			INTO EXCA_DLIVY_CRCT
+				(
+					DLIVY_CRCT_DOC_NO
+					,MFC_BIZRID
+					,MFC_BIZRNO
+					,MFC_BRCH_ID
+					,MFC_BRCH_NO
+					,CUST_BIZRID
+					,CUST_BIZRNO
+					,CUST_BRCH_ID
+					,CUST_BRCH_NO
+					,DLIVY_DT
+					,CTNR_CD
+					,DLIVY_CRCT_REG_DT
+					,DLIVY_CRCT_STAT_CD
+					,DLIVY_SE
+					,DLIVY_QTY
+					,DLIVY_GTN
+					,REG_CUST_NM
+					,RMK
+					,EXCA_STD_CD
+					,STAC_DOC_NO
+					,REG_PRSN_ID
+					,REG_DTTM
+			  )
+			  VALUES
+			  (
+			 	 #{DLIVY_CRCT_DOC_NO}
+				,#{MFC_BIZRID}
+				,#{MFC_BIZRNO}
+				,#{MFC_BRCH_ID}
+				,#{MFC_BRCH_NO}
+				,#{CUST_BIZRID}
+				<choose>
+					<when test='CUST_SEL_CK == "Y"'>
+						,#{CUST_BIZRNO}
+					</when>
+					<otherwise>
+						,ECL_ENCRYPT(#{CUST_BIZRNO})
+					</otherwise>
+				</choose>
+				,#{CUST_BRCH_ID}
+				,#{CUST_BRCH_NO}
+				,REPLACE( #{DLIVY_DT}, '-')
+				,#{CTNR_CD}
+				,TO_CHAR(SYSDATE,'YYYYMMDD')
+				,'R'
+				,#{DLIVY_SE}
+				,#{DLIVY_QTY}
+				,#{DLIVY_GTN}
+				,#{CUST_NM}
+				,#{RMK}
+				,#{EXCA_STD_CD}
+				,''
+				,#{S_USER_ID}
+				,SYSDATE
+			  )
+	</insert>
+	
+	<update id="epmf4759442_update" parameterType="map">
+		UPDATE EXCA_DLIVY_CRCT
+		      SET CUST_BIZRID = #{CUST_BIZRID}
+	
+					<choose>
+						<when test='CUST_SEL_CK == "Y"'>
+							,CUST_BIZRNO = #{CUST_BIZRNO}
+						</when>
+						<otherwise>
+							,CUST_BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO})
+						</otherwise>
+					</choose>
+					
+					,CUST_BRCH_ID = #{CUST_BRCH_ID}
+					,CUST_BRCH_NO = #{CUST_BRCH_NO}
+					,DLIVY_DT = REPLACE( #{DLIVY_DT}, '-')
+					,CTNR_CD = #{CTNR_CD}
+					,DLIVY_SE = #{DLIVY_SE}
+					,DLIVY_QTY = #{DLIVY_QTY}
+					,DLIVY_GTN = #{DLIVY_GTN}
+					,RMK = #{RMK}
+					,DLIVY_CRCT_STAT_CD = 'R' /* 정정등록으로 수정 */
+					,REG_CUST_NM = #{CUST_NM}
+					,UPD_PRSN_ID = #{S_USER_ID}
+					,UPD_DTTM = SYSDATE
+		WHERE 1=1
+		    AND DLIVY_CRCT_DOC_NO = #{DLIVY_CRCT_DOC_NO}
+		    AND MFC_BIZRNO = #{MFC_BIZRNO_KEY}
+		    AND MFC_BRCH_NO = #{MFC_BRCH_NO_KEY}
+		    AND CUST_BIZRNO = #{CUST_BIZRNO_KEY}
+		    AND DLIVY_DT = #{DLIVY_DT_KEY}
+		    AND CTNR_CD = #{CTNR_CD_KEY}
+	</update>
+	
+	<delete id="epmf4759401_delete" parameterType="map">
+		DELETE 
+		   FROM EXCA_DLIVY_CRCT
+		 WHERE 1=1
+		    AND DLIVY_CRCT_DOC_NO = #{DLIVY_CRCT_DOC_NO}
+		    AND MFC_BIZRNO = #{MFC_BIZRNO}
+		    AND MFC_BRCH_NO = #{MFC_BRCH_NO}
+		    AND CUST_BIZRNO = #{CUST_BIZRNO}
+		    AND DLIVY_DT = #{DLIVY_DT}
+		    AND CTNR_CD = #{CTNR_CD}
+		    AND DLIVY_CRCT_STAT_CD IN ('R', 'T')
+	</delete>
+	
+	<update id="epmf4759401_update" parameterType="map">
+		UPDATE EXCA_DLIVY_CRCT
+		      SET DLIVY_CRCT_STAT_CD = #{DLIVY_CRCT_STAT_CD}
+		    		,UPD_PRSN_ID = #{S_USER_ID}
+					,UPD_DTTM = SYSDATE
+		 WHERE 1=1
+		     AND DLIVY_CRCT_DOC_NO = #{DLIVY_CRCT_DOC_NO}
+		     AND MFC_BIZRNO = #{MFC_BIZRNO}
+		     AND MFC_BRCH_NO = #{MFC_BRCH_NO}
+		     AND CUST_BIZRNO = #{CUST_BIZRNO}
+		     AND DLIVY_DT = #{DLIVY_DT}
+		     AND CTNR_CD = #{CTNR_CD}
+		     
+		     <choose>
+		     	<when test='DLIVY_CRCT_STAT_CD == "C" '>
+		     		AND DLIVY_CRCT_STAT_CD = 'R'
+		     	</when>
+		     	<when test='DLIVY_CRCT_STAT_CD == "R" '>
+		     		AND DLIVY_CRCT_STAT_CD = 'C'
+		     	</when>
+		     	<when test='DLIVY_CRCT_STAT_CD == "T" '>
+		     		AND DLIVY_CRCT_STAT_CD = 'R'
+		     	</when>
+		     </choose>
+		     
+	</update>
+	
+	<select id="epmf4759442_select" resultType="hashmap">
+		 SELECT A.*
+		 			,EPCN_BIZR_NM(A.MFC_BIZRID, A.MFC_BIZRNO) AS MFC_BIZRNM
+		 			,PI_DECRYPT(A.CUST_BIZRNO) as CUST_BIZRNO_DE
+		   FROM EXCA_DLIVY_CRCT A
+		 WHERE 1=1
+		    AND DLIVY_CRCT_DOC_NO = #{DLIVY_CRCT_DOC_NO}
+		    AND MFC_BIZRNO = #{MFC_BIZRNO}
+		    AND MFC_BRCH_NO = #{MFC_BRCH_NO}
+		    AND CUST_BIZRNO = #{CUST_BIZRNO}
+		    AND DLIVY_DT = #{DLIVY_DT}
+		    AND CTNR_CD = #{CTNR_CD}
+	</select>
+	
+</mapper>

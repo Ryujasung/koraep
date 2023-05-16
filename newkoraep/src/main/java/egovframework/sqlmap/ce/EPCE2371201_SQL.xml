@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE2371201Mapper">
+
+	<select id="epce2371201_select" resultType="hashmap">
+	 	 SELECT A.ETC_CD, A.ETC_CD_NM
+		   FROM EPCN_ETC_CD A
+		        	,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') B
+	    WHERE 1=1
+		    AND A.LANG_SE_CD = B.LANG_SE_CD
+		    AND A.GRP_CD = 'D021'
+		    AND A.ETC_CD IN ('WC', 'CC')
+		 ORDER BY A.SEL_ORD
+	</select>
+	
+	<select id="epce2371201_select2" resultType="hashmap">
+			SELECT A.WRHS_DOC_NO, A.RTN_DOC_NO
+						,A.MFC_BIZRID, A.MFC_BIZRNO, A.MFC_BRCH_ID, A.MFC_BRCH_NO
+						,A.WHSDL_BIZRID, ecl_decrypt(A.WHSDL_BIZRNO) as WHSDL_BIZRNO
+				        ,EPCN_BIZR_NM(A.MFC_BIZRID, A.MFC_BIZRNO) AS MFC_BIZRNM
+				        ,EPCN_BRCH_NM(A.MFC_BRCH_ID, A.MFC_BRCH_NO, A.MFC_BIZRID, A.MFC_BIZRNO) AS MFC_BRCH_NM
+				        ,EPCN_BIZR_NM(A.WHSDL_BIZRID, A.WHSDL_BIZRNO) AS WHSDL_BIZRNM
+				        ,A.WRHS_CFM_DT
+				        ,<![CDATA['<a href="javascript:fn_page()" class="gridLink">' || TO_CHAR(TO_DATE(A.WRHS_CFM_DT, 'YYYYMMDD'), 'YYYY-MM-DD') || '</a>' as WRHS_CFM_DT_PAGE]]>
+				        ,A.FH_CFM_QTY_TOT + A.FB_CFM_QTY_TOT + A.DRCT_CFM_QTY_TOT AS CFM_QTY_TOT
+				        ,A.CFM_WHSL_FEE_TOT
+				        ,A.CFM_RTL_FEE_TOT
+				        ,A.CFM_WHSL_FEE_STAX_TOT
+				        ,A.CFM_WHSL_FEE_TOT + A.CFM_RTL_FEE_TOT + A.CFM_WHSL_FEE_STAX_TOT AS CFM_FEE_TOT
+				        ,EPCN_ETC_NM(A.RTN_STAT_CD, 'D021') AS RTN_STAT_NM
+				        ,A.CFM_GTN_TOT
+				        ,SUBSTR(A.WRHS_CFM_DT, 1, 4) as STD_YEAR
+		    FROM EPCM_CFM_MST A
+		  WHERE 1=1
+		      AND A.RTN_STAT_CD IN ('CC', 'WC') /* 센터확인, 입고확인 */
+		      AND A.WRHS_CFM_DT BETWEEN replace(#{START_DT_SEL}, '-', '') AND replace(#{END_DT_SEL}, '-', '') 
+		    <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+              AND A.MFC_BIZRID = #{MFC_BIZRID}
+			  AND A.MFC_BIZRNO = #{MFC_BIZRNO}
+			</if>
+			<if test='MFC_BRCH_ID != null and MFC_BRCH_ID != "" '>
+              AND A.MFC_BRCH_ID = #{MFC_BRCH_ID}
+              AND A.MFC_BRCH_NO = #{MFC_BRCH_NO}
+		    </if>
+		    <if test='RTN_STAT_CD_SEL != null and RTN_STAT_CD_SEL != "" '>
+		      AND A.RTN_STAT_CD = #{RTN_STAT_CD_SEL}
+			</if>
+		 ORDER BY A.WRHS_CFM_DT
+	</select>
+	
+	<select id="epce2371201_select3" resultType="hashmap">
+			SELECT  to_char(A.FH_CFM_QTY_TOT + A.FB_CFM_QTY_TOT + A.DRCT_CFM_QTY_TOT) AS CFM_QTY_TOT
+				        ,to_char(A.CFM_WHSL_FEE_TOT + A.CFM_RTL_FEE_TOT + A.CFM_WHSL_FEE_STAX_TOT) AS CFM_FEE_TOT
+				        ,to_char(A.CFM_GTN_TOT) as CFM_GTN_TOT
+		    FROM EPCM_CFM_MST A
+		  WHERE 1=1
+		      AND A.RTN_STAT_CD IN ('CC', 'WC') /* 센터확인, 입고확인 */
+			  AND A.WRHS_DOC_NO = #{WRHS_DOC_NO}
+
+	</select>
+
+	<update id="epce2371201_insert" parameterType="map" >
+		
+		 INSERT INTO EPGM_BILL_LST
+		 (
+			  BILL_DOC_NO, 
+			  BILL_ISSU_DT, 
+			  BILL_SE_CD, 
+			  STD_YEAR, 
+			  ISSU_STAT_CD, 
+			  MNUL_ISSU_YN, 
+			  MFC_BIZRID, 
+			  MFC_BIZRNO, 
+			  VACCT_BANK_CD, 
+			  VACCT_NO, 
+			  REG_PRSN_ID, 
+			  REG_DTTM
+		 )
+		 (
+			  SELECT #{BILL_DOC_NO}
+			  			 ,TO_CHAR(SYSDATE, 'YYYYMMDD')
+				         ,'F' /* (그룹코드: D031) : G: 보증금, F: 취급수수료, M: 보증금(조정) */
+				         ,#{STD_YEAR}
+				         ,'I' /* (그룹코드: D032) : I: 발급, A: 수납확인 */
+				         ,'N' /* Y:수기, N: 시스템 */
+				         ,BIZRID
+				         ,BIZRNO
+				         ,MFC_VACCT_BANK_CD
+				         ,MFC_FEE_VACCT_NO
+						 ,#{S_USER_ID}
+						 ,SYSDATE
+			    FROM EPCN_BIZR_INFO
+			  WHERE 1=1
+			      AND BIZRID = #{MFC_BIZRID}
+			      AND BIZRNO = #{MFC_BIZRNO}
+		 )
+		
+	</update>
+	
+	<update id="epce2371201_insert2" parameterType="map" >
+		INSERT INTO EPGM_BILL_DTL
+		 (
+		    BILL_DOC_NO, 
+		    DTL_SN, 
+		    DTL_RGST_DT, 
+		    MAPP_SE_CD, 
+		    MAPP_WRHS_DOC_NO, 
+		    WRHS_QTY, 
+		    WRHS_GTN, 
+		    WRHS_WHSL_FEE, 
+		    WRHS_RTL_FEE, 
+		    WRHS_WHSL_FEE_STAX, 
+		    WRHS_FEE_TOT, 
+		    WHSDL_BRCH_ID, 
+		    WHSDL_BRCH_NO, 
+		    WHSDL_BIZRID, 
+		    WHSDL_BIZRNO, 
+		    REG_PRSN_ID, 
+		    REG_DTTM
+		 )
+		 (
+		   SELECT #{BILL_DOC_NO}
+			          ,(SELECT NVL(MAX(DTL_SN), 0) FROM EPGM_BILL_DTL WHERE BILL_DOC_NO = #{BILL_DOC_NO}) + ROWNUM
+			          ,TO_CHAR(SYSDATE, 'YYYYMMDD')
+			          ,'2' /* (그룹코드: D033) : 1: 출고, 2: 입고, 3: 직접회수 */
+			          ,WRHS_DOC_NO
+			          ,FH_CFM_QTY_TOT + FB_CFM_QTY_TOT + DRCT_CFM_QTY_TOT
+			          ,CFM_GTN_TOT
+			          ,CFM_WHSL_FEE_TOT
+			          ,CFM_RTL_FEE_TOT
+			          ,CFM_WHSL_FEE_STAX_TOT
+			          ,CFM_WHSL_FEE_TOT + CFM_RTL_FEE_TOT + CFM_WHSL_FEE_STAX_TOT AS CFM_FEE_TOT
+			          ,WHSDL_BRCH_ID
+			          ,WHSDL_BRCH_NO
+			          ,WHSDL_BIZRID
+			          ,WHSDL_BIZRNO
+			          ,#{S_USER_ID}
+			          ,SYSDATE
+		     FROM EPCM_CFM_MST
+		   WHERE 1=1
+		       AND WRHS_DOC_NO = #{WRHS_DOC_NO}
+		       AND RTN_STAT_CD IN ('CC','WC')
+		       AND #{STD_YEAR} = SUBSTR(WRHS_CFM_DT, 1, 4)
+		 )
+	</update>
+
+	<!-- 잔액 인서트 -->
+	<update id="epce2371201_insert3" parameterType="map" >
+		INSERT INTO EPGM_MFC_GTN_BAL
+			 (
+				  MFC_BIZRID
+				  ,MFC_BIZRNO
+				  ,STD_DT
+				  ,STD_YEAR
+				  ,BAL_SN
+				  ,MAPP_DOC_NO
+				  ,PLAN_GTN_BAL
+				  ,ADIT_GTN_BAL
+				  ,DRCT_PAY_GTN_BAL
+				  ,PRCS_ID
+				  ,PRCS_DTTM
+				  ,DEL_YN
+			 )
+
+			 (
+			 	SELECT
+						  #{MFC_BIZRID}
+						  ,#{MFC_BIZRNO}
+						  ,TO_CHAR(SYSDATE, 'YYYYMMDD')
+						  ,#{STD_YEAR}
+						  ,TEMP_SEQ.NEXTVAL
+						  ,BILL_DOC_NO
+						  ,ADD_BILL_REFN_GTN * -1
+						  ,0
+						  ,0
+						  ,#{S_USER_ID}
+						  ,SYSDATE
+						  ,'N'
+				 FROM EPGM_BILL_LST
+			   WHERE 1=1
+			       AND BILL_DOC_NO = #{BILL_DOC_NO}
+			 )
+	</update>
+
+	<update id="epce2371201_update" parameterType="map" >
+		DECLARE
+		    BEGIN
+				UPDATE EPCM_CFM_MST 
+					  SET RTN_STAT_CD = #{RTN_STAT_CD}
+					  		,BF_RTN_STAT_CD = RTN_STAT_CD
+					  		,MAPP_BILL_DOC_NO = #{BILL_DOC_NO}
+					  		,UPD_PRSN_ID = #{S_USER_ID}
+					  		,UPD_DTTM = SYSDATE
+		  		 WHERE WRHS_DOC_NO = #{WRHS_DOC_NO};
+		  		 
+		  		 UPDATE EPCM_RTN_MST 
+					  SET RTN_STAT_CD = #{RTN_STAT_CD}
+					  		,BF_RTN_STAT_CD = RTN_STAT_CD
+					  		,UPD_PRSN_ID = #{S_USER_ID}
+					  		,UPD_DTTM = SYSDATE
+		  		 WHERE RTN_DOC_NO = #{RTN_DOC_NO};
+		END; 		 
+	</update>
+	
+	<update id="epce2371201_update2" parameterType="map" >
+		UPDATE EPGM_BILL_LST 
+		    SET (
+			          NOTY_AMT
+			          ,WHSL_FEE_TOT
+			          ,WHSL_FEE_STAX_TOT
+			          ,RTL_FEE_TOT
+			          ,ADD_BILL_REFN_GTN
+			        ) = (
+			              SELECT SUM(WRHS_FEE_TOT)
+				                     ,SUM(WRHS_WHSL_FEE)
+				                     ,SUM(WRHS_WHSL_FEE_STAX)
+				                     ,SUM(WRHS_RTL_FEE)
+				                     ,SUM(WRHS_GTN)
+			                FROM EPGM_BILL_DTL
+			              WHERE BILL_DOC_NO = #{BILL_DOC_NO}
+			            )
+		  WHERE BILL_DOC_NO = #{BILL_DOC_NO}
+	</update>
+	
+</mapper>

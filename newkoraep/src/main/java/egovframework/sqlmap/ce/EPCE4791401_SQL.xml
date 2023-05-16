@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE4791401Mapper">
+
+	<select id="epce4791401_select" resultType="hashmap">
+		 SELECT EXCA_STD_CD, EXCA_STD_NM
+		 			,<![CDATA['<a href="javascript:fn_pop()" class="gridLink">' || EXCA_STD_NM || '</a>' as EXCA_STD_NM_LINK ]]>
+			        ,TO_CHAR(TO_DATE(EXCA_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(EXCA_END_DT,'YYYYMMDD'),'YYYY-MM-DD') AS EXCA_DT
+			        ,TO_CHAR(TO_DATE(CRCT_PSBL_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(CRCT_PSBL_END_DT,'YYYYMMDD'),'YYYY-MM-DD') AS CRCT_PSBL_DT
+			        ,EXCA_STAT_CD
+			        ,EPCN_ETC_NM(EXCA_STAT_CD, 'C011') as EXCA_STAT_NM
+			        ,DECODE(CET_FYER_EXCA_YN,'Y','센터정산') AS CET_FYER_EXCA_YN
+		   FROM EXCA_STD_MGNT 
+		  WHERE 1=1
+		  	<if test='STD_YEAR_SEL != null and STD_YEAR_SEL != "" '>
+		  		AND EXCA_SE_YEAR = #{STD_YEAR_SEL}
+		  	</if>
+		    <if test='STAT_CD_SEL != null and STAT_CD_SEL != "" '>
+		    	AND EXCA_STAT_CD = #{STAT_CD_SEL}
+		    </if>
+		 ORDER BY EXCA_STD_CD DESC
+	</select>
+	
+	<select id="epce4791431_select" resultType="hashmap">
+		   SELECT BIZRID
+		   			  ,BIZRNO
+			          ,BIZRNM
+		     FROM EPCN_BIZR_INFO
+		   WHERE 1=1
+		       AND BIZR_TP_CD IN ('M1', 'M2')
+		   ORDER BY SEL_ORD, BIZRNM
+	</select>
+	
+	<select id="epce4791431_select2" resultType="hashmap">
+		   SELECT BIZRID
+		   			  ,BIZRNO
+			          ,BIZRNM
+			          ,(SELECT 'Y' 
+			              FROM EXCA_TRGT_INFO 
+			            WHERE 1=1
+			                AND EXCA_STD_CD = #{EXCA_STD_CD}
+			                AND MFC_BIZRID = A.BIZRID
+			                AND MFC_BIZRNO = A.BIZRNO
+			                AND ROWNUM = 1
+			            ) as TRGT_YN
+		     FROM EPCN_BIZR_INFO A
+		   WHERE 1=1
+		       AND BIZR_TP_CD IN ('M1', 'M2')
+		   ORDER BY SEL_ORD, BIZRNM
+	</select>
+	
+	<select id="epce4791464_select" resultType="hashmap">
+		    SELECT 
+		    			EXCA_STD_CD
+					    ,EXCA_ST_DT
+					    ,EXCA_END_DT
+					    ,CRCT_PSBL_ST_DT
+					    ,CRCT_PSBL_END_DT
+					    ,EXCA_SE_CD
+					    ,EXCA_SE_YEAR
+					    ,EXCA_SE_QTRMT
+					    ,CET_FYER_EXCA_YN
+                        ,CRCT_CFM_END_DT AS CRCT_CFM_END_DT_ORI 
+					    ,EXCA_TRGT_SE
+		    			,EXCA_STD_NM
+                        ,TO_CHAR(TO_DATE(CRCT_CFM_END_DT,'YYYYMMDD'),'YYYY-MM-DD') AS CRCT_CFM_END_DT
+				        ,TO_CHAR(TO_DATE(EXCA_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(EXCA_END_DT,'YYYYMMDD'),'YYYY-MM-DD') AS EXCA_DT
+				        ,TO_CHAR(TO_DATE(CRCT_PSBL_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(CRCT_PSBL_END_DT,'YYYYMMDD'),'YYYY-MM-DD') AS CRCT_PSBL_DT
+				        ,EXCA_STAT_CD
+				        ,EPCN_ETC_NM(EXCA_STAT_CD, 'C011') as EXCA_STAT_NM
+				        ,DECODE(CET_FYER_EXCA_YN,'Y','센터정산') AS CET_FYER_EXCA
+				        ,(SELECT LISTAGG(C.BIZRNM, ', ') WITHIN GROUP(ORDER BY C.SEL_ORD, C.BIZRNM)
+				            FROM EXCA_TRGT_INFO B
+				                 ,EPCN_BIZR_INFO C
+				           WHERE A.EXCA_STD_CD = B.EXCA_STD_CD
+				             AND B.MFC_BIZRID = C.BIZRID
+				             AND B.MFC_BIZRNO = C.BIZRNO
+				          ) AS MFC_LIST
+				        ,(SELECT COUNT(1) FROM EXCA_STD_MGNT WHERE EXCA_STAT_CD = 'S') as STAT_CNT
+			   FROM EXCA_STD_MGNT A
+			 WHERE 1=1
+			    AND EXCA_STD_CD = #{EXCA_STD_CD}
+			 ORDER BY EXCA_STD_CD DESC
+	</select>
+
+	<!-- 등록 -->
+	<insert id="epce4791431_insert"  parameterType="hashmap">
+		INSERT INTO EXCA_STD_MGNT
+		 (
+		    EXCA_STD_CD, 
+		    REG_SN, 
+		    EXCA_ST_DT, 
+		    EXCA_END_DT, 
+		    CRCT_PSBL_ST_DT, 
+		    CRCT_PSBL_END_DT, 
+		    EXCA_STAT_CD, 
+		    EXCA_STD_NM, 
+		    EXCA_SE_CD, 
+		    EXCA_SE_YEAR, 
+		    EXCA_SE_QTRMT, 
+		    CET_FYER_EXCA_YN,
+            CRCT_CFM_END_DT, 
+		    REG_PRSN_ID, 
+		    REG_DTTM,
+		    EXCA_TRGT_SE
+		 )
+		 VALUES
+		 (
+		    #{EXCA_STD_CD}, 
+		    #{REG_SN}, 
+		    #{EXCA_ST_DT}, 
+		    #{EXCA_END_DT}, 
+		    #{CRCT_PSBL_ST_DT}, 
+		    #{CRCT_PSBL_END_DT}, 
+		    'L', 
+		    #{EXCA_STD_NM}, 
+		    #{EXCA_SE_CD}, 
+		    #{EXCA_SE_YEAR}, 
+		    #{EXCA_SE_QTRMT}, 
+		    #{CET_FYER_EXCA_YN},
+            #{CRCT_CFM_END_DT},
+		    #{S_USER_ID}, 
+		    SYSDATE,
+		    #{TRGT_YN}
+		 )
+	</insert>
+
+	<insert id="epce4791431_insert2"  parameterType="hashmap">
+		 INSERT INTO EXCA_TRGT_INFO
+		 (
+		    EXCA_STD_CD, 
+		    DTL_SN, 
+		    MFC_BIZRID, 
+		    MFC_BIZRNO, 
+		    REG_PRSN_ID, 
+		    REG_DTTM
+		 )
+		 VALUES
+		 (
+		    #{EXCA_STD_CD}, 
+		    (SELECT NVL(MAX(DTL_SN),0)+1 FROM EXCA_TRGT_INFO WHERE EXCA_STD_CD = #{EXCA_STD_CD}), 
+		    #{BIZRID}, 
+		    #{BIZRNO}, 
+		    #{S_USER_ID}, 
+		    SYSDATE
+		 )
+	</insert>
+	
+	<delete id="epce4791442_delete"  parameterType="hashmap">
+		DELETE FROM EXCA_TRGT_INFO WHERE EXCA_STD_CD = #{EXCA_STD_CD}
+	</delete>
+	
+	<delete id="epce4791442_delete2"  parameterType="hashmap">
+		DELETE FROM EXCA_STD_MGNT WHERE EXCA_STD_CD = #{EXCA_STD_CD}
+	</delete>
+	
+	<!-- 수정 -->
+	<update id="epce4791442_update"  parameterType="hashmap">
+	
+		UPDATE EXCA_STD_MGNT 
+		     SET EXCA_ST_DT = #{EXCA_ST_DT}
+				    ,EXCA_END_DT = #{EXCA_END_DT}
+				    ,CRCT_PSBL_ST_DT = #{CRCT_PSBL_ST_DT}
+				    ,CRCT_PSBL_END_DT = #{CRCT_PSBL_END_DT}
+				    ,EXCA_STD_NM = #{EXCA_STD_NM}
+				    ,EXCA_SE_CD = #{EXCA_SE_CD}
+				    ,EXCA_SE_YEAR = #{EXCA_SE_YEAR}
+				    ,EXCA_SE_QTRMT = #{EXCA_SE_QTRMT}
+				    ,CET_FYER_EXCA_YN = #{CET_FYER_EXCA_YN}
+                    ,CRCT_CFM_END_DT = #{CRCT_CFM_END_DT}
+				    ,EXCA_TRGT_SE = #{TRGT_YN}
+				    ,UPD_PRSN_ID = #{S_USER_ID}
+				    ,UPD_DTTM = SYSDATE
+	    WHERE 1=1
+	        AND EXCA_STD_CD = #{EXCA_STD_CD}
+
+	</update>
+
+	<update id="epce4791464_update"  parameterType="hashmap">
+	
+		 UPDATE EXCA_STD_MGNT 
+		       SET EXCA_STAT_CD = #{EXCA_STAT_CD}
+  		  WHERE 1=1
+  		      AND EXCA_STD_CD = #{EXCA_STD_CD}
+  		    <if test='EXCA_STAT_CD == "S" '>
+  		      AND EXCA_STAT_CD = 'L'
+  		    </if>
+  		    <if test='EXCA_STAT_CD == "E" '>
+  		      AND EXCA_STAT_CD = 'S'
+  		    </if>
+	
+	</update>
+	
+</mapper>

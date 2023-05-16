@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF6123901Mapper">
+
+	<select id="epmf6123901_select" parameterType="map" resultType="hashmap">
+		   SELECT NVL(A.MFC_BIZRID, E.MFC_BIZRID) AS MFC_BIZRID
+			          ,PI_DECRYPT(NVL(A.MFC_BIZRNO, E.MFC_BIZRNO)) AS MFC_BIZRNO
+			          ,EPCN_BIZR_NM(NVL(A.MFC_BIZRID, E.MFC_BIZRID)
+			          ,NVL(A.MFC_BIZRNO, E.MFC_BIZRNO)) AS MFC_BIZRNM
+			          ,NVL(A.D_HOME,0) + NVL(E.D_HOME,0) AS D_HOME
+			          ,NVL(A.D_SHOP,0) + NVL(E.D_SHOP,0) AS D_SHOP 
+			          ,NVL(A.D_TOTAL,0) + NVL(E.D_TOTAL,0) AS D_TOTAL 
+			          ,NVL(R_HOME, 0) AS R_HOME
+			          ,NVL(R_DRCT, 0) AS R_DRCT
+			          ,NVL(R_SHOP, 0) AS R_SHOP 
+			          ,NVL(R_TOTAL, 0) AS R_TOTAL 
+			          ,DECODE( NVL(A.D_TOTAL,0) + NVL(E.D_TOTAL, 0), 0, 0, ROUND(( NVL(R_TOTAL, 0) / (NVL(A.D_TOTAL,0) + NVL(E.D_TOTAL,0))*100 ), 1) ) AS RATE 
+	     	FROM
+			         (
+			           SELECT A.MFC_BIZRID, A.MFC_BIZRNO
+			                  ,NVL(SUM(DECODE(C.PRPS_CD, '1', B.DLIVY_QTY)), 0) AS D_HOME
+			                  ,NVL(SUM(DECODE(C.PRPS_CD, '0', B.DLIVY_QTY)), 0) AS D_SHOP
+			                  ,NVL(SUM(DECODE(C.PRPS_CD, '1', B.DLIVY_QTY, '0', B.DLIVY_QTY)), 0) AS D_TOTAL
+			             FROM EPDM_DLIVY_MST A
+			                  ,EPDM_DLIVY_INFO B
+			                  ,EPCN_STD_CTNR_CD C
+			                  ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') D
+			            WHERE 1=1
+			              AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+			              AND B.CTNR_CD = C.CTNR_CD
+			              AND C.LANG_SE_CD = D.LANG_SE_CD
+			              AND B.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			              
+			              AND A.MFC_BIZRID = #{BIZRID}
+				          AND A.MFC_BIZRNO = #{BIZRNO}
+			              
+			              <if test="BRCH_ID !='' and BRCH_ID !=null">
+			              AND EXISTS (
+				                           SELECT 'X'
+				                             FROM EPCN_BRCH_INFO G
+				                           WHERE 1=1
+				                               AND A.MFC_BIZRID = G.BIZRID
+				                               AND A.MFC_BIZRNO = G.BIZRNO
+		                                       AND A.MFC_BRCH_ID = G.BRCH_ID
+				                               AND A.MFC_BRCH_NO = G.BRCH_NO 
+			                                   AND EXISTS (
+					                                              SELECT 'X'
+					                                                FROM EPCN_BRCH_INFO G2
+					                                              WHERE 1=1
+					                                                  AND G.BIZRID = G2.BIZRID
+					                                                  AND G.BIZRNO = G2.BIZRNO
+					                                                  AND (
+						                                                        (G.BRCH_ID = G2.BRCH_ID AND G.BRCH_NO = G2.BRCH_NO)
+						                                                      OR G.GRP_BRCH_NO = DECODE(G2.GRP_YN, 'Y', G2.BRCH_NO, '')                            
+					                                                         ) 
+					                                                  AND G2.BRCH_ID = #{BRCH_ID} 
+					                                                  AND G2.BRCH_NO = #{BRCH_NO}
+						                                          )                 
+		                         		)
+		                 </if>       		
+			              
+			           GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO
+			         ) A
+			    FULL OUTER JOIN      
+			      (  
+			           SELECT A.MFC_BIZRID, A.MFC_BIZRNO
+			                  ,NVL(SUM(DECODE(C.PRPS_CD, '2', B.CFM_QTY)), 0) AS R_DRCT
+			                  ,NVL(SUM(DECODE(C.PRPS_CD, '1', B.CFM_QTY)), 0) AS R_HOME
+			                  ,NVL(SUM(DECODE(C.PRPS_CD, '0', B.CFM_QTY)), 0) AS R_SHOP
+			                  ,NVL(SUM(B.CFM_QTY), 0) AS R_TOTAL
+			             FROM EPCM_CFM_MST A
+			                  ,EPCM_CFM_INFO B
+			                  ,EPCN_STD_CTNR_CD C
+			                  ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') D
+			            WHERE 1=1
+			              AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+			              AND A.RTN_STAT_CD in ('WC','CC','IB','AC','PA','PP','PC')
+			              AND B.CTNR_CD = C.CTNR_CD
+			              AND C.LANG_SE_CD = D.LANG_SE_CD
+			              AND A.WRHS_CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			              
+			              AND A.MFC_BIZRID = #{BIZRID}
+				          AND A.MFC_BIZRNO = #{BIZRNO}
+			              
+			              <if test="BRCH_ID !='' and BRCH_ID !=null">
+			              AND EXISTS (
+					                           SELECT 'X'
+					                             FROM EPCN_BRCH_INFO G
+					                           WHERE 1=1
+					                               AND A.MFC_BIZRID = G.BIZRID
+					                               AND A.MFC_BIZRNO = G.BIZRNO
+			                                       AND A.MFC_BRCH_ID = G.BRCH_ID
+					                               AND A.MFC_BRCH_NO = G.BRCH_NO 
+				                                   AND EXISTS (
+						                                              SELECT 'X'
+						                                                FROM EPCN_BRCH_INFO G2
+						                                              WHERE 1=1
+						                                                  AND G.BIZRID = G2.BIZRID
+						                                                  AND G.BIZRNO = G2.BIZRNO
+						                                                  AND (
+							                                                        (G.BRCH_ID = G2.BRCH_ID AND G.BRCH_NO = G2.BRCH_NO)
+							                                                      OR G.GRP_BRCH_NO = DECODE(G2.GRP_YN, 'Y', G2.BRCH_NO, '')                            
+						                                                         ) 
+						                                                  AND G2.BRCH_ID = #{BRCH_ID} 
+						                                                  AND G2.BRCH_NO = #{BRCH_NO}
+							                                          )
+			                         		)
+			              </if>
+			           
+			           GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO
+			         ) B  
+			    ON A.MFC_BIZRID = B.MFC_BIZRID AND A.MFC_BIZRNO = B.MFC_BIZRNO
+			    
+              FULL OUTER JOIN      
+				(
+                      SELECT A.MFC_BIZRID, A.MFC_BIZRNO
+                             	,NVL(SUM(DECODE(C.PRPS_CD, '1', A.DLIVY_QTY)), 0) AS D_HOME
+			                    ,NVL(SUM(DECODE(C.PRPS_CD, '0', A.DLIVY_QTY)), 0) AS D_SHOP
+			                    ,NVL(SUM(DECODE(C.PRPS_CD, '1', A.DLIVY_QTY, '0', A.DLIVY_QTY)), 0) AS D_TOTAL
+                        FROM EXCA_DLIVY_CRCT A
+                        		,EPCN_STD_CTNR_CD C
+			                    ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') D
+                      WHERE 1=1
+                          AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I')
+                          AND A.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                          AND A.CTNR_CD = C.CTNR_CD
+                          AND C.LANG_SE_CD = D.LANG_SE_CD
+                          
+                          AND A.MFC_BIZRID = #{BIZRID}
+				          AND A.MFC_BIZRNO = #{BIZRNO}
+			              
+			              <if test="BRCH_ID !='' and BRCH_ID !=null">
+                          AND EXISTS (
+				                           SELECT 'X'
+				                             FROM EPCN_BRCH_INFO G
+				                           WHERE 1=1
+				                               AND A.MFC_BIZRID = G.BIZRID
+				                               AND A.MFC_BIZRNO = G.BIZRNO
+		                                       AND A.MFC_BRCH_ID = G.BRCH_ID
+				                               AND A.MFC_BRCH_NO = G.BRCH_NO 
+			                                   AND EXISTS (
+					                                              SELECT 'X'
+					                                                FROM EPCN_BRCH_INFO G2
+					                                              WHERE 1=1
+					                                                  AND G.BIZRID = G2.BIZRID
+					                                                  AND G.BIZRNO = G2.BIZRNO
+					                                                  AND (
+						                                                        (G.BRCH_ID = G2.BRCH_ID AND G.BRCH_NO = G2.BRCH_NO)
+						                                                      OR G.GRP_BRCH_NO = DECODE(G2.GRP_YN, 'Y', G2.BRCH_NO, '')                            
+					                                                         ) 
+					                                                  AND G2.BRCH_ID = #{BRCH_ID} 
+					                                                  AND G2.BRCH_NO = #{BRCH_NO}
+						                                          )                 
+		                         		)
+                          </if>
+                          
+                     GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO
+                   ) E
+				ON A.MFC_BIZRID = E.MFC_BIZRID AND A.MFC_BIZRNO = E.MFC_BIZRNO
+	
+	  ORDER BY EPCN_BIZR_SEL_ORD(NVL(A.MFC_BIZRID, B.MFC_BIZRID), NVL(A.MFC_BIZRNO, B.MFC_BIZRNO))
+	   
+	</select>
+
+</mapper>
+

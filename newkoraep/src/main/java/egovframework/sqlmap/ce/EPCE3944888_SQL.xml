@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3944888Mapper">
+                                                                             
+
+    <!-- 언어구분관리 목록 조회 -->
+ 	<select id="epce3944888_select" parameterType="map" resultType="hashmap">
+
+	       SELECT
+				LANG_SE_CD,
+				LANG_SE_NM,
+				DECODE( USE_YN,'Y',EPCN_LANG_NM('use_y'),EPCN_LANG_NM('use_n')) AS USE_YN,
+				USE_YN AS USE_YN_ORI,
+				SEL_ORD,
+				STD_YN AS STD_YN_ORI,
+				DECODE( STD_YN,'Y','○','') AS STD_YN
+			
+			FROM   EPCN_LANG_CD
+			   WHERE 1=1
+			ORDER BY STD_YN ASC ,SEL_ORD ASC
+ 	            
+	</select> 
+
+
+	<!-- 언어구분관리 저장시 중복체크 -->
+    <select id="epce3944888_select2" parameterType="map" resultType="int">
+	
+	    SELECT 
+	     COUNT(*)
+	    FROM 
+	      EPCN_LANG_CD
+	    WHERE 1=1
+	    AND LANG_SE_CD = TRIM(UPPER(#{LANG_SE_CD}))
+	    
+	</select> 
+	
+	<!-- 다국어관리 페이지 에서 호출시 표준여부 기준으로 검색 -->
+	<select id="epce3944888_select3" parameterType="map" resultType="hashmap">
+	
+			SELECT
+				LANG_SE_CD,
+				LANG_SE_NM,
+				USE_YN,
+				SEL_ORD,
+				STD_YN,
+				REG_PRSN_ID,
+				REG_DTTM
+			FROM
+			    EPCN_LANG_CD
+ 	            ORDER BY STD_YN DESC ,SEL_ORD ASC
+ 	         
+	</select>
+	
+	
+    <!-- 언어구분관리 저장  -->
+	<insert id="epce3944888_insert" parameterType="map">
+		INSERT 
+			INTO EPCN_LANG_CD
+			   (
+				 LANG_SE_CD,
+				 LANG_SE_NM, 
+				 USE_YN, 
+				 SEL_ORD, 
+				 STD_YN, 
+				 REG_PRSN_ID, 
+				 REG_DTTM
+			  )
+			 VALUES
+				 (
+				 TRIM(UPPER(#{LANG_SE_CD})),
+				 #{LANG_SE_NM},
+			 	 #{USE_YN},
+				 #{SEL_ORD},
+				 #{STD_YN},
+				 #{RGST_PRSN_ID},
+				    SYSDATE 
+				 )
+	</insert>
+    <!-- 언어구분관리 표준여부 변경 -->
+	<update id="epce3944888_update" parameterType="map">
+	
+	  UPDATE  
+	     EPCN_LANG_CD 
+	  SET 
+	    STD_YN ='N'
+	   WHERE   LANG_SE_CD = UPPER(#{LANG_SE_CD_STD})
+	   AND      STD_YN ='Y'
+	  	
+	</update>
+	
+    <!-- 언어구분관리 수정 -->
+	<update id="epce3944888_update2" parameterType="map">
+
+		UPDATE
+	  	   EPCN_LANG_CD
+		SET
+			LANG_SE_NM  = #{LANG_SE_NM},
+			USE_YN          = #{USE_YN},
+			SEL_ORD        = #{SEL_ORD},
+			STD_YN          = #{STD_YN},
+			UPD_PRSN_ID  = #{UPD_PRSN_ID},
+			UPD_DTTM     =   SYSDATE 
+		 WHERE 1=1
+		 AND LANG_SE_CD   = UPPER(#{LANG_SE_CD})
+
+	</update>
+	
+	    <!-- 언어구분관리 표시순서여부 변경 -->
+	<update id="epce3944888_update3" parameterType="map">
+
+		UPDATE
+	  	   EPCN_LANG_CD
+		SET
+			SEL_ORD        = #{SEL_ORD_CG},
+			UPD_PRSN_ID  = #{UPD_PRSN_ID},
+			UPD_DTTM     =   SYSDATE 
+		 WHERE 1=1
+		 AND LANG_SE_CD   = UPPER(#{LANG_SE_CD_CNT})
+
+	</update>
+	
+	
+	
+	
+	
+	</mapper>
+	

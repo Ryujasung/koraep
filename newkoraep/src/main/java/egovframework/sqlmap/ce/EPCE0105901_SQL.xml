@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE0105901Mapper">
+  
+	<!-- 빈용기 기준금액관리 조회  -->
+	<select id="epce0105901_select" parameterType="map" resultType="hashmap">
+
+				<if test='excelYn == null or excelYn == "" '>
+					SELECT 
+									* 
+					FROM				
+						(
+				</if>
+							SELECT
+											 ROW_NUMBER()OVER(ORDER BY  A.CTNR_CD) AS PNO
+											 ,A.CTNR_CD
+											,A.CTNR_NM
+											,A.LANG_SE_CD
+											,E.ETC_CD_NM
+											,NVL(D.STD_DPS,0) AS STD_DPS
+											,CASE
+												WHEN D.APLC_ST_DT IS NOT NULL
+												AND D.APLC_END_DT IS NOT NULL
+												THEN TO_CHAR(TO_DATE(D.APLC_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(D.APLC_END_DT,'YYYYMMDD'),'YYYY-MM-DD') 
+												ELSE ''
+												END AS STD_DPS_APLC_DT
+											,B.STD_FEE AS STD_FEE
+											,B.STD_WHSL_FEE AS STD_WHSL_FEE
+											,B.STD_RTL_FEE AS STD_RTL_FEE
+											,NVL2(B.PSBL_ST_FEE, B.PSBL_ST_FEE||' ~ '||B.PSBL_END_FEE,'') AS PSBL_FEE
+											,NVL2(B.PSBL_ST_WHSL_FEE, B.PSBL_ST_WHSL_FEE||' ~ '||B.PSBL_END_WHSL_FEE,'') AS PSBL_WHSL_FEE
+											,NVL2(B.PSBL_ST_RTL_FEE, B.PSBL_ST_RTL_FEE||' ~ '||B.PSBL_END_RTL_FEE,'') AS	PSBL_RTL_FEE
+											,B.APLC_ST_DT
+											,B.APLC_END_DT
+											,E.ETC_CD
+											,CASE
+												WHEN B.APLC_ST_DT IS NOT NULL
+												AND B.APLC_END_DT IS NOT NULL
+												THEN TO_CHAR(TO_DATE(B.APLC_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(B.APLC_END_DT,'YYYYMMDD'),'YYYY-MM-DD')
+												ELSE ''
+												END AS APLC_DT
+							FROM 	  EPCN_STD_CTNR_CD A
+							          	,( SELECT * FROM EPCN_STD_FEE_MGNT WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN APLC_ST_DT AND APLC_END_DT ) B
+										,( SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C  
+										,( SELECT * FROM EPCN_STD_DPS_MGNT	WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN APLC_ST_DT AND APLC_END_DT) D
+										,EPCN_ETC_CD E
+							WHERE 1=1
+							AND 	A.CTNR_CD		=	B.CTNR_CD(+)
+							AND 	A.MFC_SE_CD	=	E.ETC_CD
+							AND	E.GRP_CD		=	'E003'
+							AND	A.CTNR_CD		=	D.CTNR_CD(+)
+							AND	A.LANG_SE_CD=	C.LANG_SE_CD
+						    AND	A.USE_YN		=	'Y'	
+						    
+						    <if test='BIZR_TP_CD =="M1"  '>
+								AND E.RSV_ITEM2 IN (#{BIZRNO} ,'0000000000')
+						    </if>
+						    
+						     <if test='BIZR_TP_CD =="M2"  '>
+								AND E.RSV_ITEM2 = #{BIZRNO}
+						    </if>
+							
+							<if test='CTNR_CD != null and CTNR_CD != ""'>
+								AND A.CTNR_CD = #{CTNR_CD}
+							</if>
+							
+							ORDER BY A.CTNR_CD
+	    <if test='excelYn == null or excelYn == "" '>
+			)
+			WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+		</if>	   
+
+	</select>
+	
+		<!-- 빈용기 기준금액관리 조회  -->
+		<select id="epce0105901_select_cnt" parameterType="map" resultType="int">
+	
+							SELECT
+										COUNT(1)
+							FROM 	  EPCN_STD_CTNR_CD A
+							          	,( SELECT * FROM EPCN_STD_FEE_MGNT WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN APLC_ST_DT AND APLC_END_DT ) B
+										,( SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C  
+										,( SELECT * FROM EPCN_STD_DPS_MGNT	WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN APLC_ST_DT AND APLC_END_DT) D
+										,EPCN_ETC_CD E
+							WHERE 1=1
+							AND 	A.CTNR_CD		=	B.CTNR_CD(+)
+							AND 	A.MFC_SE_CD	=	E.ETC_CD
+							AND	E.GRP_CD		=	'E003'
+							AND	A.CTNR_CD		=	D.CTNR_CD(+)
+							AND	A.LANG_SE_CD=	C.LANG_SE_CD
+						    AND	A.USE_YN		=	'Y'	
+						    
+						    <if test='BIZR_TP_CD =="M1"  '>
+								AND E.RSV_ITEM2 IN (#{BIZRNO} ,'0000000000')
+						    </if>
+						    
+						     <if test='BIZR_TP_CD =="M2"  '>
+								AND E.RSV_ITEM2 = #{BIZRNO}
+						    </if>
+							
+							<if test='CTNR_CD != null and CTNR_CD != ""'>
+								AND A.CTNR_CD = #{CTNR_CD}
+							</if>
+	</select>
+
+</mapper>
+

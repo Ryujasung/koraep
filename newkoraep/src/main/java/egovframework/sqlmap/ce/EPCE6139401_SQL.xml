@@ -1,0 +1,1134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE6139401Mapper">
+
+	<!-- 상세입고현황 조회  -->
+	<select id="epce6139401_select" parameterType="map"   resultType="hashmap">
+			<if test='excelYn == null or excelYn == "" '>
+			 SELECT 
+				*
+			 FROM (
+			</if> 
+			 		SELECT
+			 				ROW_NUMBER()OVER(ORDER BY  T1.WRHS_CFM_DT DESC, T1.WHSDL_BIZRID, T1.MFC_BIZRID, T1.MFC_BRCH_ID,T1.RTN_DOC_NO DESC) AS PNO
+							, T1.WRHS_CFM_DT
+                            , T1.RTN_DOC_NO
+							, C.CUST_BIZRNM
+							, PI_DECRYPT(T1.WHSDL_BIZRNO) AS WHSDL_BIZRNO
+							, EPCN_ETC_NM(D.AREA_CD , 'B010') AS AREA_NM
+							, C.MFC_BIZRNM
+							, C.MFC_BRCH_NM
+							, F.CTNR_NM
+							, CASE WHEN SUBSTR(F.CTNR_CD,4,2) = 00 THEN '표준용기' ELSE '비표준용기' END AS STANDARD_NM
+							, EPCN_ETC_NM( F.PRPS_CD , 'E002') AS PRPS_NM
+							, EPCN_ETC_NM( F.CPCT_CD , 'E001') AS CPCT_NM
+                            , EPCN_ETC_NM( F.ALKND_CD , 'E004') AS ALKND_NM
+							,NVL((SELECT RTN_QTY 
+									   FROM EPCM_RTN_INFO 
+									WHERE 1=1
+										AND CTNR_CD 		= T1.CTNR_CD
+										AND RTN_DOC_NO = T1.RTN_DOC_NO
+									),0) AS RTN_QTY
+							,T1.CFM_QTY
+						    ,T1.CFM_GTN
+							,T1.CFM_FEE_TOT
+							,T1.CFM_FEE_STAX_TOT
+							,T1.CFM_ATM_TOT
+							,T1.CRCT_QTY
+						    ,T1.CRCT_GTN
+							,T1.CRCT_FEE_TOT
+							,T1.CRCT_FEE_STAX_TOT
+							,T1.CRCT_ATM_TOT							
+							,DECODE(T1.GBN, 'C', EPCN_ETC_NM(T1.RTN_STAT_CD , 'C002'), EPCN_ETC_NM(T1.RTN_STAT_CD , 'D021')) AS STAT_CD_NM 	
+							,T1.MFC_BRCH_NO
+							,T1.RTN_REG_DT
+							,T1.RTN_DT
+							,T1.RMK
+					FROM
+					(
+							  SELECT  NVL(A.GBN, B.GBN) AS GBN
+									 ,NVL(A.WRHS_DOC_NO, B.WRHS_DOC_NO) AS WRHS_DOC_NO
+		              				 ,NVL(A.WRHS_CRCT_DOC_NO, B.WRHS_CRCT_DOC_NO) AS WRHS_CRCT_DOC_NO
+		                      		 ,NVL(A.MFC_BIZRNO, B.MFC_BIZRNO) AS MFC_BIZRNO
+									 ,NVL(A.MFC_BIZRID, B.MFC_BIZRID) AS MFC_BIZRID
+		                       		 ,NVL(A.MFC_BRCH_ID, B.MFC_BRCH_ID) AS MFC_BRCH_ID
+		                       		 ,NVL(A.MFC_BRCH_NO, B.MFC_BRCH_NO) AS MFC_BRCH_NO
+									 ,NVL(A.WHSDL_BIZRNO, B.WHSDL_BIZRNO) AS WHSDL_BIZRNO
+									 ,NVL(A.WHSDL_BIZRID, B.WHSDL_BIZRID) AS WHSDL_BIZRID
+	  		                       	 ,NVL(A.WHSDL_BRCH_ID, B.WHSDL_BRCH_ID) AS WHSDL_BRCH_ID
+			                         ,NVL(A.WHSDL_BRCH_NO, B.WHSDL_BRCH_NO) AS WHSDL_BRCH_NO
+			                         ,NVL(A.WRHS_CFM_DT, B.WRHS_CFM_DT) AS WRHS_CFM_DT
+			                         ,NVL(A.RTN_DT, B.RTN_DT) AS RTN_DT
+			                         ,NVL(A.RTN_REG_DT, B.RTN_REG_DT) AS RTN_REG_DT
+			                         ,NVL(A.RTN_DOC_NO, B.RTN_DOC_NO) AS RTN_DOC_NO
+									 ,NVL(A.CTNR_CD, B.CTNR_CD) AS CTNR_CD
+									 ,NVL(A.CFM_QTY, B.CFM_QTY) AS CFM_QTY
+			                         ,NVL(A.CFM_GTN, B.CFM_GTN) AS CFM_GTN
+			                         ,NVL(A.CFM_FEE_TOT, B.CFM_FEE_TOT) AS CFM_FEE_TOT
+			                         ,NVL(A.CFM_FEE_STAX_TOT, B.CFM_FEE_STAX_TOT) AS CFM_FEE_STAX_TOT
+			                         ,NVL(A.CFM_ATM_TOT, B.CFM_ATM_TOT) AS CFM_ATM_TOT
+			                         ,NVL(A.CRCT_QTY, 0) + NVL(B.CRCT_QTY, 0) AS CRCT_QTY
+			                         ,NVL(A.CRCT_GTN, 0) + NVL(B.CRCT_GTN, 0) AS CRCT_GTN
+			                         ,NVL(A.CRCT_FEE_TOT, 0) + NVL(B.CRCT_FEE_TOT, 0) AS CRCT_FEE_TOT
+			                         ,NVL(A.CRCT_FEE_STAX_TOT, 0) + NVL(B.CRCT_FEE_STAX_TOT, 0) AS CRCT_FEE_STAX_TOT
+			                         ,NVL(A.CRCT_ATM_TOT, 0) + NVL(B.CRCT_ATM_TOT, 0) AS CRCT_ATM_TOT
+			                         ,NVL(A.RMK, B.RMK) AS RMK
+			                         ,NVL(A.RTN_STAT_CD, B.RTN_STAT_CD) AS RTN_STAT_CD
+							  FROM
+								     (
+											SELECT  'A' AS GBN
+												    ,A.WRHS_DOC_NO
+	                                 				,'' AS WRHS_CRCT_DOC_NO
+	                                 				,A.MFC_BIZRNO
+													,A.MFC_BIZRID
+	                                 				,A.MFC_BRCH_ID
+	                                 				,A.MFC_BRCH_NO
+													,A.WHSDL_BIZRNO
+													,A.WHSDL_BIZRID
+	                                 				,A.WHSDL_BRCH_ID
+					                                ,A.WHSDL_BRCH_NO
+					                                ,A.WRHS_CFM_DT
+					                                ,G.RTN_DT
+					                                ,G.RTN_REG_DT
+					                                ,A.RTN_DOC_NO
+												    ,B.CTNR_CD as CTNR_CD
+												    ,NVL(B.CFM_QTY,0) AS QTY_TOT
+												    ,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_QTY),0) AS CRCT_QTY_TOT
+					                                ,SUBSTR(B.RMK,3) AS RMK
+					                                ,A.RTN_STAT_CD
+													,NVL(B.CFM_QTY,0) AS CFM_QTY
+													,NVL(B.CFM_GTN,0) AS CFM_GTN
+													,NVL(B.CFM_WHSL_FEE,0) + NVL(B.CFM_RTL_FEE,0) AS CFM_FEE_TOT
+													,NVL(B.CFM_WHSL_FEE_STAX,0) AS  CFM_FEE_STAX_TOT
+													,NVL(B.CFM_GTN, 0) + NVL(B.CFM_WHSL_FEE, 0)+NVL(B.CFM_WHSL_FEE_STAX, 0) +NVL(B.CFM_RTL_FEE,0) AS CFM_ATM_TOT
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_QTY), 0) AS CRCT_QTY
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_GTN), 0)  AS CRCT_GTN
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_WHSL_FEE) + NVL2(D.WRHS_DOC_NO, 0, B.CFM_RTL_FEE), 0) AS CRCT_FEE_TOT
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_WHSL_FEE_STAX),0) AS CRCT_FEE_STAX_TOT
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_GTN) +NVL2(D.WRHS_DOC_NO, 0, B.CFM_WHSL_FEE)+NVL2(D.WRHS_DOC_NO, 0, B.CFM_WHSL_FEE_STAX)+NVL2(D.WRHS_DOC_NO, 0, B.CFM_RTL_FEE), 0) AS CRCT_ATM_TOT
+											FROM EPCM_CFM_MST A
+										     	,EPCM_CFM_INFO B
+										     	,(
+								                      	 SELECT DISTINCT AA.WRHS_DOC_NO
+								                           FROM EXCA_WRHS_CRCT AA
+								                         WHERE 1=1
+								                             AND AA.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+	 						                     ) D
+	                                   			, EPCM_RTN_MST G
+											WHERE 1=1
+											AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+											AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+											AND A.WRHS_DOC_NO = D.WRHS_DOC_NO(+)
+	                            			AND A.RTN_DOC_NO = G.RTN_DOC_NO
+											<if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+												AND  G.RTN_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+											<if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+												AND  G.RTN_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+											<if test="SEARCH_GBN.equalsIgnoreCase('3') ">
+												AND  A.WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+									 ) A
+									 FULL OUTER JOIN (
+											SELECT  'B' AS GBN
+											        ,A.WRHS_DOC_NO
+		                                            ,D.WRHS_CRCT_DOC_NO
+		                                            ,A.MFC_BIZRNO
+													,A.MFC_BIZRID
+													,A.MFC_BRCH_ID
+							                        ,A.MFC_BRCH_NO
+													,A.WHSDL_BIZRNO
+													,A.WHSDL_BIZRID
+					                                ,A.WHSDL_BRCH_ID
+					                                ,A.WHSDL_BRCH_NO
+		                                            ,D.CRCT_WRHS_CFM_DT AS WRHS_CFM_DT
+		                                            ,D.CRCT_RTN_DT AS RTN_DT
+		                                            ,G.RTN_REG_DT
+		                                            ,A.RTN_DOC_NO
+												 	,D.CTNR_CD as CTNR_CD
+												 	,0 AS QTY_TOT
+												 	,NVL(D.CRCT_QTY,0) AS CRCT_QTY_TOT
+	                                             	,SUBSTR(D.RMK,3) AS RMK
+	                                             	,A.RTN_STAT_CD
+													,0 AS CFM_QTY
+													,0 AS CFM_GTN
+													,0 AS CFM_FEE_TOT
+													,0 AS CFM_FEE_STAX_TOT
+													,0 AS CFM_ATM_TOT
+													,NVL(D.CRCT_QTY,0) AS CRCT_QTY
+													,NVL(D.CRCT_GTN,0) AS CRCT_GTN
+													,NVL(D.CRCT_WHSL_FEE, 0) + NVL(D.CRCT_RTL_FEE,0) AS CRCT_FEE_TOT
+													,NVL(D.CRCT_WHSL_FEE_STAX,0) AS  CRCT_FEE_STAX_TOT
+													,NVL(D.CRCT_GTN, 0) + NVL(D.CRCT_WHSL_FEE, 0) + NVL(D.CRCT_WHSL_FEE_STAX, 0) + NVL(D.CRCT_RTL_FEE,0) AS CRCT_ATM_TOT
+											FROM EPCM_CFM_MST A
+											  	,(
+												   	 SELECT WRHS_CRCT_DOC_NO, WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, CRCT_RTN_DT
+                                                          , CRCT_QTY
+                                                          , CRCT_GTN
+                                                          , CRCT_WHSL_FEE
+                                                          , CRCT_WHSL_FEE_STAX
+                                                          , CRCT_RTL_FEE
+                                                          , RMK
+													 FROM EXCA_WRHS_CRCT A
+							                         WHERE 1=1
+							                         AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+							                         AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+											         				  SELECT 'X' FROM EXCA_WRHS_CRCT B
+											           				  WHERE 1=1
+											         			      AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+											             			  AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+											             			  AND B.MNUL_EXCA_SE IS NOT NULL
+														            )
+							                     ) D
+											   , EPCM_RTN_MST G
+											WHERE 1=1
+										    AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+											AND A.WRHS_DOC_NO = D.WRHS_DOC_NO
+			                                AND A.RTN_DOC_NO = G.RTN_DOC_NO
+											<if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+												AND  G.RTN_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+											<if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+												AND  D.CRCT_RTN_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+											<if test="SEARCH_GBN.equalsIgnoreCase('3') ">
+												AND  D.CRCT_WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>	
+	
+	                                        UNION ALL
+	
+                                            SELECT  'C' AS GBN
+											       ,'' AS WRHS_DOC_NO
+                                                   ,A.WRHS_CRCT_DOC_NO
+                                                   ,A.MFC_BIZRNO
+                                                   ,A.MFC_BIZRID
+                                                   ,MFC_BRCH_ID
+                               					   ,MFC_BRCH_NO
+												   ,WHSDL_BIZRNO
+												   ,WHSDL_BIZRID
+                               					   ,WHSDL_BRCH_ID
+                               					   ,WHSDL_BRCH_NO
+                                                   ,CRCT_WRHS_CFM_DT AS WRHS_CFM_DT
+                                                   ,CRCT_RTN_DT AS RTN_DT
+                                                   ,'' AS RTN_REG_DT
+                                                   ,'' AS RTN_DOC_NO
+                                                   ,A.CTNR_CD
+                                                   ,0 AS QTY_TOT
+                                                   ,NVL(A.CRCT_QTY,0) AS CRCT_QTY_TOT
+                                                   ,SUBSTR(A.RMK,3) AS RMK
+                                                   ,WRHS_CRCT_STAT_CD AS RTN_STAT_CD
+												   ,0 AS CFM_QTY
+												   ,0 AS CFM_GTN
+												   ,0 AS CFM_FEE_TOT
+												   ,0 AS CFM_FEE_STAX_TOT
+												   ,0 AS CFM_ATM_TOT
+												   ,NVL(A.CRCT_QTY,0) AS CRCT_QTY
+												   ,NVL(A.CRCT_GTN,0) AS CRCT_GTN
+												   ,NVL(A.CRCT_WHSL_FEE, 0) + NVL(A.CRCT_RTL_FEE,0) AS CRCT_FEE_TOT
+												   ,NVL(A.CRCT_WHSL_FEE_STAX,0) AS  CRCT_FEE_STAX_TOT
+												   ,NVL(A.CRCT_GTN, 0) +NVL(A.CRCT_WHSL_FEE, 0)+NVL(A.CRCT_WHSL_FEE_STAX, 0) +NVL(A.CRCT_RTL_FEE,0) AS CRCT_ATM_TOT
+                                            FROM   (
+                                                        SELECT WRHS_CRCT_DOC_NO, WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, CRCT_RTN_DT,
+                                                                 MNUL_MFC_BIZRID AS MFC_BIZRID,
+                                                                 MNUL_MFC_BIZRNO AS MFC_BIZRNO,
+                                                                 MNUL_MFC_BRCH_ID AS MFC_BRCH_ID,
+                                                                 MNUL_MFC_BRCH_NO AS MFC_BRCH_NO,
+                                                                 MNUL_WHSDL_BIZRID AS WHSDL_BIZRID,
+                                                                 MNUL_WHSDL_BIZRNO AS WHSDL_BIZRNO,
+                                                                 MNUL_WHSDL_BRCH_ID AS WHSDL_BRCH_ID,
+                                                                 MNUL_WHSDL_BRCH_NO AS WHSDL_BRCH_NO,
+                                                                 CRCT_QTY,
+	                                                             CRCT_GTN,
+	                                                             CRCT_WHSL_FEE,
+	                                                             CRCT_WHSL_FEE_STAX,
+	                                                             CRCT_RTL_FEE,
+                                                                 RMK,
+                                                                 WRHS_CRCT_STAT_CD
+                                                        FROM EXCA_WRHS_CRCT A
+                                                        WHERE 1=1
+                                                        AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+                                                        AND A.WRHS_DOC_NO = 'IN-0'
+                                                        AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+                                                                         SELECT 'X' FROM EXCA_WRHS_CRCT B
+                                                                         WHERE 1=1
+                                                                            AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+                                                                            AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+                                                                            AND B.MNUL_EXCA_SE IS NOT NULL
+                                                                       )
+                                                    ) A
+                                              WHERE 1=1
+                                              
+                                              <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+                                                /* 수기등록건은 반환등록일자가 없어 정정반환일자로 조회 */
+												AND  A.CRCT_RTN_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											  </if>
+											  <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+												AND  A.CRCT_RTN_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											  </if>
+											  <if test="SEARCH_GBN.equalsIgnoreCase('3') ">
+												AND  A.CRCT_WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											  </if>	
+								 ) B	
+								 ON (
+										A.CTNR_CD = B.CTNR_CD
+									AND A.MFC_BIZRID = B.MFC_BIZRID
+									AND A.MFC_BIZRNO = B.MFC_BIZRNO
+ 									AND A.WHSDL_BIZRID = B.WHSDL_BIZRID
+ 									AND A.WHSDL_BIZRNO = B.WHSDL_BIZRNO
+                  					AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+								 )
+						  ) T1
+						, (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+						, EPCN_DTSS_CUST_INFO C
+						, EPCN_BRCH_INFO D
+						, EPCN_STD_CTNR_CD F
+						WHERE 1=1
+	                	AND T1.WHSDL_BIZRID = C.CUST_BIZRID
+						AND T1.WHSDL_BIZRNO = C.CUST_BIZRNO
+						AND T1.WHSDL_BRCH_ID = C.CUST_BRCH_ID
+						AND T1.WHSDL_BRCH_NO = C.CUST_BRCH_NO
+						AND T1.MFC_BIZRID = C.MFC_BIZRID
+						AND T1.MFC_BIZRNO = C.MFC_BIZRNO
+						AND T1.MFC_BRCH_ID = C.MFC_BRCH_ID
+						AND T1.MFC_BRCH_NO = C.MFC_BRCH_NO
+						AND T1.WHSDL_BIZRID = D.BIZRID
+						AND T1.WHSDL_BIZRNO = D.BIZRNO
+						AND T1.WHSDL_BRCH_ID = D.BRCH_ID
+						AND T1.WHSDL_BRCH_NO = D.BRCH_NO
+						AND T1.CTNR_CD = F.CTNR_CD
+						AND F.LANG_SE_CD = E.LANG_SE_CD
+						
+						
+                        <choose>
+                           <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+                               AND SUBSTR(F.CTNR_CD,2,1) in ('1','2')
+                           </when>
+                           <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+                               AND SUBSTR(F.CTNR_CD,2,1) in ('3','4')
+                           </when>
+                        </choose>
+                        <choose>
+		                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "Y" '>
+		                      AND SUBSTR(F.CTNR_CD,4,2) = 00
+		                  </when>
+		                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "N" '>
+		                     AND SUBSTR(F.CTNR_CD,4,2) != 00
+		                  </when>
+		               </choose>
+                        <if test='PRPS_CD != null and PRPS_CD != "" '>
+                          AND F.PRPS_CD = #{PRPS_CD}
+                        </if>
+                        <if test='ALKND_CD != null and ALKND_CD != "" '>
+                          AND F.ALKND_CD = #{ALKND_CD}
+                        </if>
+						
+						<choose>
+							<when test='RTL_FEE_APLC_YN == "Y" '>
+								AND (T1.RMK IS NULL OR TRIM(T1.RMK) = '') 
+                                AND F.PRPS_CD = '1' /* 가정용 */
+							</when>
+							<when test='RTL_FEE_APLC_YN == "N" '>
+                                AND (T1.RMK IS NOT NULL OR TRIM(T1.RMK) != '')
+								AND F.PRPS_CD = '1' /* 가정용 */
+							</when>
+						</choose>
+
+						<if test="RTN_STAT_CD !=''  and RTN_STAT_CD !=null">
+							AND T1.RTN_STAT_CD 	= #{RTN_STAT_CD}
+						</if>
+						
+						<if test="MFC_BRCH_ID !=''  and MFC_BRCH_ID !=null">
+							AND T1.MFC_BRCH_ID 		= #{MFC_BRCH_ID}
+							AND T1.MFC_BRCH_NO 	= #{MFC_BRCH_NO}
+						</if>
+						
+						<if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+							AND D.BIZR_TP_CD 		= #{BIZR_TP_CD}
+						</if>
+						
+						<if test="MFC_LIST !=null and MFC_LIST.size >0" >
+								AND	T1.MFC_BIZRID||';'||T1.MFC_BIZRNO  IN
+					        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.MFC_BIZRID_NO}
+					        </foreach>   
+						 </if>              
+						 <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+								AND	T1.WHSDL_BIZRID||';'||T1.WHSDL_BIZRNO  IN
+					        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.WHSDL_BIZRID_NO}
+					        </foreach>
+						 </if>
+						 <if test="CTNR_LIST !=null and CTNR_LIST.size >0" >
+								AND	T1.CTNR_CD IN
+					        <foreach collection="CTNR_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.CTNR_CD}
+					        </foreach>
+						 </if>
+						 <if test="AREA_LIST !=null and AREA_LIST.size >0" >
+								AND	D.AREA_CD IN
+					        <foreach collection="AREA_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.AREA_CD}
+					        </foreach>
+						 </if>
+					
+						AND EXISTS (
+					                   SELECT 'X'
+					                     FROM EPCN_BRCH_INFO S1
+						                          ,EPCN_ATH_GRP_USER S2
+						                          ,EPCN_ATH_GRP_BIZR S3
+					                   WHERE 1=1
+					                       AND T1.WHSDL_BIZRID = S1.BIZRID
+					                       AND T1.WHSDL_BIZRNO = S1.BIZRNO
+					                       AND T1.WHSDL_BRCH_ID = S1.BRCH_ID
+					                       AND T1.WHSDL_BRCH_NO = S1.BRCH_NO
+					                       AND S2.USER_ID = #{T_USER_ID}
+					                       AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+					                       AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+					                       AND S1.AREA_CD = S3.AREA_CD
+				                  )
+				                  						
+						ORDER BY T1.WRHS_CFM_DT DESC, T1.WHSDL_BIZRID , T1.MFC_BIZRID, T1.MFC_BRCH_ID,T1.RTN_DOC_NO DESC
+
+				
+			 <if test='excelYn == null or excelYn == "" '>
+			)
+			WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+		</if>	  		     
+	</select>
+	     
+	<!--엑셀 총 카운트 -->  
+	<select id="epce6139401_select_cnt" parameterType="map" resultType="hashmap">
+			 		SELECT  
+	 					 COUNT(1) as CNT
+	 					,SUM(NVL((SELECT RTN_QTY FROM EPCM_RTN_INFO 
+	 					     	 WHERE 1=1
+									AND CTNR_CD = T1.CTNR_CD
+									AND RTN_DOC_NO = T1.RTN_DOC_NO
+								),0)) AS RTN_QTY
+						,SUM(NVL(T1.CFM_QTY,0)) AS CFM_QTY
+					    ,SUM(NVL(T1.CFM_GTN,0)) AS CFM_GTN
+						,SUM(NVL(T1.CFM_FEE_TOT,0)) AS  CFM_FEE_TOT
+						,SUM(NVL(T1.CFM_FEE_STAX_TOT,0)) AS  CFM_FEE_STAX_TOT
+						,SUM(NVL(T1.CFM_ATM_TOT,0)) AS CFM_ATM_TOT
+						,SUM(NVL(T1.CRCT_QTY,0)) AS CRCT_QTY
+					    ,SUM(NVL(T1.CRCT_GTN,0)) AS CRCT_GTN
+						,SUM(NVL(T1.CRCT_FEE_TOT,0)) AS  CRCT_FEE_TOT
+						,SUM(NVL(T1.CRCT_FEE_STAX_TOT,0)) AS  CRCT_FEE_STAX_TOT
+						,SUM(NVL(T1.CRCT_ATM_TOT,0)) AS CRCT_ATM_TOT						
+					FROM
+					(
+							  SELECT  NVL(A.GBN, B.GBN) AS GBN
+									 ,NVL(A.WRHS_DOC_NO, B.WRHS_DOC_NO) AS WRHS_DOC_NO
+		              				 ,NVL(A.WRHS_CRCT_DOC_NO, B.WRHS_CRCT_DOC_NO) AS WRHS_CRCT_DOC_NO
+		                      		 ,NVL(A.MFC_BIZRNO, B.MFC_BIZRNO) AS MFC_BIZRNO
+									 ,NVL(A.MFC_BIZRID, B.MFC_BIZRID) AS MFC_BIZRID
+		                       		 ,NVL(A.MFC_BRCH_ID, B.MFC_BRCH_ID) AS MFC_BRCH_ID
+		                       		 ,NVL(A.MFC_BRCH_NO, B.MFC_BRCH_NO) AS MFC_BRCH_NO
+									 ,NVL(A.WHSDL_BIZRNO, B.WHSDL_BIZRNO) AS WHSDL_BIZRNO
+									 ,NVL(A.WHSDL_BIZRID, B.WHSDL_BIZRID) AS WHSDL_BIZRID
+	  		                       	 ,NVL(A.WHSDL_BRCH_ID, B.WHSDL_BRCH_ID) AS WHSDL_BRCH_ID
+			                         ,NVL(A.WHSDL_BRCH_NO, B.WHSDL_BRCH_NO) AS WHSDL_BRCH_NO
+			                         ,NVL(A.WRHS_CFM_DT, B.WRHS_CFM_DT) AS WRHS_CFM_DT
+			                         ,NVL(A.RTN_DT, B.RTN_DT) AS RTN_DT
+			                         ,NVL(A.RTN_REG_DT, B.RTN_REG_DT) AS RTN_REG_DT
+			                         ,NVL(A.RTN_DOC_NO, B.RTN_DOC_NO) AS RTN_DOC_NO
+									 ,NVL(A.CTNR_CD, B.CTNR_CD) AS CTNR_CD
+									 ,NVL(A.CFM_QTY, B.CFM_QTY) AS CFM_QTY
+			                         ,NVL(A.CFM_GTN, B.CFM_GTN) AS CFM_GTN
+			                         ,NVL(A.CFM_FEE_TOT, B.CFM_FEE_TOT) AS CFM_FEE_TOT
+			                         ,NVL(A.CFM_FEE_STAX_TOT, B.CFM_FEE_STAX_TOT) AS CFM_FEE_STAX_TOT
+			                         ,NVL(A.CFM_ATM_TOT, B.CFM_ATM_TOT) AS CFM_ATM_TOT
+			                         ,NVL(A.CRCT_QTY, 0) + NVL(B.CRCT_QTY, 0) AS CRCT_QTY
+			                         ,NVL(A.CRCT_GTN, 0) + NVL(B.CRCT_GTN, 0) AS CRCT_GTN
+			                         ,NVL(A.CRCT_FEE_TOT, 0) + NVL(B.CRCT_FEE_TOT, 0) AS CRCT_FEE_TOT
+			                         ,NVL(A.CRCT_FEE_STAX_TOT, 0) + NVL(B.CRCT_FEE_STAX_TOT, 0) AS CRCT_FEE_STAX_TOT
+			                         ,NVL(A.CRCT_ATM_TOT, 0) + NVL(B.CRCT_ATM_TOT, 0) AS CRCT_ATM_TOT
+			                         ,NVL(A.RMK, B.RMK) AS RMK
+			                         ,NVL(A.RTN_STAT_CD, B.RTN_STAT_CD) AS RTN_STAT_CD
+							  FROM
+								     (
+											SELECT  'A' AS GBN
+												    ,A.WRHS_DOC_NO
+	                                 				,'' AS WRHS_CRCT_DOC_NO
+	                                 				,A.MFC_BIZRNO
+													,A.MFC_BIZRID
+	                                 				,A.MFC_BRCH_ID
+	                                 				,A.MFC_BRCH_NO
+													,A.WHSDL_BIZRNO
+													,A.WHSDL_BIZRID
+	                                 				,A.WHSDL_BRCH_ID
+					                                ,A.WHSDL_BRCH_NO
+					                                ,A.WRHS_CFM_DT
+					                                ,G.RTN_DT
+					                                ,G.RTN_REG_DT
+					                                ,A.RTN_DOC_NO
+												    ,B.CTNR_CD as CTNR_CD
+												    ,NVL(B.CFM_QTY,0) AS QTY_TOT
+												    ,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_QTY),0) AS CRCT_QTY_TOT
+					                                ,SUBSTR(B.RMK,3) AS RMK
+					                                ,A.RTN_STAT_CD
+													,NVL(B.CFM_QTY,0) AS CFM_QTY
+													,NVL(B.CFM_GTN,0) AS CFM_GTN
+													,NVL(B.CFM_WHSL_FEE,0) + NVL(B.CFM_RTL_FEE,0) AS CFM_FEE_TOT
+													,NVL(B.CFM_WHSL_FEE_STAX,0) AS  CFM_FEE_STAX_TOT
+													,NVL(B.CFM_GTN, 0) + NVL(B.CFM_WHSL_FEE, 0)+NVL(B.CFM_WHSL_FEE_STAX, 0) +NVL(B.CFM_RTL_FEE,0) AS CFM_ATM_TOT
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_QTY), 0) AS CRCT_QTY
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_GTN), 0)  AS CRCT_GTN
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_WHSL_FEE) + NVL2(D.WRHS_DOC_NO, 0, B.CFM_RTL_FEE), 0) AS CRCT_FEE_TOT
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_WHSL_FEE_STAX),0) AS CRCT_FEE_STAX_TOT
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_GTN) +NVL2(D.WRHS_DOC_NO, 0, B.CFM_WHSL_FEE)+NVL2(D.WRHS_DOC_NO, 0, B.CFM_WHSL_FEE_STAX)+NVL2(D.WRHS_DOC_NO, 0, B.CFM_RTL_FEE), 0) AS CRCT_ATM_TOT
+											FROM EPCM_CFM_MST A
+										     	,EPCM_CFM_INFO B
+										     	,(
+								                      	 SELECT DISTINCT AA.WRHS_DOC_NO
+								                           FROM EXCA_WRHS_CRCT AA
+								                         WHERE 1=1
+								                             AND AA.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+	 						                     ) D
+	                                   			, EPCM_RTN_MST G
+											WHERE 1=1
+											AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+											AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+											AND A.WRHS_DOC_NO = D.WRHS_DOC_NO(+)
+	                            			AND A.RTN_DOC_NO = G.RTN_DOC_NO
+											<if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+												AND  G.RTN_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+											<if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+												AND  G.RTN_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+											<if test="SEARCH_GBN.equalsIgnoreCase('3') ">
+												AND  A.WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+									 ) A
+									 FULL OUTER JOIN (
+											SELECT  'B' AS GBN
+											        ,A.WRHS_DOC_NO
+		                                            ,D.WRHS_CRCT_DOC_NO
+		                                            ,A.MFC_BIZRNO
+													,A.MFC_BIZRID
+													,A.MFC_BRCH_ID
+							                        ,A.MFC_BRCH_NO
+													,A.WHSDL_BIZRNO
+													,A.WHSDL_BIZRID
+					                                ,A.WHSDL_BRCH_ID
+					                                ,A.WHSDL_BRCH_NO
+		                                            ,D.CRCT_WRHS_CFM_DT AS WRHS_CFM_DT
+		                                            ,D.CRCT_RTN_DT AS RTN_DT
+		                                            ,G.RTN_REG_DT
+		                                            ,A.RTN_DOC_NO
+												 	,D.CTNR_CD as CTNR_CD
+												 	,0 AS QTY_TOT
+												 	,NVL(D.CRCT_QTY,0) AS CRCT_QTY_TOT
+	                                             	,SUBSTR(D.RMK,3) AS RMK
+	                                             	,A.RTN_STAT_CD
+													,0 AS CFM_QTY
+													,0 AS CFM_GTN
+													,0 AS CFM_FEE_TOT
+													,0 AS CFM_FEE_STAX_TOT
+													,0 AS CFM_ATM_TOT
+													,NVL(D.CRCT_QTY,0) AS CRCT_QTY
+													,NVL(D.CRCT_GTN,0) AS CRCT_GTN
+													,NVL(D.CRCT_WHSL_FEE, 0) + NVL(D.CRCT_RTL_FEE,0) AS CRCT_FEE_TOT
+													,NVL(D.CRCT_WHSL_FEE_STAX,0) AS  CRCT_FEE_STAX_TOT
+													,NVL(D.CRCT_GTN, 0) + NVL(D.CRCT_WHSL_FEE, 0) + NVL(D.CRCT_WHSL_FEE_STAX, 0) + NVL(D.CRCT_RTL_FEE,0) AS CRCT_ATM_TOT
+											FROM EPCM_CFM_MST A
+											  	,(
+												   	 SELECT WRHS_CRCT_DOC_NO, WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, CRCT_RTN_DT
+                                                          , CRCT_QTY
+                                                          , CRCT_GTN
+                                                          , CRCT_WHSL_FEE
+                                                          , CRCT_WHSL_FEE_STAX
+                                                          , CRCT_RTL_FEE
+                                                          , RMK
+													 FROM EXCA_WRHS_CRCT A
+							                         WHERE 1=1
+							                         AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+							                         AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+											         				  SELECT 'X' FROM EXCA_WRHS_CRCT B
+											           				  WHERE 1=1
+											         			      AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+											             			  AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+											             			  AND B.MNUL_EXCA_SE IS NOT NULL
+														            )
+							                     ) D
+											   , EPCM_RTN_MST G
+											WHERE 1=1
+										    AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+											AND A.WRHS_DOC_NO = D.WRHS_DOC_NO
+			                                AND A.RTN_DOC_NO = G.RTN_DOC_NO
+											<if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+												AND  G.RTN_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+											<if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+												AND  D.CRCT_RTN_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+											<if test="SEARCH_GBN.equalsIgnoreCase('3') ">
+												AND  D.CRCT_WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>	
+	
+	                                        UNION ALL
+	
+                                            SELECT  'C' AS GBN
+											       ,'' AS WRHS_DOC_NO
+                                                   ,A.WRHS_CRCT_DOC_NO
+                                                   ,A.MFC_BIZRNO
+                                                   ,A.MFC_BIZRID
+                                                   ,MFC_BRCH_ID
+                               					   ,MFC_BRCH_NO
+												   ,WHSDL_BIZRNO
+												   ,WHSDL_BIZRID
+                               					   ,WHSDL_BRCH_ID
+                               					   ,WHSDL_BRCH_NO
+                                                   ,CRCT_WRHS_CFM_DT AS WRHS_CFM_DT
+                                                   ,CRCT_RTN_DT AS RTN_DT
+                                                   ,'' AS RTN_REG_DT
+                                                   ,'' AS RTN_DOC_NO
+                                                   ,A.CTNR_CD
+                                                   ,0 AS QTY_TOT
+                                                   ,NVL(A.CRCT_QTY,0) AS CRCT_QTY_TOT
+                                                   ,SUBSTR(A.RMK,3) AS RMK
+                                                   ,'' AS RTN_STAT_CD
+												   ,0 AS CFM_QTY
+												   ,0 AS CFM_GTN
+												   ,0 AS CFM_FEE_TOT
+												   ,0 AS CFM_FEE_STAX_TOT
+												   ,0 AS CFM_ATM_TOT
+												   ,NVL(A.CRCT_QTY,0) AS CRCT_QTY
+												   ,NVL(A.CRCT_GTN,0) AS CRCT_GTN
+												   ,NVL(A.CRCT_WHSL_FEE, 0) + NVL(A.CRCT_RTL_FEE,0) AS CRCT_FEE_TOT
+												   ,NVL(A.CRCT_WHSL_FEE_STAX,0) AS  CRCT_FEE_STAX_TOT
+												   ,NVL(A.CRCT_GTN, 0) +NVL(A.CRCT_WHSL_FEE, 0)+NVL(A.CRCT_WHSL_FEE_STAX, 0) +NVL(A.CRCT_RTL_FEE,0) AS CRCT_ATM_TOT
+                                            FROM   (
+                                                        SELECT WRHS_CRCT_DOC_NO, WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, CRCT_RTN_DT,
+                                                                 MNUL_MFC_BIZRID AS MFC_BIZRID,
+                                                                 MNUL_MFC_BIZRNO AS MFC_BIZRNO,
+                                                                 MNUL_MFC_BRCH_ID AS MFC_BRCH_ID,
+                                                                 MNUL_MFC_BRCH_NO AS MFC_BRCH_NO,
+                                                                 MNUL_WHSDL_BIZRID AS WHSDL_BIZRID,
+                                                                 MNUL_WHSDL_BIZRNO AS WHSDL_BIZRNO,
+                                                                 MNUL_WHSDL_BRCH_ID AS WHSDL_BRCH_ID,
+                                                                 MNUL_WHSDL_BRCH_NO AS WHSDL_BRCH_NO,
+                                                                 CRCT_QTY,
+	                                                             CRCT_GTN,
+	                                                             CRCT_WHSL_FEE,
+	                                                             CRCT_WHSL_FEE_STAX,
+	                                                             CRCT_RTL_FEE,
+                                                                 RMK
+                                                        FROM EXCA_WRHS_CRCT A
+                                                        WHERE 1=1
+                                                        AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+                                                        AND A.WRHS_DOC_NO = 'IN-0'
+                                                        AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+                                                                         SELECT 'X' FROM EXCA_WRHS_CRCT B
+                                                                         WHERE 1=1
+                                                                            AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+                                                                            AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+                                                                            AND B.MNUL_EXCA_SE IS NOT NULL
+                                                                       )
+                                                    ) A
+                                              WHERE 1=1
+                                              
+                                              <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+                                                /* 수기등록건은 반환등록일자가 없어 정정반환일자로 조회 */
+												AND  A.CRCT_RTN_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											  </if>
+											  <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+												AND  A.CRCT_RTN_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											  </if>
+											  <if test="SEARCH_GBN.equalsIgnoreCase('3') ">
+												AND  A.CRCT_WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											  </if>	
+								 ) B	
+								 ON (
+										A.CTNR_CD = B.CTNR_CD
+									AND A.MFC_BIZRID = B.MFC_BIZRID
+									AND A.MFC_BIZRNO = B.MFC_BIZRNO
+ 									AND A.WHSDL_BIZRID = B.WHSDL_BIZRID
+ 									AND A.WHSDL_BIZRNO = B.WHSDL_BIZRNO
+                  					AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+								 )
+						  ) T1
+						, (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+						, EPCN_DTSS_CUST_INFO C
+						, EPCN_BRCH_INFO D
+						, EPCN_STD_CTNR_CD F
+						WHERE 1=1
+	                	AND T1.WHSDL_BIZRID = C.CUST_BIZRID
+						AND T1.WHSDL_BIZRNO = C.CUST_BIZRNO
+						AND T1.WHSDL_BRCH_ID = C.CUST_BRCH_ID
+						AND T1.WHSDL_BRCH_NO = C.CUST_BRCH_NO
+						AND T1.MFC_BIZRID = C.MFC_BIZRID
+						AND T1.MFC_BIZRNO = C.MFC_BIZRNO
+						AND T1.MFC_BRCH_ID = C.MFC_BRCH_ID
+						AND T1.MFC_BRCH_NO = C.MFC_BRCH_NO
+						AND T1.WHSDL_BIZRID = D.BIZRID
+						AND T1.WHSDL_BIZRNO = D.BIZRNO
+						AND T1.WHSDL_BRCH_ID = D.BRCH_ID
+						AND T1.WHSDL_BRCH_NO = D.BRCH_NO
+						AND T1.CTNR_CD = F.CTNR_CD
+						AND F.LANG_SE_CD = E.LANG_SE_CD
+						
+						
+                        <choose>
+                           <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+                               AND SUBSTR(F.CTNR_CD,2,1) in ('1','2')
+                           </when>
+                           <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+                               AND SUBSTR(F.CTNR_CD,2,1) in ('3','4')
+                           </when>
+                        </choose>
+                        <choose>
+		                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "Y" '>
+		                      AND SUBSTR(F.CTNR_CD,4,2) = 00
+		                  </when>
+		                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "N" '>
+		                     AND SUBSTR(F.CTNR_CD,4,2) != 00
+		                  </when>
+		               </choose>
+                        <if test='PRPS_CD != null and PRPS_CD != "" '>
+                          AND F.PRPS_CD = #{PRPS_CD}
+                        </if>
+                        <if test='ALKND_CD != null and ALKND_CD != "" '>
+                          AND F.ALKND_CD = #{ALKND_CD}
+                        </if>
+						
+						<choose>
+							<when test='RTL_FEE_APLC_YN == "Y" '>
+								AND (T1.RMK IS NULL OR TRIM(T1.RMK) = '') 
+                                AND F.PRPS_CD = '1' /* 가정용 */
+							</when>
+							<when test='RTL_FEE_APLC_YN == "N" '>
+                                AND (T1.RMK IS NOT NULL OR TRIM(T1.RMK) != '')
+								AND F.PRPS_CD = '1' /* 가정용 */
+							</when>
+						</choose>
+
+						<if test="RTN_STAT_CD !=''  and RTN_STAT_CD !=null">
+							AND T1.RTN_STAT_CD 	= #{RTN_STAT_CD}
+						</if>
+						
+						<if test="MFC_BRCH_ID !=''  and MFC_BRCH_ID !=null">
+							AND T1.MFC_BRCH_ID 		= #{MFC_BRCH_ID}
+							AND T1.MFC_BRCH_NO 	= #{MFC_BRCH_NO}
+						</if>
+						
+						<if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+							AND D.BIZR_TP_CD 		= #{BIZR_TP_CD}
+						</if>
+						
+						<if test="MFC_LIST !=null and MFC_LIST.size >0" >
+								AND	T1.MFC_BIZRID||';'||T1.MFC_BIZRNO  IN
+					        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.MFC_BIZRID_NO}
+					        </foreach>   
+						 </if>              
+						 <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+								AND	T1.WHSDL_BIZRID||';'||T1.WHSDL_BIZRNO  IN
+					        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.WHSDL_BIZRID_NO}
+					        </foreach>
+						 </if>
+						 <if test="CTNR_LIST !=null and CTNR_LIST.size >0" >
+								AND	T1.CTNR_CD IN
+					        <foreach collection="CTNR_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.CTNR_CD}
+					        </foreach>
+						 </if>
+						 <if test="AREA_LIST !=null and AREA_LIST.size >0" >
+								AND	D.AREA_CD IN
+					        <foreach collection="AREA_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.AREA_CD}
+					        </foreach>
+						 </if>
+					
+						AND EXISTS (
+					                   SELECT 'X'
+					                     FROM EPCN_BRCH_INFO S1
+						                          ,EPCN_ATH_GRP_USER S2
+						                          ,EPCN_ATH_GRP_BIZR S3
+					                   WHERE 1=1
+					                       AND T1.WHSDL_BIZRID = S1.BIZRID
+					                       AND T1.WHSDL_BIZRNO = S1.BIZRNO
+					                       AND T1.WHSDL_BRCH_ID = S1.BRCH_ID
+					                       AND T1.WHSDL_BRCH_NO = S1.BRCH_NO
+					                       AND S2.USER_ID = #{T_USER_ID}
+					                       AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+					                       AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+					                       AND S1.AREA_CD = S3.AREA_CD
+				                  )
+						 
+	</select>
+	  
+	<!-- 차트조회  -->
+	<select id="epce6139401_select2" parameterType="map"   resultType="hashmap">
+				SELECT   
+ 			 		EPCN_BIZR_ABBR_NM(T1.MFC_BIZRID ,T1.MFC_BIZRNO) AS MFC_BIZRNM  
+					,NVL(SUM(T1.CFM_GTN),0) AS CFM_GTN_TOT
+					,NVL(SUM(T1.CFM_FEE_TOT),0) AS  FEE_TOT
+					,NVL(SUM(T1.CFM_FEE_STAX_TOT),0)  AS  STAX_TOT
+					,NVL(SUM(T1.CFM_ATM_TOT),0) AS AMT_TOT
+					,NVL(SUM(T1.CRCT_GTN),0) AS CRCT_GTN_TOT
+					,NVL(SUM(T1.CRCT_FEE_TOT),0) AS  CRCT_FEE_TOT
+					,NVL(SUM(T1.CRCT_FEE_STAX_TOT),0)  AS  CRCT_FEE_STAX_TOT
+					,NVL(SUM(T1.CRCT_ATM_TOT),0) AS CRCT_ATM_TOT					
+				FROM
+					(
+							  SELECT  NVL(A.GBN, B.GBN) AS GBN
+									 ,NVL(A.WRHS_DOC_NO, B.WRHS_DOC_NO) AS WRHS_DOC_NO
+		              				 ,NVL(A.WRHS_CRCT_DOC_NO, B.WRHS_CRCT_DOC_NO) AS WRHS_CRCT_DOC_NO
+		                      		 ,NVL(A.MFC_BIZRNO, B.MFC_BIZRNO) AS MFC_BIZRNO
+									 ,NVL(A.MFC_BIZRID, B.MFC_BIZRID) AS MFC_BIZRID
+		                       		 ,NVL(A.MFC_BRCH_ID, B.MFC_BRCH_ID) AS MFC_BRCH_ID
+		                       		 ,NVL(A.MFC_BRCH_NO, B.MFC_BRCH_NO) AS MFC_BRCH_NO
+									 ,NVL(A.WHSDL_BIZRNO, B.WHSDL_BIZRNO) AS WHSDL_BIZRNO
+									 ,NVL(A.WHSDL_BIZRID, B.WHSDL_BIZRID) AS WHSDL_BIZRID
+	  		                       	 ,NVL(A.WHSDL_BRCH_ID, B.WHSDL_BRCH_ID) AS WHSDL_BRCH_ID
+			                         ,NVL(A.WHSDL_BRCH_NO, B.WHSDL_BRCH_NO) AS WHSDL_BRCH_NO
+			                         ,NVL(A.WRHS_CFM_DT, B.WRHS_CFM_DT) AS WRHS_CFM_DT
+			                         ,NVL(A.RTN_DT, B.RTN_DT) AS RTN_DT
+			                         ,NVL(A.RTN_REG_DT, B.RTN_REG_DT) AS RTN_REG_DT
+			                         ,NVL(A.RTN_DOC_NO, B.RTN_DOC_NO) AS RTN_DOC_NO
+									 ,NVL(A.CTNR_CD, B.CTNR_CD) AS CTNR_CD
+									 ,NVL(A.CFM_QTY, B.CFM_QTY) AS CFM_QTY
+			                         ,NVL(A.CFM_GTN, B.CFM_GTN) AS CFM_GTN
+			                         ,NVL(A.CFM_FEE_TOT, B.CFM_FEE_TOT) AS CFM_FEE_TOT
+			                         ,NVL(A.CFM_FEE_STAX_TOT, B.CFM_FEE_STAX_TOT) AS CFM_FEE_STAX_TOT
+			                         ,NVL(A.CFM_ATM_TOT, B.CFM_ATM_TOT) AS CFM_ATM_TOT
+			                         ,NVL(A.CRCT_QTY, 0) + NVL(B.CRCT_QTY, 0) AS CRCT_QTY
+			                         ,NVL(A.CRCT_GTN, 0) + NVL(B.CRCT_GTN, 0) AS CRCT_GTN
+			                         ,NVL(A.CRCT_FEE_TOT, 0) + NVL(B.CRCT_FEE_TOT, 0) AS CRCT_FEE_TOT
+			                         ,NVL(A.CRCT_FEE_STAX_TOT, 0) + NVL(B.CRCT_FEE_STAX_TOT, 0) AS CRCT_FEE_STAX_TOT
+			                         ,NVL(A.CRCT_ATM_TOT, 0) + NVL(B.CRCT_ATM_TOT, 0) AS CRCT_ATM_TOT
+			                         ,NVL(A.RMK, B.RMK) AS RMK
+			                         ,NVL(A.RTN_STAT_CD, B.RTN_STAT_CD) AS RTN_STAT_CD
+							  FROM
+								     (
+											SELECT  'A' AS GBN
+												    ,A.WRHS_DOC_NO
+	                                 				,'' AS WRHS_CRCT_DOC_NO
+	                                 				,A.MFC_BIZRNO
+													,A.MFC_BIZRID
+	                                 				,A.MFC_BRCH_ID
+	                                 				,A.MFC_BRCH_NO
+													,A.WHSDL_BIZRNO
+													,A.WHSDL_BIZRID
+	                                 				,A.WHSDL_BRCH_ID
+					                                ,A.WHSDL_BRCH_NO
+					                                ,A.WRHS_CFM_DT
+					                                ,G.RTN_DT
+					                                ,G.RTN_REG_DT
+					                                ,A.RTN_DOC_NO
+												    ,B.CTNR_CD as CTNR_CD
+												    ,NVL(B.CFM_QTY,0) AS QTY_TOT
+												    ,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_QTY),0) AS CRCT_QTY_TOT
+					                                ,SUBSTR(B.RMK,3) AS RMK
+					                                ,A.RTN_STAT_CD
+													,NVL(B.CFM_QTY,0) AS CFM_QTY
+													,NVL(B.CFM_GTN,0) AS CFM_GTN
+													,NVL(B.CFM_WHSL_FEE,0) + NVL(B.CFM_RTL_FEE,0) AS CFM_FEE_TOT
+													,NVL(B.CFM_WHSL_FEE_STAX,0) AS  CFM_FEE_STAX_TOT
+													,NVL(B.CFM_GTN, 0) + NVL(B.CFM_WHSL_FEE, 0)+NVL(B.CFM_WHSL_FEE_STAX, 0) +NVL(B.CFM_RTL_FEE,0) AS CFM_ATM_TOT
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_QTY), 0) AS CRCT_QTY
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_GTN), 0)  AS CRCT_GTN
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_WHSL_FEE) + NVL2(D.WRHS_DOC_NO, 0, B.CFM_RTL_FEE), 0) AS CRCT_FEE_TOT
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_WHSL_FEE_STAX),0) AS CRCT_FEE_STAX_TOT
+													,NVL(NVL2(D.WRHS_DOC_NO, 0, B.CFM_GTN) +NVL2(D.WRHS_DOC_NO, 0, B.CFM_WHSL_FEE)+NVL2(D.WRHS_DOC_NO, 0, B.CFM_WHSL_FEE_STAX)+NVL2(D.WRHS_DOC_NO, 0, B.CFM_RTL_FEE), 0) AS CRCT_ATM_TOT
+											FROM EPCM_CFM_MST A
+										     	,EPCM_CFM_INFO B
+										     	,(
+								                      	 SELECT DISTINCT AA.WRHS_DOC_NO
+								                           FROM EXCA_WRHS_CRCT AA
+								                         WHERE 1=1
+								                             AND AA.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+	 						                     ) D
+	                                   			, EPCM_RTN_MST G
+											WHERE 1=1
+											AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+											AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+											AND A.WRHS_DOC_NO = D.WRHS_DOC_NO(+)
+	                            			AND A.RTN_DOC_NO = G.RTN_DOC_NO
+											<if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+												AND  G.RTN_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+											<if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+												AND  G.RTN_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+											<if test="SEARCH_GBN.equalsIgnoreCase('3') ">
+												AND  A.WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+									 ) A
+									 FULL OUTER JOIN (
+											SELECT  'B' AS GBN
+											        ,A.WRHS_DOC_NO
+		                                            ,D.WRHS_CRCT_DOC_NO
+		                                            ,A.MFC_BIZRNO
+													,A.MFC_BIZRID
+													,A.MFC_BRCH_ID
+							                        ,A.MFC_BRCH_NO
+													,A.WHSDL_BIZRNO
+													,A.WHSDL_BIZRID
+					                                ,A.WHSDL_BRCH_ID
+					                                ,A.WHSDL_BRCH_NO
+		                                            ,D.CRCT_WRHS_CFM_DT AS WRHS_CFM_DT
+		                                            ,D.CRCT_RTN_DT AS RTN_DT
+		                                            ,G.RTN_REG_DT
+		                                            ,A.RTN_DOC_NO
+												 	,D.CTNR_CD as CTNR_CD
+												 	,0 AS QTY_TOT
+												 	,NVL(D.CRCT_QTY,0) AS CRCT_QTY_TOT
+	                                             	,SUBSTR(D.RMK,3) AS RMK
+	                                             	,A.RTN_STAT_CD
+													,0 AS CFM_QTY
+													,0 AS CFM_GTN
+													,0 AS CFM_FEE_TOT
+													,0 AS CFM_FEE_STAX_TOT
+													,0 AS CFM_ATM_TOT
+													,NVL(D.CRCT_QTY,0) AS CRCT_QTY
+													,NVL(D.CRCT_GTN,0) AS CRCT_GTN
+													,NVL(D.CRCT_WHSL_FEE, 0) + NVL(D.CRCT_RTL_FEE,0) AS CRCT_FEE_TOT
+													,NVL(D.CRCT_WHSL_FEE_STAX,0) AS  CRCT_FEE_STAX_TOT
+													,NVL(D.CRCT_GTN, 0) + NVL(D.CRCT_WHSL_FEE, 0) + NVL(D.CRCT_WHSL_FEE_STAX, 0) + NVL(D.CRCT_RTL_FEE,0) AS CRCT_ATM_TOT
+											FROM EPCM_CFM_MST A
+											  	,(
+												   	 SELECT WRHS_CRCT_DOC_NO, WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, CRCT_RTN_DT
+                                                          , CRCT_QTY
+                                                          , CRCT_GTN
+                                                          , CRCT_WHSL_FEE
+                                                          , CRCT_WHSL_FEE_STAX
+                                                          , CRCT_RTL_FEE
+                                                          , RMK
+													 FROM EXCA_WRHS_CRCT A
+							                         WHERE 1=1
+							                         AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+							                         AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+											         				  SELECT 'X' FROM EXCA_WRHS_CRCT B
+											           				  WHERE 1=1
+											         			      AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+											             			  AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+											             			  AND B.MNUL_EXCA_SE IS NOT NULL
+														            )
+							                     ) D
+											   , EPCM_RTN_MST G
+											WHERE 1=1
+										    AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+											AND A.WRHS_DOC_NO = D.WRHS_DOC_NO
+			                                AND A.RTN_DOC_NO = G.RTN_DOC_NO
+											<if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+												AND  G.RTN_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+											<if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+												AND  D.CRCT_RTN_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>
+											<if test="SEARCH_GBN.equalsIgnoreCase('3') ">
+												AND  D.CRCT_WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											</if>	
+	
+	                                        UNION ALL
+	
+                                            SELECT  'C' AS GBN
+											       ,'' AS WRHS_DOC_NO
+                                                   ,A.WRHS_CRCT_DOC_NO
+                                                   ,A.MFC_BIZRNO
+                                                   ,A.MFC_BIZRID
+                                                   ,MFC_BRCH_ID
+                               					   ,MFC_BRCH_NO
+												   ,WHSDL_BIZRNO
+												   ,WHSDL_BIZRID
+                               					   ,WHSDL_BRCH_ID
+                               					   ,WHSDL_BRCH_NO
+                                                   ,CRCT_WRHS_CFM_DT AS WRHS_CFM_DT
+                                                   ,CRCT_RTN_DT AS RTN_DT
+                                                   ,'' AS RTN_REG_DT
+                                                   ,'' AS RTN_DOC_NO
+                                                   ,A.CTNR_CD
+                                                   ,0 AS QTY_TOT
+                                                   ,NVL(A.CRCT_QTY,0) AS CRCT_QTY_TOT
+                                                   ,SUBSTR(A.RMK,3) AS RMK
+                                                   ,'' AS RTN_STAT_CD
+												   ,0 AS CFM_QTY
+												   ,0 AS CFM_GTN
+												   ,0 AS CFM_FEE_TOT
+												   ,0 AS CFM_FEE_STAX_TOT
+												   ,0 AS CFM_ATM_TOT
+												   ,NVL(A.CRCT_QTY,0) AS CRCT_QTY
+												   ,NVL(A.CRCT_GTN,0) AS CRCT_GTN
+												   ,NVL(A.CRCT_WHSL_FEE, 0) + NVL(A.CRCT_RTL_FEE,0) AS CRCT_FEE_TOT
+												   ,NVL(A.CRCT_WHSL_FEE_STAX,0) AS  CRCT_FEE_STAX_TOT
+												   ,NVL(A.CRCT_GTN, 0) +NVL(A.CRCT_WHSL_FEE, 0)+NVL(A.CRCT_WHSL_FEE_STAX, 0) +NVL(A.CRCT_RTL_FEE,0) AS CRCT_ATM_TOT
+                                            FROM   (
+                                                        SELECT WRHS_CRCT_DOC_NO, WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, CRCT_RTN_DT,
+                                                                 MNUL_MFC_BIZRID AS MFC_BIZRID,
+                                                                 MNUL_MFC_BIZRNO AS MFC_BIZRNO,
+                                                                 MNUL_MFC_BRCH_ID AS MFC_BRCH_ID,
+                                                                 MNUL_MFC_BRCH_NO AS MFC_BRCH_NO,
+                                                                 MNUL_WHSDL_BIZRID AS WHSDL_BIZRID,
+                                                                 MNUL_WHSDL_BIZRNO AS WHSDL_BIZRNO,
+                                                                 MNUL_WHSDL_BRCH_ID AS WHSDL_BRCH_ID,
+                                                                 MNUL_WHSDL_BRCH_NO AS WHSDL_BRCH_NO,
+                                                                 CRCT_QTY,
+	                                                             CRCT_GTN,
+	                                                             CRCT_WHSL_FEE,
+	                                                             CRCT_WHSL_FEE_STAX,
+	                                                             CRCT_RTL_FEE,
+                                                                 RMK
+                                                        FROM EXCA_WRHS_CRCT A
+                                                        WHERE 1=1
+                                                        AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+                                                        AND A.WRHS_DOC_NO = 'IN-0'
+                                                        AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+                                                                         SELECT 'X' FROM EXCA_WRHS_CRCT B
+                                                                         WHERE 1=1
+                                                                            AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+                                                                            AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+                                                                            AND B.MNUL_EXCA_SE IS NOT NULL
+                                                                       )
+                                                    ) A
+                                              WHERE 1=1
+                                              
+                                              <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+                                                /* 수기등록건은 반환등록일자가 없어 정정반환일자로 조회 */
+												AND  A.CRCT_RTN_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											  </if>
+											  <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+												AND  A.CRCT_RTN_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											  </if>
+											  <if test="SEARCH_GBN.equalsIgnoreCase('3') ">
+												AND  A.CRCT_WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+											  </if>	
+								 ) B	
+								 ON (
+										A.CTNR_CD = B.CTNR_CD
+									AND A.MFC_BIZRID = B.MFC_BIZRID
+									AND A.MFC_BIZRNO = B.MFC_BIZRNO
+ 									AND A.WHSDL_BIZRID = B.WHSDL_BIZRID
+ 									AND A.WHSDL_BIZRNO = B.WHSDL_BIZRNO
+                  					AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+								 )
+						  ) T1
+						, (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+						, EPCN_DTSS_CUST_INFO C
+						, EPCN_BRCH_INFO D
+						, EPCN_STD_CTNR_CD F
+						, EPCN_BIZR_INFO T3
+						WHERE 1=1
+	                	AND T1.WHSDL_BIZRID = C.CUST_BIZRID
+						AND T1.WHSDL_BIZRNO = C.CUST_BIZRNO
+						AND T1.WHSDL_BRCH_ID = C.CUST_BRCH_ID
+						AND T1.WHSDL_BRCH_NO = C.CUST_BRCH_NO
+						AND T1.MFC_BIZRID = C.MFC_BIZRID
+						AND T1.MFC_BIZRNO = C.MFC_BIZRNO
+						AND T1.MFC_BRCH_ID = C.MFC_BRCH_ID
+						AND T1.MFC_BRCH_NO = C.MFC_BRCH_NO
+						AND T1.WHSDL_BIZRID = D.BIZRID
+						AND T1.WHSDL_BIZRNO = D.BIZRNO
+						AND T1.WHSDL_BRCH_ID = D.BRCH_ID
+						AND T1.WHSDL_BRCH_NO = D.BRCH_NO
+						AND T1.CTNR_CD = F.CTNR_CD
+						AND F.LANG_SE_CD = E.LANG_SE_CD
+						AND T1.MFC_BIZRID = T3.BIZRID
+		    			AND T1.MFC_BIZRNO = T3.BIZRNO
+						
+						
+                        <choose>
+                           <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+                               AND SUBSTR(F.CTNR_CD,2,1) in ('1','2')
+                           </when>
+                           <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+                               AND SUBSTR(F.CTNR_CD,2,1) in ('3','4')
+                           </when>
+                        </choose>
+                        <choose>
+		                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "Y" '>
+		                      AND SUBSTR(F.CTNR_CD,4,2) = 00
+		                  </when>
+		                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "N" '>
+		                     AND SUBSTR(F.CTNR_CD,4,2) != 00
+		                  </when>
+		               </choose>
+                        <if test='PRPS_CD != null and PRPS_CD != "" '>
+                          AND F.PRPS_CD = #{PRPS_CD}
+                        </if>
+                        <if test='ALKND_CD != null and ALKND_CD != "" '>
+                          AND F.ALKND_CD = #{ALKND_CD}
+                        </if>
+						
+						<choose>
+							<when test='RTL_FEE_APLC_YN == "Y" '>
+								AND (T1.RMK IS NULL OR TRIM(T1.RMK) = '') 
+                                AND F.PRPS_CD = '1' /* 가정용 */
+							</when>
+							<when test='RTL_FEE_APLC_YN == "N" '>
+                                AND (T1.RMK IS NOT NULL OR TRIM(T1.RMK) != '')
+								AND F.PRPS_CD = '1' /* 가정용 */
+							</when>
+						</choose>
+
+						<if test="RTN_STAT_CD !=''  and RTN_STAT_CD !=null">
+							AND T1.RTN_STAT_CD 	= #{RTN_STAT_CD}
+						</if>
+						
+						<if test="MFC_BRCH_ID !=''  and MFC_BRCH_ID !=null">
+							AND T1.MFC_BRCH_ID 		= #{MFC_BRCH_ID}
+							AND T1.MFC_BRCH_NO 	= #{MFC_BRCH_NO}
+						</if>
+						
+						<if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+							AND D.BIZR_TP_CD 		= #{BIZR_TP_CD}
+						</if>
+						
+						<if test="MFC_LIST !=null and MFC_LIST.size >0" >
+								AND	T1.MFC_BIZRID||';'||T1.MFC_BIZRNO  IN
+					        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.MFC_BIZRID_NO}
+					        </foreach>   
+						 </if>              
+						 <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+								AND	T1.WHSDL_BIZRID||';'||T1.WHSDL_BIZRNO  IN
+					        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.WHSDL_BIZRID_NO}
+					        </foreach>
+						 </if>
+						 <if test="CTNR_LIST !=null and CTNR_LIST.size >0" >
+								AND	T1.CTNR_CD IN
+					        <foreach collection="CTNR_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.CTNR_CD}
+					        </foreach>
+						 </if>
+						 <if test="AREA_LIST !=null and AREA_LIST.size >0" >
+								AND	D.AREA_CD IN
+					        <foreach collection="AREA_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.AREA_CD}
+					        </foreach>
+						 </if>
+					
+						AND EXISTS (
+					                   SELECT 'X'
+					                     FROM EPCN_BRCH_INFO S1
+						                          ,EPCN_ATH_GRP_USER S2
+						                          ,EPCN_ATH_GRP_BIZR S3
+					                   WHERE 1=1
+					                       AND T1.WHSDL_BIZRID = S1.BIZRID
+					                       AND T1.WHSDL_BIZRNO = S1.BIZRNO
+					                       AND T1.WHSDL_BRCH_ID = S1.BRCH_ID
+					                       AND T1.WHSDL_BRCH_NO = S1.BRCH_NO
+					                       AND S2.USER_ID = #{T_USER_ID}
+					                       AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+					                       AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+					                       AND S1.AREA_CD = S3.AREA_CD
+				                  )
+				GROUP BY T1.MFC_BIZRNO, T1.MFC_BIZRID, T3.SEL_ORD
+	      		ORDER BY T3.SEL_ORD
+	</select>
+	
+	<!--상태값  -->
+	<select id="epce6139401_select3" parameterType="map"   resultType="hashmap">
+			SELECT * FROM EPCN_ETC_CD
+			WHERE 1=1
+			AND GRP_CD ='D021'
+			AND  ETC_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+	</select>
+	
+</mapper>
+

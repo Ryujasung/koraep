@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/jdbc  http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd">
+	
+	 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="core.log.jdbc.driver.OracleDriver" /><!-- core.log.jdbc.driver.OracleDriver -->
+		
+		<!-- 개발서버 -->
+		<property name="url" value="jdbc:oracle:thin:@175.115.52.202:11541:devkora" />
+		<property name="username" value="korase" />
+		<property name="password" value="korase#3" />
+		 
+		<!-- 운영서버 -->
+<!-- 		<property name="url" value="jdbc:oracle:thin:@175.115.52.205:11541:kora1" />  -->
+<!-- 		<property name="username" value="koraepse" /> -->
+<!-- 		<property name="password" value="kora#se$2" />  -->
+		 
+		<property name="connectionProperties" value="SetBigStringTryClob=true" />
+
+		<property name="maxActive" value="100" />
+		<property name="maxWait" value="10000" />
+		<property name="initialSize" value="10" />
+    	<property name="maxIdle" value="5"/>
+    	
+    	<property name="validationQuery" value="SELECT 1 FROM DUAL"/>
+		<property name="testOnBorrow" value="true"/>
+		<property name="testOnReturn" value="false"/>
+		<property name="testWhileIdle" value="true"/>
+    	<property name="timeBetweenEvictionRunsMillis" value="60000"/>
+	</bean>
+
+</beans>

@@ -1,0 +1,71 @@
+
+<link rel="stylesheet" href="/common/css/common.css"/>
+
+<script type="text/javaScript" language="javascript">
+
+	function confirmExec(v){
+		
+		if($('#close_today').prop('checked')){
+			gfn_setCookie("kora_mm", "done");
+		}
+
+		if(v == 'Y'){
+			if($("#func").val() != ''){
+				var pframe = window.frames[$("#alertLayer").find("#alertPagedata").val()];
+				
+				if(pframe == undefined){
+					if($("#func").val().indexOf('(') < 0){
+						eval($("#func").val()+'()');
+					}else{
+						eval($("#func").val());
+					}
+				}else{
+					if($("#func").val().indexOf('(') < 0){
+						eval('pframe.'+$("#func").val()+'()');
+					}else{
+						eval('pframe.'+$("#func").val());
+					}
+				}
+			}
+			$('#alertClose').trigger('click');
+		}else if(v =='N'){
+			$('#alertClose').trigger('click');
+		}
+	}
+
+	function gfn_setCookie(cookieName, cookieValue)
+	{
+		var expireDate = new Date('9/09/9999');
+		alert('aa');
+		document.cookie = cookieName + "=" + escape( cookieValue ) + "; path=/; expires=" + expireDate.toGMTString() ;
+		return true;
+	}
+	
+</script>
+<div id="alertLayer">
+	<input type="hidden" id="alertPagedata"/>
+	<input type="hidden" id="func"/>
+ </div>
+<div id="layerPop" class="layer_popup alert" style="width:100%;hight:100%;">
+	<div class="layer_head c1">
+		<h1 class="layer_title">알림</h1>
+	</div>
+	<div class="layer_body">
+		<p class="txt mb25" id="alertText" style=""></p>
+		<div id="alert">
+			<button class="btn30 c3" style="width: 87px;" onclick="confirmExec('Y')" id="alertOk">OK</button>
+		</div>
+		<div id="confirm" style="display:none">
+			<button class="btn30 c3" style="width: 87px;" onclick="confirmExec('Y')">확인</button>
+			<button class="btn30 c3" style="width: 87px;" onclick="confirmExec('N')">아니오</button>
+		</div>
+		
+		<button class="btn30 c3" style="width: 87px;display:none" layer="close" id="alertClose">CLOSE</button>
+		 
+		<div style="padding:10px 10px 0 0;text-align:right;display:none" id="closeDiv">
+			<input type="checkbox" id="close_today" style="margin:2px;width:15px;height:15px">
+			<label for="close_today">다시보지 않기</label>
+		</div>
+		
+	</div>
+</div>

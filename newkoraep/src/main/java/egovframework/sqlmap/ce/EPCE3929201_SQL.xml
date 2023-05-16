@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3929201Mapper">
+   
+<!-- 로그인이력조회 초기 조회 -->
+<select id="epce3929201_select" parameterType="map" resultType="hashmap">
+
+	<if test='excelYn == null or excelYn == "" '>
+		 SELECT 
+		 			PNO 
+		 			, USER_ID
+					, ACSS_IP	
+					, ACCS_BRSR
+				    , USER_NM
+					, BIZRNM
+					, REG_TIME
+					, BRCH_NM
+					, LGN_LGOT
+		  FROM (
+	</if>
+
+ SELECT ROW_NUMBER()OVER(ORDER BY A.REG_DTTM  DESC ) AS PNO 
+			, A.USER_ID
+			, A.ACSS_IP	
+			, A.ACCS_BRSR
+		    , B.USER_NM
+			, C.BIZRNM
+			,  DECODE (#{LGN_LGOT}, 'LGN', TO_CHAR(TO_DATE(SUBSTR(A.LGN_DT||''||A.LGN_TM,1,14), 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS'),
+		                     	TO_CHAR(TO_DATE(SUBSTR(A.LGOT_DT||''||A.LGOT_TM,1,14), 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') )  AS REG_TIME
+			, D.BRCH_NM
+			, DECODE (#{LGN_LGOT},'LGN','로그인','로그아웃' ) AS LGN_LGOT
+		FROM EPCN_LGN_HIST A 
+				 ,EPCN_USER_INFO B    
+				 ,EPCN_BIZR_INFO C 
+				 ,EPCN_BRCH_INFO D   
+		WHERE 1=1
+		    AND A.USER_ID = B.USER_ID
+		    AND B.BIZRID = C.BIZRID
+			AND B.BIZRNO =C.BIZRNO
+			AND B.BIZRID = D.BIZRID
+			AND B.BIZRNO =D.BIZRNO
+			AND B.BRCH_ID = D.BRCH_ID
+			AND B.BRCH_NO =D.BRCH_NO
+		<if test="LGN_LGOT  == 'LGN' ">
+			AND A.LGN_DT||SUBSTR(A.LGN_TM,1,2) BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}   
+	    </if>
+	    <if test="LGN_LGOT =='LGOT' " >
+		    AND A.LGOT_DT||SUBSTR(A.LGOT_TM,1,2)     BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}  
+	    </if>
+         <if test="USER_ID != ''  ">
+		   AND  A.USER_ID LIKE '%' || #{USER_ID} || '%'
+		 </if>
+		
+		ORDER BY A.REG_DTTM  DESC 
+
+	<if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+    </if>	
+
+</select>
+
+<!-- 로그인이력조회 초기 조회 -->
+<select id="epce3929201_select_cnt" parameterType="map" resultType="int">
+
+	  SELECT COUNT(1)
+		FROM EPCN_LGN_HIST A 
+				 ,EPCN_USER_INFO B    
+				 ,EPCN_BIZR_INFO C 
+				 ,EPCN_BRCH_INFO D   
+		WHERE 1=1
+		    AND A.USER_ID = B.USER_ID
+		    AND B.BIZRID = C.BIZRID
+			AND B.BIZRNO =C.BIZRNO
+			AND B.BIZRID = D.BIZRID
+			AND B.BIZRNO =D.BIZRNO
+			AND B.BRCH_ID = D.BRCH_ID
+			AND B.BRCH_NO =D.BRCH_NO
+		<if test="LGN_LGOT  == 'LGN' ">
+			AND A.LGN_DT||SUBSTR(A.LGN_TM,1,2) BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}  
+	    </if>
+	    <if test="LGN_LGOT =='LGOT' " >
+		    AND A.LGOT_DT||SUBSTR(A.LGOT_TM,1,2)     BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}  
+	    </if>
+         <if test="USER_ID != ''  ">
+		    AND A.USER_ID LIKE '%' || #{USER_ID} || '%'
+		 </if>
+
+</select>
+
+</mapper>
+

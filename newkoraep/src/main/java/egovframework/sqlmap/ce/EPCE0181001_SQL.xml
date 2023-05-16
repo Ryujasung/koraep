@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE0181001Mapper">
+<!-- 도매 직매장/공장관리 -->
+    
+	<!-- 조회 -->
+	<select id="epce0181001_select" parameterType="map"  resultType="hashmap">
+		<if test='excelYn == null or excelYn == "" '>
+				SELECT 
+					*
+				 FROM (
+		</if>
+						  SELECT
+			 				 ROW_NUMBER()OVER(ORDER BY   BIZRNM ,GRP_BRCH_NO) AS PNO
+							,BRCH_ID
+							,BRCH_NO
+							,BIZRID
+							,BIZRNO
+							,BRCH_NM
+							,BIZRNM
+							,DECODE(GRP_YN ,'N',
+									(SELECT B.BRCH_NM FROM EPCN_BRCH_INFO B WHERE 1=1 
+									AND B.BIZRID			= BIZRID
+									AND B.BIZRNO		= BIZRNO
+									AND B.BRCH_NO 	= A.GRP_BRCH_NO ),'') AS GRP_BRCH_NM
+							,BIZR_TP_CD
+							,GRP_BRCH_NO 
+							,AREA_CD
+							,EPCN_ETC_NM(AREA_CD , 'B010') AS AREA_NM
+							,PAY_EXEC_YN
+							,EPCN_ETC_NM(ACP_MGNT_YN , 'S015') AS ACP_MGNT_YN_NM
+							,ACP_MGNT_YN
+							,SPRT_MGNT_YN
+							,STAT_CD
+							,EPCN_ETC_NM(STAT_CD , 'B007') AS STAT_CD_NM
+							,AFF_OGN_CD
+							,EPCN_ETC_NM(AFF_OGN_CD , 'B004') AS AFF_OGN_NM
+							,CTNR_CD_RTC_YN
+							,EPCN_ETC_NM(CTNR_CD_RTC_YN , 'S021') AS CTNR_CD_RTC_YN_NM
+						 FROM 	
+						 	EPCN_BRCH_INFO A
+						 WHERE 1=1
+						 
+						 <choose>
+					         <when test='BIZR_TP_CD !=""  and BIZR_TP_CD !=null  '>
+					           AND BIZR_TP_CD  = #{BIZR_TP_CD}
+					         </when>
+					         <otherwise>
+					         	 AND BIZR_TP_CD IN ('W1','W2')
+					         </otherwise>
+					     </choose>
+						<if test="BIZRID !=''  and BIZRID !=null">
+							AND BIZRID 	= #{BIZRID}
+							AND BIZRNO 	= #{BIZRNO}
+						</if>
+						 <if test="GRP_BRCH_NO !=''  and GRP_BRCH_NO !=null">
+							AND GRP_BRCH_NO 	= #{GRP_BRCH_NO}
+						</if>
+						<if test="AREA_CD !=''  and AREA_CD !=null">
+							AND 	AREA_CD 	= #{AREA_CD}
+						</if>
+						 <if test=" AFF_OGN_CD !='' and AFF_OGN_CD !=null">
+						 	and AFF_OGN_CD = #{AFF_OGN_CD} 
+						 </if>
+						<if test="STAT_CD !=''  and STAT_CD !=null">
+							AND 	STAT_CD 	= #{STAT_CD}
+						</if>
+						<if test="ACP_MGNT_YN !=''  and ACP_MGNT_YN !=null">
+							AND 	ACP_MGNT_YN 	= #{ACP_MGNT_YN}
+						</if>
+						<if test="CTNR_CD_RTC_YN !=''  and CTNR_CD_RTC_YN !=null">
+							AND 	CTNR_CD_RTC_YN 	= #{CTNR_CD_RTC_YN}
+						</if>						
+				
+			              ORDER BY  BIZRNM ,GRP_BRCH_NO
+	    <if test='excelYn == null or excelYn == "" '>
+			)
+			WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+		</if>	     
+	</select>
+	
+	<!--조회 토탈 수-->
+	<select id="epce0181001_select_cnt" parameterType="map" resultType="int">
+ 				 SELECT
+				 	COUNT(1)
+				 FROM 	
+				 	EPCN_BRCH_INFO 
+				 WHERE 1=1
+				 
+				 <choose>
+			         <when test='BIZR_TP_CD !=""  and BIZR_TP_CD !=null  '>
+			           AND BIZR_TP_CD  = #{BIZR_TP_CD}
+			         </when>
+			         <otherwise>
+			         	 AND BIZR_TP_CD IN ('W1','W2')
+			         </otherwise>
+			     </choose>
+				<if test="BIZRID !=''  and BIZRID !=null">
+					AND BIZRID 	= #{BIZRID}
+					AND BIZRNO 	= #{BIZRNO}
+				</if>
+				 <if test="GRP_BRCH_NO !=''  and GRP_BRCH_NO !=null">
+					AND GRP_BRCH_NO 	= #{GRP_BRCH_NO}
+				</if>
+				<if test="AREA_CD !=''  and AREA_CD !=null">
+					AND 	AREA_CD 	= #{AREA_CD}
+				</if>
+				 <if test=" AFF_OGN_CD !='' and AFF_OGN_CD !=null">
+				 	and AFF_OGN_CD = #{AFF_OGN_CD} 
+				 </if>
+				<if test="STAT_CD !=''  and STAT_CD !=null">
+					AND 	STAT_CD 	= #{STAT_CD}
+				</if>
+				<if test="ACP_MGNT_YN !=''  and ACP_MGNT_YN !=null">
+					AND 	ACP_MGNT_YN 	= #{ACP_MGNT_YN}
+				</if>
+				<if test="CTNR_CD_RTC_YN !=''  and CTNR_CD_RTC_YN !=null">
+					AND 	CTNR_CD_RTC_YN 	= #{CTNR_CD_RTC_YN}
+				</if>						
+				
+	</select>
+	
+	<!--상태 체크  -->
+	<select id="epce0181001_select2" parameterType="map" resultType="int">
+			SELECT COUNT(1)
+			FROM EPCN_BRCH_INFO 
+			WHERE 1=1
+			AND BIZRID = #{BIZRID}
+			AND BIZRNO = #{BIZRNO}
+			AND BRCH_NO = #{BRCH_NO}
+			AND BRCH_ID = #{BRCH_ID}
+			AND	STAT_CD = #{STAT_CD}
+	</select>
+	
+	<!-- selectbox 상태조회  -->
+	<select id="epce0181001_select3" parameterType="map" resultType="hashmap">
+			SELECT A.ETC_CD, A.ETC_CD_NM
+			FROM EPCN_ETC_CD A
+				,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') B
+			WHERE 1=1
+			AND A.LANG_SE_CD = B.LANG_SE_CD
+			AND A.USE_YN = 'Y'
+			AND GRP_CD ='B007'
+			AND ETC_CD !='W'
+			ORDER BY SEL_ORD
+	</select>
+
+	<!--상태변경  -->
+	<update id="epce0181001_update" parameterType="map">
+		    UPDATE 
+		    	EPCN_BRCH_INFO 
+		    SET 
+		    	STAT_CD = #{STAT_CD}
+		    	,UPD_PRSN_ID = #{REG_PRSN_ID}
+				,UPD_DTTM = SYSDATE
+		    WHERE 1=1
+		    AND BIZRID = #{BIZRID}
+			AND BIZRNO = #{BIZRNO}
+			AND BRCH_NO = #{BRCH_NO}
+			AND BRCH_ID = #{BRCH_ID}
+	</update>
+	
+<!-- 
+/***************************************************************************************************************************************************************************************
+ * 		직매장/공장관리 저장/ 수정
+ ****************************************************************************************************************************************************************************************/
+ -->		
+	
+	<!-- 총괄지점 검색 -->
+	<select id="epce0181031_select" parameterType="map" resultType="hashmap">
+			 SELECT BRCH_NO, BRCH_NM 
+			   FROM EPCN_BRCH_INFO A
+			 WHERE 1=1
+			     AND BIZRID = #{BIZRID}
+			     AND BIZRNO = #{BIZRNO}
+			     AND GRP_YN = 'Y'
+			     AND BRCH_NO != '9999999999'
+			 ORDER BY BRCH_NM
+	</select>
+	
+	<!-- 직매장 등록 -->
+	<update id="epce0181031_insert"  parameterType="hashmap">
+		 INSERT INTO EPCN_BRCH_INFO
+		 (
+		    BRCH_ID, 
+		    BRCH_NO, 
+		    BIZRID, 
+		    BIZRNO, 
+		    BIZRNM, 
+		    BRCH_NM, 
+		    BIZR_TP_CD,
+		    GRP_YN,
+		    GRP_BRCH_NO,
+		    AREA_CD,
+		    AFF_OGN_CD,
+		    STAT_CD, 
+		    ACP_MGNT_YN,
+		    REG_PRSN_ID, 
+		    REG_DTTM
+		 )
+
+		 (
+		 	SELECT BIZR_TP_CD || #{PSNB_SEQ},
+					    #{BRCH_NO}, 
+					    BIZRID, 
+					    BIZRNO, 
+					    BIZRNM, 
+					    #{BRCH_NM}, 
+					    BIZR_TP_CD,
+					    #{GRP_YN},
+					    #{GRP_BRCH_NO},
+					    #{AREA_CD},
+					    #{AFF_OGN_CD},
+					    'Y',
+					    #{ACP_MGNT_YN},
+					    #{S_USER_ID}, 
+					    SYSDATE
+			  FROM EPCN_BIZR_INFO
+			WHERE 1=1
+			    AND BIZRID = #{BIZRID}
+			    AND BIZRNO = #{BIZRNO}
+		 )
+	</update>
+	
+	<!-- 지점 상세조회 -->
+	<select id="epce0181031_select2" parameterType="map"  resultType="hashmap">
+		SELECT A.BIZRID, A.BIZRNO, A.BRCH_ID, A.BRCH_NO
+				     ,(SELECT BIZRNM FROM EPCN_BIZR_INFO WHERE BIZRID = A.BIZRID AND BIZRNO = A.BIZRNO) as BIZRNM
+		             ,A.GRP_YN, A.GRP_BRCH_NO
+		             ,A.BRCH_NM
+		             ,A.AREA_CD
+		             ,EPCN_ETC_NM(A.BIZR_TP_CD , 'B001') AS BIZR_TP_CD
+		             ,A.AFF_OGN_CD
+		             ,A.ACP_MGNT_YN
+		             ,B.BIZRID AS PAY_EXEC_BIZRID
+		             ,B.BIZRNO AS PAY_EXEC_BIZRNO
+		             ,B.RPST_TEL_NO1
+		             ,B.RPST_TEL_NO2
+		             ,B.RPST_TEL_NO3
+		             ,B.PNO
+		             ,B.ADDR1
+		             ,B.ADDR2
+		             ,PI_DECRYPT(B.ASTN_EMAIL) AS ASTN_EMAIL
+		             ,B.ACP_BANK_CD as ACP_BANK_CD_SEL
+		             ,PI_DECRYPT(B.ACP_ACCT_NO) AS ACP_ACCT_NO
+		             ,B.ACP_ACCT_DPSTR_NM
+		             ,A.CTNR_CD_RTC_YN
+	        FROM EPCN_BRCH_INFO A
+	             	 ,EPCN_BIZR_INFO B
+         WHERE 1=1
+	         AND A.BIZRID = #{BIZRID}
+	         AND A.BIZRNO = #{BIZRNO}
+	         AND A.BRCH_ID = #{BRCH_ID}
+	         AND A.BRCH_NO = #{BRCH_NO}
+	         AND A.BRCH_NO = B.BIZRID(+)
+	         AND PI_ENCRYPT(A.BRCH_NO) = B.BIZRNO(+)
+	</select>
+	
+	<!-- 중복체크 -->
+	<select id="epce0181031_select3" parameterType="map"  resultType="int">
+		SELECT COUNT(1)
+         FROM EPCN_BRCH_INFO A
+       WHERE 1=1
+           AND BIZRID = #{BIZRID}
+           AND BIZRNO = #{BIZRNO}
+           AND BRCH_NO = #{BRCH_NO}
+	</select>
+	
+	<update id="epce0181042_update"  parameterType="hashmap">
+		UPDATE EPCN_BRCH_INFO
+			   SET BRCH_NM = #{BRCH_NM}
+				    ,GRP_YN = #{GRP_YN}
+				    ,GRP_BRCH_NO = #{GRP_BRCH_NO}
+				    ,AREA_CD = #{AREA_CD} 
+				    ,AFF_OGN_CD	= #{AFF_OGN_CD}
+				    ,ACP_MGNT_YN = #{ACP_MGNT_YN}
+				    ,CTNR_CD_RTC_YN = #{CTNR_CD_RTC_YN}
+				    ,UPD_PRSN_ID = #{S_USER_ID}
+				    ,UPD_DTTM = SYSDATE
+		WHERE 1=1
+		  AND BIZRID = #{BIZRID}
+		  AND BIZRNO = #{BIZRNO}
+		  AND BRCH_ID = #{BRCH_ID}
+		  AND BRCH_NO = #{BRCH_NO}
+	</update>
+	
+<!-- 
+/***************************************************************************************************************************************************************************************
+ * 					지역 일괄 설정
+ ****************************************************************************************************************************************************************************************/
+ -->		
+	<!-- 지역 일괄 설정 저장 및 수정 -->
+	<update id="epce0181088_update"  parameterType="hashmap">
+		 	UPDATE 
+		    	EPCN_BRCH_INFO 
+		    SET 
+		    	AREA_CD =	#{AREA_CD}
+		    	,UPD_PRSN_ID = #{REG_PRSN_ID}
+				,UPD_DTTM = SYSDATE
+		    WHERE 1=1
+		    AND BIZRID = #{BIZRID}
+			AND BIZRNO = #{BIZRNO}
+			AND BRCH_NO = #{BRCH_NO}
+			AND BRCH_ID = #{BRCH_ID}
+	</update> 
+
+<!-- 
+/***************************************************************************************************************************************************************************************
+ * 					단체설정
+ ****************************************************************************************************************************************************************************************/
+ -->		
+	<!-- 단체 저장 및 수정 -->
+	<update id="epce01810882_update"  parameterType="hashmap">
+		 	UPDATE 
+		    	EPCN_BRCH_INFO 
+		    SET 
+    			AFF_OGN_CD = #{AFF_OGN_CD}
+    			,UPD_PRSN_ID = #{REG_PRSN_ID}
+				,UPD_DTTM = SYSDATE
+		    WHERE 1=1
+		    AND BIZRID = #{BIZRID}
+			AND BIZRNO = #{BIZRNO}
+			AND BRCH_NO = #{BRCH_NO}
+			AND BRCH_ID = #{BRCH_ID}
+	</update> 
+	
+	
+	<!-- ERP 저장 및 수정 -->
+	<update id="epce01810884_update"  parameterType="hashmap">
+		 	UPDATE 
+		    	EPCN_BIZR_INFO 
+		    SET 
+    			 ERP_CD = #{ERP_CD}
+    			,ERP_CD_NM = #{ERP_CD_NM}
+    			,ERP_CFM_YN = 'Y'
+    			,UPD_PRSN_ID = #{REG_PRSN_ID}
+				,UPD_DTTM = SYSDATE
+		    WHERE 1=1
+		    AND BIZRID = #{BIZRID}
+			AND BIZRNO = #{BIZRNO}
+	</update> 	
+</mapper>
+
+
+	
+

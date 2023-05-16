@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3920201Mapper">
+   
+<!-- 로그인이력조회 초기 조회 -->
+<select id="epce3920201_select" parameterType="map" resultType="hashmap">
+
+	<if test='excelYn == null or excelYn == "" '>
+		 SELECT 
+		 			PNO ,
+				              PRIVACYNO,
+			              MENU_CD,
+			              MENU_NM,
+			              EMAIL,
+			              MBIL_NO,
+			              TEL_NO,
+			              TARGET_ID,
+			              TARGET_NM,
+			              CRUD,
+			              STARTTIME,
+			              USER_ID,
+			              USER_NM,
+			              ACSS_IP,
+			              REG_PRSN_ID,
+			              REG_PRSN_NAME,
+			              REG_DTTM
+		  FROM (
+	</if>
+
+        SELECT ROW_NUMBER()OVER(ORDER BY A.REG_DTTM  DESC ) AS PNO ,
+				              A.PRIVACYNO,
+			              A.MENU_CD,
+                    B.MENU_NM,
+			              A.EMAIL,
+			              A.MBIL_NO,
+			              A.TEL_NO,
+			              A.TARGET_ID,
+			              A.TARGET_NM,
+			              TO_CHAR(A.CRUD) CRUD,
+			              to_char(A.STARTTIME,'YYYY-MM-DD HH24:MI:SS') STARTTIME,
+			              A.USER_ID,
+			              A.USER_NM,
+			              A.ACSS_IP,
+			              A.REG_PRSN_ID,
+			              A.REG_PRSN_NAME,
+			              A.REG_DTTM
+  FROM EPCN_PRIVACYLOG A
+  LEFT JOIN EPCN_MENU B ON A.MENU_CD = B.MENU_CD
+  WHERE 1 = 1
+		    AND TO_CHAR(A.REG_DTTM,'YYYYMMDDHH')  BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}  
+		<if test="LGN_LGOT  == '' ||  LGN_LGOT != null">
+			AND   A.CRUD = #{LGN_LGOT}
+	    </if>
+	    
+         <if test="USER_ID != ''  ">
+		   AND  A.USER_ID LIKE '%' || #{USER_ID} || '%'
+		 </if>
+		
+		ORDER BY A.REG_DTTM  DESC 
+
+	<if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+    </if>	
+
+</select>
+
+<!-- 로그인이력조회 초기 조회 -->
+<select id="epce3920201_select_cnt" parameterType="map" resultType="int">
+
+	  SELECT COUNT(1)
+		FROM EPCN_PRIVACYLOG
+		WHERE 1=1
+			    AND TO_CHAR(REG_DTTM,'YYYYMMDDHH')  BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}  
+		<if test="LGN_LGOT  == '' ||  LGN_LGOT != null">
+			AND   CRUD = #{LGN_LGOT}
+	    </if>
+	    
+         <if test="USER_ID != ''  ">
+		   AND  A.USER_ID LIKE '%' || #{USER_ID} || '%'
+		 </if>
+
+</select>
+
+</mapper>
+

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE6645242Mapper">
+    
+    <!-- 빈용기명 조회  -->
+    <select id="epce6645242_select1" parameterType="map" resultType="hashmap">
+      SELECT A.CTNR_CD
+	             ,A.CTNR_NM
+	             ,C.STD_DPS
+	             ,A.PRPS_CD
+	             ,A.CPCT_CD
+	             ,EPCN_ETC_NM(PRPS_CD , 'E002') AS CPCT_NM1
+	             ,EPCN_ETC_NM(CPCT_CD , 'E001') AS CPCT_NM2
+	   	FROM EPCN_STD_CTNR_CD A
+	             	JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E  ON   A.LANG_SE_CD = E.LANG_SE_CD
+	             ,EPCN_ETC_CD B 
+	             ,EPCN_STD_DPS_MGNT C
+	  WHERE  1=1
+	  	  AND A.USE_YN = 'Y'
+	  	  AND B.USE_YN = 'Y'
+	  	  AND C.USE_YN = 'Y'
+	      AND A.MFC_SE_CD   = B.ETC_CD
+	      AND A.LANG_SE_CD = E.LANG_SE_CD
+	      AND B.GRP_CD        = 'E003'
+	      AND C.CTNR_CD      =A.CTNR_CD
+	      AND C.LANG_SE_CD =A.LANG_SE_CD
+	      
+	      AND A.PRPS_CD IN ('0', '1')
+	      
+	      <if test="BIZR_TP_CD != ''">
+		     <choose>
+		         <when test='BIZR_TP_CD == "M1"'>
+				   AND B.RSV_ITEM2 IN (#{MFC_BIZRNO}, '0000000000')
+		         </when>
+		         <when test='BIZR_TP_CD == "M2"'>
+		           AND B.RSV_ITEM2 = #{MFC_BIZRNO}
+		         </when>
+		     </choose>
+		 </if>
+	      
+	      AND  REPLACE( #{DRCT_RTRVL_DT}, '-') BETWEEN  C.APLC_ST_DT and  C.APLC_END_DT
+	               
+	     ORDER BY A.SEL_ORD, A.CTNR_CD, A.CTNR_NM
+    </select>
+    
+    <!-- 직접회수등록 등록시 검색 등록한 용기명 있는지 조회 -->
+	<select id="epce6645242_select2" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM EPDM_DLIVY_MST A
+				 ,EPDM_DLIVY_INFO B 
+		WHERE 1=1
+		AND A.DLIVY_DOC_NO			=B.DLIVY_DOC_NO
+		AND	A.MFC_BIZRID			=#{MFC_BIZRID}
+		AND	A.MFC_BIZRNO			=#{MFC_BIZRNO}
+		AND	A.MFC_BRCH_ID			=#{MFC_BRCH_ID}
+		AND	A.MFC_BRCH_NO			=#{MFC_BRCH_NO}
+		AND	B.CUST_BRCH_ID			=#{CUST_BRCH_ID}
+		AND	B.CUST_BRCH_NO			=#{CUST_BRCH_NO}
+		AND	B.CUST_BIZRID			=#{CUST_BIZRID}
+		AND	B.CUST_BIZRNO			=#{CUST_BIZRNO}
+		AND	A.DLIVY_REG_DT			= TO_CHAR(SYSDATE,'YYYYMMDD')
+		AND	B.DLIVY_DT				=REPLACE(#{DLIVY_DT}, '-')
+		AND	B.CTNR_CD				=#{CTNR_CD}
+	</select>
+    
+    <!-- 거래처 사업자 및 지점 등록 여부 -->
+	<select id="epce6645242_select3" resultType="hashmap">
+		 SELECT A.BIZRID as CUST_BIZRID
+		 		,A.BIZRNO as CUST_BIZRNO
+		 		,A.BIZR_TP_CD as CUST_BIZR_TP_CD
+		 		,NVL(B.BRCH_ID, 'N') as CUST_BRCH_ID
+		   FROM EPCN_BIZR_INFO A
+		   			,EPCN_BRCH_INFO B
+	    WHERE 1=1
+		    AND A.BIZRNO = #{CUST_BIZRNO}
+		    AND A.BIZRID = B.BIZRID(+)
+		    AND A.BIZRNO = B.BIZRNO(+)
+		    AND B.BRCH_ID(+) = '9999999999'
+		    AND B.BRCH_NO(+) = '9999999999'
+		    AND ROWNUM = 1
+    </select>
+    
+    <!-- 직접회수정보변경 그리드 초기값 셋팅 -->
+	<select id="epce6645242_select4" resultType="hashmap">
+			SELECT D.CUST_BIZRID, D.CUST_BRCH_ID, D.CUST_BRCH_NO
+					  ,C.BRCH_NM AS MFC_BRCH_NM
+			          ,B.BIZRNM AS CUST_BIZRNM
+			          ,ECL_DECRYPT(B.BIZRNO) AS CUST_BIZRNO
+			          ,E.PRPS_CD
+			          ,EPCN_ETC_NM(E.PRPS_CD, 'E002') AS PRPS_NM
+			          ,E.CTNR_NM
+			          ,E.CTNR_CD
+			          ,E.CPCT_CD
+			          ,EPCN_ETC_NM(E.CPCT_CD, 'E001') AS CPCT_NM
+			          ,D.DRCT_RTRVL_QTY
+			          ,D.DRCT_PAY_GTN
+			          ,D.DRCT_PAY_GTN / D.DRCT_RTRVL_QTY as STD_DPS
+			          ,D.DRCT_PAY_FEE
+			          ,D.RMK
+		     FROM EPDM_DRCT_RTRVL_MST A
+		              ,EPCN_BIZR_INFO B
+		        	  ,EPCN_BRCH_INFO C
+			          ,EPDM_DRCT_RTRVL_INFO D
+			          ,EPCN_STD_CTNR_CD E
+			          ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+		  WHERE 1=1
+		      AND A.DRCT_RTRVL_DOC_NO = #{DRCT_RTRVL_DOC_NO}
+		      AND A.DRCT_RTRVL_DOC_NO = D.DRCT_RTRVL_DOC_NO
+		      AND D.CUST_BIZRID = B.BIZRID
+		      AND D.CUST_BIZRNO = B.BIZRNO
+		      AND A.MFC_BIZRID = C.BIZRID
+			  AND A.MFC_BIZRNO = C.BIZRNO
+		      AND A.MFC_BRCH_ID = C.BRCH_ID
+		      AND A.MFC_BRCH_NO = C.BRCH_NO
+		      AND D.CTNR_CD = E.CTNR_CD
+		      AND E.LANG_SE_CD = F.LANG_SE_CD
+	</select>
+    
+    <!-- 직접회수정보변경 저장시 직접회수등록상태인지 조회 -->
+	<select id="epce6645242_select5" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		  FROM EPDM_DRCT_RTRVL_MST 
+		WHERE 1=1
+			AND DRCT_RTRVL_DOC_NO = #{DRCT_RTRVL_DOC_NO}
+			AND DRCT_RTRVL_STAT_CD != 'RG'
+	</select>
+    
+    
+    <!-- 직접회수정보변경 저장 시 중복데이터 있는지 조회 -->
+	<select id="epce6645242_select6" parameterType="map" resultType="int">
+		  SELECT COUNT(*)
+			FROM EPDM_DRCT_RTRVL_MST A
+					 ,EPDM_DRCT_RTRVL_INFO B 
+		WHERE 1=1
+			AND A.DRCT_RTRVL_DOC_NO	= B.DRCT_RTRVL_DOC_NO
+			AND A.MFC_BIZRID			= #{MFC_BIZRID}
+			AND A.MFC_BIZRNO			= #{MFC_BIZRNO}
+			AND A.MFC_BRCH_ID		= #{MFC_BRCH_ID}
+			AND A.MFC_BRCH_NO		= #{MFC_BRCH_NO}
+			AND B.CUST_BRCH_ID		= #{CUST_BRCH_ID}
+			AND B.CUST_BRCH_NO		= #{CUST_BRCH_NO}
+			AND B.CUST_BIZRID		= #{CUST_BIZRID}
+			AND B.CUST_BIZRNO		= ECL_ENCRYPT(#{CUST_BIZRNO})
+			/*AND A.DRCT_RTRVL_REG_DT	= TO_CHAR(SYSDATE,'YYYYMMDD')*/
+			AND A.DRCT_RTRVL_DT			= REPLACE(#{DRCT_RTRVL_DT}, '-', '')
+			AND B.CTNR_CD						= #{CTNR_CD}
+	</select>
+    
+	
+	<!-- 직접회수상세 등록 -->
+	<insert id="epce6645242_insert" parameterType="map" >
+		INSERT
+			INTO EPDM_DRCT_RTRVL_INFO
+				(
+				 	DRCT_RTRVL_DOC_NO
+					,CUST_BIZRNO
+					,CTNR_CD
+					,CUST_BRCH_ID
+					,CUST_BRCH_NO
+					,CUST_BIZRID
+					,DRCT_RTRVL_QTY
+					,DRCT_PAY_GTN
+					,DRCT_PAY_FEE
+					,CUST_NM
+					,RMK
+					,UPD_PRSN_ID
+					,UPD_DTTM
+				)
+				VALUES
+				(
+					 #{DRCT_RTRVL_DOC_NO}
+					,ECL_ENCRYPT(#{CUST_BIZRNO})
+					,#{CTNR_CD}
+					,#{CUST_BRCH_ID}
+					,#{CUST_BRCH_NO}
+					,#{CUST_BIZRID}
+					,#{DRCT_RTRVL_QTY}
+					,#{DRCT_RTRVL_QTY} * #{STD_DPS}
+					,#{DRCT_PAY_FEE}
+					,#{CUST_BIZRNM}
+					,#{RMK}
+					,#{S_USER_ID}
+					,SYSDATE
+				)
+	</insert>
+	
+	<update id="epce6645242_update" parameterType="map" >
+		UPDATE  EPDM_DRCT_RTRVL_MST  
+			 SET
+					(DRCT_RTRVL_QTY_TOT, DRCT_PAY_GTN_TOT, DRCT_PAY_FEE_TOT
+					 ) = (
+							SELECT SUM(DRCT_RTRVL_QTY), SUM(DRCT_PAY_GTN), SUM(DRCT_PAY_FEE)
+							  FROM EPDM_DRCT_RTRVL_INFO A
+							WHERE 1=1
+								AND A.DRCT_RTRVL_DOC_NO = #{DRCT_RTRVL_DOC_NO}
+						  )
+		WHERE 1=1
+			AND DRCT_RTRVL_DOC_NO = #{DRCT_RTRVL_DOC_NO}
+			AND DRCT_RTRVL_STAT_CD = 'RG' /* 직접회수등록 */
+	</update>
+		
+	<!--직접회수정보 재 등록시 상세정보 삭제  -->
+	<delete id="epce6645242_delete" parameterType="map" >
+	   	DELETE FROM EPDM_DRCT_RTRVL_INFO
+	   	WHERE 1=1
+	     	AND DRCT_RTRVL_DOC_NO = #{DRCT_RTRVL_DOC_NO}
+	</delete>
+    
+</mapper>

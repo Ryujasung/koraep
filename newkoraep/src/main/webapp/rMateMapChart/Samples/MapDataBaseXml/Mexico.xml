@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<State code="100" label="Aguascalientes" symbol="Aguascalientes"/>
+	<State code="200" label="BajaCalifornia" symbol="BajaCalifornia"/>
+	<State code="300" label="BajaCaliforniaSur" symbol="BajaCaliforniaSur"/>
+	<State code="400" label="Campeche" symbol="Campeche"/>
+	<State code="500" label="Chiapas" symbol="Chiapas"/>
+	<State code="600" label="Chihuahua" symbol="Chihuahua"/>
+	<State code="700" label="Coahuila" symbol="Coahuila"/>
+	<State code="800" label="Colima" symbol="Colima"/>
+	<State code="900" label="Durango" symbol="Durango"/>
+	<State code="1000" label="Guanajuato" symbol="Guanajuato"/>
+	<State code="1100" label="Guerrero" symbol="Guerrero"/>
+	<State code="1200" label="Hidalgo" symbol="Hidalgo"/>
+	<State code="1300" label="Jalisco" symbol="Jalisco"/>
+	<State code="1400" label="EstadodeMéxico" symbol="EstadodeMéxico"/>
+	<State code="1500" label="Michoacán" symbol="Michoacán"/>
+	<State code="1600" label="Morelos" symbol="Morelos"/>
+	<State code="1700" label="Nayarit" symbol="Nayarit"/>
+	<State code="1800" label="NuevoLeón" symbol="NuevoLeón"/>
+	<State code="1900" label="Oaxaca" symbol="Oaxaca"/>
+	<State code="2000" label="Puebla" symbol="Puebla"/>
+	<State code="2100" label="Querétaro" symbol="Querétaro"/>
+	<State code="2200" label="QuintanaRoo" symbol="QuintanaRoo"/>
+	<State code="2300" label="SanLuisPotosí" symbol="SanLuisPotosí"/>
+	<State code="2400" label="Sinaloa" symbol="Sinaloa"/>
+	<State code="2500" label="Sonora" symbol="Sonora"/>
+	<State code="2600" label="Tabasco" symbol="Tabasco"/>
+	<State code="2700" label="Tamaulipas" symbol="Tamaulipas"/>
+	<State code="2800" label="Tlaxcala" symbol="Tlaxcala"/>
+	<State code="2900" label="Veracruz" symbol="Veracruz"/>
+	<State code="3000" label="Yucatán" symbol="Yucatán"/>
+	<State code="3100" label="Zacatecas" symbol="Zacatecas"/>
+	<State code="3200" label="DistritoFederal" symbol="DistritoFederal"/>
+</Map>

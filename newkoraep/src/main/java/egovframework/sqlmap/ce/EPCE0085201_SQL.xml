@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE0085201Mapper">
+
+	<select id="epce00852012_select" resultType="hashmap">
+		 SELECT BIZRID, BIZRNO, BIZR_STAT_CD, BIZRNM, BIZR_TP_CD
+		   FROM EPCN_BIZR_INFO 
+		 WHERE 1=1
+		     AND BIZRNO = ECL_ENCRYPT(#{BIZRNO}) 
+		     AND BIZR_TP_CD IN ('T1','M1','M2','W1','W2','R1')
+		 ORDER BY DECODE(BIZR_STAT_CD, 'Y', 0, 1)
+	</select>
+	
+	<select id="epce00852012_select2" resultType="hashmap">
+		  SELECT BRCH_ID || ';' || BRCH_NO AS ETC_CD, BRCH_NM as ETC_CD_NM
+		    FROM EPCN_BRCH_INFO
+		  WHERE 1=1
+		      AND BIZRID = #{BIZRID}
+		      AND BIZRNO = #{BIZRNO}
+		      AND STAT_CD = 'Y'
+		 ORDER BY DECODE(BRCH_NO,'9999999999',0,1), BRCH_NM
+	</select>
+	
+	<select id="epce00852012_select3" resultType="hashmap">
+		 SELECT BIZRID, BIZRNO, BIZR_STAT_CD, BIZRNM, BIZR_TP_CD
+		   FROM EPCN_BIZR_INFO 
+		 WHERE 1=1
+		     AND BIZRNO = ECL_ENCRYPT(#{BIZRNO}) 
+		 ORDER BY DECODE(BIZR_STAT_CD, 'Y', 0, 1)
+	</select>
+
+    <select id="epce00852012_select4" resultType="hashmap">
+          SELECT BRCH_ID ,BRCH_NO
+            FROM EPCN_BRCH_INFO
+          WHERE 1=1
+              AND BIZRNO = ECL_ENCRYPT(#{BIZRNO}) 
+              AND STAT_CD = 'Y'
+         ORDER BY DECODE(BRCH_NO,'9999999999',0,1), BRCH_NM
+    </select>
+</mapper>

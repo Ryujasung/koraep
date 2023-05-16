@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE0130001Mapper">
+
+	<!-- 입고정보생산자ERP대조 조회  -->
+	<select id="epce0130001_select" parameterType="map"   resultType="hashmap">
+		<if test='excelYn == null or excelYn == "" '>
+        SELECT PNO, 
+               WHSDL_CFM_DT,
+               WHSDL_BIZRNM, 
+               WHSDL_BIZRNO_DE,
+               CFM_DT,
+               WHSDL_BIZRID, 
+               WHSDL_BIZRNO,
+               MFC_BIZRID,
+               MFC_BIZRNO,
+               MFC_BRCH_ID,
+               MFC_BRCH_NO,
+               CTNR_NM, 
+               MFC_BIZRNM, 
+               MFC_BRCH_NM, 
+               SYS_QTY, 
+               SYS_GTN, 
+               SYS_FEE, 
+               SYS_STAX,
+               SYS_AMT, 
+               ERP_QTY, 
+               ERP_GTN, 
+               ERP_FEE, 
+               ERP_STAX, 
+               ERP_AMT 
+          FROM (
+		</if>
+               SELECT ROW_NUMBER()OVER(ORDER BY A.CFM_DT DESC, D.BIZRNM, D.BRCH_NM, B.BIZRNM, E.CTNR_NM) AS PNO, 
+                      <![CDATA[ '<a href="javascript:link(1);" class="gridLink">'||TO_CHAR(TO_DATE(A.CFM_DT, 'yyyymmdd'),'yyyy-mm-dd')||'</a>' ]]> AS WHSDL_CFM_DT,
+                      A.CFM_DT,
+                      B.BIZRNM AS WHSDL_BIZRNM, 
+                      PI_DECRYPT(A.WHSDL_BIZRNO) AS WHSDL_BIZRNO_DE,
+                      A.WHSDL_BIZRID,
+                      A.WHSDL_BIZRNO,
+                      A.MFC_BIZRNO,
+                      A.MFC_BIZRID, 
+                      A.MFC_BRCH_NO,
+                      A.MFC_BRCH_ID,
+                      E.CTNR_NM, 
+                      D.BIZRNM AS MFC_BIZRNM, 
+                      D.BRCH_NM AS MFC_BRCH_NM, 
+                      A.SYS_QTY, 
+                      A.SYS_GTN, 
+                      A.SYS_FEE, 
+                      A.SYS_STAX, 
+                      A.SYS_AMT, 
+                      A.ERP_QTY, 
+                      A.ERP_GTN, 
+                      A.ERP_FEE, 
+                      A.ERP_STAX, 
+                      A.ERP_AMT 
+                 FROM 
+                      (SELECT NVL(A.CFM_DT, B.CFM_DT) AS CFM_DT, 
+                             NVL(A.WHSDL_BIZRID, B.WHSDL_BIZRID) AS WHSDL_BIZRID, 
+                             NVL(A.WHSDL_BIZRNO, B.WHSDL_BIZRNO) AS WHSDL_BIZRNO, 
+                             NVL(A.CTNR_CD, B.CTNR_CD ) AS CTNR_CD, 
+                             NVL(A.MFC_BIZRID, B.MFC_BIZRID ) AS MFC_BIZRID, 
+                             NVL(A.MFC_BIZRNO, B.MFC_BIZRNO ) AS MFC_BIZRNO, 
+                             NVL(A.MFC_BRCH_ID, B.MFC_BRCH_ID) AS MFC_BRCH_ID, 
+                             NVL(A.MFC_BRCH_NO, B.MFC_BRCH_NO) AS MFC_BRCH_NO, 
+                             NVL(A.SYS_QTY, B.SYS_QTY ) AS SYS_QTY, 
+                             NVL(A.SYS_GTN, B.SYS_GTN ) AS SYS_GTN, 
+                             NVL(A.SYS_FEE , B.SYS_FEE ) AS SYS_FEE , 
+                             NVL(A.SYS_STAX , B.SYS_STAX ) AS SYS_STAX , 
+                             NVL(A.SYS_AMT , B.SYS_AMT ) AS SYS_AMT , 
+                             NVL(B.ERP_QTY, A.ERP_QTY ) AS ERP_QTY, 
+                             NVL(B.ERP_GTN, A.ERP_GTN ) AS ERP_GTN, 
+                             NVL(B.ERP_FEE, A.ERP_FEE ) AS ERP_FEE, 
+                             NVL(B.ERP_STAX, A.ERP_STAX ) AS ERP_STAX, 
+                             NVL(B.ERP_AMT, A.ERP_AMT ) AS ERP_AMT 
+                        FROM 
+                             (SELECT A.WRHS_CFM_DT AS CFM_DT, 
+                                    A.WHSDL_BIZRNO, 
+                                    A.WHSDL_BIZRID, 
+                                    B.CTNR_CD, 
+                                    A.MFC_BIZRNO, 
+                                    A.MFC_BIZRID, 
+                                    A.MFC_BRCH_NO, 
+                                    A.MFC_BRCH_ID, 
+                                    B.CFM_QTY AS SYS_QTY, 
+                                    B.CFM_GTN AS SYS_GTN, 
+                                    B.CFM_RTL_FEE + B.CFM_WHSL_FEE AS SYS_FEE , 
+                                    B.CFM_WHSL_FEE_STAX AS SYS_STAX , 
+                                    B.CFM_GTN + B.CFM_RTL_FEE + B.CFM_WHSL_FEE + B.CFM_WHSL_FEE_STAX AS SYS_AMT , 
+                                    0 AS ERP_QTY, 
+                                    0 AS ERP_GTN, 
+                                    0 AS ERP_FEE, 
+                                    0 AS ERP_STAX, 
+                                    0 AS ERP_AMT 
+                               FROM EPCM_CFM_MST A, 
+                                    EPCM_CFM_INFO B 
+                              WHERE A.WRHS_DOC_NO = B.WRHS_DOC_NO 
+                                    AND A.RTN_STAT_CD NOT IN ('RR','WJ','SM','SW') 
+                             ) A 
+                         FULL OUTER JOIN 
+                             (SELECT A.CFM_DT, 
+                                    A.WHSDL_BIZRNO, 
+                                    A.WHSDL_BIZRID, 
+                                    B.MAPP_CTNR_CD AS CTNR_CD, 
+                                    A.MFC_BIZRNO, 
+                                    A.MFC_BIZRID, 
+                                    A.MFC_BRCH_NO , 
+                                    A.MFC_BRCH_ID, 
+                                    0 AS SYS_QTY, 
+                                    0 AS SYS_GTN, 
+                                    0 AS SYS_FEE, 
+                                    0 AS SYS_STAX, 
+                                    0 AS SYS_AMT, 
+                                    A.CFM_QTY AS ERP_QTY, 
+                                    A.CFM_GTN AS ERP_GTN, 
+                                    A.CFM_FEE AS ERP_FEE, 
+                                    A.CFM_FEE_STAX AS ERP_STAX, 
+                                    A.CFM_GTN + A.CFM_FEE + A.CFM_FEE_STAX AS ERP_AMT 
+                               FROM EPCN_MFC_CFM_INFO A, 
+                                    EPCN_MFC_CTNR_INFO B 
+                              WHERE A.MFC_CTNR_CD = B.MFC_CTNR_NM 
+                             ) B 
+                             ON A.CFM_DT = B.CFM_DT 
+                             AND A.WHSDL_BIZRNO = B.WHSDL_BIZRNO 
+                             AND A.WHSDL_BIZRID = B.WHSDL_BIZRID 
+                             AND A.CTNR_CD = B.CTNR_CD 
+                             AND A.MFC_BIZRNO = B.MFC_BIZRNO 
+                             AND A.MFC_BIZRNO = B.MFC_BIZRNO 
+                             AND A.MFC_BRCH_ID = B.MFC_BRCH_ID 
+                             AND A.MFC_BRCH_NO = B.MFC_BRCH_NO 
+                      ) A, 
+                      EPCN_BIZR_INFO B, 
+                      EPCN_BRCH_INFO D, 
+                      EPCN_STD_CTNR_CD E 
+                WHERE 1=1 
+                      AND A.WHSDL_BIZRID = B.BIZRID 
+                      AND A.WHSDL_BIZRNO = B.BIZRNO 
+                      AND A.MFC_BRCH_ID = D.BRCH_ID 
+                      AND A.MFC_BRCH_NO = D.BRCH_NO 
+                      AND A.MFC_BIZRID = D.BIZRID 
+                      AND A.MFC_BIZRNO = D.BIZRNO 
+                      AND A.CTNR_CD = E.CTNR_CD 
+                      AND 'KOR' = E.LANG_SE_CD 
+                      
+                      AND A.CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+                       
+                    <if test="MFC_BIZRID !=''  and MFC_BIZRID !=null">
+                      AND A.MFC_BIZRID = #{MFC_BIZRID} 
+                      AND A.MFC_BIZRNO = #{MFC_BIZRNO}
+                    </if>
+                    <if test="MFC_BRCH_ID !=''  and MFC_BRCH_ID !=null">
+                      AND A.MFC_BRCH_ID = #{MFC_BRCH_ID} 
+                      AND A.MFC_BRCH_NO = #{MFC_BRCH_NO}
+                    </if>
+                    <if test="WHSL_SE_CD !=''  and WHSL_SE_CD !=null">
+                      AND B.BIZR_TP_CD = #{WHSL_SE_CD}
+                    </if>
+                    <if test="WHSDL_BIZRID !=''  and WHSDL_BIZRID !=null">
+                      AND A.WHSDL_BIZRID = #{WHSDL_BIZRID} 
+                      AND A.WHSDL_BIZRNO = #{WHSDL_BIZRNO}
+                    </if>
+                    <if test="CTNR_CD !=''  and CTNR_CD !=null">
+                      AND A.CTNR_CD = #{CTNR_CD}
+                    </if>
+                       
+             ORDER BY A.CFM_DT DESC, D.BIZRNM, D.BRCH_NM, B.BIZRNM, E.CTNR_NM 
+        <if test='excelYn == null or excelYn == "" '>
+               ) 
+         WHERE PNO BETWEEN (15*0)+1 AND 15*1        
+        </if>        
+ 	</select>
+	
+	<!-- 입고정보생산자ERP대조 총 카운트 -->
+	<select id="epce0130001_select_cnt" parameterType="map" resultType="hashmap">
+        SELECT 
+               COUNT(*) AS CNT, 
+               SUM(A.SYS_QTY)        AS SYS_QTY,
+               SUM(A.SYS_GTN)        AS SYS_GTN,
+               SUM(A.SYS_FEE)        AS SYS_FEE,
+               SUM(A.SYS_STAX)       AS SYS_STAX,
+               SUM(A.SYS_TOTAL_AMT)  AS SYS_AMT,
+               SUM(A.ERP_QTY)        AS ERP_QTY,
+               SUM(A.ERP_GTN)        AS ERP_GTN,
+               SUM(A.ERP_FEE)        AS ERP_FEE,
+               SUM(A.ERP_STAX)       AS ERP_STAX,
+               SUM(A.ERP_TOTAL_AMT)  AS ERP_AMT
+          FROM 
+               (SELECT NVL(A.CFM_DT, B.CFM_DT) AS CFM_DT, 
+                      NVL(A.WHSDL_BIZRID, B.WHSDL_BIZRID) AS WHSDL_BIZRID, 
+                      NVL(A.WHSDL_BIZRNO, B.WHSDL_BIZRNO) AS WHSDL_BIZRNO, 
+                      NVL(A.CTNR_CD, B.CTNR_CD ) AS CTNR_CD, 
+                      NVL(A.MFC_BIZRID, B.MFC_BIZRID ) AS MFC_BIZRID, 
+                      NVL(A.MFC_BIZRNO, B.MFC_BIZRNO ) AS MFC_BIZRNO, 
+                      NVL(A.MFC_BRCH_ID, B.MFC_BRCH_ID) AS MFC_BRCH_ID, 
+                      NVL(A.MFC_BRCH_NO, B.MFC_BRCH_NO) AS MFC_BRCH_NO, 
+                      NVL(A.SYS_QTY, B.SYS_QTY ) AS SYS_QTY, 
+                      NVL(A.SYS_GTN, B.SYS_GTN ) AS SYS_GTN, 
+                      NVL(A.SYS_FEE , B.SYS_FEE ) AS SYS_FEE , 
+                      NVL(A.SYS_STAX , B.SYS_STAX ) AS SYS_STAX , 
+                      NVL(A.SYS_TOTAL_AMT , B.SYS_TOTAL_AMT ) AS SYS_TOTAL_AMT , 
+                      NVL(B.ERP_QTY, A.ERP_QTY ) AS ERP_QTY, 
+                      NVL(B.ERP_GTN, A.ERP_GTN ) AS ERP_GTN, 
+                      NVL(B.ERP_FEE, A.ERP_FEE ) AS ERP_FEE, 
+                      NVL(B.ERP_STAX, A.ERP_STAX ) AS ERP_STAX, 
+                      NVL(B.ERP_TOTAL_AMT, A.ERP_TOTAL_AMT ) AS ERP_TOTAL_AMT 
+                 FROM 
+                      (SELECT A.WRHS_CFM_DT AS CFM_DT, 
+                             A.WHSDL_BIZRNO, 
+                             A.WHSDL_BIZRID, 
+                             B.CTNR_CD, 
+                             A.MFC_BIZRNO, 
+                             A.MFC_BIZRID, 
+                             A.MFC_BRCH_NO, 
+                             A.MFC_BRCH_ID, 
+                             B.CFM_QTY AS SYS_QTY, 
+                             B.CFM_GTN AS SYS_GTN, 
+                             B.CFM_RTL_FEE + B.CFM_WHSL_FEE AS SYS_FEE , 
+                             B.CFM_WHSL_FEE_STAX AS SYS_STAX , 
+                             B.CFM_GTN + B.CFM_RTL_FEE + B.CFM_WHSL_FEE + B.CFM_WHSL_FEE_STAX AS SYS_TOTAL_AMT , 
+                             0 AS ERP_QTY, 
+                             0 AS ERP_GTN, 
+                             0 AS ERP_FEE, 
+                             0 AS ERP_STAX, 
+                             0 AS ERP_TOTAL_AMT 
+                        FROM EPCM_CFM_MST A, 
+                             EPCM_CFM_INFO B 
+                       WHERE A.WRHS_DOC_NO = B.WRHS_DOC_NO 
+                             AND A.RTN_STAT_CD NOT IN ('RR','WJ','SM','SW') 
+                      ) A 
+                  FULL OUTER JOIN 
+                      (SELECT A.CFM_DT, 
+                             A.WHSDL_BIZRNO, 
+                             A.WHSDL_BIZRID, 
+                             B.MAPP_CTNR_CD AS CTNR_CD, 
+                             A.MFC_BIZRNO, 
+                             A.MFC_BIZRID, 
+                             A.MFC_BRCH_NO , 
+                             A.MFC_BRCH_ID, 
+                             0 AS SYS_QTY, 
+                             0 AS SYS_GTN, 
+                             0 AS SYS_FEE, 
+                             0 AS SYS_STAX, 
+                             0 AS SYS_TOTAL_AMT, 
+                             A.CFM_QTY AS ERP_QTY, 
+                             A.CFM_GTN AS ERP_GTN, 
+                             A.CFM_FEE AS ERP_FEE, 
+                             A.CFM_FEE_STAX AS ERP_STAX, 
+                             A.CFM_GTN + A.CFM_FEE + A.CFM_FEE_STAX AS ERP_TOTAL_AMT 
+                        FROM EPCN_MFC_CFM_INFO A, 
+                             EPCN_MFC_CTNR_INFO B 
+                       WHERE A.MFC_CTNR_CD = B.MFC_CTNR_NM 
+                      ) B 
+                      ON A.CFM_DT = B.CFM_DT 
+                      AND A.WHSDL_BIZRNO = B.WHSDL_BIZRNO 
+                      AND A.WHSDL_BIZRID = B.WHSDL_BIZRID 
+                      AND A.CTNR_CD = B.CTNR_CD 
+                      AND A.MFC_BIZRNO = B.MFC_BIZRNO 
+                      AND A.MFC_BIZRNO = B.MFC_BIZRNO 
+                      AND A.MFC_BRCH_ID = B.MFC_BRCH_ID 
+                      AND A.MFC_BRCH_NO = B.MFC_BRCH_NO 
+               ) A, 
+               EPCN_BIZR_INFO B, 
+               EPCN_BRCH_INFO D, 
+               EPCN_STD_CTNR_CD E 
+         WHERE 1=1 
+               AND A.WHSDL_BIZRID = B.BIZRID 
+               AND A.WHSDL_BIZRNO = B.BIZRNO 
+               AND A.MFC_BRCH_ID = D.BRCH_ID 
+               AND A.MFC_BRCH_NO = D.BRCH_NO 
+               AND A.MFC_BIZRID = D.BIZRID 
+               AND A.MFC_BIZRNO = D.BIZRNO 
+               AND A.CTNR_CD = E.CTNR_CD 
+               AND 'KOR' = E.LANG_SE_CD 
+               
+               AND A.CFM_DT BETWEEN REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+               
+            <if test="MFC_BIZRID !=''  and MFC_BIZRID !=null">
+               AND A.MFC_BIZRID = #{MFC_BIZRID} 
+               AND A.MFC_BIZRNO = #{MFC_BIZRNO}
+            </if>
+            <if test="MFC_BRCH_ID !=''  and MFC_BRCH_ID !=null">
+               AND A.MFC_BRCH_ID = #{MFC_BRCH_ID} 
+               AND A.MFC_BRCH_NO = #{MFC_BRCH_NO}
+            </if>
+            <if test="WHSL_SE_CD !=''  and WHSL_SE_CD !=null">
+               AND B.BIZR_TP_CD = #{WHSL_SE_CD}
+            </if>
+            <if test="WHSDL_BIZRID !=''  and WHSDL_BIZRID !=null">
+               AND A.WHSDL_BIZRID = #{WHSDL_BIZRID} 
+               AND A.WHSDL_BIZRNO = #{WHSDL_BIZRNO}
+            </if>
+            <if test="CTNR_CD !=''  and CTNR_CD !=null">
+               AND A.CTNR_CD = #{CTNR_CD}
+            </if>
+	</select>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<State code="100" label="West-Malaysia" symbol="west-malaysia" horizontalCenterGap="2" verticalCenterGap="-10">
+		<Province code="101" label="Johor" symbol="Johor" horizontalCenterGap="0" verticalCenterGap="0"/>
+		<Province code="102" label="Melaka" symbol="Melaka" horizontalCenterGap="0" verticalCenterGap="0"/>
+		<Province code="103" label="Negeri Sembilan" symbol="Negeri_Sembilan" horizontalCenterGap="0" verticalCenterGap="0"/>
+		<Province code="104" label="Selangor" symbol="Selangor" horizontalCenterGap="10" verticalCenterGap="-20"/>
+		<Province code="105" label="Perak" symbol="Perak" horizontalCenterGap="-20" verticalCenterGap="0"/>
+		<Province code="106" label="Pinang" symbol="Pinang" horizontalCenterGap="0" verticalCenterGap="0"/>
+		<Province code="107" label="Kedah" symbol="Kedah" horizontalCenterGap="0" verticalCenterGap="0"/>
+		<Province code="108" label="Perlis" symbol="Perlis" horizontalCenterGap="25" verticalCenterGap="0"/>
+		<Province code="109" label="Kelantan" symbol="Kelantan" horizontalCenterGap="0" verticalCenterGap="40"/>
+		<Province code="110" label="Pahang" symbol="Pahang" horizontalCenterGap="0" verticalCenterGap="0"/>
+		<Province code="111" label="Terengganu" symbol="Terengganu" horizontalCenterGap="0" verticalCenterGap="0"/>
+		<Province code="112" label="Kuala Lumpur" symbol="Kuala_Lumpur" horizontalCenterGap="0" verticalCenterGap="0"/>
+	</State>
+	<State code="200" label="East-Malaysia" symbol="east-malaysia" horizontalCenterGap="-20" verticalCenterGap="45">
+		<Province code="201" label="Sarawak" symbol="Sarawak" horizontalCenterGap="40" verticalCenterGap="20"/>
+		<Province code="202" label="Sabah" symbol="Sabah" horizontalCenterGap="-20" verticalCenterGap="30"/>
+	</State>
+</Map>

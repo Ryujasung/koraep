@@ -1,0 +1,59 @@
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+	
+	<title>모바일 인증서 내보내기</title>
+	<link rel="stylesheet" type="text/css" href="../../../css/m_certcommon.css?v=1" />
+	<!--link rel="stylesheet" type="text/css" href="../../../css/m_certstyle.css?v=1" /-->
+</head>
+<body>
+	<div id="m-us-div-cert-result" class="m-us-layout-cert-result" oncontextmenu="return false" onselectstart="return false">
+		<div id="m-us-result-inner" class="m-us-layout-result-inner">
+	        <p class="m-us-result-icon"><img id="m-us-result-icon" /> </p>
+	        <p id="m-us-result-tit" class="m-us-result-tit"> </p>
+	        <p id="m-us-result-tit2" class="m-us-result-tit2"> </p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		function getQueryVariable(variable) {
+			var query = window.location.search.substring(1);
+			var vars = query.split("&");
+			for (var i=0; i<vars.length; i++) {
+				if(0 < vars[i].indexOf("=")) {
+					if(variable == vars[i].substring(0, vars[i].indexOf("="))) {
+						return vars[i].substring(vars[i].indexOf("=")+1, vars[i].length);
+					}
+				}
+			}
+			return null;
+		}
+		
+		var retIcon = document.getElementById('m-us-result-icon');
+		var mainMsg = document.getElementById('m-us-result-tit');
+		var subMsg = document.getElementById('m-us-result-tit2');
+		
+		function success () {
+			retIcon.setAttribute('src', '../../../img/mobile/m_result_icon1.png', 0);
+    		retIcon.setAttribute('alt', '성공 이미지', 0);
+    		mainMsg.appendChild(document.createTextNode('인증서 내보내기를 성공 했습니다.'));
+    		subMsg.appendChild(document.createTextNode('이 안내 페이지는 닫아 주세요.'));
+		}
+		
+		function failure () {
+			retIcon.setAttribute('src', '../../../img/mobile/m_result_icon2.png', 0);
+    		retIcon.setAttribute('alt', '실패 이미지', 0);
+    		mainMsg.appendChild(document.createTextNode('인증서 내보내기를 실패 했습니다.'));
+    		subMsg.appendChild(document.createTextNode('이 안내 페이지는 닫아 주세요.'));
+		}
+		
+		var result = getQueryVariable('result');
+		
+		if ( '0' == result ) {
+			success();
+		} else {
+			failure();
+			alert('errCode : ' + getQueryVariable('errCode') + '\nerrMsg : ' + getQueryVariable('errMsg'));
+		}
+	</script>
+</body>

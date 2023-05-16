@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 고지서취소요청내역조회 -->
+
+<mapper namespace="egovframework.mapper.ce.ep.EPCE2371302Mapper">
+
+    <!--고지서취소요청내역조회  -->  
+    <select id="epce2371302_select2" parameterType="map" resultType="hashmap">
+        SELECT PNO , 
+               CNL_REQ_SEQ,
+               REQ_DATE, 
+               BILL_DOC_NO, 
+               BIZRNM, 
+               REQ_ID, 
+               USER_NM, 
+               REQ_STAT_NM, 
+               BILL_SE_NM,
+               BILL_SE_CD,
+               REQ_RSN, 
+               PARAM 
+          FROM (
+                <![CDATA[
+                SELECT ROW_NUMBER()OVER(ORDER BY TO_CHAR(REQ_DTTM,'YYYY-MM-DD') DESC, A.BILL_DOC_NO ) AS PNO ,
+                      A.CNL_REQ_SEQ, 
+                      TO_CHAR(REQ_DTTM,'YYYY-MM-DD') AS REQ_DATE,
+                      A.BILL_DOC_NO, 
+                      C.BIZRNM, 
+                      A.REQ_ID, 
+                      D.USER_NM, 
+                      EPCN_ETC_NM(A.REQ_STAT_CD, 'D056') AS REQ_STAT_NM, 
+                      EPCN_ETC_NM(A.BILL_SE_CD, 'D031') AS BILL_SE_NM,
+                      A.BILL_SE_CD,
+                      A.REQ_RSN, 
+                      '<a href="javascript:link();" class="gridLink">'||'확인'||'</a>' AS PARAM 
+                ]]>
+                 FROM EPGM_BILL_CNL_REQ_INFO A, 
+                      EPGM_BILL_LST B, 
+                      EPCN_BIZR_INFO C, 
+                      EPCN_USER_INFO D 
+                WHERE 1=1 
+                      AND A.BILL_DOC_NO = B.BILL_DOC_NO(+)
+                      AND D.BIZRID = C.BIZRID
+                      AND D.BIZRNO = C.BIZRNO 
+                      AND A.REQ_ID = D.USER_ID
+                      AND TO_CHAR(A.REQ_DTTM,'YYYYMMDD') BETWEEN #{START_DT} AND #{END_DT}
+        
+                      <if test="REQ_ID != ''  "    >
+                      AND A.REQ_ID LIKE '%' || #{REQ_ID} || '%'
+                      </if>
+                      <if test="BILL_DOC_NO != ''">        
+                      AND A.BILL_DOC_NO LIKE '%' || #{BILL_DOC_NO} || '%'
+                      </if>
+                      <if test="MFC_BIZRID != ''">
+                      AND B.MFC_BIZRID = #{MFC_BIZRID}
+                      </if>
+                      <if test="MFC_BIZRNO != ''">
+                      AND B.MFC_BIZRNO = #{MFC_BIZRNO}
+                      </if>
+                      <if test="REQ_STAT_CD != ''">
+                      AND A.REQ_STAT_CD = #{REQ_STAT_CD}
+                      </if>
+             ORDER BY A.CNL_REQ_SEQ DESC, A.BILL_DOC_NO 
+               ) 
+         WHERE 1=1 
+               AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+    </select>
+
+
+    <!-- 고지서취소요청내역조회 -->  
+    <select id="epce2371302_select2_cnt" parameterType="map" resultType="int">
+        SELECT COUNT(*) AS CNT
+         FROM EPGM_BILL_CNL_REQ_INFO A, 
+              EPGM_BILL_LST B, 
+              EPCN_BIZR_INFO C, 
+              EPCN_USER_INFO D 
+        WHERE 1=1 
+              AND A.BILL_DOC_NO = B.BILL_DOC_NO(+)
+              AND D.BIZRID = C.BIZRID
+              AND D.BIZRNO = C.BIZRNO  
+              AND A.REQ_ID = D.USER_ID
+              AND TO_CHAR(A.REQ_DTTM,'YYYYMMDD') BETWEEN #{START_DT} AND #{END_DT}
+    
+              <if test="REQ_ID != ''  "    >
+              AND A.REQ_ID LIKE '%' || #{REQ_ID} || '%'
+              </if>
+              <if test="BILL_DOC_NO != ''">        
+              AND A.BILL_DOC_NO LIKE '%' || #{BILL_DOC_NO} || '%'
+              </if>
+              <if test="MFC_BIZRID != ''">
+              AND B.MFC_BIZRID = #{MFC_BIZRID}
+              </if>
+              <if test="MFC_BIZRNO != ''">
+              AND B.MFC_BIZRNO = #{MFC_BIZRNO}
+              </if>
+              <if test="REQ_STAT_CD != ''">
+              AND A.REQ_STAT_CD = #{REQ_STAT_CD}
+              </if>
+    </select>
+  
+    <!--고지서취소요청내역조회 사유 팝업  -->  
+    <select id="epce2371302_select3" parameterType="map" resultType="String">
+        SELECT REQ_RSN 
+          FROM EPGM_BILL_CNL_REQ_INFO 
+         WHERE 1=1 
+               AND CNL_REQ_SEQ = #{CNL_REQ_SEQ}
+    </select>
+</mapper>

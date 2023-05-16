@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.wh.ep.EPWH8126601Mapper">
+    
+	<!-- 문의/답변 총 게시글 수 조회 -->
+    <select id="epwh8126601" parameterType="map" resultType="hashmap">
+        SELECT COUNT(*) AS CNT,
+        	   SUM(CASE WHEN CNTN_SE = 'Q' THEN 1 ELSE 0 END) AS QCNT
+          FROM EPCN_ASK_ANSR A
+         WHERE 1=1
+           AND A.CNTN_SE = 'Q'
+           AND EXISTS (SELECT * FROM 
+				                     (SELECT * FROM EPCN_ASK_ANSR
+						                   WHERE 1=1
+			
+						                     AND REG_PRSN_ID = #{USER_ID}
+				
+						                    <if test='CONDITION == "sbj"'>
+						                     AND upper(SBJ) LIKE '%' || upper(#{WORD}) || '%'
+						                    </if>
+						                    <if test='CONDITION == "cntn"'>
+						                     AND upper(CNTN) LIKE '%' || upper(#{WORD}) || '%'
+						                    </if>
+						                    <if test='CONDITION == "prsn"'>
+						                     AND upper(CNTN) LIKE '%' || upper(#{WORD}) || '%'
+						                    </if>) C
+					              WHERE A.ASK_SEQ = C.ASK_SEQ)
+    </select>
+    
+    <!-- 문의/답변 조회(Paging) -->
+	<select id="epwh8126601_select" parameterType="map" resultType="hashmap">
+	    SELECT ASK_SEQ,
+	    	   CNTN_SE,
+		       SBJ,
+		       CNTN_TP,
+		       REG_PRSN_ID,
+		       USER_NM,
+		       BIZRNM,
+		       REG_DTTM,
+		       RNUM,
+		       NVL2((SELECT ASK_SEQ FROM EPCN_ASK_ANSR S WHERE T.ASK_SEQ = S.ASK_SEQ AND S.CNTN_SE = 'A'), 'Y', 'N') AS ANS_YN
+		  FROM (SELECT ASK_SEQ,
+			    	   CNTN_SE,
+				       SBJ,
+				       CNTN_TP,
+				       REG_PRSN_ID,
+				       USER_NM,
+				       BIZRNM,
+				       REG_DTTM,
+				       ROWNUM AS RNUM
+				  FROM (SELECT A.ASK_SEQ,
+				  	   A.CNTN_SE,
+				       A.SBJ,
+				       A.CNTN_TP,
+				       A.REG_PRSN_ID,
+				       B.USER_NM,
+				       C.BIZRNM,
+				       TO_CHAR(A.REG_DTTM, 'YYYYMMDD') AS REG_DTTM
+				  FROM EPCN_ASK_ANSR A
+				  	   LEFT JOIN EPCN_USER_INFO B
+				  	   ON A.REG_PRSN_ID = B.USER_ID
+				  	   LEFT JOIN EPCN_BIZR_INFO C
+                       ON B.BIZRNO = C.BIZRNO
+				 WHERE 1=1
+				     AND A.CNTN_SE = 'Q'
+				     AND EXISTS (SELECT * FROM 
+					                      (SELECT * FROM EPCN_ASK_ANSR D
+					                      				 LEFT JOIN EPCN_USER_INFO E
+				  	   									 ON D.REG_PRSN_ID = E.USER_ID
+								                   WHERE 1=1
+								
+								                     AND D.ASK_SEQ IN (SELECT ASK_SEQ FROM EPCN_ASK_ANSR WHERE REG_PRSN_ID = #{USER_ID})
+								
+								                    <if test='CONDITION == "sbj"'>
+								                     AND upper(D.SBJ) LIKE '%' || upper(#{WORD}) || '%'
+								                    </if>
+								                    <if test='CONDITION == "cntn"'>
+								                     AND upper(D.CNTN) LIKE '%' || upper(#{WORD}) || '%'
+								                    </if>
+								                    <if test='CONDITION == "prsn"'>
+								                     AND upper(E.USER_NM) LIKE '%' || upper(#{WORD}) || '%'
+								                    </if>) C
+					              WHERE A.ASK_SEQ = C.ASK_SEQ)
+				 ORDER BY ASK_SEQ DESC, CNTN_SE DESC)
+				 ) T
+		 WHERE 1=1
+	     <if test="PAGE != ''">
+		   AND RNUM BETWEEN #{STARTROW} AND #{ENDROW}
+	     </if>
+	</select>
+    
+</mapper>

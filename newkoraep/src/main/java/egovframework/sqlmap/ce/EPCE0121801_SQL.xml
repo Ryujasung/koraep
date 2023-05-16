@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE0121801Mapper">
+
+	 <!--거래처구분 코드  조회 -->
+	<select id="epce0121801_select" resultType="hashmap">
+		  SELECT ETC_CD, ETC_CD_NM
+			FROM EPCN_ETC_CD 
+		  WHERE 1=1
+			  AND GRP_CD ='B001'
+			  AND USE_YN = 'Y'
+			  AND ETC_CD IN ('R1','R2')
+		  ORDER BY SEL_ORD
+	</select>
+	
+	<!-- 소매거래처관리 리스트 -->
+	<select id="epce0121801_select2" resultType="hashmap">
+	
+		<if test='excelYn == null or excelYn == "" '>
+		 SELECT 
+		 			PNO 
+		 			,WHSDL_BRCH_ID
+		 			,WHSDL_BRCH_NO
+		 			,WHSDL_BIZRID
+		 			,WHSDL_BIZRNO
+			        ,RTL_CUST_BRCH_ID
+			        ,RTL_CUST_BRCH_NO
+			        ,RTL_CUST_BIZRID
+			        ,RTL_CUST_BIZRNO
+			        ,WHSDL_BIZRNM
+			        ,WHSDL_BRCH_NM		
+			        ,BIZR_TP_CD
+			        ,BIZR_TP_CD_NM	
+			        ,CUST_BIZRNM
+			        ,CUST_BIZRNM_LINK
+			        ,CUST_BRCH_NM 			
+			        ,CUST_BIZRNO_DE 	
+			        ,STAT_CD 
+			        ,STAT_NM 
+			        ,BIZR_SE_CD
+			        ,UPLOAD_YN
+			        ,FILE_NM
+			        ,FILE_NM_ORI
+					,DTL_SN    
+					,SAVE_FILE_NM  
+					,FILE_PATH
+		  FROM (
+		</if>
+		SELECT  ROW_NUMBER()OVER(ORDER BY D.SEL_ORD, A.WHSDL_BIZRID, E.SEL_ORD, A.RTL_CUST_BIZRID, DECODE(A.RTL_CUST_BRCH_NO,'9999999999','0','1'), C.BRCH_NM) AS PNO 
+					,A.WHSDL_BRCH_ID, A.WHSDL_BRCH_NO, A.WHSDL_BIZRID, A.WHSDL_BIZRNO
+			        ,A.RTL_CUST_BRCH_ID, A.RTL_CUST_BRCH_NO, A.RTL_CUST_BIZRID, A.RTL_CUST_BIZRNO
+			        ,D.BIZRNM AS WHSDL_BIZRNM
+			        ,B.BRCH_NM AS WHSDL_BRCH_NM		
+			        ,C.BIZR_TP_CD AS BIZR_TP_CD
+			        ,EPCN_ETC_NM(C.BIZR_TP_CD, 'B001') AS BIZR_TP_CD_NM	
+			        ,C.BIZRNM as CUST_BIZRNM
+			        ,<![CDATA['<a href="javascript:fn_pop()" class="gridLink">' || C.BIZRNM || '</a>' as CUST_BIZRNM_LINK
+			        ,C.BRCH_NM AS CUST_BRCH_NM 			
+			        ,PI_DECRYPT(C.BIZRNO) AS CUST_BIZRNO_DE 	
+			        ,A.STAT_CD 
+			        ,EPCN_ETC_NM(A.STAT_CD, 'S011') AS STAT_NM 
+			        ,E.BIZR_SE_CD
+			        ,CASE WHEN F.FILE_NM IS NULL THEN 'N' ELSE 'Y' END AS UPLOAD_YN
+			        ,'<a href="javascript:link();" target="_self" class="gridLink">'|| F.FILE_NM ||'</a>' AS FILE_NM]]>
+		   			,F.FILE_NM AS FILE_NM_ORI
+					,F.DTL_SN    
+					,F.SAVE_FILE_NM  
+					,F.FILE_PATH
+		  FROM EPCN_RTL_CUST_INFO A 
+		  LEFT OUTER JOIN EPCN_RTL_CUST_FILE F 
+		    ON A.WHSDL_BIZRID = F.WHSDL_BIZRID
+		   AND A.RTL_CUST_BIZRID = F.RTL_CUST_BIZRID
+			        ,EPCN_BRCH_INFO B 
+			        ,EPCN_BRCH_INFO C 
+			        ,EPCN_BIZR_INFO D 
+			        ,EPCN_BIZR_INFO E
+		  WHERE 1=1
+			   AND A.WHSDL_BRCH_ID = B.BRCH_ID
+			   AND A.WHSDL_BRCH_NO = B.BRCH_NO
+			   AND A.WHSDL_BIZRID = B.BIZRID
+			   AND A.WHSDL_BIZRNO = B.BIZRNO
+		       AND A.RTL_CUST_BRCH_ID = C.BRCH_ID
+		       AND A.RTL_CUST_BRCH_NO = C.BRCH_NO
+		       AND A.RTL_CUST_BIZRID = C.BIZRID
+		       AND A.RTL_CUST_BIZRNO = C.BIZRNO
+		       AND A.WHSDL_BIZRID = D.BIZRID
+		       AND A.WHSDL_BIZRNO = D.BIZRNO
+		       AND A.RTL_CUST_BIZRID = E.BIZRID
+           	   AND A.RTL_CUST_BIZRNO = E.BIZRNO
+		     
+		    <if test='BIZRID != null and BIZRID != "" '>
+		    	AND A.WHSDL_BIZRID = #{BIZRID}
+		    </if>
+		    <if test='BIZRNO != null and BIZRNO != "" '>
+		    	AND A.WHSDL_BIZRNO = #{BIZRNO}
+		    </if>
+		    <if test='AREA_CD_SEL != null and AREA_CD_SEL != "" '>
+		    	AND C.AREA_CD  = #{AREA_CD_SEL}
+		    </if>
+		    <if test='STAT_CD_SEL != null and STAT_CD_SEL != "" '>
+		    	AND A.STAT_CD  = #{STAT_CD_SEL}
+		    </if>
+		    <if test='BIZR_TP_CD_SEL != null and BIZR_TP_CD_SEL != "" '>
+		    	AND C.BIZR_TP_CD = #{BIZR_TP_CD_SEL}
+		    </if>
+		    <if test='CUST_BIZRNM_SEL != null and CUST_BIZRNM_SEL != "" '>
+		    	AND C.BIZRNM like '%' || #{CUST_BIZRNM_SEL} || '%'
+		    </if>
+		    <if test='CUST_BIZRNO_SEL != null and CUST_BIZRNO_SEL != "" '>
+		    	AND C.BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO_SEL})
+		    </if>
+		    <if test="WHSDL_BIZRID !=null and WHSDL_BIZRID !='' ">
+				AND A.WHSDL_BIZRID	= #{WHSDL_BIZRID}
+			</if>
+			<if test="RTL_CUST_BIZRID !=null and RTL_CUST_BIZRID !='' ">
+				AND A.RTL_CUST_BIZRID	= #{RTL_CUST_BIZRID}
+			</if>
+		    <if test='FRC_YN != null and FRC_YN != "" '>
+		    	AND A.FRC_YN = #{FRC_YN}
+		    </if>
+		    
+		 ORDER BY D.SEL_ORD, A.WHSDL_BIZRID, E.SEL_ORD, A.RTL_CUST_BIZRID, DECODE(A.RTL_CUST_BRCH_NO,'9999999999','0','1'), C.BRCH_NM
+		    
+		 <if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+         </if>	   
+		    
+	</select>
+	
+	<!-- 소매거래처관리 리스트 -->
+	<select id="epce0121801_select2_cnt" resultType="int">
+
+		 SELECT COUNT(1)
+		   FROM EPCN_RTL_CUST_INFO A 
+			        ,EPCN_BRCH_INFO B 
+			        ,EPCN_BRCH_INFO C 
+			        ,EPCN_BIZR_INFO D 
+			        ,EPCN_BIZR_INFO E
+		  WHERE 1=1
+			   AND A.WHSDL_BRCH_ID = B.BRCH_ID
+			   AND A.WHSDL_BRCH_NO = B.BRCH_NO
+			   AND A.WHSDL_BIZRID = B.BIZRID
+			   AND A.WHSDL_BIZRNO = B.BIZRNO
+		       AND A.RTL_CUST_BRCH_ID = C.BRCH_ID
+		       AND A.RTL_CUST_BRCH_NO = C.BRCH_NO
+		       AND A.RTL_CUST_BIZRID = C.BIZRID
+		       AND A.RTL_CUST_BIZRNO = C.BIZRNO
+		       AND A.WHSDL_BIZRID = D.BIZRID
+		       AND A.WHSDL_BIZRNO = D.BIZRNO
+		       AND A.RTL_CUST_BIZRID = E.BIZRID
+           	   AND A.RTL_CUST_BIZRNO = E.BIZRNO
+		     
+		    <if test='BIZRID != null and BIZRID != "" '>
+		    	AND A.WHSDL_BIZRID = #{BIZRID}
+		    </if>
+		    <if test='BIZRNO != null and BIZRNO != "" '>
+		    	AND A.WHSDL_BIZRNO = #{BIZRNO}
+		    </if>
+		    <if test='AREA_CD_SEL != null and AREA_CD_SEL != "" '>
+		    	AND C.AREA_CD  = #{AREA_CD_SEL}
+		    </if>
+		    <if test='STAT_CD_SEL != null and STAT_CD_SEL != "" '>
+		    	AND A.STAT_CD  = #{STAT_CD_SEL}
+		    </if>
+		    <if test='BIZR_TP_CD_SEL != null and BIZR_TP_CD_SEL != "" '>
+		    	AND C.BIZR_TP_CD = #{BIZR_TP_CD_SEL}
+		    </if>
+		    <if test='CUST_BIZRNM_SEL != null and CUST_BIZRNM_SEL != "" '>
+		    	AND C.BIZRNM like '%' || #{CUST_BIZRNM_SEL} || '%'
+		    </if>
+		    <if test='CUST_BIZRNO_SEL != null and CUST_BIZRNO_SEL != "" '>
+		    	AND C.BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO_SEL})
+		    </if>
+		    
+		    <if test='FRC_YN != null and FRC_YN != "" '>
+		    	AND A.FRC_YN = #{FRC_YN}
+		    </if>
+
+	</select>
+	
+	<!-- 소매거래처관리 사업자 및 지점 등록 여부 -->
+	<select id="epce0121831_select" resultType="hashmap">
+		 SELECT A.BIZRID, A.BIZR_TP_CD, NVL(B.BRCH_ID, 'N') as BRCH_ID
+		   FROM EPCN_BIZR_INFO A
+		   			,EPCN_BRCH_INFO B
+	    WHERE 1=1
+		    AND A.BIZRNO = ECL_ENCRYPT(#{BIZRNO})
+		    AND A.BIZRID = B.BIZRID(+)
+		    AND A.BIZRNO = B.BIZRNO(+)
+		    AND B.BRCH_NO(+) = '9999999999'
+		    AND ROWNUM = 1
+    </select>
+    
+    <!-- 소매거래처관리 데이터 체크 -->
+	<select id="epce0121831_select2" resultType="hashmap">
+		 /*
+		 SELECT 'C001' as ERR_CD
+		   FROM EPCN_BIZR_INFO
+	    WHERE 1=1
+		    AND BIZRNO = ECL_ENCRYPT( BIZRNO )
+		    AND BIZR_TP_CD NOT IN ('R1','R2')
+		 
+		 UNION ALL   
+		 */
+		 
+		 SELECT 'A002' as ERR_CD
+		   FROM EPCN_RTL_CUST_INFO
+		WHERE 1=1
+		    AND WHSDL_BRCH_ID = #{WHSDL_BRCH_ID}
+			AND WHSDL_BRCH_NO = #{WHSDL_BRCH_NO}
+			AND WHSDL_BIZRID = #{WHSDL_BIZRID}
+			AND WHSDL_BIZRNO = #{WHSDL_BIZRNO}
+			/*AND RTL_CUST_BIZRID =*/ 
+			AND RTL_CUST_BIZRNO = ECL_ENCRYPT(#{BIZRNO})
+			AND RTL_CUST_BRCH_ID = '9999999999'
+			AND RTL_CUST_BRCH_NO = '9999999999'
+    </select>
+    
+    <!-- 소매거래처관리 데이터 체크 (엑셀저장용) -->
+	<select id="epce0121831_select3" resultType="hashmap">
+    	SELECT A.BIZRID AS WHSDL_BIZRID
+			        ,A.BIZRNO AS WHSDL_BIZRNO
+			        ,A.BIZRNM AS WHSDL_BIZRNM
+			        ,A.BRCH_ID AS WHSDL_BRCH_ID
+			        ,A.BRCH_NO AS WHSDL_BRCH_NO 
+			        ,A.BRCH_NM AS WHSDL_BRCH_NM
+			        ,(SELECT BIZR_TP_CD FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1) AS BIZR_TP_CD
+			        ,#{BIZRNM} AS BIZRNM
+			        ,#{BIZRNO} AS BIZRNO
+			        ,#{BIZRNO} AS BIZRNO_DE
+			        ,A.BIZR_TP_CD AS WHSDL_BIZR_TP_CD /* 도매업자 사업자유형 체크 */
+			        ,(
+			        	SELECT 'Y'
+						  FROM EPCN_RTL_CUST_INFO
+						WHERE 1=1
+						    AND WHSDL_BRCH_ID = A.BRCH_ID
+							AND WHSDL_BRCH_NO = A.BRCH_NO
+							AND WHSDL_BIZRID = A.BIZRID
+							AND WHSDL_BIZRNO = A.BIZRNO
+							AND RTL_CUST_BIZRNO = ECL_ENCRYPT(#{BIZRNO})
+							/*AND RTL_CUST_BRCH_ID = '9999999999'*/
+							AND RTL_CUST_BRCH_NO = '9999999999'
+			        ) as DATA_YN /* 데이터 존재 여부 */
+		  FROM EPCN_BRCH_INFO A
+		WHERE 1=1
+		    AND A.BIZRNO = #{WHSDL_BIZRNO}
+		    AND A.BRCH_NO = #{WHSDL_BRCH_NO}
+		    AND A.STAT_CD = 'Y'
+    </select>
+	
+	<update id="epce0121831_insert">
+		INSERT INTO EPCN_BIZR_INFO
+		  (
+		    BIZRID, 
+		    BIZRNO, 
+		    BIZRNM, 
+		    BIZR_TP_CD, 
+		    BIZR_STAT_CD, 
+		    BIZR_SE_CD, 
+		    REG_PRSN_ID, 
+		    REG_DTTM
+		  )
+		  VALUES
+		  (
+		  	#{BIZRID}, 
+		    ECL_ENCRYPT(#{BIZRNO}), 
+		    #{BIZRNM}, 
+		    #{BIZR_TP_CD},
+		    'Y',
+		    'H',
+		    #{S_USER_ID},
+		    SYSDATE
+		  )
+  	</update>
+	
+	<update id="epce0121831_insert2">
+		 INSERT INTO EPCN_BRCH_INFO
+		 (
+		    BRCH_ID, 
+		    BRCH_NO, 
+		    BIZRID, 
+		    BIZRNO, 
+		    BIZRNM, 
+		    BRCH_NM, 
+		    BIZR_TP_CD,
+		    STAT_CD, 
+		    REG_PRSN_ID, 
+		    REG_DTTM
+		 )
+		 VALUES
+		 (
+		 	'9999999999',
+		    '9999999999', 
+		    #{BIZRID}, 
+		    ECL_ENCRYPT(#{BIZRNO}), 
+		    #{BIZRNM}, 
+		    (   
+		        SELECT LANG_NM
+				  FROM EPCN_LANG_INFO A
+				        	,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') B
+			    WHERE A.LANG_CD = 'hq'
+				    AND A.LANG_SE_CD = B.LANG_SE_CD
+    		 ), 
+		    #{BIZR_TP_CD},
+		    'Y', 
+		    #{S_USER_ID}, 
+		    SYSDATE
+		 )
+	</update>
+
+	<update id="epce0121831_insert3">
+		 INSERT INTO EPCN_RTL_CUST_INFO
+		 (
+		    WHSDL_BRCH_ID, 
+		    WHSDL_BRCH_NO,
+		    WHSDL_BIZRID, 
+		    WHSDL_BIZRNO, 
+		    RTL_CUST_BIZRID, 
+		    RTL_CUST_BIZRNO, 
+		    RTL_CUST_BRCH_ID, 
+		    RTL_CUST_BRCH_NO, 
+		    RTL_CUST_NM, 
+		    WHSDL_BIZRNM,
+		    WHSDL_BRCH_NM, 
+		    BIZR_TP_CD, 
+		    STAT_CD, 
+		    REG_PRSN_ID, 
+		    REG_DTTM
+		    
+		    <if test='FRC_YN != null and FRC_YN != "" '>
+		    	,FRC_YN
+		    </if>
+		 )
+		 
+		 SELECT #{WHSDL_BRCH_ID}
+				    ,#{WHSDL_BRCH_NO}
+				    ,#{WHSDL_BIZRID}
+				    ,#{WHSDL_BIZRNO}
+				    ,BIZRID
+				    ,BIZRNO
+				    ,NVL(#{BRCH_ID}, '9999999999')
+				    ,'9999999999'
+			        ,BIZRNM
+			        ,#{WHSDL_BIZRNM}
+			        ,#{WHSDL_BRCH_NM}
+			        ,BIZR_TP_CD
+			        ,'Y'
+			        ,#{S_USER_ID}
+			        ,SYSDATE
+			        
+			        <if test='FRC_YN != null and FRC_YN != "" '>
+				    	,#{FRC_YN}
+				    </if>
+			        
+		   FROM EPCN_BIZR_INFO
+		WHERE 1=1
+		    AND BIZRID = #{BIZRID}
+		    AND BIZRNO = ECL_ENCRYPT(#{BIZRNO})
+		    
+	</update>
+    
+    <!-- 소매거래처관리 데이터 확인  -->
+    <select id="epce0121831_select4" resultType="int">
+        SELECT COUNT(*) AS CNT 
+          FROM EPCN_RTL_CUST_INFO 
+         WHERE WHSDL_BRCH_ID = #{WHSDL_BRCH_ID} 
+               AND WHSDL_BRCH_NO = #{WHSDL_BRCH_NO} 
+               AND WHSDL_BIZRID = #{WHSDL_BIZRID} 
+               AND WHSDL_BIZRNO = #{WHSDL_BIZRNO} 
+               AND RTL_CUST_BIZRNO = 
+               (SELECT BIZRNO 
+                 FROM EPCN_BIZR_INFO 
+                WHERE 1=1 
+                      AND BIZRID = #{BIZRID} 
+                      AND BIZRNO = ECL_ENCRYPT(#{BIZRNO}) 
+               )        
+    </select>
+    
+	
+	<update id="epce0121831_update">
+	
+		MERGE INTO EPCN_RTL_CUST_INFO A
+		 USING 
+		  (
+		  	   SELECT #{WHSDL_BRCH_ID} as WHSDL_BRCH_ID
+	                      ,#{WHSDL_BRCH_NO} as WHSDL_BRCH_NO
+	                      ,#{WHSDL_BIZRID} as WHSDL_BIZRID
+	                      ,#{WHSDL_BIZRNO} as WHSDL_BIZRNO
+	                      ,BIZRID
+	                      ,BIZRNO
+	                      ,'9999999999' as BRCH_ID
+	                      ,'9999999999' as BRCH_NO
+	                      ,BIZRNM
+	                      ,#{WHSDL_BIZRNM} as WHSDL_BIZRNM
+	                      ,#{WHSDL_BRCH_NM} as WHSDL_BRCH_NM
+	                      ,BIZR_TP_CD
+	                      ,'Y' as STAT_CD
+	                      ,#{S_USER_ID} as REG_PRSN_ID
+	                      ,SYSDATE as REG_DTTM
+	                      <if test='FRC_YN != null and FRC_YN != "" '>
+	                        ,#{FRC_YN} as FRC_YN
+	                      </if>  
+	                FROM EPCN_BIZR_INFO
+	              WHERE 1=1
+	                  AND BIZRID = #{BIZRID}
+	                  AND BIZRNO = ECL_ENCRYPT(#{BIZRNO})
+		  ) B
+		
+	      ON (
+	             		A.WHSDL_BRCH_ID = B.WHSDL_BRCH_ID
+	             AND A.WHSDL_BRCH_NO = B.WHSDL_BRCH_NO
+	             AND A.WHSDL_BIZRID = B.WHSDL_BIZRID
+	             AND A.WHSDL_BIZRNO = B.WHSDL_BIZRNO
+	             AND A.RTL_CUST_BIZRID = B.BIZRID
+	             AND A.RTL_CUST_BIZRNO = B.BIZRNO
+	          )
+	          
+	      WHEN MATCHED THEN
+	        
+	        UPDATE SET FRC_YN = 'Y'
+	          
+	      WHEN NOT MATCHED THEN
+	
+	          INSERT 
+	               (
+	                  WHSDL_BRCH_ID, 
+	                  WHSDL_BRCH_NO, 
+	                  WHSDL_BIZRID, 
+	                  WHSDL_BIZRNO, 
+	                  RTL_CUST_BIZRID, 
+	                  RTL_CUST_BIZRNO, 
+	                  RTL_CUST_BRCH_ID, 
+	                  RTL_CUST_BRCH_NO, 
+	                  RTL_CUST_NM, 
+	                  WHSDL_BIZRNM,
+	                  WHSDL_BRCH_NM, 
+	                  BIZR_TP_CD, 
+	                  STAT_CD, 
+	                  REG_PRSN_ID, 
+	                  REG_DTTM
+	                  
+	                  <if test='FRC_YN != null and FRC_YN != "" '>
+	                    ,FRC_YN
+	                  </if>
+	               )
+	               VALUES
+	               (
+	               	  B.WHSDL_BRCH_ID, 
+	                  B.WHSDL_BRCH_NO, 
+	                  B.WHSDL_BIZRID, 
+	                  B.WHSDL_BIZRNO, 
+	                  B.BIZRID, 
+	                  B.BIZRNO, 
+	                  B.BRCH_ID, 
+	                  B.BRCH_NO, 
+	                  B.BIZRNM, 
+	                  B.WHSDL_BIZRNM,
+	                  B.WHSDL_BRCH_NM, 
+	                  B.BIZR_TP_CD, 
+	                  B.STAT_CD, 
+	                  B.REG_PRSN_ID, 
+	                  B.REG_DTTM
+	                  
+	                  <if test='FRC_YN != null and FRC_YN != "" '>
+	                    ,B.FRC_YN
+	                  </if>
+	               )
+	               
+	
+	</update>
+	
+	<!-- 거래상태 변경 -->
+	<update id="epce0121801_update"  parameterType="hashmap">
+		UPDATE EPCN_RTL_CUST_INFO 
+		      SET STAT_CD = #{EXEC_STAT_CD},
+         			UPD_PRSN_ID = #{S_USER_ID}, 
+					UPD_DTTM = SYSDATE
+        WHERE 1=1
+            AND WHSDL_BRCH_ID=#{WHSDL_BRCH_ID}
+            AND WHSDL_BRCH_NO=#{WHSDL_BRCH_NO}
+            AND WHSDL_BIZRID=#{WHSDL_BIZRID}
+            AND WHSDL_BIZRNO=#{WHSDL_BIZRNO}
+            AND RTL_CUST_BRCH_ID=#{RTL_CUST_BRCH_ID}
+            AND RTL_CUST_BRCH_NO=#{RTL_CUST_BRCH_NO}
+            AND RTL_CUST_BIZRID=#{RTL_CUST_BIZRID}
+            AND RTL_CUST_BIZRNO=#{RTL_CUST_BIZRNO}
+	</update>
+	
+	<!-- 사업자정보 변경 -->
+	<update id="epce0121888_update"  parameterType="hashmap">
+		   UPDATE EPCN_BIZR_INFO
+			     SET BIZRNM = #{CUST_BIZRNM_M}
+			WHERE 1=1
+			    AND BIZRID = #{RTL_CUST_BIZRID}
+			    AND BIZRNO = #{RTL_CUST_BIZRNO}
+			    AND BIZR_SE_CD = 'H' /* 사업자구분이 H:수기 인 건만 수정가능 */
+	</update>
+	
+	<!-- 지점정보 변경 -->
+	<update id="epce0121888_update2"  parameterType="hashmap">
+		  UPDATE EPCN_BRCH_INFO
+			    SET BIZRNM = #{CUST_BIZRNM_M}
+		   WHERE 1=1
+			   AND BRCH_ID = #{RTL_CUST_BRCH_ID}
+			   AND BRCH_NO = #{RTL_CUST_BRCH_NO}
+			   AND BIZRID = #{RTL_CUST_BIZRID}
+			   AND BIZRNO = #{RTL_CUST_BIZRNO}
+	</update>
+	
+	<!-- 거래처정보 변경 -->
+	<update id="epce0121888_update3"  parameterType="hashmap">
+		  UPDATE EPCN_RTL_CUST_INFO
+			    SET RTL_CUST_NM = #{CUST_BIZRNM_M}
+		   WHERE 1=1
+			   AND WHSDL_BRCH_ID = #{WHSDL_BRCH_ID}
+			   AND WHSDL_BRCH_NO = #{WHSDL_BRCH_NO}
+			   AND WHSDL_BIZRID = #{WHSDL_BIZRID}
+			   AND WHSDL_BIZRNO = #{WHSDL_BIZRNO}
+			   AND RTL_CUST_BRCH_ID = #{RTL_CUST_BRCH_ID}
+			   AND RTL_CUST_BRCH_NO = #{RTL_CUST_BRCH_NO}
+			   AND RTL_CUST_BIZRID = #{RTL_CUST_BIZRID}
+			   AND RTL_CUST_BIZRNO = #{RTL_CUST_BIZRNO}
+	</update>
+	
+		<!--증빙파일 삭제  -->
+	<delete id="epce2925897_delete"  parameterType="map" >
+			DELETE FROM EPCM_RTRVL_PRF_FILE 
+			WHERE 1=1
+			AND WHSDL_BIZRID	= #{WHSDL_BIZRID}
+			AND WHSDL_BIZRNO 	= #{WHSDL_BIZRNO}
+			AND RTRVL_DT 			= #{RTRVL_DT}
+			AND DTL_SN				= #{DTL_SN}
+	</delete>
+	
+<!-- 
+/***********************************************************************************************************************************************
+ *협의서증빙자료관리 저장
+ ************************************************************************************************************************************************/
+ -->
+
+	<!-- 증빙파일등록 등록 -->
+	<insert  id="epce01218881_insert"  parameterType="map" >
+		INSERT
+			INTO EPCN_RTL_CUST_FILE
+				(
+					WHSDL_BIZRNO
+					,WHSDL_BIZRID
+					,RTL_CUST_BIZRID
+					,RTL_CUST_BIZRNO
+					,DTL_SN
+					,FILE_NM
+					,SAVE_FILE_NM
+					,FILE_PATH
+					,REG_PRSN_ID
+					,REG_DTTM
+				)values(
+					#{WHSDL_BIZRNO}
+					,#{WHSDL_BIZRID}
+					,#{RTL_CUST_BIZRID}
+					,#{RTL_CUST_BIZRNO}
+					, (	SELECT 	NVL(MAX(DTL_SN), 0) + 1 AS DTL_SN 
+						FROM 	EPCN_RTL_CUST_FILE 
+						WHERE 	1=1
+						AND WHSDL_BIZRNO  = #{WHSDL_BIZRNO}
+						AND WHSDL_BIZRID  	= #{WHSDL_BIZRID}
+						AND RTL_CUST_BIZRID = #{RTL_CUST_BIZRID}
+						AND RTL_CUST_BIZRNO = #{RTL_CUST_BIZRNO}) 
+					,#{FILE_NM}
+					,#{SAVE_FILE_NM}
+					,#{FILE_PATH}
+					,#{REG_PRSN_ID}
+					,SYSDATE
+				)
+	</insert>
+	
+		<!--증빙파일 삭제  -->
+	<delete id="epce0121801_delete"  parameterType="map" >
+			DELETE FROM EPCN_RTL_CUST_FILE 
+			WHERE 1=1
+			AND WHSDL_BIZRID	= #{WHSDL_BIZRID}
+			AND WHSDL_BIZRNO 	= #{WHSDL_BIZRNO}
+			AND RTL_CUST_BIZRID = #{RTL_CUST_BIZRID}
+			AND RTL_CUST_BIZRNO	= #{RTL_CUST_BIZRNO}
+	</delete>
+	
+</mapper>

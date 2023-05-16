@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE9000101Mapper">
+	
+	<!-- 회수정보관리 조회 -->
+	<select id="EPCE9000101_select"   parameterType="map" resultType="hashmap">
+		<if test='excelYn == null or excelYn == "" '>
+			SELECT 
+					  *
+			 FROM (   
+		</if> 
+					SELECT
+							  	ROW_NUMBER()OVER(ORDER BY RTRVL_DT DESC , PBOX_LST_NO ) AS PNO, 
+							  	PBOX_LST_NO,
+						       RTRVL_DT,
+						       CUST_BIZRNM,
+						       PI_DECRYPT(CUST_BIZRNO) as CUST_BIZRNO,
+						       WHSDL_BIZRNM,
+						       PI_DECRYPT(WHSDL_BIZRNO) as WHSDL_BIZRNO,
+						       DECODE(BOX_SE_CD,'1','정상','비정상') AS BOX_SE_CD,
+						       AREA_CD,
+						       EPCN_ETC_NM(AREA_CD,'B010') AS AREA_NM,
+						       DLIVY_QTY,
+						       RTN_QTY,
+						       DST_QTY,
+						       KEEP_QTY
+						FROM   EPCM_PBOX_INFO
+						WHERE 1=1
+						AND  RTRVL_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+						<if test='WHSDL_BIZRNO !=null  and WHSDL_BIZRNO !="" '  >
+								AND  WHSDL_BIZRNO		=  #{WHSDL_BIZRNO}
+						</if>
+						<if test='WHSDL_BIZRNO_DE !=null  and WHSDL_BIZRNO_DE !="" '  >
+									AND  WHSDL_BIZRNO = PI_ENCRYPT(#{WHSDL_BIZRNO_DE})
+						</if>
+						
+        
+           <if test='excelYn == null or excelYn == "" '>
+			)
+			WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+		</if>	     	
+               	
+	</select>
+	
+	<!-- 회수정보관리 조회 카운트 -->
+	<select id="EPCE9000101_select_cnt" parameterType="map" resultType="hashmap">
+	
+				SELECT 
+							COUNT(*)                                     AS CNT
+							,SUM(A.RMG_QTY_TOT-DLIVY_QTY_TOT+RTN_QTY_TOT)                     AS FH_RTRVL_QTY_TOT
+							,SUM(A.DLIVY_QTY_TOT)                     AS FB_RTRVL_QTY_TOT
+							,SUM(A.RTN_QTY_TOT) AS RTRVL_QTY_TOT
+							,SUM(A.DLIVY_GTN_TOT)                        AS RTRVL_GTN_TOT
+							,SUM(A.RTN_GTN_TOT)		             AS REG_RTRVL_FEE_TOT
+
+				FROM 
+							EPCM_PBOX_MST A
+					where 1=1	
+				<choose>
+					<when test='SEL_GBN !=null and SEL_GBN =="RTRVL_CFM_DT" '  >
+						AND  A.REG_DTTM BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+					</when>
+					<otherwise>
+						AND  A.REG_DTTM BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+					</otherwise>
+				</choose>
+										
+				<if test='BIZR_TP_CD !=null  and BIZR_TP_CD !="" '  >
+						AND 	B.BIZR_TP_CD 				=  #{BIZR_TP_CD}
+				</if>
+				<if test='WHSDL_BIZRNO !=null  and WHSDL_BIZRNO !="" '  >
+						AND  A.WHSDL_BIZRNO		=  #{WHSDL_BIZRNO}
+						AND  A.WHSDL_BIZRID		= 	#{WHSDL_BIZRID}
+				</if>
+				<if test='WHSDL_BRCH_ID !=null  and WHSDL_BRCH_ID !="" '  >
+						AND  A.WHSDL_BRCH_ID		=	#{WHSDL_BRCH_ID}
+						AND  A.WHSDL_BRCH_NO	=	#{WHSDL_BRCH_NO}
+				</if>
+				<if test='RTRVL_STAT_CD !=null  and RTRVL_STAT_CD !="" ' >
+						AND 	A.RTRVL_STAT_CD		=	#{RTRVL_STAT_CD}
+				</if>
+				
+				<if test='WHSDL_BIZRNO_DE !=null  and WHSDL_BIZRNO_DE !="" '  >
+						AND  A.WHSDL_BIZRNO = PI_ENCRYPT(#{WHSDL_BIZRNO_DE})
+				</if>
+				
+				<if test='PRPS_CD != null and PRPS_CD != "" ' >
+					<if test="PRPS_CD.equalsIgnoreCase('0') ">
+						AND A.FB_RTRVL_QTY_TOT != 0
+					</if>
+					<if test="PRPS_CD.equalsIgnoreCase('1') ">
+						AND A.FH_RTRVL_QTY_TOT != 0
+					</if>								
+				</if>				
+			
+				
+	</select>
+	
+	<!--중복체크  -->
+	<select id="EPCE9000131_chk" parameterType="map" resultType="int">
+			SELECT COUNT(*)
+			FROM EPCM_PBOX_INFO 
+			WHERE RTRVL_DT = REPLACE(#{RTRVL_DT}, '-')
+			AND CUST_BIZRNM = #{CUST_BIZRNM}
+			AND CUST_BIZRNO = PI_ENCRYPT(#{CUST_BIZRNO})
+			AND WHSDL_BIZRNM = #{WHSDL_BIZRNM}
+			AND WHSDL_BIZRNO = PI_ENCRYPT(#{WHSDL_BIZRNO})
+			AND DLIVY_QTY = #{DLIVY_QTY}
+			AND RTN_QTY = #{RTN_QTY}
+			AND DST_QTY = #{DST_QTY}
+			      
+	</select>          
+	
+	<!-- 총 회수량 합계 조회 -->
+	<select id="EPCE9000101_select2" parameterType="map" resultType="hashmap">
+		 	SELECT   
+						TO_CHAR(NVL(T1,0),'9,999,999,999,999') 			AS T1
+						,TO_CHAR(NVL(T2,0),'9,999,999,999,999')  		AS T2
+						,TO_CHAR(NVL(T3,0),'9,999,999,999,999') 			AS T3
+						,TO_CHAR(NVL(T1,0)-(NVL(T2,0)+NVL(T3,0)),'9,999,999,999,999')  	AS T4
+						,TO_CHAR(NVL(T5,0),'9,999,999,999,999') 			AS T5
+			FROM                  
+					(       
+						SELECT      
+									<if test='PRPS_CD == null or PRPS_CD == "" ' >
+									SUM(A.FH_RTRVL_QTY_TOT)+ SUM(A.FB_RTRVL_QTY_TOT) AS T1
+									,SUM(CASE WHEN RTRVL_STAT_CD   IN ('VC','WC','RC') THEN FH_RTRVL_QTY_TOT + FB_RTRVL_QTY_TOT  END ) AS T2
+									,SUM(CASE WHEN RTRVL_STAT_CD  = 'PC' THEN FH_RTRVL_QTY_TOT + FB_RTRVL_QTY_TOT  END ) AS T3
+									,SUM(CASE WHEN RTRVL_STAT_CD   IN ('RG' ,'WG') THEN FH_RTRVL_QTY_TOT + FB_RTRVL_QTY_TOT  END ) AS T5
+									</if>		
+												
+									<if test='PRPS_CD != null and PRPS_CD != "" ' >
+										<if test="PRPS_CD.equalsIgnoreCase('0') ">
+									 SUM(A.FB_RTRVL_QTY_TOT) AS T1
+									,SUM(CASE WHEN RTRVL_STAT_CD   IN ('VC','WC','RC') THEN FB_RTRVL_QTY_TOT  END ) AS T2
+									,SUM(CASE WHEN RTRVL_STAT_CD  = 'PC' THEN FB_RTRVL_QTY_TOT  END ) AS T3
+									,SUM(CASE WHEN RTRVL_STAT_CD   IN ('RG' ,'WG') THEN FB_RTRVL_QTY_TOT  END ) AS T5
+										</if>
+										<if test="PRPS_CD.equalsIgnoreCase('1') ">
+ 									 SUM(A.FH_RTRVL_QTY_TOT) AS T1
+									,SUM(CASE WHEN RTRVL_STAT_CD   IN ('VC','WC','RC') THEN FH_RTRVL_QTY_TOT  END ) AS T2
+									,SUM(CASE WHEN RTRVL_STAT_CD  = 'PC' THEN FH_RTRVL_QTY_TOT  END ) AS T3
+									,SUM(CASE WHEN RTRVL_STAT_CD   IN ('RG' ,'WG') THEN FH_RTRVL_QTY_TOT END ) AS T5
+										</if>								
+									</if>
+															
+						FROM 
+									EPCM_RTRVL_MST A
+									,(SELECT * FROM EPCN_BRCH_INFO WHERE BIZR_TP_CD IN ('W1','W2')  )B
+									<if test='BIZRNM !=null  and BIZRNM !="" ' >
+									,(SELECT * FROM EPCN_BRCH_INFO  WHERE 1=1 AND BIZRNM LIKE '%' || #{BIZRNM}   || '%'	) C
+					 				</if> 
+						WHERE 1=1
+							AND  A.WHSDL_BIZRNO		 =	B.BIZRNO 
+							AND  A.WHSDL_BIZRID		 =	B.BIZRID
+							AND  A.WHSDL_BRCH_ID		 =	B.BRCH_ID
+							AND  A.WHSDL_BRCH_NO	 =	B.BRCH_NO 
+						
+						<if test='BIZRNM !=null  and BIZRNM !="" ' >
+							AND  A.RTL_CUST_BIZRNO	 =	C.BIZRNO 
+							AND  A.RTL_CUST_BIZRID		 =	C.BIZRID
+							AND  A.RTL_CUST_BRCH_ID	 =	C.BRCH_ID
+							AND  A.RTL_CUST_BRCH_NO	 =	C.BRCH_NO 
+						</if> 
+						
+						<choose>
+							<when test='SEL_GBN !=null and SEL_GBN =="RTRVL_CFM_DT" '  >
+								AND  A.RTRVL_CFM_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+							</when>
+							<otherwise>
+								AND  A.RTRVL_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+							</otherwise>
+						</choose>
+						
+						<if test='BIZR_TP_CD !=null  and BIZR_TP_CD !="" '  >
+								AND 	B.BIZR_TP_CD 				=  #{BIZR_TP_CD}
+						</if>
+						<if test='WHSDL_BIZRNO !=null  and WHSDL_BIZRNO !="" '  >
+								AND  A.WHSDL_BIZRNO		=  #{WHSDL_BIZRNO}
+								AND  A.WHSDL_BIZRID		= 	#{WHSDL_BIZRID}
+						</if>
+						<if test='WHSDL_BRCH_ID !=null  and WHSDL_BRCH_ID !="" '  >
+								AND  A.WHSDL_BRCH_ID		=	#{WHSDL_BRCH_ID}
+								AND  A.WHSDL_BRCH_NO	=	#{WHSDL_BRCH_NO}
+						</if>
+						<if test='RTRVL_STAT_CD !=null  and RTRVL_STAT_CD !="" ' >
+								AND 	A.RTRVL_STAT_CD		=	#{RTRVL_STAT_CD}
+						</if>
+						
+						<if test='WHSDL_BIZRNO_DE !=null  and WHSDL_BIZRNO_DE !="" '  >
+								AND  A.WHSDL_BIZRNO = PI_ENCRYPT(#{WHSDL_BIZRNO_DE})
+						</if>
+						
+						<if test='PRPS_CD != null and PRPS_CD != "" ' >
+							<if test="PRPS_CD.equalsIgnoreCase('0') ">
+								AND A.FB_RTRVL_QTY_TOT != 0
+							</if>
+							<if test="PRPS_CD.equalsIgnoreCase('1') ">
+								AND A.FH_RTRVL_QTY_TOT != 0
+							</if>								
+						</if>						
+						
+						AND EXISTS (
+						                   SELECT 'X'
+						                     FROM EPCN_BRCH_INFO S1
+							                          ,EPCN_ATH_GRP_USER S2
+							                          ,EPCN_ATH_GRP_BIZR S3
+						                   WHERE 1=1
+						                       AND A.WHSDL_BIZRID = S1.BIZRID
+						                       AND A.WHSDL_BIZRNO = S1.BIZRNO
+						                       AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+						                       AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+						                       AND S2.USER_ID = #{T_USER_ID}
+						                       AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+						                       AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+						                       AND S1.AREA_CD = S3.AREA_CD
+					                  )
+						
+					)	
+	</select>
+	
+		<!-- 회수정보관리 삭제 ,등록일괄확인  상태값 체크 -->
+	<select id="EPCE9000101_select3" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM EPCM_RTRVL_MST 
+		WHERE 1=1
+		AND	RTRVL_DOC_NO 	 =	#{RTRVL_DOC_NO}
+		AND RTRVL_STAT_CD	NOT IN('RG' ,'WG','RJ','WJ','VC')
+	</select>
+	
+	<!-- 회수정보관리 회수등록구분 -->
+	<select id="EPCE9000101_select4" parameterType="map" resultType="String">
+					SELECT     
+									CASE     
+										WHEN RTRVL_REG_SE = 'M' 
+								       	THEN 'VC'
+								      	WHEN RTRVL_REG_SE = 'P' 
+								       	THEN 'WG'
+								       	WHEN RTRVL_REG_SE = 'D' 
+								       	THEN 'RG'
+								    END AS STAT_CD_NM 	
+					FROM 
+								EPCN_RTL_CUST_INFO
+					WHERE 1=1
+					AND WHSDL_BRCH_ID		= #{WHSDL_BRCH_ID}
+					AND WHSDL_BRCH_NO   	= #{WHSDL_BRCH_NO}
+					AND WHSDL_BIZRID    	= #{WHSDL_BIZRID}
+					AND WHSDL_BIZRNO    	= #{WHSDL_BIZRNO}
+					AND RTL_CUST_BIZRNO 	= #{RTL_CUST_BIZRNO}
+	</select>
+	          
+	<!-- 회수등록일괄확인 -->
+	<update id="EPCE9000101_update" parameterType="map" >	
+			UPDATE 
+						EPCM_RTRVL_MST 
+			SET 
+						RTRVL_STAT_CD 	=	#{RTRVL_STAT_CD} 
+						,RTRVL_CFM_DT 	= 	TO_CHAR(SYSDATE,'YYYYMMDD')
+						,UPD_PRSN_ID		=	#{UPD_PRSN_ID}
+						,UPD_DTTM		=	SYSDATE
+			WHERE  1=1 
+			AND 		RTRVL_DOC_NO =#{RTRVL_DOC_NO}  
+	</update>	
+	
+	<!-- 회수정보관리 삭제 -->
+	<delete id="EPCE9000101_delete" parameterType="map">
+		DELETE FROM EPCM_PBOX_INFO WHERE PBOX_LST_NO = #{PBOX_LST_NO}
+	</delete>
+	
+<!-- 
+/***********************************************************************************************************************************************
+*	회수정보 등록
+************************************************************************************************************************************************/
+ -->
+ 
+ 	<!-- 회수정보저장  소매거래처 조회  -->
+ 	<select id="EPCE9000131_select" parameterType="map" resultType="hashmap">
+		SELECT	 
+					A.BIZRID
+					,ECL_DECRYPT(A.BIZRNO) AS BIZRNO
+				 	,NVL(B.BRCH_ID, 'N') as BRCH_ID
+					,B.BRCH_NO
+		FROM 	
+					EPCN_BIZR_INFO	 	A
+		   			,EPCN_BRCH_INFO 	B
+	    WHERE 1=1
+	    AND A.BIZRNO 	= ECL_ENCRYPT(#{CUST_BIZRNO})
+	    AND A.BIZRID 	= B.BIZRID(+)
+	    AND A.BIZRNO 	= B.BIZRNO(+)
+	    AND B.BRCH_NO(+) = '9999999999'
+	    AND ROWNUM = 1
+	</select>
+ 	
+ 	<!--회수정보저장 중복체크  -->
+	<select id="EPCE9000131_select2" parameterType="map" resultType="int">
+			SELECT COUNT(*)
+			FROM EPCM_RTRVL_MST  A
+					 ,EPCM_RTRVL_INFO B 
+			WHERE 1=1
+			AND A.RTRVL_DOC_NO			=B.RTRVL_DOC_NO
+			AND	A.WHSDL_BIZRID		=#{WHSDL_BIZRID}
+			AND	A.WHSDL_BIZRNO		=#{WHSDL_BIZRNO}
+			AND	A.WHSDL_BRCH_ID		=#{WHSDL_BRCH_ID}
+			AND	A.WHSDL_BRCH_NO		=#{WHSDL_BRCH_NO}
+			AND	A.RTL_CUST_BIZRNO	=ECL_ENCRYPT(#{RTL_CUST_BIZRNO})
+			AND	A.RTL_CUST_BIZRID	=#{RTL_CUST_BIZRID}
+			AND	A.RTL_CUST_BRCH_ID	=#{RTL_CUST_BRCH_ID}
+			AND	A.RTL_CUST_BRCH_NO	=#{RTL_CUST_BRCH_NO}   
+			AND	A.RTRVL_REG_DT		= TO_CHAR(SYSDATE,'YYYYMMDD')
+			AND	B.RTRVL_DT				=REPLACE(#{RTRVL_DT}, '-')
+			AND	B.RTRVL_CTNR_CD		=#{RTRVL_CTNR_CD}   
+			<if test='RTRVL_DOC_NO !=null  and RTRVL_DOC_NO !="" '  >   
+			AND   A.RTRVL_DOC_NO   	!=#{RTRVL_DOC_NO}
+			</if>         
+			      
+	</select>          
+	      
+	<!--회수정보저장 도매업자지점아이디 조회 -->
+	<select id="EPCE9000131_select3" parameterType="map" resultType="hashmap">
+			SELECT BRCH_ID ,BRCH_NM
+			FROM EPCN_BRCH_INFO 
+			WHERE 1=1   
+			AND	BRCH_NO		=	#{WHSDL_BRCH_NO}
+			AND	BIZRID			=	#{WHSDL_BIZRID}
+			AND	BIZRNO			=	#{WHSDL_BIZRNO}  
+	</select>   
+	     
+	<!-- 회수정보저장 엑셀등록 조회 -->
+	<select id="EPCE9000131_select4" parameterType="map" resultType="hashmap">
+				SELECT 
+			 		  #{RTRVL_DT} as RTRVL_DT,
+			 		  #{CUST_BIZRNM} as CUST_BIZRNM,
+			 		  #{CUST_BIZRNO} as CUST_BIZRNO,
+			 		  #{WHSDL_BIZRNO} as WHSDL_BIZRNO,
+			 		  #{WHSDL_BIZRNM} as WHSDL_BIZRNM,
+			 		  #{AREA_CD} as AREA_CD,
+			 		  #{DLIVY_QTY} as DLIVY_QTY,
+			 		  #{RTN_QTY} as RTN_QTY,
+			 		  #{DST_QTY} as DST_QTY
+					FROM   dual
+	     
+	</select>  
+        
+    <!-- 소매업자 조회 -->
+    <select id="EPCE9000131_select5" parameterType="map" resultType="hashmap">
+           SELECT  
+                     --D.BIZRNM AS WHSDL_BIZRNM
+                     A.RTL_CUST_NM AS WHSDL_BIZRNM
+                    ,PI_DECRYPT(C.BIZRNO) AS CUST_BIZRNO_DE     
+           FROM EPCN_RTL_CUST_INFO A 
+                    ,EPCN_BRCH_INFO B 
+                    ,EPCN_BRCH_INFO C 
+                    ,EPCN_BIZR_INFO D 
+                    ,EPCN_BIZR_INFO E
+          WHERE 1=1
+               AND A.WHSDL_BRCH_ID = B.BRCH_ID
+               AND A.WHSDL_BRCH_NO = B.BRCH_NO
+               AND A.WHSDL_BIZRID = B.BIZRID
+               AND A.WHSDL_BIZRNO = B.BIZRNO
+               AND A.RTL_CUST_BRCH_ID = C.BRCH_ID
+               AND A.RTL_CUST_BRCH_NO = C.BRCH_NO
+               AND A.RTL_CUST_BIZRID = C.BIZRID
+               AND A.RTL_CUST_BIZRNO = C.BIZRNO
+               AND A.WHSDL_BIZRID = D.BIZRID
+               AND A.WHSDL_BIZRNO = D.BIZRNO
+               AND A.RTL_CUST_BIZRID = E.BIZRID
+               AND A.RTL_CUST_BIZRNO = E.BIZRNO
+               AND A.WHSDL_BIZRID =  #{WHSDL_BIZRID}
+               AND A.WHSDL_BIZRNO =  #{WHSDL_BIZRNO}
+               AND A.STAT_CD = 'Y'
+               AND B.STAT_CD = 'Y'
+               AND C.STAT_CD = 'Y'
+         ORDER BY D.SEL_ORD, A.WHSDL_BIZRID, E.SEL_ORD, A.RTL_CUST_BIZRID, DECODE(A.RTL_CUST_BRCH_NO,'9999999999','0','1'), C.BRCH_NM
+         
+    </select> 
+        
+	<!--MST 등록  -->
+	<insert id="EPCE9000131_insert"  parameterType="map" >	
+		INSERT INTO
+				EPCM_PBOX_MST
+				(
+				
+							BOX_DOC_NO,
+					        WHSDL_BIZRNO,
+					        WHSDL_BIZRID,
+					        WHSDL_BRCH_NO,
+					        WHSDL_BRCH_ID,
+					        BOX_DT,
+					      
+					        REG_PRSN_ID,
+					        REG_DTTM
+					
+				)
+				VALUES
+				(
+				 	 #{BOX_DOC_NO}
+					,#{WHSDL_BIZRNO}
+					,#{WHSDL_BIZRID}
+					,#{WHSDL_BRCH_NO}
+					,#{WHSDL_BRCH_ID}
+					, TO_CHAR(SYSDATE,'YYYYMMDD')
+					
+					,#{S_USER_ID}
+					,SYSDATE
+				 )
+	</insert>
+	       
+	 <!--INFO 등록  -->
+	 <insert id="EPCE9000131_insert2"  parameterType="map" >	
+ 			INSERT
+					INTO   EPCM_PBOX_INFO VALUES
+					       (
+					              '',
+					              REPLACE(#{RTRVL_DT}, '-'),
+					              #{CUST_BIZRNM},
+					              ECL_ENCRYPT(#{CUST_BIZRNO}),
+					              #{WHSDL_BIZRNM},
+					              ECL_ENCRYPT(#{WHSDL_BIZRNO}) ,
+					              '1',
+					              TO_CHAR(SYSDATE,'YYYYMMDD'),
+					              (SELECT A.ETC_CD  FROM EPCN_BIZR_INFO B , EPCN_ETC_CD A WHERE decode(SUBSTR(B.ADDR1, 0, INSTR(ADDR1, ' ', 1, 1)) , '제주특별자치도 ' ,'제주도 ','세종특별자치시 ' ,'세종시 ','경남 ' ,'경상남도 ' ,SUBSTR(B.ADDR1, 0, INSTR(ADDR1, ' ', 1, 1)))= A.ETC_CD_NM||' '  AND B.BIZRNM = #{WHSDL_BIZRNM}),
+					              #{DLIVY_QTY},
+					              #{RTN_QTY},
+					              #{DST_QTY},
+					              to_number(#{RTN_QTY})-to_number(#{DLIVY_QTY})-to_number(#{DST_QTY}),
+					              #{S_USER_ID},
+					              sysdate,
+					              '',
+					              ''
+					       )
+	 </insert>
+	 
+	 <insert id="pbox_add"  parameterType="map" >	
+ 			INSERT
+			INTO   EPCM_PBOX_BIZR values
+			       (
+			              #{WHSDL_BIZRNO},
+			              (SELECT BIZRNM FROM epcn_bizr_info WHERE BIZRNO = #{WHSDL_BIZRNO}),
+			              '',
+			              sysdate
+		              )
+	 </insert>
+	 
+	  <insert id="pbox_delete"  parameterType="map" >	
+ 			
+ 			DELETE FROM EPCM_PBOX_BIZR 
+ 			WHERE WHSDL_BIZRNO = #{WHSDL_BIZRNO}
+	 </insert>
+	 
+	 <select id="pbox_bizr_select"  parameterType="map"  resultType="hashmap">
+	 SELECT WHSDL_BIZRNM,
+	       WHSDL_BIZRNO
+	FROM   EPCM_PBOX_BIZR
+	 </select>
+	 
+	  <update id="EPCE9000142_update" parameterType="map" >    
+			UPDATE EPCM_PBOX_INFO
+			SET    RTRVL_DT = REPLACE(#{RTRVL_DT}, '-'),
+			       AREA_CD = #{AREA_CD},
+			       DLIVY_QTY = #{DLIVY_QTY},
+			       RTN_QTY = #{RTN_QTY},
+			       DST_QTY = #{DST_QTY},
+			       KEEP_QTY  =  to_number(#{RTN_QTY})-to_number(#{DLIVY_QTY})-to_number(#{DST_QTY})
+	       WHERE PBOX_LST_NO =  #{PBOX_LST_NO}
+	</update>
+	 
+	 <!-- MST update -->  
+	 <update id="EPCE9000131_update" parameterType="map" >    
+			UPDATE    
+				 EPCM_PBOX_MST  SET
+				 RMG_QTY_TOT = #{TOT}+#{RMG_QTY_TOT}+#{RTN_QTY_TOT}-#{DLIVY_QTY_TOT},
+				 RTN_QTY_TOT =#{RTN_QTY_TOT},
+				 DLIVY_QTY_TOT =#{DLIVY_QTY_TOT},
+				DLIVY_GTN_TOT =#{DLIVY_GTN_TOT},
+				RTN_GTN_TOT =#{RTN_GTN_TOT}
+				WHERE 1=1
+				AND BOX_DOC_NO =#{BOX_DOC_NO}   
+	</update>
+	
+	
+<!-- 	  
+/***********************************************************************************************************************************************
+ *	P-BOX 상세보기
+ ************************************************************************************************************************************************/
+  -->
+	<!--P-BOX 상세보기  -->
+	<select id="EPCE9000142_select" parameterType="map" resultType="hashmap">
+			  SELECT a.RTRVL_DT,
+				       a.CUST_BIZRNM,
+				       PI_DECRYPT( a.CUST_BIZRNO) CUST_BIZRNO,
+				       a.BOX_SE_CD,
+				       a.RTRVL_CTNR_CD,
+				       a.DLIVY_QTY,
+				       a.DLIVY_GTN,
+				       a.RTN_QTY,
+				       a.RTN_GTN,
+				       PI_DECRYPT(b.WHSDL_BIZRNO) WHSDL_BIZRNO,
+				       c.BIZRNM AS WHSDL_BIZRNM, 
+				       d.BRCH_NM AS AREA_NM,
+				       PI_DECRYPT(b.WHSDL_BIZRNO) WHSDL_BIZRNO
+				
+				FROM   EPCM_PBOX_INFO a ,
+				   		 EPCM_pbox_mst b , 
+				   		 EPCN_BIZR_INFO c, 
+				   		 EPCN_BRCH_INFO d
+				   
+				WHERE  a.BOX_DOC_NO = #{BOX_DOC_NO}
+				AND a.BOX_DOC_NO = b.BOX_DOC_NO
+				AND b.WHSDL_BIZRNO =  c.BIZRNO
+				AND c.BIZRNO=d.BIZRNO
+				
+	</select>
+		      
+	<!-- info 삭제 -->	    
+  	<delete id="EPCE9000142_delete" parameterType="map">
+  			DELETE FROM EPCM_RTRVL_INFO WHERE RTRVL_DOC_NO =#{RTRVL_DOC_NO}
+  	</delete>
+	     
+	     
+	 <select id="epCE9000131_SN" parameterType="string" resultType="Long">
+	 select NVL(max(DTL_SN),0) from EPCM_PBOX_INFO
+	 where BOX_DOC_NO = #{BOX_DOC_NO}
+	 
+	  </select>   
+	 <select id="EPCE9000131_tot" parameterType="map" resultType="hashmap">
+	   SELECT   nvl(SUM(RMG_QTY_TOT),0) SUMTOT FROM EPCM_PBOX_MST
+			WHERE (BOX_DT, BOX_DOC_NO ) IN (  
+				select max(BOX_DT) BOX_DT, MAX(BOX_DOC_NO) BOX_DOC_NO from EPCM_PBOX_MST
+      				     WHERE WHSDL_BIZRNO = #{WHSDL_BIZRNO}
+      				     and WHSDL_BIZRID =#{WHSDL_BIZRID}
+      				     )
+      		     and WHSDL_BIZRNO = #{WHSDL_BIZRNO}
+      				     and WHSDL_BIZRID =#{WHSDL_BIZRID}	     
+		 
+		
+	  </select>   
+	
+<!-- 	  
+/***********************************************************************************************************************************************
+  *	회수정보 조정
+ ************************************************************************************************************************************************/
+ --> 
+	<!--회수조정시 마스터 상태값 변경  -->
+	<update id="EPCE90001422_update" parameterType="map">
+  			UPDATE EPCM_RTRVL_MST SET 
+  			RTRVL_STAT_CD 				=	#{RTRVL_STAT_CD}
+  			WHERE RTRVL_DOC_NO 	=	#{RTRVL_DOC_NO}
+  	</update>
+	   
+	  
+<!-- 
+/***********************************************************************************************************************************************
+ *회수증빙자료관리 조회
+ ************************************************************************************************************************************************/
+ -->   
+ 
+ 	<!--회수정보수정 그리드 초기값  -->
+	<select id="EPCE9000197_select" parameterType="map" resultType="hashmap">
+			SELECT    
+				<![CDATA[ 
+						EPCN_BIZR_NM(WHSDL_BIZRID,WHSDL_BIZRNO) AS WHSDL_BIZRNM
+						,RTRVL_DT
+						,TO_CHAR(REG_DTTM,'YYYY-MM-DD') AS REG_DTTM
+						,'<a href="javascript:link();" target="_self" class="gridLink">'||FILE_NM||'</a>' AS FILE_NM
+						,FILE_NM AS FILE_NM_ORI
+						,DTL_SN    
+						,SAVE_FILE_NM  
+						,FILE_PATH
+						,WHSDL_BIZRNO
+						,WHSDL_BIZRID
+				]]>            
+			   FROM
+						EPCM_RTRVL_PRF_FILE A
+			WHERE 1=1
+			<if test="START_DT !=null and START_DT !='' ">
+				AND   RTRVL_DT BETWEEN  REPLACE(#{START_DT}, '-')  AND REPLACE(#{END_DT}, '-') 
+			</if>
+			<if test="WHSDL_BIZRNO !=null and WHSDL_BIZRNO !='' ">
+				AND WHSDL_BIZRID	= #{WHSDL_BIZRID}
+				AND WHSDL_BIZRNO 	= #{WHSDL_BIZRNO}
+			</if>	
+			<if test="DTL_SN !=null and DTL_SN !='' ">
+				AND	RTRVL_DT  	=#{RTRVL_DT}
+				AND 	DTL_SN		= #{DTL_SN}
+			</if>  
+			
+			AND EXISTS (
+				                   SELECT 'X'
+				                     FROM EPCN_BRCH_INFO S1
+					                          ,EPCN_ATH_GRP_USER S2
+					                          ,EPCN_ATH_GRP_BIZR S3
+				                   WHERE 1=1
+				                       AND A.WHSDL_BIZRID = S1.BIZRID
+				                       AND A.WHSDL_BIZRNO = S1.BIZRNO
+				                       AND S2.USER_ID = #{T_USER_ID}
+				                       AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+				                       AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+				                       AND S1.AREA_CD = S3.AREA_CD
+			                  )
+			
+	</select>    
+	
+	<!--증빙파일 삭제  -->
+	<delete id="EPCE9000197_delete"  parameterType="map" >
+			DELETE FROM EPCM_RTRVL_PRF_FILE 
+			WHERE 1=1
+			AND WHSDL_BIZRID	= #{WHSDL_BIZRID}
+			AND WHSDL_BIZRNO 	= #{WHSDL_BIZRNO}
+			AND RTRVL_DT 			= #{RTRVL_DT}
+			AND DTL_SN				= #{DTL_SN}
+	</delete>
+	
+<!-- 
+/***********************************************************************************************************************************************
+ *회수증빙자료관리 저장
+ ************************************************************************************************************************************************/
+ -->
+
+	<!-- 증빙파일등록 등록 -->
+	<insert  id="EPCE9000188_insert"  parameterType="map" >
+		INSERT
+			INTO EPCM_RTRVL_PRF_FILE
+				(
+					WHSDL_BIZRNO
+					,WHSDL_BIZRID
+					,RTRVL_DT
+					,DTL_SN
+					,FILE_NM
+					,SAVE_FILE_NM
+					,FILE_PATH
+					,REG_PRSN_ID
+					,REG_DTTM
+				)values(
+					#{WHSDL_BIZRNO}
+					,#{WHSDL_BIZRID}
+					,REPLACE(#{RTRVL_DT}, '-')
+					, (	SELECT 	NVL(MAX(DTL_SN), 0) + 1 AS DTL_SN 
+						FROM 	EPCM_RTRVL_PRF_FILE 
+						WHERE 	1=1
+						AND WHSDL_BIZRNO  = #{WHSDL_BIZRNO}
+						AND WHSDL_BIZRID  	= #{WHSDL_BIZRID}
+						AND RTRVL_DT      		= REPLACE(#{RTRVL_DT}, '-') ) 
+					,#{FILE_NM}
+					,#{SAVE_FILE_NM}
+					,#{FILE_PATH}
+					,#{REG_PRSN_ID}
+					,SYSDATE
+				)
+	</insert>
+	
+</mapper>
+

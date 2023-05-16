@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE6190101Mapper">
+      
+    <!-- 지역별출고회수현황 조회  -->
+    <select id="epce6190101_select" parameterType="map" resultType="hashmap">
+        SELECT AREA_CD,
+      		  EPCN_ETC_NM(AREA_CD,'B010') AS AREA_NM ,
+      		  DLIVY_QTY ,
+		        CFM_QTY ,
+		        DRCT_RTRVL_QTY ,
+		        EXCH_QTY ,
+		        RTRVL_QTY,
+		        CFM_GTN ,
+     				CASE TT.DLIVY_QTY_TOT      WHEN 0 THEN 0 ELSE ROUND(DLIVY_QTY / TT.DLIVY_QTY_TOT * 100, 2) END           AS DLIVY_QTY_RT ,
+				    CASE TT.CFM_QTY_TOT        WHEN 0 THEN 0 ELSE ROUND(CFM_QTY / TT.CFM_QTY_TOT * 100, 2) END               AS CFM_QTY_RT ,
+				    CASE TT.DRCT_RTRVL_QTY_TOT WHEN 0 THEN 0 ELSE ROUND(DRCT_RTRVL_QTY / TT.DRCT_RTRVL_QTY_TOT * 100, 2) END AS DRCT_RTRVL_QTY_RT ,
+				    CASE TT.RTRVL_QTY_TOT      WHEN 0 THEN 0 ELSE ROUND(RTRVL_QTY / TT.RTRVL_QTY_TOT * 100, 2) END           AS RTRVL_QTY_RT ,
+				    CASE TT.CFM_GTN_TOT        WHEN 0 THEN 0 ELSE ROUND(CFM_GTN / TT.CFM_GTN_TOT * 100, 2) END               AS CFM_GTN_RT ,
+				    CASE DLIVY_QTY             WHEN 0 THEN 0 ELSE ROUND(RTRVL_QTY / DLIVY_QTY * 100, 2) END                  AS QTY_RT,
+				    TT.DLIVY_QTY_TOT ,
+				    TT.CFM_QTY_TOT ,
+				    TT.DRCT_RTRVL_QTY_TOT ,
+				    TT.RTRVL_QTY_TOT
+       FROM (
+				       SELECT AREA_CD,
+				       		  	SUM(DLIVY_QTY) AS DLIVY_QTY ,
+							        SUM(CFM_QTY) AS CFM_QTY ,
+							        SUM(DRCT_RTRVL_QTY) AS DRCT_RTRVL_QTY ,
+							        SUM(EXCH_QTY) AS EXCH_QTY ,
+							        SUM(RTRVL_QTY) AS RTRVL_QTY,
+							        SUM(CFM_GTN) AS CFM_GTN
+				         FROM EPCM_AREA_CFM_RTN_STAT
+				        WHERE DEL_YN = 'N'
+				          AND SEARCH_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+				     GROUP BY AREA_CD
+				     ) A
+             ,(
+             	SELECT SUM(DLIVY_QTY) AS DLIVY_QTY_TOT,
+                      SUM(CFM_QTY) AS CFM_QTY_TOT ,
+							        SUM(DRCT_RTRVL_QTY) AS DRCT_RTRVL_QTY_TOT ,
+							        SUM(EXCH_QTY) AS EXCH_QTY_TOT ,
+							        SUM(RTRVL_QTY) AS RTRVL_QTY_TOT,
+							        SUM(CFM_GTN) AS CFM_GTN_TOT
+                 FROM EPCM_AREA_CFM_RTN_STAT
+                WHERE DEL_YN = 'N'
+         				  AND SEARCH_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+             ) TT
+     ORDER BY AREA_CD
+    </select>
+    
+    <!-- 지역별_생산자별 출고회수현황 조회  -->
+    <select id="epce6190101_select2" parameterType="map" resultType="hashmap">
+        
+     SELECT AREA_CD,
+			      BIZRNM,
+      		  EPCN_ETC_NM(AREA_CD,'B010') AS AREA_NM ,
+      		  DLIVY_QTY ,
+		        CFM_QTY ,
+		        DRCT_RTRVL_QTY ,
+		        EXCH_QTY ,
+		        RTRVL_QTY,
+		        CFM_GTN ,
+     				CASE TT.DLIVY_QTY_TOT      WHEN 0 THEN 0 ELSE ROUND(DLIVY_QTY / TT.DLIVY_QTY_TOT * 100, 2) END           AS DLIVY_QTY_RT ,
+				    CASE TT.CFM_QTY_TOT        WHEN 0 THEN 0 ELSE ROUND(CFM_QTY / TT.CFM_QTY_TOT * 100, 2) END               AS CFM_QTY_RT ,
+				    CASE TT.DRCT_RTRVL_QTY_TOT WHEN 0 THEN 0 ELSE ROUND(DRCT_RTRVL_QTY / TT.DRCT_RTRVL_QTY_TOT * 100, 2) END AS DRCT_RTRVL_QTY_RT ,
+				    CASE TT.RTRVL_QTY_TOT      WHEN 0 THEN 0 ELSE ROUND(RTRVL_QTY / TT.RTRVL_QTY_TOT * 100, 2) END           AS RTRVL_QTY_RT ,
+				    CASE TT.CFM_GTN_TOT        WHEN 0 THEN 0 ELSE ROUND(CFM_GTN / TT.CFM_GTN_TOT * 100, 2) END               AS CFM_GTN_RT ,
+				    CASE DLIVY_QTY             WHEN 0 THEN 0 ELSE ROUND(RTRVL_QTY / DLIVY_QTY * 100, 2) END                  AS QTY_RT,
+				    TT.DLIVY_QTY_TOT ,
+				    TT.CFM_QTY_TOT ,
+				    TT.DRCT_RTRVL_QTY_TOT ,
+				    TT.RTRVL_QTY_TOT
+       FROM (
+				       SELECT AREA_CD,
+			                BIZRNM ,
+				       		  	SUM(DLIVY_QTY) AS DLIVY_QTY ,
+							        SUM(CFM_QTY) AS CFM_QTY ,
+							        SUM(DRCT_RTRVL_QTY) AS DRCT_RTRVL_QTY ,
+							        SUM(EXCH_QTY) AS EXCH_QTY ,
+							        SUM(RTRVL_QTY) AS RTRVL_QTY,
+							        SUM(CFM_GTN) AS CFM_GTN
+				         FROM EPCM_AREA_CFM_RTN_STAT,
+                      EPCN_BIZR_INFO C
+                WHERE MFC_BIZRID = C.BIZRID
+        		      AND MFC_BIZRNO = C.BIZRNO
+				          AND DEL_YN = 'N'
+                   
+				          AND SEARCH_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-') 
+
+                  
+                  AND AREA_CD  = #{AREA_CD}
+				     GROUP BY AREA_CD, BIZRNM
+				     ) A
+             ,(
+             	SELECT SUM(DLIVY_QTY) AS DLIVY_QTY_TOT,
+                      SUM(CFM_QTY) AS CFM_QTY_TOT ,
+							        SUM(DRCT_RTRVL_QTY) AS DRCT_RTRVL_QTY_TOT ,
+							        SUM(EXCH_QTY) AS EXCH_QTY_TOT ,
+							        SUM(RTRVL_QTY) AS RTRVL_QTY_TOT,
+							        SUM(CFM_GTN) AS CFM_GTN_TOT
+                 FROM EPCM_AREA_CFM_RTN_STAT
+                WHERE DEL_YN = 'N'
+                  
+    				  AND SEARCH_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-') 
+
+                  
+                  AND AREA_CD  = #{AREA_CD}
+             ) TT
+
+     ORDER BY AREA_CD
+     
+
+
+    </select>
+</mapper>

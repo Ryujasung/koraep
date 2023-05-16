@@ -1,0 +1,134 @@
+/* 스토리지 저장매체 onMouseOver 배경 */
+.us-layout-storage-wrap ul li button.us-layout-storage-btn-on,
+.us-layout-embed-storage ul li button.us-layout-storage-btn-on
+{
+	background : #FF9D9D ;
+}
+
+/* 스토리지 저장매체 selected 배경 */
+.us-layout-storage-wrap ul li button.us-layout-storage-btn-off:hover,
+.us-layout-embed-storage ul li button.us-layout-storage-btn-off:hover
+{
+	background : #D30D3E ;
+}
+
+/* 스토리지 레이어창 테두리 */
+.us-layout-storage-more-wrap,
+.us-layout-embed-storage .us-layout-storage-more-wrap .us-layout-storage-embed-inner
+{
+	border : 3px solid #D30D3E ;
+}
+
+/* 인증서 LIST 배경 */
+.us-layout-list
+{
+	background : #D30D3E ;
+}
+
+/* 인증서보기 TAB 버튼 */
+.us-layout-view-tab li a:hover
+{
+	background : #FF9D9D ;
+}
+.us-layout-view-tab li a.active
+{
+	background : #D30D3E ;
+}
+.us-view-tab-content
+{
+	border : 10px solid #D30D3E ;
+}
+
+/* 인증서보기 TAB B LIST 선택시 / 보안토큰 LIST 선택시 */
+.us-layout-view-grid-row-data-selected-element,
+.us-layout-sectoken-select-grid-row-data-selected-element
+{
+	background : #D30D3E ;
+}
+
+
+/* 메인 타이틀 폰트 */
+.us-layout-lbl-title
+{
+	color : #D30D3E ;
+}
+
+/* 메인 상단 이미지 배경 높이 */
+.us-layout-logo{
+	height:60px;
+}
+
+/* 스토리지 레이어창 저장매체 onMouse 배경 */
+.us-layout-storage-more-wrap ul li button.us-layout-storage-btn-on,
+.us-layout-storage-more-wrap ul li button.us-layout-storage-btn-off:hover
+{
+	background : #FF7698 ;
+}
+.us-layout-storage-select-list ul li button.us-layout-storage-btn-on,
+.us-layout-storage-select-list ul li button.us-layout-storage-btn-off:hover
+{
+	background : #FF7698 ;
+}
+
+/* 인증서 LIST head */
+.us-layout-grid-row-title-element
+{
+	background : #D9DFE6 ; color : #333333 ;
+}
+.us-layout-grid-row-title-divider
+{
+	background-color : #D30D3E ;
+}
+
+
+/* 인증서 LIST 음영/폰트 */
+.us-layout-grid-row-data-element
+{
+	border-bottom : 1px solid #911232 ;
+}
+.us-layout-grid-row-data-selected-element
+{
+	color : #D30D3E ;
+}
+
+/* 인증서암호/암호창 테두리 색상 */
+.us-layout-pw .us-layout-lbl-pw .us-pw-text1,
+.us-layout-embed-pw .us-layout-lbl-pw .us-pw-text1
+{
+	color : #D30D3E ;
+}
+.us-layout-pw .us-layout-pw-text,
+.us-layout-embed-pw .us-layout-pw-text
+{
+	border : 2px solid #D30D3E ;
+}
+
+/* 확인/취소 버튼 폰트,음영 */
+.us-normal-btn
+{
+	background : #B5B8BE ;
+	border-bottom : 3px solid #444444 ; border-left : 1px solid #B5B8BE ; border-top : 1px solid #B5B8BE ; border-right : 1px solid #B5B8BE ;
+	color : #333333 ;
+}
+.us-normal-btn.btn-confirm
+{
+	background : #D30D3E ;
+	border-bottom : 3px solid #911232 ; border-left : 1px solid #D30D3E ; border-top : 1px solid #D30D3E ; border-right : 1px solid #D30D3E ;
+	color : #FFFFFF ;
+}
+.us-normal-btn.btn-confirm2
+{
+	color : #D30D3E ;
+	border-bottom : 3px solid #D30D3E ; border-left : 1px solid #D30D3E ; border-top : 1px solid #D30D3E ; border-right : 1px solid #D30D3E ;
+}
+.us-normal-btn.btn-info
+{
+	background : #B5B8BE ;
+	border-bottom : 3px solid #444444 ; border-left : 1px solid #B5B8BE ; border-top : 1px solid #B5B8BE ; border-right : 1px solid #B5B8BE ;
+	color : #333333 ;
+}
+
+
+
+
+

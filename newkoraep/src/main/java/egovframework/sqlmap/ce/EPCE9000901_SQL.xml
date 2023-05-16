@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE9000901Mapper">
+
+	<select id="epce9000901_select"  resultType="hashmap">
+	 	 SELECT ETC_CD, ETC_CD_NM
+		   FROM EPCN_ETC_CD A
+		        	,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+	    WHERE 1=1
+		    AND A.LANG_SE_CD = C.LANG_SE_CD
+		    AND GRP_CD = 'B001' 
+		    AND ETC_CD IN ('M1','M2','W1','W2')
+		 ORDER BY SEL_ORD
+	</select>
+
+	<select id="epce9000901_select2" parameterType="string" resultType="hashmap">
+	
+		SELECT REG_SN,
+		EXCA_REG_DT, 
+		<![CDATA[ '<a href="javascript:fn_page();" class="gridLink" >'||TO_CHAR(TO_DATE(EXCA_REG_DT,'YYYYMMDD'),'YYYY-MM-DD')||'</a>' ]]>AS EXCA_REG_DT_PAGE,
+		BIZR_TP_NM,
+		BIZRNM,
+		PI_DECRYPT(WHSDL_BIZRNO) AS WHSDL_BIZRNO,
+		BANK_NM,
+		PI_DECRYPT(ACCT_NO) AS ACCT_NO,
+		REAL_PAY_DT,
+		ACP_DT,
+		EXCA_AMT,
+		EXCA_ISSU_SE_NM,
+		EXCA_SE_NM,
+		EXCA_PROC_STAT_CD,
+		EPCN_ETC_NM(EXCA_PROC_STAT_CD, 'C024') AS EXCA_PROC_STAT_NM,
+		STD_YEAR,
+		YEAR_CHG_YN
+		
+		FROM EPCM_OFFSET_INFO
+		
+		WHERE 1=1
+		
+		<if test='EXCA_STD_CD_SEL != null and  EXCA_STD_CD_SEL != ""'>
+               AND EXCA_SE_NM = #{EXCA_STD_CD_SEL}
+		</if> 
+		
+		<if test='BIZRNM_SEL !=null  and BIZRNM_SEL !="" '  >
+				AND  BIZRNM = #{BIZRNM_SEL}
+		</if>
+		
+		<if test='EXCA_PROC_STAT_CD_SEL !=null  and EXCA_PROC_STAT_CD_SEL !="" '  >
+				AND  EXCA_PROC_STAT_CD = #{EXCA_PROC_STAT_CD_SEL}
+		</if>
+	
+	</select>
+	
+		
+		<select id="epce9000901_select3" parameterType="map" resultType="hashmap">
+	
+		  SELECT B.GRP_CD, B.GRP_NM, A.ETC_CD, A.ETC_CD_NM
+		           , A.RSV_ITEM1, A.RSV_ITEM2, A.RSV_ITEM3 
+	      FROM EPCN_ETC_CD A
+	          	  ,EPCN_ETC_CD_GRP B
+	          	  ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+	      WHERE A.GRP_CD = B.GRP_CD
+	        AND A.LANG_SE_CD = B.LANG_SE_CD
+	        AND A.USE_YN = 'Y'
+	        AND B.USE_YN = 'Y'
+	        AND A.GRP_CD =  'C024' /**P*/
+	        AND A.LANG_SE_CD = C.LANG_SE_CD
+          AND (A.ETC_CD_NM = '발급' OR A.ETC_CD_NM = '수납확인')
+
+	    ORDER BY TO_NUMBER(SEL_ORD)
+	</select>
+	
+	
+	<select id="epce9000902_select" parameterType="map" resultType="hashmap">
+	
+       	SELECT
+					reg_sn,
+	 				WRHS_CFM_DT,
+					WHSDL_BIZRNM AS BIZRNM,
+					PI_DECRYPT(WHSDL_BIZRNO) AS WHSDL_BIZRNO_DE,
+					AREA_NM,
+					CFM_QTY_TOT,
+					CFM_GTN_TOT,
+					CFM_FEE_TOT,
+					CFM_FEE_STAX_TOT,
+					CFM_TOT,
+					MFC_BIZRNM,
+					MFC_BRCH_NM,
+					EXCA_STD_CD,
+					OFFSET_REG_DT
+				FROM epcm_offset_lst
+				WHERE 1=1
+					 		AND PI_DECRYPT(WHSDL_BIZRNO) =  #{WHSDL_BIZRNO}
+			 		<if test='ACP_DT !=null  and ACP_DT !="" '  >
+               				AND OFFSET_REG_DT = #{ACP_DT}
+               		</if>
+               		<if test='ACP_DT ==null  or ACP_DT =="" '  >
+               				AND OFFSET_REG_DT  = to_char(sysdate, 'YYYYMMDD')
+               		</if>
+	</select>
+	
+	<select id="epce9000902_select2" parameterType="map" resultType="hashmap">
+	
+       	SELECT
+					reg_sn,
+	 				WRHS_CFM_DT,
+					WHSDL_BIZRNM AS BIZRNM,
+					PI_DECRYPT(WHSDL_BIZRNO) AS WHSDL_BIZRNO_DE,
+					AREA_NM,
+					CFM_QTY_TOT,
+					CFM_GTN_TOT,
+					CFM_FEE_TOT,
+					CFM_FEE_STAX_TOT,
+					CFM_TOT,
+					MFC_BIZRNM,
+					MFC_BRCH_NM,
+					EXCA_STD_CD,
+					OFFSET_REG_DT
+				FROM epcm_offset_lst
+				WHERE 1=1
+			 		  AND PI_DECRYPT(WHSDL_BIZRNO) =  #{WHSDL_BIZRNO}
+			 		  AND OFFSET_REG_DT = #{OFFSET_REG_DT}
+	</select>
+	
+</mapper>

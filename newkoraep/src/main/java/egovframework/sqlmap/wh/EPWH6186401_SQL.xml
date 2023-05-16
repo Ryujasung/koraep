@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.wh.ep.EPWH6186401Mapper">
+  
+	<!-- 회수대비초과반환현황 조회  -->
+	<select id="epwh6186401_select" parameterType="map"   resultType="hashmap">
+		  <if test='excelYn == null or excelYn == "" '>
+			SELECT
+							*
+			 FROM (
+		 </if>
+
+						SELECT
+									ROWNUM AS PNO
+									,TOTALCOUNT
+									,PI_DECRYPT(WHSDL_BIZRNO) AS WHSDL_BIZRNO
+									,(SELECT  RPST_TEL_NO1||'-'||RPST_TEL_NO2||'-'||RPST_TEL_NO3 from EPCN_BIZR_INFO where BIZRID =WHSDL_BIZRID and BIZRNO =WHSDL_BIZRNO)    AS TEL_NO
+									,WHSDL_BIZRNM
+									,EPCN_ETC_NM(AREA_CD,'B010') AS AREA_CD
+									,RTRVL_M
+									,RTRVL_H
+									,(RTRVL_M +RTRVL_H ) AS RTRVL_TOT
+									,DECODE( (RTRVL_M + RTRVL_H), 0, 0, ROUND((RTRVL_H / (RTRVL_M + RTRVL_H)),4) * 100) AS RTRVL_RT_H
+									,CFM_M
+									,CFM_H
+									,CFM_D
+									,(CFM_M +CFM_H +CFM_D) AS CFM_TOT
+									,DECODE( (CFM_M + CFM_H+CFM_D), 0, 0, ROUND((CFM_H / (CFM_M + CFM_H+CFM_D)),4) * 100) AS CFM_RT_H
+                  ,(RTRVL_M - CFM_M ) AS RTRVL_CPR_RTRVL_M
+                  ,(RTRVL_H - CFM_H ) AS RTRVL_CPR_RTRVL_H
+                  ,(RTRVL_H - CFM_H ) - CFM_D + (RTRVL_M - CFM_M) AS RTRVL_CPR_RTRVL_TOT
+									,DECODE(((CFM_H +CFM_D - RTRVL_H) + (CFM_M - RTRVL_M)),0,0, ROUND(((CFM_H + CFM_D - RTRVL_H) / ((CFM_H + CFM_D - RTRVL_H) + (CFM_M - RTRVL_M))),4) * 100) AS RTRVL_CPR_RTRVL_RT_H
+		    					,DECODE((RTRVL_H+RTRVL_M), 0, 0 , ROUND((CFM_H+CFM_D+CFM_M) / (RTRVL_H+RTRVL_M), 4) * 100) AS RTRVL_CPR_RTRVL_RT
+		    					,DECODE((RTRVL_H), 0, 0 , ROUND((CFM_H+CFM_D) / (RTRVL_H), 4) * 100) AS CFM_RTRVL_PER_H
+                  ,DECODE((RTRVL_M), 0, 0 , ROUND((CFM_M) / (RTRVL_M), 4) * 100) AS CFM_RTRVL_PER_M
+
+						FROM
+										(
+											 SELECT
+											        count(*) AS TOTALCOUNT,
+											        A.WHSDL_BIZRNO,
+											        A.WHSDL_BIZRID,
+                              EPCN_BIZR_NM(WHSDL_BIZRID,WHSDL_BIZRNO) AS WHSDL_BIZRNM,
+											        A.AREA_CD,
+											        SUM(A.RTRVL_M) AS RTRVL_M ,
+											        SUM(A.RTRVL_H) AS RTRVL_H ,
+											        SUM(A.CFM_M) AS CFM_M,
+											        SUM(A.CFM_H) AS CFM_H,
+											        SUM(A.CFM_D) AS CFM_D
+											  FROM EPCM_RTN_EXCEED_STAT A
+                       WHERE DEL_YN = 'N'
+                       AND A.WHSDL_BIZRNO = #{WHSDL_BIZRNO}  
+                        <if test=" AREA_CD !=null and AREA_CD !='' " >
+														AND	AREA_CD = #{AREA_CD}
+												</if>
+
+												<if test=" BIZR_TP_CD !=null and BIZR_TP_CD !='' " >
+													AND A.BIZR_TP_CD =#{BIZR_TP_CD}
+												</if>
+ 
+                          AND SEARCH_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+											GROUP BY 	WHSDL_BIZRID, WHSDL_BIZRNO, AREA_CD
+						) A
+						WHERE 1=1
+ 			<if test="OVER_DIV eq 1">
+				<![CDATA[  AND  (RTRVL_H - CFM_H) < 0 ]]>
+			</if>
+			<if test="OVER_DIV eq 2">
+			    <![CDATA[  AND  (RTRVL_M - CFM_M) < 0 ]]>
+			</if>
+			<if test='excelYn == null or excelYn == "" '>
+			
+					<![CDATA[	 AND ROWNUM <= #{ROWS_PER_PAGE}*#{CURRENT_PAGE} ]]>
+					)   
+					WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+			</if>	  	     
+	</select>
+	
+	<!-- 회수대비초과반환현황 조회  -->
+	<select id="epwh6186401_select3" parameterType="map"   resultType="hashmap">
+						<if test='excelYn == null or excelYn == "" '>
+			SELECT
+							*
+			 FROM (
+		 </if>
+
+						SELECT
+									ROWNUM AS PNO
+									,TOTALCOUNT
+									,PI_DECRYPT(WHSDL_BIZRNO) AS WHSDL_BIZRNO
+									,(SELECT  RPST_TEL_NO1||'-'||RPST_TEL_NO2||'-'||RPST_TEL_NO3 from EPCN_BIZR_INFO where BIZRID =WHSDL_BIZRID and BIZRNO =WHSDL_BIZRNO)    AS TEL_NO
+									,WHSDL_BIZRNM
+									,EPCN_ETC_NM(AREA_CD,'B010') AS AREA_CD
+									,RTRVL_M
+									,RTRVL_H
+									,(RTRVL_M +RTRVL_H ) AS RTRVL_TOT
+									,DECODE( (RTRVL_M + RTRVL_H), 0, 0, ROUND((RTRVL_H / (RTRVL_M + RTRVL_H)),4) * 100) AS RTRVL_RT_H
+									,CFM_M
+									,CFM_H
+									,CFM_D
+									,(CFM_M +CFM_H +CFM_D) AS CFM_TOT
+									,DECODE( (CFM_M + CFM_H+CFM_D), 0, 0, ROUND((CFM_H / (CFM_M + CFM_H+CFM_D)),4) * 100) AS CFM_RT_H
+                  ,(RTRVL_M - CFM_M ) AS RTRVL_CPR_RTRVL_M
+                  ,(RTRVL_H - CFM_H ) AS RTRVL_CPR_RTRVL_H
+                  ,(RTRVL_H - CFM_H ) - CFM_D + (RTRVL_M - CFM_M) AS RTRVL_CPR_RTRVL_TOT
+									,DECODE(((CFM_H +CFM_D - RTRVL_H) + (CFM_M - RTRVL_M)),0,0, ROUND(((CFM_H + CFM_D - RTRVL_H) / ((CFM_H + CFM_D - RTRVL_H) + (CFM_M - RTRVL_M))),4) * 100) AS RTRVL_CPR_RTRVL_RT_H
+		    					,DECODE((RTRVL_H+RTRVL_M), 0, 0 , ROUND((CFM_H+CFM_D+CFM_M) / (RTRVL_H+RTRVL_M), 4) * 100) AS RTRVL_CPR_RTRVL_RT
+		    					,DECODE((RTRVL_H), 0, 0 , ROUND((CFM_H+CFM_D) / (RTRVL_H), 4) * 100) AS CFM_RTRVL_PER_H
+                  ,DECODE((RTRVL_M), 0, 0 , ROUND((CFM_M) / (RTRVL_M), 4) * 100) AS CFM_RTRVL_PER_M
+
+						FROM
+										(
+											 SELECT
+											        count(*) AS TOTALCOUNT,
+											        A.WHSDL_BIZRNO,
+											        A.WHSDL_BIZRID,
+                              EPCN_BIZR_NM(WHSDL_BIZRID,WHSDL_BIZRNO) AS WHSDL_BIZRNM,
+											        A.AREA_CD,
+											        SUM(A.RTRVL_M) AS RTRVL_M ,
+											        SUM(A.RTRVL_H) AS RTRVL_H ,
+											        SUM(A.CFM_M) AS CFM_M,
+											        SUM(A.CFM_H) AS CFM_H,
+											        SUM(A.CFM_D) AS CFM_D
+											  FROM EPCM_RTN_EXCEED_STAT A
+                       WHERE DEL_YN = 'N'
+                       AND A.WHSDL_BIZRNO = #{WHSDL_BIZRNO}  
+                        <if test=" AREA_CD !=null and AREA_CD !='' " >
+														AND	AREA_CD = #{AREA_CD}
+												</if>
+
+												<if test=" BIZR_TP_CD !=null and BIZR_TP_CD !='' " >
+													AND A.BIZR_TP_CD =#{BIZR_TP_CD}
+												</if>
+ 
+                          AND SEARCH_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+											GROUP BY 	WHSDL_BIZRID, WHSDL_BIZRNO, AREA_CD
+						) A
+						WHERE 1=1
+ 			<if test="OVER_DIV eq 1">
+				<![CDATA[  AND  (RTRVL_H - CFM_H) < 0 ]]>
+			</if>
+			<if test="OVER_DIV eq 2">
+			    <![CDATA[  AND  (RTRVL_M - CFM_M) < 0 ]]>
+			</if>
+			<if test='excelYn == null or excelYn == "" '>
+			
+					<![CDATA[	 AND ROWNUM <= #{ROWS_PER_PAGE}*#{CURRENT_PAGE} ]]>
+					)   
+					WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+			</if>	
+	</select>
+	
+	<!-- 차트조회  -->
+	<select id="epwh6186401_select2"  parameterType="map"   resultType="hashmap">
+					SELECT 
+									EPCN_ETC_NM(AREA_CD,'B010') AS AREA_CD
+									,RTRVL_M
+									,RTRVL_H
+									,CFM_M
+									,CFM_H
+									,CFM_D
+						FROM 
+										(
+											SELECT
+											        count(*) AS TOTALCOUNT,
+											        A.AREA_CD,
+											        SUM(A.RTRVL_M) AS RTRVL_M ,
+											        SUM(A.RTRVL_H) AS RTRVL_H ,
+											        SUM(A.CFM_M) AS CFM_M,
+											        SUM(A.CFM_H) AS CFM_H,
+											        SUM(A.CFM_D) AS CFM_D
+											  FROM EPCM_RTN_EXCEED_STAT A
+                       WHERE DEL_YN = 'N'
+                       AND A.WHSDL_BIZRNO = #{WHSDL_BIZRNO}  
+                        <if test=" AREA_CD !=null and AREA_CD !='' " >
+													AND	AREA_CD = #{AREA_CD}
+												</if>
+												<if test=" BIZR_TP_CD !=null and BIZR_TP_CD !='' " >
+													AND A.BIZR_TP_CD =#{BIZR_TP_CD}
+												</if>
+ 
+                          AND SEARCH_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+											GROUP BY  AREA_CD
+						) A
+						WHERE 1=1
+ 			<if test="OVER_DIV eq 1">
+				<![CDATA[  AND  (RTRVL_H - CFM_H) < 0 ]]>
+			</if>
+			<if test="OVER_DIV eq 2">
+			    <![CDATA[  AND  (RTRVL_M - CFM_M) < 0 ]]>
+			</if>
+	</select>
+	
+	
+</mapper>
+

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.cms.CMSCS003Mapper">
+
+	<!-- 계좌목록 selectbox -->
+	<select id="cmscs003_select0" resultType="hashmap">
+		 SELECT A.ETC_CD_NM		AS ACCT_NM
+		 		,A.RSV_ITEM1	AS ACCT_NO
+		 		,A.ETC_CD		AS ACCT_CD
+           FROM EPCN_ETC_CD A
+              	,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+         WHERE A.LANG_SE_CD = C.LANG_SE_CD
+           AND A.GRP_CD = 'D035' 
+         ORDER BY A.SEL_ORD
+	</select>
+	
+	<!-- 가상계좌내역조회 -->
+	<select id="cmscs003_select" resultType="hashmap">
+		SELECT	A.*
+				, B.BIZRNM AS SHOW_NM
+        FROM
+		(	SELECT	TR_IL							AS TR_DT
+					,TR_TIME						AS TR_TM
+					,TR_NO							AS TR_NO
+					,CASE WHEN PROC_STAT_CD = '1' OR PROC_STAT_CD = '2' THEN VACCT_NO ELSE '' END	AS ACCT_NO
+					,CASE WHEN PROC_STAT_CD = '1' OR PROC_STAT_CD = '2' THEN '신한' ELSE '' END		AS BANK_NM
+					,DECODE(PROC_STAT_CD, '0', '출금', '1', '입금', '취소')								AS INOUT
+					,CASE WHEN PROC_STAT_CD >= 2 THEN '-'||SUM_AMT ELSE ''||SUM_AMT END				AS TR_AMT
+					,SEND_MAN						AS JEOKYO
+					,TX_CUR_BAL						AS TX_CUR_BAL
+			FROM TONG_VACCT_ACP_LK
+			WHERE 1=1
+			  AND TR_IL BETWEEN REPLACE(#{START_DT_SEL}, '-') AND REPLACE(#{END_DT_SEL}, '-')
+			  <if test='ACCT_NO != null and ACCT_NO != "" '>
+				  AND VACCT_ANO = (SELECT RSV_ITEM1 FROM EPCN_ETC_CD WHERE GRP_CD = 'D035' AND ETC_CD = #{ACCT_NO})
+		      </if>
+		      <if test='INOUT != null and INOUT != "" '>
+				  AND PROC_STAT_CD = #{INOUT}
+			  </if>
+		) A,
+		(	SELECT	BIZRNM
+	                ,PI_DECRYPT(MFC_DPS_VACCT_NO) AS MFC_DPS_VACCT_NO
+                    ,PI_DECRYPT(MFC_FEE_VACCT_NO) AS MFC_FEE_VACCT_NO
+	        FROM EPCN_BIZR_INFO 
+	        WHERE SUBSTR(BIZR_TP_CD, 0, 1) = 'M' -- 생산자
+        ) B
+        WHERE 1=1
+        <if test='ACCT_NO == "21"'>
+          AND A.ACCT_NO = B.MFC_DPS_VACCT_NO(+)
+        </if>
+        <if test='ACCT_NO == "22"'>
+          AND A.ACCT_NO = B.MFC_FEE_VACCT_NO(+)
+        </if>
+        ORDER BY A.TR_DT DESC, A.TR_NO DESC
+	</select>
+
+	<!-- 계좌거래내역조회 -->
+	<select id="cmscs003_select2" resultType="hashmap">
+		SELECT	A.TR_DT
+				,A.TR_TM
+				,EPCN_ETC_NM(NVL(B.ACP_BANK_CD, A.CENTER_BANK_CD), 'S090')	AS BANK_NM
+				,A.TARGET_ACCT_NO                 							AS ACCT_NO
+				,A.INOUT
+				,A.TR_AMT
+				,NVL(B.BIZRNM, A.CENTER_NM)									AS SHOW_NM
+				,A.JEOKYO
+		FROM
+		(	SELECT	ACCT_TXDAY									AS TR_DT
+					,ACCT_TXTIME								AS TR_TM
+					,ACCT_TXDAY_SEQ
+					,ACCT_NO									AS ACCT_NO
+					,DECODE(INOUT_GUBUN, '1', '출금', '2', '입금')	AS INOUT
+					,TX_AMT										AS TR_AMT
+					,JEOKYO										AS JEOKYO
+					,TARGET_ACCT_NO                 			AS TARGET_ACCT_NO
+					,D.RSV_ITEM2								AS CENTER_NM
+					,D.RSV_ITEM3								AS CENTER_BANK_CD
+			FROM TONG_ACCT_ACP_LK 
+				,(	SELECT  RSV_ITEM1
+							,RSV_ITEM2
+							,RSV_ITEM3
+					FROM EPCN_ETC_CD
+					WHERE GRP_CD = 'D035'
+				) D
+			WHERE TARGET_ACCT_NO = D.RSV_ITEM1(+)
+			  AND NVL(RMK, 'NONE') != '불능통지발생'
+			  AND ACCT_TXDAY BETWEEN REPLACE(#{START_DT_SEL}, '-') AND REPLACE(#{END_DT_SEL}, '-')
+			  <if test='ACCT_NO != null and ACCT_NO != "" '>
+				AND ACCT_NO = (SELECT RSV_ITEM1 FROM EPCN_ETC_CD WHERE GRP_CD = 'D035' AND ETC_CD = #{ACCT_NO})
+			  </if>
+			  <if test='INOUT != null and INOUT != "" '>
+				AND INOUT_GUBUN = #{INOUT}
+			  </if>
+			ORDER BY ACCT_TXDAY DESC, ACCT_TXTIME DESC, ACCT_TXDAY_SEQ DESC
+		) A
+		,(	SELECT *
+			FROM (	SELECT	ROW_NUMBER() OVER (PARTITION BY ACP_ACCT_NO ORDER BY BIZRID DESC) AS RN
+							,BIZRNM
+							,PI_DECRYPT(ACP_ACCT_NO) AS ACP_ACCT_NO
+							,ACP_BANK_CD
+					FROM EPCN_BIZR_INFO 
+					WHERE SUBSTR(BIZR_TP_CD, 0, 1) IN ('M', 'W')
+					  AND bizr_stat_cd = 'Y')
+			WHERE RN = 1
+		) B
+		WHERE A.TARGET_ACCT_NO = B.ACP_ACCT_NO(+)
+	</select>
+	
+	<!-- 계좌잔액조회 -->
+	<select id="cmscs003_select3" resultType="hashmap">
+		SELECT * FROM 
+		(
+			SELECT ACCT_NO, TX_CUR_BAL FROM (
+			    SELECT ROW_NUMBER() OVER (PARTITION BY VACCT_ANO ORDER BY TR_IL DESC, TR_NO DESC) AS NO
+			            , VACCT_ANO AS ACCT_NO
+			            , TX_CUR_BAL
+			    FROM TONG_VACCT_ACP_LK
+			    WHERE 1=1
+			    <if test='END_DT_SEL != null and END_DT_SEL != "" '>
+			    	AND TR_IL &lt;= REPLACE(#{END_DT_SEL}, '-')
+		    	</if>
+			)
+			WHERE NO = 1
+			
+			UNION ALL
+			
+			SELECT ACCT_NO, TX_CUR_BAL FROM (
+			    SELECT ROW_NUMBER() OVER (PARTITION BY ACCT_NO ORDER BY ACCT_TXDAY DESC, ACCT_TXDAY_SEQ DESC) AS NO
+			            , ACCT_NO
+			            , TX_CUR_BAL
+			    FROM TONG_ACCT_ACP_LK
+			    WHERE 1=1
+			    <if test='END_DT_SEL != null and END_DT_SEL != "" '>
+			    	AND ACCT_TXDAY &lt;= REPLACE(#{END_DT_SEL}, '-')
+		    	</if>
+			)
+			WHERE NO = 1
+		) A,
+		( 
+			SELECT ETC_CD, ETC_CD_NM, RSV_ITEM1, SEL_ORD 
+			FROM EPCN_ETC_CD 
+			WHERE GRP_CD = 'D035'
+		) B
+		WHERE A.ACCT_NO(+)=B.RSV_ITEM1
+		ORDER BY SEL_ORD
+	</select>
+</mapper>

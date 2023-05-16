@@ -1,0 +1,1129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE6185201Mapper">
+
+<!-- 연도별출고회수현황 조회  -->
+	<select id="epce6185201_select" parameterType="map"   resultType="hashmap">
+               SELECT MFC_BIZRID, MFC_BIZRNO, ALKND_CD, PRPS_CD
+			          ,EPCN_BIZR_NM(MFC_BIZRID, MFC_BIZRNO) AS MFC_BIZRNM
+			          ,EPCN_ETC_NM(ALKND_CD, 'E004') AS ALKND_NM
+                      ,NVL(EPCN_ETC_NM(CTNR_SE, 'E005'), '') AS CTNR_NM
+                      ,DECODE(CTNR_SE, NULL,'합계', NVL(EPCN_ETC_NM(PRPS_CD, 'E002'), '소계')) AS PRPS_NM
+			          ,NVL(SUM(DLIVY_QTY_3),0) as DLIVY_QTY_3
+			          ,NVL(SUM(DLIVY_QTY_2),0) as DLIVY_QTY_2
+			          ,NVL(SUM(DLIVY_QTY_1),0) as DLIVY_QTY_1
+			          ,NVL(SUM(CFM_QTY_3),0) as CFM_QTY_3
+			          ,NVL(SUM(CFM_QTY_2),0) as CFM_QTY_2
+			          ,NVL(SUM(CFM_QTY_1),0) as CFM_QTY_1
+                      ,NVL(SUM(DRCT_RTRVL_QTY_3),0) as DRCT_RTRVL_QTY_3
+                      ,NVL(SUM(DRCT_RTRVL_QTY_2),0) as DRCT_RTRVL_QTY_2
+                      ,NVL(SUM(DRCT_RTRVL_QTY_1),0) as DRCT_RTRVL_QTY_1
+                      ,NVL(SUM(EXCH_QTY_3),0) as EXCH_QTY_3
+                      ,NVL(SUM(EXCH_QTY_2),0) as EXCH_QTY_2
+                      ,NVL(SUM(EXCH_QTY_1),0) as EXCH_QTY_1
+                      ,NVL(SUM(RTRVL_QTY_3),0) as RTRVL_QTY_3
+                      ,NVL(SUM(RTRVL_QTY_2),0) as RTRVL_QTY_2
+                      ,NVL(SUM(RTRVL_QTY_1),0) as RTRVL_QTY_1
+                      ,CASE SUM(DLIVY_QTY_3) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_3) / SUM(DLIVY_QTY_3) * 100, 2),0) END as QTY_RT_3
+                      ,CASE SUM(DLIVY_QTY_2) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_2) / SUM(DLIVY_QTY_2) * 100, 2),0) END as QTY_RT_2
+                      ,CASE SUM(DLIVY_QTY_1) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_1) / SUM(DLIVY_QTY_1) * 100, 2),0) END as QTY_RT_1
+				FROM EPCM_YEAR_CFM_RTN_STAT
+				
+				WHERE SEARCH_DT = #{STD_YEAR_SEL}||'0101'
+				
+			    and del_yn = 'N'
+				  GROUP BY MFC_BIZRID, MFC_BIZRNO, ALKND_CD, ROLLUP(CTNR_SE, PRPS_CD)
+						      ORDER BY EPCN_BIZR_SEL_ORD(MFC_BIZRID, MFC_BIZRNO), ALKND_CD, CTNR_SE DESC, PRPS_CD DESC
+	</select>
+	
+	<select id="epce6185201_select5" parameterType="map"   resultType="hashmap">
+		SELECT ALKND_NM||'(회수)' AS TITLE_IN
+				   ,ALKND_NM||'(출고)' AS TITLE_OUT
+				   ,DLIVY_QTY AS VAL_OUT
+				   ,CFM_QTY AS VAL_IN
+		  FROM (
+				   SELECT EPCN_ETC_NM(NVL(A.ALKND_CD, B.ALKND_CD), 'E004') AS ALKND_NM
+		                       ,NVL(DLIVY_QTY_1, '0') AS DLIVY_QTY
+		                       ,NVL(CFM_QTY_1, '0') as CFM_QTY
+		               FROM
+		                   (
+		                     /* 0:유흥용 1:가정용 2:직접반환   1:소주 2:맥주 3:기타주류 9:음료*/
+		                     SELECT C.ALKND_CD
+		                              ,SUM(B.DLIVY_QTY) AS DLIVY_QTY_1
+		                       FROM EPDM_DLIVY_MST A
+		                              ,EPDM_DLIVY_INFO B
+		                              ,(
+		                                SELECT C.CTNR_CD, C.PRPS_CD, C.ALKND_CD
+		                                  FROM EPCN_STD_CTNR_CD C
+		                                       ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+		                                 WHERE 1=1
+		                                   AND C.LANG_SE_CD = F.LANG_SE_CD
+		                              ) C
+		                    WHERE 1=1		                        
+	                            <choose>
+	                            	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+		                            	AND B.DLIVY_DT BETWEEN #{START_DT} AND #{END_DT}
+	                            	</when>
+	                            	<otherwise>
+	    	                        	AND A.STD_YEAR = #{STD_YEAR_SEL}
+	                            	</otherwise>
+	                            </choose>   		                        
+		                        AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+		                        AND B.CTNR_CD = C.CTNR_CD
+		                     GROUP BY C.ALKND_CD
+		                   ) A
+		                   FULL OUTER JOIN
+		                  (
+		                     SELECT C.ALKND_CD
+		                              ,SUM(B.CFM_QTY) AS CFM_QTY_1
+		                       FROM EPCM_CFM_MST A
+		                              ,EPCM_CFM_INFO B
+		                              ,(
+		                                SELECT C.CTNR_CD, C.PRPS_CD, C.ALKND_CD
+		                                  FROM EPCN_STD_CTNR_CD C
+		                                       ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+		                                 WHERE 1=1
+		                                   AND C.LANG_SE_CD = F.LANG_SE_CD
+		                              ) C
+		                    WHERE 1=1
+	                            <choose>
+	                            	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+		                            	AND A.WRHS_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+	                            	</when>
+	                            	<otherwise>
+	    	                        	AND SUBSTR(A.WRHS_CFM_DT,1,4) = #{STD_YEAR_SEL}
+	                            	</otherwise>
+	                            </choose>   		                        		                        
+		                        AND A.RTN_STAT_CD IN ('WC','CC','IB','AC','PA','PP','PC')
+		                        AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+		                        AND B.CTNR_CD = C.CTNR_CD
+		                     GROUP BY C.ALKND_CD
+		                  ) B
+		                  ON (A.ALKND_CD = B.ALKND_CD)
+                ORDER BY A.ALKND_CD
+                )
+	</select>
+	
+	<select id="epce6185201_select6" parameterType="map"   resultType="hashmap">
+		SELECT PRPS_NM||'(회수)' AS TITLE_IN
+				   ,PRPS_NM||'(출고)' AS TITLE_OUT
+				   ,DLIVY_QTY AS VAL_OUT
+				   ,CFM_QTY AS VAL_IN
+		  FROM (
+				   SELECT EPCN_ETC_NM(NVL(A.PRPS_CD, B.PRPS_CD), 'E002') AS PRPS_NM
+		                       ,NVL(DLIVY_QTY_1, '0') AS DLIVY_QTY
+		                       ,NVL(CFM_QTY_1, '0') as CFM_QTY
+		               FROM
+		                   (
+		                     /* 0:유흥용 1:가정용 2:직접반환   1:소주 2:맥주 3:기타주류 9:음료*/
+		                     SELECT C.PRPS_CD AS PRPS_CD
+		                              	,SUM(B.DLIVY_QTY) AS DLIVY_QTY_1
+		                       FROM EPDM_DLIVY_MST A
+		                              ,EPDM_DLIVY_INFO B
+		                              ,(
+		                                SELECT C.CTNR_CD, C.PRPS_CD, C.ALKND_CD
+		                                  FROM EPCN_STD_CTNR_CD C
+		                                       ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+		                                 WHERE 1=1
+		                                   AND C.LANG_SE_CD = F.LANG_SE_CD
+		                              ) C
+		                    WHERE 1=1
+	                            <choose>
+	                            	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+		                            	AND B.DLIVY_DT BETWEEN #{START_DT} AND #{END_DT}
+	                            	</when>
+	                            	<otherwise>
+	    	                        	AND A.STD_YEAR = #{STD_YEAR_SEL}
+	                            	</otherwise>
+	                            </choose>   		                        
+		                        AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+		                        AND B.CTNR_CD = C.CTNR_CD
+		                     GROUP BY C.PRPS_CD
+		                   ) A
+		                   FULL OUTER JOIN
+		                  (
+		                     SELECT C.PRPS_CD AS PRPS_CD
+		                              	,SUM(B.CFM_QTY) AS CFM_QTY_1
+		                       FROM EPCM_CFM_MST A
+		                              ,EPCM_CFM_INFO B
+		                              ,(
+		                                SELECT C.CTNR_CD, C.PRPS_CD, C.ALKND_CD
+		                                  FROM EPCN_STD_CTNR_CD C
+		                                       ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+		                                 WHERE 1=1
+		                                   AND C.LANG_SE_CD = F.LANG_SE_CD
+		                              ) C
+		                    WHERE 1=1
+	                            <choose>
+	                            	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+		                            	AND A.WRHS_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+	                            	</when>
+	                            	<otherwise>
+	    	                        	AND SUBSTR(A.WRHS_CFM_DT,1,4) = #{STD_YEAR_SEL}
+	                            	</otherwise>
+	                            </choose> 		                        
+		                        AND A.RTN_STAT_CD IN ('WC','CC','IB','AC','PA','PP','PC')
+		                        AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+		                        AND B.CTNR_CD = C.CTNR_CD
+		                     GROUP BY C.PRPS_CD
+		                  ) B
+		                  ON (A.PRPS_CD = B.PRPS_CD)
+                ORDER BY A.PRPS_CD
+                )
+	</select>
+	
+	<select id="epce6185201_select8" parameterType="map"   resultType="hashmap">
+
+               SELECT TO_NUMBER(M.MM) || '월' as MONTH
+                          ,DLIVY_QTY_3 as VAL_UP3
+                          ,DLIVY_QTY_2 as VAL_UP2
+                          ,DLIVY_QTY_1 as VAL_UP1
+                          ,CFM_QTY_3 as VAL_BT3
+                          ,CFM_QTY_2 as VAL_BT2
+                          ,CFM_QTY_1 as VAL_BT1
+                 FROM
+                       (
+                         SELECT LPAD(LEVEL,2,'0') AS MM FROM DUAL CONNECT BY LEVEL  <![CDATA[<=]]>  12
+                       )M
+                       ,(
+                         /* 0:유흥용 1:가정용 2:직접반환   1:소주 2:맥주 3:기타주류 9:음료*/
+                         SELECT SUBSTR(B.DLIVY_DT,5,2) AS MM
+                                    ,SUM(DECODE(C.PRPS_CD, '0', B.DLIVY_QTY)) AS DLIVY_QTY_1
+                                    ,SUM(DECODE(C.PRPS_CD, '1', B.DLIVY_QTY)) AS DLIVY_QTY_2
+                                    ,SUM(DECODE(C.PRPS_CD, '2', B.DLIVY_QTY)) AS DLIVY_QTY_3
+                           FROM EPDM_DLIVY_MST A
+                                  ,EPDM_DLIVY_INFO B
+                                  ,(
+                                    SELECT C.CTNR_CD, C.PRPS_CD, C.ALKND_CD
+                                      FROM EPCN_STD_CTNR_CD C
+                                           ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+                                     WHERE 1=1
+                                       AND C.LANG_SE_CD = F.LANG_SE_CD
+                                  ) C
+                        WHERE 1=1
+                            AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+                            AND B.CTNR_CD = C.CTNR_CD
+                            <choose>
+                            	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+	                            	AND B.DLIVY_DT BETWEEN #{START_DT} AND #{END_DT}
+                            	</when>
+                            	<otherwise>
+    	                        	AND A.STD_YEAR = #{STD_YEAR_SEL}
+                            	</otherwise>
+                            </choose>                               
+                             
+                         GROUP BY SUBSTR(B.DLIVY_DT,5,2)
+                       ) A
+                      ,(
+                         SELECT SUBSTR(A.WRHS_CFM_DT,5,2) AS MM
+                                ,SUM(DECODE(C.PRPS_CD, '0', B.CFM_QTY)) AS CFM_QTY_1
+                                ,SUM(DECODE(C.PRPS_CD, '1', B.CFM_QTY)) AS CFM_QTY_2
+                                ,SUM(DECODE(C.PRPS_CD, '2', B.CFM_QTY)) AS CFM_QTY_3
+                           FROM EPCM_CFM_MST A
+                                ,EPCM_CFM_INFO B
+                                ,(
+                                  SELECT C.CTNR_CD, C.PRPS_CD, C.ALKND_CD
+                                    FROM EPCN_STD_CTNR_CD C
+                                         ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+                                   WHERE 1=1
+                                     AND C.LANG_SE_CD = F.LANG_SE_CD
+                                ) C
+                        WHERE 1=1
+                            AND A.RTN_STAT_CD IN ('WC','CC','IB','AC','PA','PP','PC')
+                            AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+                            AND B.CTNR_CD = C.CTNR_CD
+                            <choose>
+                            	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+	                            	AND A.WRHS_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+                            	</when>
+                            	<otherwise>
+    	                        	AND SUBSTR(A.WRHS_CFM_DT,1,4) = #{STD_YEAR_SEL}
+                            	</otherwise>
+                            </choose>                            
+                             
+                         GROUP BY SUBSTR(A.WRHS_CFM_DT,5,2)
+                      ) B
+                WHERE M.MM = A.MM(+)
+                  AND M.MM = B.MM(+)
+             ORDER BY TO_NUMBER(M.MM)
+	</select>
+	
+	<select id="epce6185201_select9" parameterType="map"   resultType="hashmap">
+		SELECT TO_NUMBER(M.MM) || '월' as MONTH
+		            ,NVL(TRUNC((CFM_QTY_1/DLIVY_QTY_1)*100, 2), 0) AS VAL_1
+		            ,NVL(TRUNC((CFM_QTY_2/DLIVY_QTY_2)*100, 2), 0) AS VAL_2
+		            ,NVL(TRUNC((CFM_QTY_3/DLIVY_QTY_3)*100, 2), 0) AS VAL_3
+		            ,NVL(TRUNC((CFM_QTY_9/DLIVY_QTY_9)*100, 2), 0) AS VAL_4
+	       FROM
+		             (
+		               SELECT LPAD(LEVEL,2,'0') AS MM FROM DUAL CONNECT BY LEVEL  <![CDATA[<=]]>   12
+		             )M
+		             ,(
+		               /* 0:유흥용 1:가정용 2:직접반환   1:소주 2:맥주 3:기타주류 9:음료*/
+		               SELECT SUBSTR(B.DLIVY_DT,5,2) AS MM
+		                      ,SUM(DECODE(C.ALKND_CD, '1', B.DLIVY_QTY)) AS DLIVY_QTY_1
+		                      ,SUM(DECODE(C.ALKND_CD, '2', B.DLIVY_QTY)) AS DLIVY_QTY_2
+		                      ,SUM(DECODE(C.ALKND_CD, '3', B.DLIVY_QTY)) AS DLIVY_QTY_3
+		                      ,SUM(DECODE(C.ALKND_CD, '9', B.DLIVY_QTY)) AS DLIVY_QTY_9
+		                 FROM EPDM_DLIVY_MST A
+		                      ,EPDM_DLIVY_INFO B
+		                      ,(
+		                          SELECT C.CTNR_CD, C.PRPS_CD, C.ALKND_CD
+		                            FROM EPCN_STD_CTNR_CD C
+		                                 ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+		                           WHERE 1=1
+		                             AND C.LANG_SE_CD = F.LANG_SE_CD
+		                        ) C
+		                WHERE 1=1
+		                  AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+		                  AND B.CTNR_CD = C.CTNR_CD
+                          <choose>
+                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+                           		AND B.DLIVY_DT BETWEEN #{START_DT} AND #{END_DT}
+                          	</when>
+                          	<otherwise>
+  	                        	AND A.STD_YEAR = #{STD_YEAR_SEL}
+                          	</otherwise>
+                          </choose> 		                  
+		                                 
+		               GROUP BY SUBSTR(B.DLIVY_DT,5,2)
+		             ) A
+		            ,(
+		               SELECT SUBSTR(A.WRHS_CFM_DT,5,2) AS MM
+		                      ,SUM(DECODE(C.ALKND_CD, '1', B.CFM_QTY)) AS CFM_QTY_1
+		                      ,SUM(DECODE(C.ALKND_CD, '2', B.CFM_QTY)) AS CFM_QTY_2
+		                      ,SUM(DECODE(C.ALKND_CD, '3', B.CFM_QTY)) AS CFM_QTY_3
+		                      ,SUM(DECODE(C.ALKND_CD, '9', B.CFM_QTY)) AS CFM_QTY_9
+		                 FROM EPCM_CFM_MST A
+		                      ,EPCM_CFM_INFO B
+		                      ,(
+		                        SELECT C.CTNR_CD, C.PRPS_CD, C.ALKND_CD
+		                          FROM EPCN_STD_CTNR_CD C
+		                               ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+		                         WHERE 1=1
+		                           AND C.LANG_SE_CD = F.LANG_SE_CD
+		                      ) C
+		              WHERE 1=1
+		                  AND A.RTN_STAT_CD IN ('WC','CC','IB','AC','PA','PP','PC')
+		                  AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+		                  AND B.CTNR_CD = C.CTNR_CD
+                          <choose>
+                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+                           		AND A.WRHS_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+                          	</when>
+                          	<otherwise>
+  	                        	AND SUBSTR(A.WRHS_CFM_DT,1,4) = #{STD_YEAR_SEL}
+                          	</otherwise>
+                          </choose>   		                                 
+		               GROUP BY SUBSTR(A.WRHS_CFM_DT,5,2)
+		            ) B
+	    WHERE M.MM = A.MM(+)
+	        AND M.MM = B.MM(+)
+	   ORDER BY TO_NUMBER(M.MM)
+	</select>
+	
+	<select id="epce6185201_select7" parameterType="map"   resultType="hashmap">
+			SELECT NVL(A.STD_YEAR, B.STD_YEAR) as STD		/* 연도별 출고/회수 현황 */
+                       ,NVL(DLIVY_QTY_1,0) AS VAL_1
+                       ,NVL(CFM_QTY_1,0) AS VAL_2
+                       ,NVL(TRUNC((CFM_QTY_1/DLIVY_QTY_1)*100, 2),0) AS VAL_LINE
+              FROM
+                      (
+                        /* 0:유흥용 1:가정용 2:직접반환   1:소주 2:맥주 3:기타주류 9:음료*/
+                        SELECT A.STD_YEAR
+                               ,SUM(B.DLIVY_QTY) AS DLIVY_QTY_1
+                          FROM EPDM_DLIVY_MST A
+                          	  ,EPDM_DLIVY_INFO B
+                         WHERE 1=1
+                         AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+                         <choose>
+                         	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+                          		AND B.DLIVY_DT BETWEEN #{START_DT} AND #{END_DT}
+                         	</when>
+                         	<otherwise>
+                         		<!-- AND SUBSTR(B.DLIVY_DT,1,4) = #{STD_YEAR_SEL} -->
+  	                        	AND A.STD_YEAR = #{STD_YEAR_SEL}
+                          	</otherwise>
+                         </choose>                            
+                        GROUP BY A.STD_YEAR
+                      ) A
+                      FULL OUTER JOIN
+                     (
+                        SELECT SUBSTR(A.WRHS_CFM_DT,1,4) AS STD_YEAR
+                               ,SUM(A.FH_CFM_QTY_TOT+A.FB_CFM_QTY_TOT+A.DRCT_CFM_QTY_TOT) AS CFM_QTY_1
+                          FROM EPCM_CFM_MST A
+                         WHERE 1=1
+                           AND A.RTN_STAT_CD IN ('WC','CC','IB','AC','PA','PP','PC')
+                          <choose>
+                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+                           		AND A.WRHS_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+                          	</when>
+                          	<otherwise>
+  	                        	AND SUBSTR(A.WRHS_CFM_DT,1,4) = #{STD_YEAR_SEL}
+                          	</otherwise>
+                          </choose>                           
+                        GROUP BY SUBSTR(A.WRHS_CFM_DT,1,4)
+                     ) B
+                     ON (A.STD_YEAR = B.STD_YEAR)
+           ORDER BY NVL(A.STD_YEAR, B.STD_YEAR)
+	</select>
+	
+	<!-- 연도별출고회수현황 조회 월별  -->
+	<select id="epce6185201_select2" parameterType="map"   resultType="hashmap">
+           SELECT NVL2(MM, TO_NUMBER(MM) || '월', '합계') as MM_NM
+                      ,NVL(SUM(DLIVY_QTY_5),0) as DLIVY_QTY_5
+                      ,NVL(SUM(DLIVY_QTY_4),0) as DLIVY_QTY_4
+                      ,NVL(SUM(DLIVY_QTY_3),0) as DLIVY_QTY_3
+                      ,NVL(SUM(DLIVY_QTY_2),0) as DLIVY_QTY_2
+                      ,NVL(SUM(DLIVY_QTY_1),0) as DLIVY_QTY_1
+                      ,NVL(SUM(CFM_QTY_5),0) as CFM_QTY_5
+                      ,NVL(SUM(CFM_QTY_4),0) as CFM_QTY_4
+                      ,NVL(SUM(CFM_QTY_3),0) as CFM_QTY_3
+                      ,NVL(SUM(CFM_QTY_2),0) as CFM_QTY_2
+                      ,NVL(SUM(CFM_QTY_1),0) as CFM_QTY_1
+                      ,NVL(SUM(DRCT_RTRVL_QTY_5),0) AS DRCT_RTRVL_QTY_5
+                      ,NVL(SUM(DRCT_RTRVL_QTY_4),0) AS DRCT_RTRVL_QTY_4
+                      ,NVL(SUM(DRCT_RTRVL_QTY_3),0) AS DRCT_RTRVL_QTY_3
+                      ,NVL(SUM(DRCT_RTRVL_QTY_2),0) AS DRCT_RTRVL_QTY_2
+                      ,NVL(SUM(DRCT_RTRVL_QTY_1),0) AS DRCT_RTRVL_QTY_1
+                      ,NVL(SUM(EXCH_QTY_5),0) AS EXCH_QTY_5
+                      ,NVL(SUM(EXCH_QTY_4),0) AS EXCH_QTY_4
+                      ,NVL(SUM(EXCH_QTY_3),0) AS EXCH_QTY_3
+                      ,NVL(SUM(EXCH_QTY_2),0) AS EXCH_QTY_2
+                      ,NVL(SUM(EXCH_QTY_1),0) AS EXCH_QTY_1
+                      ,NVL(SUM(RTRVL_QTY_5),0) AS RTRVL_QTY_5
+                      ,NVL(SUM(RTRVL_QTY_4),0) AS RTRVL_QTY_4
+                      ,NVL(SUM(RTRVL_QTY_3),0) AS RTRVL_QTY_3
+                      ,NVL(SUM(RTRVL_QTY_2),0) AS RTRVL_QTY_2
+                      ,NVL(SUM(RTRVL_QTY_1),0) AS RTRVL_QTY_1
+                      ,NVL(TRUNC(SUM(RTRVL_QTY_5) / SUM(DLIVY_QTY_5) *100, 2),0) as QTY_RT_5
+                      ,NVL(TRUNC(SUM(RTRVL_QTY_4) / SUM(DLIVY_QTY_4) *100, 2),0) as QTY_RT_4
+                      ,NVL(TRUNC(SUM(RTRVL_QTY_3) / SUM(DLIVY_QTY_3) *100, 2),0) as QTY_RT_3
+                      ,NVL(TRUNC(SUM(RTRVL_QTY_2) / SUM(DLIVY_QTY_2) *100, 2),0) as QTY_RT_3
+                      ,NVL(TRUNC(SUM(RTRVL_QTY_1) / SUM(DLIVY_QTY_1) *100, 2),0) as QTY_RT_1
+                      
+             FROM (
+                        SELECT M.MM
+                                  ,DLIVY_QTY_5
+                                  ,DLIVY_QTY_4
+                                  ,DLIVY_QTY_3
+                                  ,DLIVY_QTY_2
+                                  ,DLIVY_QTY_1
+                                  ,CFM_QTY_5
+                                  ,CFM_QTY_4
+                                  ,CFM_QTY_3
+                                  ,CFM_QTY_2
+                                  ,CFM_QTY_1
+                                  ,DRCT_RTRVL_QTY_5
+                                  ,DRCT_RTRVL_QTY_4
+                                  ,DRCT_RTRVL_QTY_3
+                                  ,DRCT_RTRVL_QTY_2
+                                  ,DRCT_RTRVL_QTY_1
+                                  ,EXCH_QTY_5
+                                  ,EXCH_QTY_4
+                                  ,EXCH_QTY_3
+                                  ,EXCH_QTY_2
+                                  ,EXCH_QTY_1
+                                  ,NVL(CFM_QTY_5,0) + NVL(DRCT_RTRVL_QTY_5,0) + NVL(EXCH_QTY_5,0) AS RTRVL_QTY_5
+                                  ,NVL(CFM_QTY_4,0) + NVL(DRCT_RTRVL_QTY_4,0) + NVL(EXCH_QTY_4,0) AS RTRVL_QTY_4
+                                  ,NVL(CFM_QTY_3,0) + NVL(DRCT_RTRVL_QTY_3,0) + NVL(EXCH_QTY_3,0) AS RTRVL_QTY_3
+                                  ,NVL(CFM_QTY_2,0) + NVL(DRCT_RTRVL_QTY_2,0) + NVL(EXCH_QTY_2,0) AS RTRVL_QTY_2
+                                  ,NVL(CFM_QTY_1,0) + NVL(DRCT_RTRVL_QTY_1,0) + NVL(EXCH_QTY_1,0) AS RTRVL_QTY_1
+                        FROM
+                                 (
+                                   SELECT LPAD(LEVEL,2,'0') AS MM FROM DUAL CONNECT BY LEVEL <![CDATA[<=]]>  12
+                                 )M
+                                 ,(
+                                   /* 0:유흥용 1:가정용 2:직접반환   1:소주 2:맥주 3:기타주류 9:음료*/
+                                   SELECT SUBSTR(B.DLIVY_DT,5,2) AS MM
+                                          ,SUM(DECODE(A.STD_YEAR, #{STD_YEAR_SEL}-4, B.DLIVY_QTY)) AS DLIVY_QTY_5
+                                          ,SUM(DECODE(A.STD_YEAR, #{STD_YEAR_SEL}-3, B.DLIVY_QTY)) AS DLIVY_QTY_4
+                                          ,SUM(DECODE(A.STD_YEAR, #{STD_YEAR_SEL}-2, B.DLIVY_QTY)) AS DLIVY_QTY_3
+                                          ,SUM(DECODE(A.STD_YEAR, #{STD_YEAR_SEL}-1, B.DLIVY_QTY)) AS DLIVY_QTY_2
+                                          ,SUM(DECODE(A.STD_YEAR, #{STD_YEAR_SEL}, B.DLIVY_QTY)) AS DLIVY_QTY_1
+                                     FROM EPDM_DLIVY_MST A
+                                            ,EPDM_DLIVY_INFO B
+                                  WHERE 1=1
+                                      AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+			                          <choose>
+			                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+			                           		AND B.DLIVY_DT BETWEEN #{START_DT} AND #{END_DT}
+			                          	</when>
+			                          	<otherwise>
+			  	                        	AND A.STD_YEAR BETWEEN #{STD_YEAR_SEL}-4 AND #{STD_YEAR_SEL}
+			                          	</otherwise>
+			                          </choose>                                       
+                                      <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+                                      AND A.MFC_BIZRID = #{MFC_BIZRID}
+                                      AND A.MFC_BIZRNO = #{MFC_BIZRNO}
+                                      </if>
+                                   GROUP BY SUBSTR(B.DLIVY_DT,5,2)
+                                 ) A
+                                ,(
+                                   SELECT SUBSTR(A.WRHS_CFM_DT,5,2) AS MM
+                                              ,SUM(DECODE(SUBSTR(A.WRHS_CFM_DT,1,4), #{STD_YEAR_SEL}-4, B.CFM_QTY)) AS CFM_QTY_5
+                                              ,SUM(DECODE(SUBSTR(A.WRHS_CFM_DT,1,4), #{STD_YEAR_SEL}-3, B.CFM_QTY)) AS CFM_QTY_4
+                                              ,SUM(DECODE(SUBSTR(A.WRHS_CFM_DT,1,4), #{STD_YEAR_SEL}-2, B.CFM_QTY)) AS CFM_QTY_3
+                                              ,SUM(DECODE(SUBSTR(A.WRHS_CFM_DT,1,4), #{STD_YEAR_SEL}-1, B.CFM_QTY)) AS CFM_QTY_2
+                                              ,SUM(DECODE(SUBSTR(A.WRHS_CFM_DT,1,4), #{STD_YEAR_SEL}, B.CFM_QTY)) AS CFM_QTY_1
+                                     FROM EPCM_CFM_MST A
+                                            ,EPCM_CFM_INFO B
+                                  WHERE 1=1
+                                      AND A.RTN_STAT_CD IN ('WC','CC','IB','AC','PA','PP','PC')
+                                      AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+			                          <choose>
+			                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+			                           		AND A.WRHS_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+			                          	</when>
+			                          	<otherwise>
+			  	                        	AND A.WRHS_CFM_DT BETWEEN #{STD_YEAR_SEL}-4 ||'0101' AND #{STD_YEAR_SEL} ||'1231'
+			                          	</otherwise>
+			                          </choose>                                         
+                                      <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+                                      AND A.MFC_BIZRID = #{MFC_BIZRID}
+                                      AND A.MFC_BIZRNO = #{MFC_BIZRNO}
+                                      </if>
+                                   GROUP BY SUBSTR(A.WRHS_CFM_DT,5,2)
+                                ) B
+                                ,(
+                                   SELECT SUBSTR(A.DRCT_RTRVL_DT,5,2) AS MM
+                                              ,SUM(DECODE(SUBSTR(A.DRCT_RTRVL_DT,1,4), #{STD_YEAR_SEL}-4, B.DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_5
+                                              ,SUM(DECODE(SUBSTR(A.DRCT_RTRVL_DT,1,4), #{STD_YEAR_SEL}-3, B.DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_4
+                                              ,SUM(DECODE(SUBSTR(A.DRCT_RTRVL_DT,1,4), #{STD_YEAR_SEL}-2, B.DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_3
+                                              ,SUM(DECODE(SUBSTR(A.DRCT_RTRVL_DT,1,4), #{STD_YEAR_SEL}-1, B.DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_2
+                                              ,SUM(DECODE(SUBSTR(A.DRCT_RTRVL_DT,1,4), #{STD_YEAR_SEL}, B.DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_1
+                                     FROM EPDM_DRCT_RTRVL_MST A
+                                            ,EPDM_DRCT_RTRVL_INFO B
+                                  WHERE 1=1
+			                          <choose>
+			                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+			                           		AND A.DRCT_RTRVL_DT BETWEEN #{START_DT} AND #{END_DT}
+			                          	</when>
+			                          	<otherwise>
+			  	                        	AND A.DRCT_RTRVL_DT BETWEEN #{STD_YEAR_SEL}-4 ||'0101' AND #{STD_YEAR_SEL} ||'1231'
+			                          	</otherwise>
+			                          </choose>                                   
+                                      <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+                                      AND A.MFC_BIZRID = #{MFC_BIZRID}
+                                      AND A.MFC_BIZRNO = #{MFC_BIZRNO}
+                                      </if>
+                                      AND A.DRCT_RTRVL_DOC_NO = B.DRCT_RTRVL_DOC_NO
+                                   GROUP BY SUBSTR(A.DRCT_RTRVL_DT,5,2)
+                                ) C
+                                ,(
+                                   SELECT A.MM 
+                                              ,SUM(A.EXCH_QTY_5) AS EXCH_QTY_5 
+                                              ,SUM(A.EXCH_QTY_4) AS EXCH_QTY_4 
+                                              ,SUM(A.EXCH_QTY_3) AS EXCH_QTY_3 
+                                              ,SUM(A.EXCH_QTY_2) AS EXCH_QTY_2 
+                                              ,SUM(A.EXCH_QTY_1) AS EXCH_QTY_1
+                                     FROM (SELECT SUBSTR(A.EXCH_CFM_DT,5,2) AS MM , 
+                                                  DECODE(SUBSTR(A.EXCH_CFM_DT,1,4), #{STD_YEAR_SEL}-4, -B.EXCH_QTY) AS EXCH_QTY_5, 
+                                                  DECODE(SUBSTR(A.EXCH_CFM_DT,1,4), #{STD_YEAR_SEL}-3, -B.EXCH_QTY) AS EXCH_QTY_4, 
+                                                  DECODE(SUBSTR(A.EXCH_CFM_DT,1,4), #{STD_YEAR_SEL}-2, -B.EXCH_QTY) AS EXCH_QTY_3, 
+                                                  DECODE(SUBSTR(A.EXCH_CFM_DT,1,4), #{STD_YEAR_SEL}-1, -B.EXCH_QTY) AS EXCH_QTY_2, 
+                                                  DECODE(SUBSTR(A.EXCH_CFM_DT,1,4), #{STD_YEAR_SEL}, -B.EXCH_QTY) AS EXCH_QTY_1 
+                                             FROM EPDM_EXCH_MST A , 
+                                                  EPDM_EXCH_INFO B 
+                                            WHERE 1=1 
+                                                  <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+                                                  AND A.REQ_MFC_BIZRID = #{MFC_BIZRID}
+                                                  AND A.REQ_MFC_BIZRNO = #{MFC_BIZRNO}
+                                                  </if>
+						                          <choose>
+						                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+						                           		AND A.EXCH_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+						                          	</when>
+						                          	<otherwise>
+						  	                        	AND A.EXCH_CFM_DT BETWEEN #{STD_YEAR_SEL}-4 ||'0101' AND #{STD_YEAR_SEL} ||'1231'
+						                          	</otherwise>
+						                          </choose>                                                  
+                                                  AND A.EXCH_REQ_DOC_NO = B.EXCH_REQ_DOC_NO 
+                                                  AND A.EXCH_STAT_CD = 'CC' 
+                                               UNION ALL 
+                                           SELECT SUBSTR(A.EXCH_CFM_DT,5,2) AS MM ,
+                                                  DECODE(SUBSTR(A.EXCH_CFM_DT,1,4), #{STD_YEAR_SEL}-4, B.EXCH_QTY) AS EXCH_QTY_5, 
+                                                  DECODE(SUBSTR(A.EXCH_CFM_DT,1,4), #{STD_YEAR_SEL}-3, B.EXCH_QTY) AS EXCH_QTY_4, 
+                                                  DECODE(SUBSTR(A.EXCH_CFM_DT,1,4), #{STD_YEAR_SEL}-2, B.EXCH_QTY) AS EXCH_QTY_3, 
+                                                  DECODE(SUBSTR(A.EXCH_CFM_DT,1,4), #{STD_YEAR_SEL}-1, B.EXCH_QTY) AS EXCH_QTY_2, 
+                                                  DECODE(SUBSTR(A.EXCH_CFM_DT,1,4), #{STD_YEAR_SEL}, B.EXCH_QTY) AS EXCH_QTY_1 
+                                             FROM EPDM_EXCH_MST A , 
+                                                  EPDM_EXCH_INFO B 
+                                            WHERE 1=1 
+                                                  <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+                                                  AND A.CFM_MFC_BIZRID = #{MFC_BIZRID}
+                                                  AND A.CFM_MFC_BIZRNO = #{MFC_BIZRNO}
+                                                  </if>
+						                          <choose>
+						                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+						                           		AND A.EXCH_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+						                          	</when>
+						                          	<otherwise>
+						  	                        	AND A.EXCH_CFM_DT BETWEEN #{STD_YEAR_SEL}-4 ||'0101' AND #{STD_YEAR_SEL} ||'1231'
+						                          	</otherwise>
+						                          </choose>                                                  
+                                                  AND A.EXCH_REQ_DOC_NO = B.EXCH_REQ_DOC_NO 
+                                                  AND A.EXCH_STAT_CD = 'CC' 
+                                            ) A  
+                                  WHERE 1=1
+                                   GROUP BY A.MM
+                                ) D                                
+                      WHERE M.MM = A.MM(+)
+                        AND M.MM = B.MM(+)
+                        AND M.MM = C.MM(+)
+                        AND M.MM = D.MM(+)
+              )    
+          GROUP BY ROLLUP(MM)
+          ORDER BY MM
+	</select>
+	
+	
+	<!-- 연도별출고회수현황 조회 주종별 -->
+	<select id="epce6185201_select3" parameterType="map" resultType="hashmap">
+	          SELECT NVL2(MM, TO_NUMBER(MM) || '월', '합계') as MM_NM
+	                  ,NVL(SUM(DLIVY_QTY_9),0) as DLIVY_QTY_9
+	                  ,NVL(SUM(DLIVY_QTY_3),0) as DLIVY_QTY_3
+	                  ,NVL(SUM(DLIVY_QTY_2),0) as DLIVY_QTY_2
+	                  ,NVL(SUM(DLIVY_QTY_1),0) as DLIVY_QTY_1
+	                  ,NVL(SUM(CFM_QTY_9),0) as CFM_QTY_9
+	                  ,NVL(SUM(CFM_QTY_3),0) as CFM_QTY_3
+	                  ,NVL(SUM(CFM_QTY_2),0) as CFM_QTY_2
+	                  ,NVL(SUM(CFM_QTY_1),0) as CFM_QTY_1
+                      ,NVL(SUM(DRCT_RTRVL_QTY_9),0) as DRCT_RTRVL_QTY_9
+                      ,NVL(SUM(DRCT_RTRVL_QTY_3),0) as DRCT_RTRVL_QTY_3
+                      ,NVL(SUM(DRCT_RTRVL_QTY_2),0) as DRCT_RTRVL_QTY_2
+                      ,NVL(SUM(DRCT_RTRVL_QTY_1),0) as DRCT_RTRVL_QTY_1
+                      ,NVL(SUM(EXCH_QTY_9),0) as EXCH_QTY_9
+                      ,NVL(SUM(EXCH_QTY_3),0) as EXCH_QTY_3
+                      ,NVL(SUM(EXCH_QTY_2),0) as EXCH_QTY_2
+                      ,NVL(SUM(EXCH_QTY_1),0) as EXCH_QTY_1
+                      ,NVL(SUM(RTRVL_QTY_9),0) as RTRVL_QTY_9
+                      ,NVL(SUM(RTRVL_QTY_3),0) as RTRVL_QTY_3
+                      ,NVL(SUM(RTRVL_QTY_2),0) as RTRVL_QTY_2
+                      ,NVL(SUM(RTRVL_QTY_1),0) as RTRVL_QTY_1
+                      ,CASE SUM(DLIVY_QTY_9) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_9) / SUM(DLIVY_QTY_9) * 100, 2),0) END as QTY_RT_9
+                      ,CASE SUM(DLIVY_QTY_3) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_3) / SUM(DLIVY_QTY_3) * 100, 2),0) END as QTY_RT_3
+                      ,CASE SUM(DLIVY_QTY_2) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_2) / SUM(DLIVY_QTY_2) * 100, 2),0) END as QTY_RT_2
+                      ,CASE SUM(DLIVY_QTY_1) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_1) / SUM(DLIVY_QTY_1) * 100, 2),0) END as QTY_RT_1
+
+	         FROM (
+	                SELECT M.MM
+	                        ,DLIVY_QTY_9
+	                        ,DLIVY_QTY_3
+	                        ,DLIVY_QTY_2
+	                        ,DLIVY_QTY_1
+	                        ,CFM_QTY_9
+	                        ,CFM_QTY_3
+	                        ,CFM_QTY_2
+	                        ,CFM_QTY_1
+                            ,DRCT_RTRVL_QTY_9
+                            ,DRCT_RTRVL_QTY_3
+                            ,DRCT_RTRVL_QTY_2
+                            ,DRCT_RTRVL_QTY_1
+                            ,EXCH_QTY_9
+                            ,EXCH_QTY_3
+                            ,EXCH_QTY_2
+                            ,EXCH_QTY_1
+                            ,NVL(CFM_QTY_9,0) + NVL(DRCT_RTRVL_QTY_9,0) + NVL(EXCH_QTY_9,0) AS RTRVL_QTY_9
+                            ,NVL(CFM_QTY_3,0) + NVL(DRCT_RTRVL_QTY_3,0) + NVL(EXCH_QTY_3,0) AS RTRVL_QTY_3
+                            ,NVL(CFM_QTY_2,0) + NVL(DRCT_RTRVL_QTY_2,0) + NVL(EXCH_QTY_2,0) AS RTRVL_QTY_2
+                            ,NVL(CFM_QTY_1,0) + NVL(DRCT_RTRVL_QTY_1,0) + NVL(EXCH_QTY_1,0) AS RTRVL_QTY_1
+	                 FROM
+	                     (
+	                       SELECT LPAD(LEVEL,2,'0') AS MM FROM DUAL CONNECT BY LEVEL  <![CDATA[<=]]>  12
+	                     )M
+	                     ,(
+	                       /* 0:유흥용 1:가정용 2:직접반환   1:소주 2:맥주 3:기타주류 9:음료*/
+	                       SELECT    MM
+	                                ,SUM(DECODE(ALKND_CD, '1', DLIVY_QTY)) AS DLIVY_QTY_1
+	                                ,SUM(DECODE(ALKND_CD, '2', DLIVY_QTY)) AS DLIVY_QTY_2
+	                                ,SUM(DECODE(ALKND_CD, '3', DLIVY_QTY)) AS DLIVY_QTY_3
+	                                ,SUM(DECODE(ALKND_CD, '9', DLIVY_QTY)) AS DLIVY_QTY_9
+	                         FROM EPCM_YEAR_CFM_RTN_STAT_BT1
+	                      WHERE 1=1
+	                          <choose>
+	                         	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+	                          		AND SEARCH_DT BETWEEN #{START_DT} AND #{END_DT}
+	                         	</when>
+	                         	<otherwise>
+	  	                       		AND SUBSTR(SEARCH_DT,1,4) = #{STD_YEAR_SEL}
+	                         	</otherwise>
+	                         </choose>                                                                                           
+                             <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+	                             AND MFC_BIZRID = #{MFC_BIZRID}
+	                             AND MFC_BIZRNO = #{MFC_BIZRNO}
+                             </if>
+	                           AND DEL_YN='N'
+	                       GROUP BY MM
+	                     ) A
+	                    ,(
+	                       SELECT MM
+	                              ,SUM(DECODE(ALKND_CD, '1', CFM_QTY)) AS CFM_QTY_1
+	                              ,SUM(DECODE(ALKND_CD, '2', CFM_QTY)) AS CFM_QTY_2
+	                              ,SUM(DECODE(ALKND_CD, '3', CFM_QTY)) AS CFM_QTY_3
+	                              ,SUM(DECODE(ALKND_CD, '9', CFM_QTY)) AS CFM_QTY_9
+	                         FROM EPCM_YEAR_CFM_RTN_STAT_BT2
+	                      WHERE 1=1
+
+	  	                      <choose>
+	                         	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+	                          		AND SEARCH_DT BETWEEN #{START_DT} AND #{END_DT}
+	                         	</when>
+	                         	<otherwise>
+	  	                       		AND SUBSTR(SEARCH_DT,1,4) = #{STD_YEAR_SEL}
+	                         	</otherwise>
+	                         </choose>                                                                                           
+                             <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+	                             AND MFC_BIZRID = #{MFC_BIZRID}
+	                             AND MFC_BIZRNO = #{MFC_BIZRNO}
+                             </if>
+	                           AND DEL_YN='N'
+	                       GROUP BY MM
+	                    ) B
+                        ,(
+                           SELECT MM
+                                  ,SUM(DECODE(ALKND_CD, '1', DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_1
+                                  ,SUM(DECODE(ALKND_CD, '2', DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_2
+                                  ,SUM(DECODE(ALKND_CD, '3', DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_3
+                                  ,SUM(DECODE(ALKND_CD, '9', DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_9
+                             FROM EPCM_YEAR_CFM_RTN_STAT_BT3
+                          WHERE 1=1
+	  	                        <choose>
+	                         	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+	                          		AND SEARCH_DT BETWEEN #{START_DT} AND #{END_DT}
+	                         	</when>
+	                         	<otherwise>
+	  	                       		AND SUBSTR(SEARCH_DT,1,4) = #{STD_YEAR_SEL}
+	                         	</otherwise>
+	                         </choose>                                                                                           
+                             <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+	                             AND MFC_BIZRID = #{MFC_BIZRID}
+	                             AND MFC_BIZRNO = #{MFC_BIZRNO}
+                             </if>
+                              AND DEL_YN='N'
+                           GROUP BY MM
+                        ) C
+                        ,(
+                           SELECT MM
+                                  ,SUM(DECODE(ALKND_CD, '1', EXCH_QTY)) AS EXCH_QTY_1
+                                  ,SUM(DECODE(ALKND_CD, '2', EXCH_QTY)) AS EXCH_QTY_2
+                                  ,SUM(DECODE(ALKND_CD, '3', EXCH_QTY)) AS EXCH_QTY_3
+                                  ,SUM(DECODE(ALKND_CD, '9', EXCH_QTY)) AS EXCH_QTY_9
+                             FROM EPCM_YEAR_CFM_RTN_STAT_BT4
+                          WHERE 1=1
+                              <choose>
+	                         	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+	                          		AND SEARCH_DT BETWEEN #{START_DT} AND #{END_DT}
+	                         	</when>
+	                         	<otherwise>
+	  	                       		AND SUBSTR(SEARCH_DT,1,4) = #{STD_YEAR_SEL}
+	                         	</otherwise>
+	                         </choose>                                                                                           
+                             <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+	                             AND MFC_BIZRID = #{MFC_BIZRID}
+	                             AND MFC_BIZRNO = #{MFC_BIZRNO}
+                             </if>
+                              AND DEL_YN='N'
+                           GROUP BY MM
+                        ) D
+	              WHERE M.MM = A.MM(+)
+	                AND M.MM = B.MM(+)
+                    AND M.MM = C.MM(+)
+                    AND M.MM = D.MM(+)
+	              )
+	          GROUP BY ROLLUP(MM)
+	          ORDER BY MM
+	          
+	</select>
+	
+	<!-- 연도별출고회수현황 조회 지역별 -->
+	<select id="epce6185201_select4" parameterType="map" resultType="hashmap">
+        <choose>
+          <when test='SEL_GBN == "4" '>
+              SELECT NVL(EPCN_ETC_NM(AREA_CD,'B010'), DECODE(AREA_CD,'N01','미등록','합계') ) AS AREA_NM
+	                  ,NVL(SUM(DLIVY_QTY_3),0) as DLIVY_QTY_3
+	                  ,NVL(SUM(DLIVY_QTY_2),0) as DLIVY_QTY_2
+	                  ,NVL(SUM(DLIVY_QTY_1),0) as DLIVY_QTY_1
+	                  ,NVL(SUM(CFM_QTY_3),0) as CFM_QTY_3
+	                  ,NVL(SUM(CFM_QTY_2),0) as CFM_QTY_2
+	                  ,NVL(SUM(CFM_QTY_1),0) as CFM_QTY_1
+                      ,NVL(SUM(DRCT_RTRVL_QTY_3),0) as DRCT_RTRVL_QTY_3
+                      ,NVL(SUM(DRCT_RTRVL_QTY_2),0) as DRCT_RTRVL_QTY_2
+                      ,NVL(SUM(DRCT_RTRVL_QTY_1),0) as DRCT_RTRVL_QTY_1
+                      ,NVL(SUM(RTRVL_QTY_3),0) as RTRVL_QTY_3
+                      ,NVL(SUM(RTRVL_QTY_2),0) as RTRVL_QTY_2
+                      ,NVL(SUM(RTRVL_QTY_1),0) as RTRVL_QTY_1
+                      ,NVL(SUM(EXCH_QTY_3),0) as EXCH_QTY_3
+                      ,NVL(SUM(EXCH_QTY_2),0) as EXCH_QTY_2
+                      ,NVL(SUM(EXCH_QTY_1),0) as EXCH_QTY_1
+                      ,CASE SUM(DLIVY_QTY_3) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_3) / SUM(DLIVY_QTY_3) * 100, 2),0) END as QTY_RT_3
+                      ,CASE SUM(DLIVY_QTY_2) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_2) / SUM(DLIVY_QTY_2) * 100, 2),0) END as QTY_RT_2
+                      ,CASE SUM(DLIVY_QTY_1) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_1) / SUM(DLIVY_QTY_1) * 100, 2),0) END as QTY_RT_1
+	         FROM (
+	                SELECT E.AREA_CD
+	                        ,DLIVY_QTY_3
+	                        ,DLIVY_QTY_2
+	                        ,DLIVY_QTY_1
+	                        ,CFM_QTY_3
+	                        ,CFM_QTY_2
+	                        ,CFM_QTY_1
+                            ,DRCT_RTRVL_QTY_3
+                            ,DRCT_RTRVL_QTY_2
+                            ,DRCT_RTRVL_QTY_1
+                            ,EXCH_QTY_3
+                            ,EXCH_QTY_2
+                            ,EXCH_QTY_1
+                            ,NVL(CFM_QTY_3,0) + NVL(DRCT_RTRVL_QTY_3,0) + NVL(EXCH_QTY_3,0) AS RTRVL_QTY_3
+                            ,NVL(CFM_QTY_2,0) + NVL(DRCT_RTRVL_QTY_2,0) + NVL(EXCH_QTY_2,0) AS RTRVL_QTY_2
+                            ,NVL(CFM_QTY_1,0) + NVL(DRCT_RTRVL_QTY_1,0) + NVL(EXCH_QTY_1,0) AS RTRVL_QTY_1
+	                 FROM
+	                     (
+	                     	 SELECT ETC_CD AS AREA_CD FROM EPCN_ETC_CD WHERE GRP_CD = 'B010'
+	                     	 UNION ALL
+                       		 SELECT 'N01' FROM DUAL /* 지역코드 널값 전용 */
+	                     ) E
+	                     ,(
+	                       /* 0:유흥용 1:가정용 2:직접반환   1:소주 2:맥주 3:기타주류 9:음료*/
+	                       SELECT NVL(AREA_CD, 'N01') AS AREA_CD
+	                              ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-2, DLIVY_QTY)) AS DLIVY_QTY_3
+			                          ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-1, DLIVY_QTY)) AS DLIVY_QTY_2
+			                          ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/, DLIVY_QTY)) AS DLIVY_QTY_1
+	                         FROM EPCM_YEAR_CFM_RTN_STAT_AR1
+	                      WHERE 1=1
+	  	                   	 <choose>
+	                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+	                           		AND SEARCH_DT BETWEEN #{START_DT} AND #{END_DT}
+	                          	</when>
+	                          	<otherwise>
+	  	                        	AND SEARCH_DT BETWEEN #{STD_YEAR_SEL}-2 ||'0101' AND #{STD_YEAR_SEL} ||'1231'
+	                          	</otherwise>
+	                         </choose>    
+	                         <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+	                              AND MFC_BIZRID = #{MFC_BIZRID}
+	                              AND MFC_BIZRNO = #{MFC_BIZRNO}
+                             </if>
+                          AND DEL_YN = 'N'
+	                       GROUP BY AREA_CD
+	                     ) A
+	                    ,(
+	                       SELECT NVL(AREA_CD, 'N01') AS AREA_CD
+	                              ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-2, CFM_QTY)) AS CFM_QTY_3
+			                          ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-1, CFM_QTY)) AS CFM_QTY_2
+ 			                          ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/, CFM_QTY)) AS CFM_QTY_1
+	                         FROM EPCM_YEAR_CFM_RTN_STAT_AR2
+	                      WHERE 1=1
+	  	                  	 <choose>
+	                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+	                           		AND SEARCH_DT BETWEEN #{START_DT} AND #{END_DT}
+	                          	</when>
+	                          	<otherwise>
+	  	                        	AND SEARCH_DT BETWEEN #{STD_YEAR_SEL}-2 ||'0101' AND #{STD_YEAR_SEL} ||'1231'
+	                          	</otherwise>
+	                         </choose>    
+	                         <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+	                              AND MFC_BIZRID = #{MFC_BIZRID}
+	                              AND MFC_BIZRNO = #{MFC_BIZRNO}
+                             </if>
+                           AND DEL_YN = 'N'
+	                       GROUP BY AREA_CD
+	                    ) B
+                        ,(
+                           SELECT NVL(AREA_CD, 'N01') AS AREA_CD
+                                      ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-2, DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_3
+                                      ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-1, DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_2
+                                      ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/, DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_1
+                             FROM EPCM_YEAR_CFM_RTN_STAT_AR3
+                            WHERE 1=1
+	  	                     <choose>
+	                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+	                           		AND SEARCH_DT BETWEEN #{START_DT} AND #{END_DT}
+	                          	</when>
+	                          	<otherwise>
+	  	                        	AND SEARCH_DT BETWEEN #{STD_YEAR_SEL}-2 ||'0101' AND #{STD_YEAR_SEL} ||'1231'
+	                          	</otherwise>
+	                         </choose>    
+	                         <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+	                              AND MFC_BIZRID = #{MFC_BIZRID}
+	                              AND MFC_BIZRNO = #{MFC_BIZRNO}
+                             </if>
+                              AND DEL_YN = 'N'
+                           GROUP BY AREA_CD
+                        ) C
+                        ,(
+                           SELECT NVL(AREA_CD, 'N01') AS AREA_CD
+                                  ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-2, EXCH_QTY)) AS EXCH_QTY_3
+                                  ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-1, EXCH_QTY)) AS EXCH_QTY_2
+                                  ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/, EXCH_QTY)) AS EXCH_QTY_1
+                             FROM EPCM_YEAR_CFM_RTN_STAT_AR4
+                          WHERE 1=1
+                          	<choose>
+	                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+	                           		AND SEARCH_DT BETWEEN #{START_DT} AND #{END_DT}
+	                          	</when>
+	                          	<otherwise>
+	  	                        	AND SEARCH_DT BETWEEN #{STD_YEAR_SEL}-2 ||'0101' AND #{STD_YEAR_SEL} ||'1231'
+	                          	</otherwise>
+	                         </choose>    
+	                         <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+	                              AND MFC_BIZRID = #{MFC_BIZRID}
+	                              AND MFC_BIZRNO = #{MFC_BIZRNO}
+                             </if>
+                              AND DEL_YN = 'N'
+                           GROUP BY AREA_CD
+                        ) D
+	               WHERE E.AREA_CD = A.AREA_CD(+)
+                     AND E.AREA_CD = B.AREA_CD(+)
+                     AND E.AREA_CD = C.AREA_CD(+)
+                     AND E.AREA_CD = D.AREA_CD(+)
+	              )
+	          GROUP BY ROLLUP(AREA_CD)
+	          ORDER BY AREA_CD
+          </when>
+          <when test='SEL_GBN == "5" '>
+              SELECT NVL(EPCN_ETC_NM(AREA_CD,'B010'), DECODE(AREA_CD,'N01','미등록','합계') ) AS AREA_NM
+	                  ,NVL(SUM(DLIVY_QTY_3),0) as DLIVY_QTY_3
+	                  ,NVL(SUM(DLIVY_QTY_2),0) as DLIVY_QTY_2
+	                  ,NVL(SUM(DLIVY_QTY_1),0) as DLIVY_QTY_1
+	                  ,NVL(SUM(CFM_QTY_3),0) as CFM_QTY_3
+	                  ,NVL(SUM(CFM_QTY_2),0) as CFM_QTY_2
+	                  ,NVL(SUM(CFM_QTY_1),0) as CFM_QTY_1
+                      ,NVL(SUM(DRCT_RTRVL_QTY_3),0) as DRCT_RTRVL_QTY_3
+                      ,NVL(SUM(DRCT_RTRVL_QTY_2),0) as DRCT_RTRVL_QTY_2
+                      ,NVL(SUM(DRCT_RTRVL_QTY_1),0) as DRCT_RTRVL_QTY_1
+                      ,NVL(SUM(RTRVL_QTY_3),0) as RTRVL_QTY_3
+                      ,NVL(SUM(RTRVL_QTY_2),0) as RTRVL_QTY_2
+                      ,NVL(SUM(RTRVL_QTY_1),0) as RTRVL_QTY_1
+                      ,NVL(SUM(EXCH_QTY_3),0) as EXCH_QTY_3
+                      ,NVL(SUM(EXCH_QTY_2),0) as EXCH_QTY_2
+                      ,NVL(SUM(EXCH_QTY_1),0) as EXCH_QTY_1
+                      ,CASE SUM(DLIVY_QTY_3) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_3) / SUM(DLIVY_QTY_3) * 100, 2),0) END as QTY_RT_3
+                      ,CASE SUM(DLIVY_QTY_2) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_2) / SUM(DLIVY_QTY_2) * 100, 2),0) END as QTY_RT_2
+                      ,CASE SUM(DLIVY_QTY_1) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_1) / SUM(DLIVY_QTY_1) * 100, 2),0) END as QTY_RT_1
+	         FROM (
+	                SELECT E.AREA_CD
+	                        ,DLIVY_QTY_3
+	                        ,DLIVY_QTY_2
+	                        ,DLIVY_QTY_1
+	                        ,CFM_QTY_3
+	                        ,CFM_QTY_2
+	                        ,CFM_QTY_1
+                            ,DRCT_RTRVL_QTY_3
+                            ,DRCT_RTRVL_QTY_2
+                            ,DRCT_RTRVL_QTY_1
+                            ,EXCH_QTY_3
+                            ,EXCH_QTY_2
+                            ,EXCH_QTY_1
+                            ,NVL(CFM_QTY_3,0) + NVL(DRCT_RTRVL_QTY_3,0) + NVL(EXCH_QTY_3,0) AS RTRVL_QTY_3
+                            ,NVL(CFM_QTY_2,0) + NVL(DRCT_RTRVL_QTY_2,0) + NVL(EXCH_QTY_2,0) AS RTRVL_QTY_2
+                            ,NVL(CFM_QTY_1,0) + NVL(DRCT_RTRVL_QTY_1,0) + NVL(EXCH_QTY_1,0) AS RTRVL_QTY_1
+	                 FROM
+	                     (
+	                     	 SELECT ETC_CD AS AREA_CD FROM EPCN_ETC_CD WHERE GRP_CD = 'B010'
+	                     	 UNION ALL
+                       		 SELECT 'N01' FROM DUAL /* 지역코드 널값 전용 */
+	                     ) E
+	                     ,(
+	                       /* 0:유흥용 1:가정용 2:직접반환   1:소주 2:맥주 3:기타주류 9:음료*/
+	                       SELECT NVL(AREA_CD, 'N01') AS AREA_CD
+	                              ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-2, DLIVY_QTY)) AS DLIVY_QTY_3
+			                          ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-1, DLIVY_QTY)) AS DLIVY_QTY_2
+			                          ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/, DLIVY_QTY)) AS DLIVY_QTY_1
+	                         FROM EPCM_YEAR_CFM_RTN_STAT_AD1
+	                      WHERE 1=1
+	  	                     <choose>
+	                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+	                           		AND SEARCH_DT BETWEEN #{START_DT} AND #{END_DT}
+	                          	</when>
+	                          	<otherwise>
+	  	                        	AND SEARCH_DT BETWEEN #{STD_YEAR_SEL}-2 ||'0101' AND #{STD_YEAR_SEL} ||'1231'
+	                          	</otherwise>
+	                         </choose>    
+	                         <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+	                              AND MFC_BIZRID = #{MFC_BIZRID}
+	                              AND MFC_BIZRNO = #{MFC_BIZRNO}
+                             </if>
+                          AND DEL_YN = 'N'
+	                       GROUP BY AREA_CD
+	                     ) A
+	                    ,(
+	                       SELECT NVL(AREA_CD, 'N01') AS AREA_CD
+	                              ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-2, CFM_QTY)) AS CFM_QTY_3
+			                          ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-1, CFM_QTY)) AS CFM_QTY_2
+ 			                          ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/, CFM_QTY)) AS CFM_QTY_1
+	                         FROM EPCM_YEAR_CFM_RTN_STAT_AD2
+	                      WHERE 1=1
+	                         <choose>
+	                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+	                           		AND SEARCH_DT BETWEEN #{START_DT} AND #{END_DT}
+	                          	</when>
+	                          	<otherwise>
+	  	                        	AND SEARCH_DT BETWEEN #{STD_YEAR_SEL}-2 ||'0101' AND #{STD_YEAR_SEL} ||'1231'
+	                          	</otherwise>
+	                         </choose>    
+	                         <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+	                              AND MFC_BIZRID = #{MFC_BIZRID}
+	                              AND MFC_BIZRNO = #{MFC_BIZRNO}
+                             </if>
+                           AND DEL_YN = 'N'
+	                       GROUP BY AREA_CD
+	                    ) B
+                        ,(
+                           SELECT NVL(AREA_CD, 'N01') AS AREA_CD
+                                      ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-2, DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_3
+                                      ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-1, DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_2
+                                      ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/, DRCT_RTRVL_QTY)) AS DRCT_RTRVL_QTY_1
+                             FROM EPCM_YEAR_CFM_RTN_STAT_AD3
+                            WHERE 1=1
+	  	                      <choose>
+	                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+	                           		AND SEARCH_DT BETWEEN #{START_DT} AND #{END_DT}
+	                          	</when>
+	                          	<otherwise>
+	  	                        	AND SEARCH_DT BETWEEN #{STD_YEAR_SEL}-2 ||'0101' AND #{STD_YEAR_SEL} ||'1231'
+	                          	</otherwise>
+	                         </choose>    
+	                         <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+	                              AND MFC_BIZRID = #{MFC_BIZRID}
+	                              AND MFC_BIZRNO = #{MFC_BIZRNO}
+                             </if>
+                              AND DEL_YN = 'N'
+                           GROUP BY AREA_CD
+                        ) C
+                        ,(
+                           SELECT NVL(AREA_CD, 'N01') AS AREA_CD
+                                  ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-2, EXCH_QTY)) AS EXCH_QTY_3
+                                  ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/-1, EXCH_QTY)) AS EXCH_QTY_2
+                                  ,SUM(DECODE(SUBSTR(SEARCH_DT,1,4),  #{STD_YEAR_SEL} /**P*/, EXCH_QTY)) AS EXCH_QTY_1
+                             FROM EPCM_YEAR_CFM_RTN_STAT_AD4
+                          WHERE 1=1
+                          	<choose>
+	                          	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+	                           		AND SEARCH_DT BETWEEN #{START_DT} AND #{END_DT}
+	                          	</when>
+	                          	<otherwise>
+	  	                        	AND SEARCH_DT BETWEEN #{STD_YEAR_SEL}-2 ||'0101' AND #{STD_YEAR_SEL} ||'1231'
+	                          	</otherwise>
+	                         </choose>    
+	                         <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+	                              AND MFC_BIZRID = #{MFC_BIZRID}
+	                              AND MFC_BIZRNO = #{MFC_BIZRNO}
+                             </if>
+                              AND DEL_YN = 'N'
+                           GROUP BY AREA_CD
+                        ) D
+	               WHERE E.AREA_CD = A.AREA_CD(+)
+                     AND E.AREA_CD = B.AREA_CD(+)
+                     AND E.AREA_CD = C.AREA_CD(+)
+                     AND E.AREA_CD = D.AREA_CD(+)
+	              )
+	          GROUP BY ROLLUP(AREA_CD)
+	          ORDER BY AREA_CD 
+          </when>
+        </choose>
+	          
+	</select>
+    
+    <!-- 연도별출고회수현황 조회  -->
+    <select id="epce6185201_select10" parameterType="map"   resultType="hashmap">
+     SELECT MFC_BIZRID,
+               MFC_BIZRNO,
+               ALKND_CD,
+               PRPS_CD ,
+               EPCN_BIZR_NM(MFC_BIZRID, MFC_BIZRNO) AS MFC_BIZRNM ,
+               EPCN_ETC_NM(ALKND_CD, 'E004') AS ALKND_NM ,
+               NVL(EPCN_ETC_NM(CTNR_SE, 'E005'), '') AS CTNR_NM ,
+               DECODE(CTNR_SE, NULL,'합계', NVL(EPCN_ETC_NM(PRPS_CD, 'E002'), '소계')) AS PRPS_NM ,
+               NVL(SUM(DLIVY_QTY_1 ),0) AS DLIVY_QTY_1  ,
+               NVL(SUM(DLIVY_QTY_2 ),0) AS DLIVY_QTY_2  ,
+               NVL(SUM(DLIVY_QTY_3 ),0) AS DLIVY_QTY_3  ,
+               NVL(SUM(DLIVY_QTY_4 ),0) AS DLIVY_QTY_4  ,
+               NVL(SUM(DLIVY_QTY_5 ),0) AS DLIVY_QTY_5  ,
+               NVL(SUM(DLIVY_QTY_6 ),0) AS DLIVY_QTY_6  ,
+               NVL(SUM(DLIVY_QTY_7 ),0) AS DLIVY_QTY_7  ,
+               NVL(SUM(DLIVY_QTY_8 ),0) AS DLIVY_QTY_8  ,
+               NVL(SUM(DLIVY_QTY_9 ),0) AS DLIVY_QTY_9  ,
+               NVL(SUM(DLIVY_QTY_10),0) AS DLIVY_QTY_10 ,
+               NVL(SUM(DLIVY_QTY_11),0) AS DLIVY_QTY_11 ,
+               NVL(SUM(DLIVY_QTY_12),0) AS DLIVY_QTY_12 ,
+               NVL(SUM(CFM_QTY_1 ),0) AS CFM_QTY_1  ,
+               NVL(SUM(CFM_QTY_2 ),0) AS CFM_QTY_2  ,
+               NVL(SUM(CFM_QTY_3 ),0) AS CFM_QTY_3  ,
+               NVL(SUM(CFM_QTY_4 ),0) AS CFM_QTY_4  ,
+               NVL(SUM(CFM_QTY_5 ),0) AS CFM_QTY_5  ,
+               NVL(SUM(CFM_QTY_6 ),0) AS CFM_QTY_6  ,
+               NVL(SUM(CFM_QTY_7 ),0) AS CFM_QTY_7  ,
+               NVL(SUM(CFM_QTY_8 ),0) AS CFM_QTY_8  ,
+               NVL(SUM(CFM_QTY_9 ),0) AS CFM_QTY_9  ,
+               NVL(SUM(CFM_QTY_10),0) AS CFM_QTY_10 ,
+               NVL(SUM(CFM_QTY_11),0) AS CFM_QTY_11 ,
+               NVL(SUM(CFM_QTY_12),0) AS CFM_QTY_12 ,
+               NVL(SUM(DRCT_RTRVL_QTY_1 ),0) AS DRCT_RTRVL_QTY_1  ,
+               NVL(SUM(DRCT_RTRVL_QTY_2 ),0) AS DRCT_RTRVL_QTY_2  ,
+               NVL(SUM(DRCT_RTRVL_QTY_3 ),0) AS DRCT_RTRVL_QTY_3  ,
+               NVL(SUM(DRCT_RTRVL_QTY_4 ),0) AS DRCT_RTRVL_QTY_4  ,
+               NVL(SUM(DRCT_RTRVL_QTY_5 ),0) AS DRCT_RTRVL_QTY_5  ,
+               NVL(SUM(DRCT_RTRVL_QTY_6 ),0) AS DRCT_RTRVL_QTY_6  ,
+               NVL(SUM(DRCT_RTRVL_QTY_7 ),0) AS DRCT_RTRVL_QTY_7  ,
+               NVL(SUM(DRCT_RTRVL_QTY_8 ),0) AS DRCT_RTRVL_QTY_8  ,
+               NVL(SUM(DRCT_RTRVL_QTY_9 ),0) AS DRCT_RTRVL_QTY_9  ,
+               NVL(SUM(DRCT_RTRVL_QTY_10),0) AS DRCT_RTRVL_QTY_10 ,
+               NVL(SUM(DRCT_RTRVL_QTY_11),0) AS DRCT_RTRVL_QTY_11 ,
+               NVL(SUM(DRCT_RTRVL_QTY_12),0) AS DRCT_RTRVL_QTY_12 ,
+               NVL(SUM(EXCH_QTY_1 ),0) AS EXCH_QTY_1  ,
+               NVL(SUM(EXCH_QTY_2 ),0) AS EXCH_QTY_2  ,
+               NVL(SUM(EXCH_QTY_3 ),0) AS EXCH_QTY_3  ,
+               NVL(SUM(EXCH_QTY_4 ),0) AS EXCH_QTY_4  ,
+               NVL(SUM(EXCH_QTY_5 ),0) AS EXCH_QTY_5  ,
+               NVL(SUM(EXCH_QTY_6 ),0) AS EXCH_QTY_6  ,
+               NVL(SUM(EXCH_QTY_7 ),0) AS EXCH_QTY_7  ,
+               NVL(SUM(EXCH_QTY_8 ),0) AS EXCH_QTY_8  ,
+               NVL(SUM(EXCH_QTY_9 ),0) AS EXCH_QTY_9  ,
+               NVL(SUM(EXCH_QTY_10),0) AS EXCH_QTY_10 ,
+               NVL(SUM(EXCH_QTY_11),0) AS EXCH_QTY_11 ,
+               NVL(SUM(EXCH_QTY_12),0) AS EXCH_QTY_12 ,
+               NVL(SUM(RTRVL_QTY_1 ),0) AS RTRVL_QTY_1  ,
+               NVL(SUM(RTRVL_QTY_2 ),0) AS RTRVL_QTY_2  ,
+               NVL(SUM(RTRVL_QTY_3 ),0) AS RTRVL_QTY_3  ,
+               NVL(SUM(RTRVL_QTY_4 ),0) AS RTRVL_QTY_4  ,
+               NVL(SUM(RTRVL_QTY_5 ),0) AS RTRVL_QTY_5  ,
+               NVL(SUM(RTRVL_QTY_6 ),0) AS RTRVL_QTY_6  ,
+               NVL(SUM(RTRVL_QTY_7 ),0) AS RTRVL_QTY_7  ,
+               NVL(SUM(RTRVL_QTY_8 ),0) AS RTRVL_QTY_8  ,
+               NVL(SUM(RTRVL_QTY_9 ),0) AS RTRVL_QTY_9  ,
+               NVL(SUM(RTRVL_QTY_10),0) AS RTRVL_QTY_10 ,
+               NVL(SUM(RTRVL_QTY_11),0) AS RTRVL_QTY_11 ,
+               NVL(SUM(RTRVL_QTY_12),0) AS RTRVL_QTY_12 ,
+               CASE SUM(DLIVY_QTY_1 ) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_1 ) / SUM(DLIVY_QTY_1 ) * 100, 2),0) END AS QTY_RT_1  ,
+               CASE SUM(DLIVY_QTY_2 ) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_2 ) / SUM(DLIVY_QTY_2 ) * 100, 2),0) END AS QTY_RT_2  ,
+               CASE SUM(DLIVY_QTY_3 ) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_3 ) / SUM(DLIVY_QTY_3 ) * 100, 2),0) END AS QTY_RT_3  ,
+               CASE SUM(DLIVY_QTY_4 ) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_4 ) / SUM(DLIVY_QTY_4 ) * 100, 2),0) END AS QTY_RT_4  ,
+               CASE SUM(DLIVY_QTY_5 ) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_5 ) / SUM(DLIVY_QTY_5 ) * 100, 2),0) END AS QTY_RT_5  ,
+               CASE SUM(DLIVY_QTY_6 ) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_6 ) / SUM(DLIVY_QTY_6 ) * 100, 2),0) END AS QTY_RT_6  ,
+               CASE SUM(DLIVY_QTY_7 ) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_7 ) / SUM(DLIVY_QTY_7 ) * 100, 2),0) END AS QTY_RT_7  ,
+               CASE SUM(DLIVY_QTY_8 ) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_8 ) / SUM(DLIVY_QTY_8 ) * 100, 2),0) END AS QTY_RT_8  ,
+               CASE SUM(DLIVY_QTY_9 ) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_9 ) / SUM(DLIVY_QTY_9 ) * 100, 2),0) END AS QTY_RT_9  ,
+               CASE SUM(DLIVY_QTY_10) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_10) / SUM(DLIVY_QTY_10) * 100, 2),0) END AS QTY_RT_10 ,
+               CASE SUM(DLIVY_QTY_11) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_11) / SUM(DLIVY_QTY_11) * 100, 2),0) END AS QTY_RT_11 ,
+               CASE SUM(DLIVY_QTY_12) WHEN 0 THEN 0 ELSE NVL(TRUNC(SUM(RTRVL_QTY_12) / SUM(DLIVY_QTY_12) * 100, 2),0) END AS QTY_RT_12
+          FROM EPCM_YEAR_CFM_RTN_STAT_MTH
+				WHERE 1 = 1 
+
+				<choose>
+                 	<when test='START_DT != null and START_DT != "" and END_DT != null and END_DT != "" '>
+                  		AND SEARCH_DT BETWEEN #{START_DT} AND #{END_DT}
+                 	</when>
+                 	<otherwise>
+                  	AND SEARCH_DT BETWEEN #{STD_YEAR_SEL} ||'0101' AND #{STD_YEAR_SEL} ||'1231'
+                 	</otherwise>
+                </choose>                             
+                   <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+                   AND MFC_BIZRID = #{MFC_BIZRID}
+                   AND MFC_BIZRNO = #{MFC_BIZRNO}
+                   </if>
+
+         GROUP BY MFC_BIZRID, MFC_BIZRNO, ALKND_CD, ROLLUP(CTNR_SE, PRPS_CD)
+        ORDER BY EPCN_BIZR_SEL_ORD(MFC_BIZRID, MFC_BIZRNO), ALKND_CD, CTNR_SE DESC, PRPS_CD DESC
+    </select>
+    
+    
+</mapper>

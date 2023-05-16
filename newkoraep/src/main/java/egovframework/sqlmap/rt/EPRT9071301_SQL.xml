@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.rt.ep.EPRT9071301Mapper">
+	
+	<!--  조회 -->
+	<select id="eprt9071301_select" resultType="hashmap">
+	
+		 SELECT 
+				 	A.PAY_DOC_NO
+		 			,A.PAY_REG_DT
+		 			,<![CDATA['<a href="javascript:fn_page()" class="gridLink">' || TO_CHAR(TO_DATE(A.PAY_REG_DT, 'YYYYMMDD'), 'YYYY-MM-DD') || '</a>' as PAY_REG_DT_PAGE]]>
+		 			,A.STD_YEAR
+			        ,A.PAY_BIZRID, A.PAY_BIZRNO, A.WHSDL_BRCH_ID, A.WHSDL_BRCH_NO
+			        ,B.BIZRNM AS WHSDL_BIZRNM
+			        ,EPCN_ETC_NM(A.ACP_BANK_CD, 'S090') AS ACP_BANK_NM
+			        ,ECL_DECRYPT(A.ACP_ACCT_NO) AS ACP_ACCT_NO
+			        ,A.ACP_ACCT_DPSTR_NM
+			        ,A.GTN_TOT
+			        ,A.WHSL_FEE_TOT + A.RTL_FEE_TOT AS FEE_TOT
+			        ,A.WHSL_FEE_STAX_TOT AS FEE_STAX_TOT
+			        ,A.PAY_AMT
+			        ,A.PAY_STAT_CD
+			        ,EPCN_ETC_NM(A.PAY_STAT_CD, 'D034') AS PAY_STAT_NM
+			        ,TO_CHAR(TO_DATE(A.REAL_PAY_DT || A.REAL_PAY_TM, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS REAL_PAY_DT
+			        ,A.BIZR_ABBR_NM
+		   FROM 
+					EPGM_PAY_INFO_LST A
+			        ,EPCN_BIZR_INFO B
+		 WHERE 1=1
+		     AND A.PAY_REG_DT BETWEEN REPLACE(#{START_DT_SEL}, '-') AND REPLACE(#{END_DT_SEL}, '-')
+		     AND A.PAY_BIZRID = B.BIZRID
+		     AND A.PAY_BIZRNO = B.BIZRNO
+		     
+		    <if test='BIZRID != null and BIZRID != "" '>
+              AND A.PAY_BIZRID = #{BIZRID}
+              AND A.PAY_BIZRNO = #{BIZRNO}
+		    </if>
+		    <if test='STAT_CD_SEL != null and STAT_CD_SEL != "" '>
+		      AND A.PAY_STAT_CD = #{STAT_CD_SEL}
+		    </if>
+		     
+		     <if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+				 AND EXISTS (
+				 					   SELECT 'X'
+			                             FROM EPCN_BRCH_INFO S1
+			                           WHERE 1=1
+			                              AND A.PAY_BIZRID = S1.BIZRID
+			                              AND A.PAY_BIZRNO = S1.BIZRNO
+			                              AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+			                              AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+					                      AND EXISTS (
+					                      					   SELECT 'X'
+									                             FROM EPCN_BRCH_INFO S2
+									                           WHERE 1=1
+									                              AND S1.BIZRID = S2.BIZRID
+									                              AND S1.BIZRNO = S2.BIZRNO
+									                              AND (
+										                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+										                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+									                                     ) 
+									                              AND S2.BRCH_ID = #{S_BRCH_ID}
+									                              AND S2.BRCH_NO = #{S_BRCH_NO}
+										          			)
+	                         		)
+			 </if>
+		     
+		 ORDER BY A.PAY_REG_DT DESC, B.SEL_ORD
+	
+	</select>
+
+	<select id="eprt9071364_select" resultType="hashmap">
+		 SELECT B.BIZRNM, ECL_DECRYPT(B.BIZRNO) AS BIZRNO
+			        ,B.RPST_NM, B.ADDR1 ||' '|| B.ADDR2 AS ADDR
+			        ,B.RPST_TEL_NO1||'-'||B.RPST_TEL_NO2||'-'||B.RPST_TEL_NO3 AS RPST_TEL_NO
+			        ,A.PAY_AMT
+			        ,B.ACP_ACCT_DPSTR_NM
+			        ,ECL_DECRYPT(B.ACP_ACCT_NO) AS ACP_ACCT_NO
+			        ,TO_CHAR(TO_DATE(A.REAL_PAY_DT || A.REAL_PAY_TM, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS REAL_PAY_DT
+		   FROM EPGM_PAY_INFO_LST A
+		        	,EPCN_BIZR_INFO B
+		 WHERE 1=1
+		     AND A.PAY_DOC_NO = #{PAY_DOC_NO}
+		     AND A.PAY_BIZRID = B.BIZRID
+			 AND A.PAY_BIZRNO = B.BIZRNO
+	</select>
+
+
+	<select id="eprt9071364_select2" resultType="hashmap">
+		 SELECT B.WRHS_CFM_DT
+			         ,C.BIZRNM AS WHSDL_BIZRNM
+			         ,E.BIZRNM AS MFC_BIZRNM
+			         ,E.BRCH_NM AS MFC_BRCH_NM
+			         ,B.WRHS_QTY
+			         ,B.WRHS_GTN
+			         ,B.WHSL_FEE + B.RTL_FEE AS FEE
+			         ,B.WHSL_FEE_STAX AS FEE_STAX
+			         ,B.WRHS_GTN + B.WHSL_FEE + B.RTL_FEE + B.WHSL_FEE_STAX AS TOT
+			         ,D.WRHS_DOC_NO
+			         ,D.RTN_DOC_NO
+                     ,TO_CHAR(TO_DATE(F.RTN_REG_DT, 'YYYYMMDD'), 'YYYY-MM-DD') as RTN_REG_DT
+                     ,TO_CHAR(TO_DATE(F.RTN_DT, 'YYYYMMDD'), 'YYYY-MM-DD') as RTN_DT
+		    FROM EPGM_PAY_INFO_LST A
+			         ,EPGM_PAY_INFO_DTL B
+			         ,EPCN_BIZR_INFO C
+			         ,EPCM_CFM_MST D
+			         ,EPCN_BRCH_INFO E
+                     ,EPCM_RTN_MST F
+		 WHERE 1=1
+		 	 AND A.PAY_DOC_NO = #{PAY_DOC_NO}
+		     AND A.PAY_DOC_NO = B.PAY_DOC_NO
+		     AND A.PAY_BIZRID = C.BIZRID
+		     AND A.PAY_BIZRNO = C.BIZRNO
+		     AND B.MAPP_WRHS_DOC_NO = D.WRHS_DOC_NO
+		     AND D.MFC_BIZRID = E.BIZRID
+		     AND D.MFC_BIZRNO = E.BIZRNO
+		     AND D.MFC_BRCH_ID = E.BRCH_ID
+		     AND D.MFC_BRCH_NO = E.BRCH_NO
+             AND F.RTN_DOC_NO = D.RTN_DOC_NO	     
+		  ORDER BY E.BIZRNM, E.BRCH_NM   
+	</select>
+	
+</mapper>
+

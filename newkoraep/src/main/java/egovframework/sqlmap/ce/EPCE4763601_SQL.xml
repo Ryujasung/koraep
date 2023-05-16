@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE4763601Mapper">
+
+	<select id="epce4763601_select" resultType="hashmap">
+		<if test='excelYn == null or excelYn == "" '>
+			SELECT 
+						  PNO,
+			   			  DRCT_RTRVL_CRCT_DOC_NO, 
+				          MFC_BIZRNM, 
+				          MFC_BRCH_NM,
+				          CUST_BIZRNM, 
+				          DRCT_RTRVL_DT, 
+				          CTNR_CD,
+				          CTNR_NM,
+				          CPCT_NM,
+				          PRPS_NM,
+				          DRCT_RTRVL_CRCT_STAT_CD,
+				          DRCT_RTRVL_CRCT_STAT_NM,
+				          DRCT_RTRVL_QTY, 
+				          DRCT_PAY_GTN,
+				          DRCT_PAY_FEE,
+				          BIZR_TP_CD,
+				          MFC_BIZRID,
+					 	  MFC_BIZRNO,
+						  MFC_BRCH_ID,
+						  MFC_BRCH_NO,
+						  CUST_BIZRID,
+						  CUST_BIZRNO,
+						  EXCA_STD_CD
+			 FROM (
+		</if>  
+		  
+		   SELECT ROW_NUMBER()OVER(ORDER BY A.DRCT_RTRVL_DT DESC) AS PNO,
+		   			  DRCT_RTRVL_CRCT_DOC_NO, 
+			          B.BIZRNM AS MFC_BIZRNM, 
+			          B.BRCH_NM AS MFC_BRCH_NM,
+			          C.BIZRNM AS CUST_BIZRNM, 
+			          A.DRCT_RTRVL_DT, 
+			          D.CTNR_CD,
+			          D.CTNR_NM,
+			          EPCN_ETC_NM(D.CPCT_CD, 'E001') AS CPCT_NM,
+			          EPCN_ETC_NM(D.PRPS_CD, 'E002') AS PRPS_NM,
+			          DRCT_RTRVL_CRCT_STAT_CD,
+			          EPCN_ETC_NM(DRCT_RTRVL_CRCT_STAT_CD, 'C003') AS DRCT_RTRVL_CRCT_STAT_NM,
+			          DRCT_RTRVL_QTY, 
+			          DRCT_PAY_GTN,
+			          DRCT_PAY_FEE,
+			          B.BIZR_TP_CD,
+					  A.MFC_BIZRID,
+				 	  A.MFC_BIZRNO,
+					  A.MFC_BRCH_ID,
+					  A.MFC_BRCH_NO,
+					  A.CUST_BIZRID,
+					  A.CUST_BIZRNO,
+					  A.EXCA_STD_CD
+			 FROM EXCA_DRCT_RTRVL_CRCT A
+			          ,EPCN_BRCH_INFO B
+			          ,EPCN_BIZR_INFO C
+			          ,EPCN_STD_CTNR_CD D
+			          ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+			  WHERE 1=1
+			      AND A.CUST_BIZRID = C.BIZRID
+			      AND A.CUST_BIZRNO = C.BIZRNO
+			      AND A.MFC_BIZRID = B.BIZRID
+			      AND A.MFC_BIZRNO = B.BIZRNO
+			      AND A.MFC_BRCH_ID = B.BRCH_ID
+			      AND A.MFC_BRCH_NO = B.BRCH_NO
+			      AND A.CTNR_CD = D.CTNR_CD
+			      AND D.LANG_SE_CD = F.LANG_SE_CD
+
+			      <if test='EXCA_STD_CD != null and EXCA_STD_CD != "" '>
+			      AND A.EXCA_STD_CD = #{EXCA_STD_CD}
+			      </if>
+			      <if test='DRCT_RTRVL_CRCT_STAT_CD != null and DRCT_RTRVL_CRCT_STAT_CD != "" '>
+			      AND A.DRCT_RTRVL_CRCT_STAT_CD = #{DRCT_RTRVL_CRCT_STAT_CD}
+			      </if>
+			      <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+			      AND A.MFC_BIZRID = #{MFC_BIZRID}
+			      AND A.MFC_BIZRNO = #{MFC_BIZRNO}
+			      </if>
+			      <if test='MFC_BRCH_ID != null and MFC_BRCH_ID != "" '>
+			      AND A.MFC_BRCH_ID = #{MFC_BRCH_ID}
+			      AND A.MFC_BRCH_NO = #{MFC_BRCH_NO}
+			      </if>
+			      <if test='CTNR_CD_SEL != null and CTNR_CD_SEL != "" '>
+			      AND A.CTNR_CD = #{CTNR_CD_SEL}
+			      </if>
+			      <if test='CUST_BIZRNO_SEL != null and CUST_BIZRNO_SEL != "" '>
+			      AND A.CUST_BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO_SEL})
+			      </if>
+			
+			   ORDER BY A.DRCT_RTRVL_DT DESC, B.BIZRNM, B.BRCH_NM, C.SEL_ORD, C.BIZRNM
+			
+		<if test='excelYn == null or excelYn == "" '>
+			)
+			WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+		</if>	   
+	</select>
+
+	<select id="epce4763601_select_cnt" resultType="hashmap">
+		   SELECT COUNT(1) as CNT
+		   			  ,SUM(DRCT_RTRVL_QTY) as DRCT_RTRVL_QTY
+			          ,SUM(DRCT_PAY_GTN) as DRCT_PAY_GTN
+			          ,SUM(DRCT_PAY_FEE) as DRCT_PAY_FEE
+			 FROM EXCA_DRCT_RTRVL_CRCT A
+			          ,EPCN_BRCH_INFO B
+			          ,EPCN_BIZR_INFO C
+			          ,EPCN_STD_CTNR_CD D
+			          ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+			  WHERE 1=1
+			      AND A.CUST_BIZRID = C.BIZRID
+			      AND A.CUST_BIZRNO = C.BIZRNO
+			      AND A.MFC_BIZRID = B.BIZRID
+			      AND A.MFC_BIZRNO = B.BIZRNO
+			      AND A.MFC_BRCH_ID = B.BRCH_ID
+			      AND A.MFC_BRCH_NO = B.BRCH_NO
+			      AND A.CTNR_CD = D.CTNR_CD
+			      AND D.LANG_SE_CD = F.LANG_SE_CD
+
+			      <if test='EXCA_STD_CD != null and EXCA_STD_CD != "" '>
+			      AND A.EXCA_STD_CD = #{EXCA_STD_CD}
+			      </if>
+			      <if test='DRCT_RTRVL_CRCT_STAT_CD != null and DRCT_RTRVL_CRCT_STAT_CD != "" '>
+			      AND A.DRCT_RTRVL_CRCT_STAT_CD = #{DRCT_RTRVL_CRCT_STAT_CD}
+			      </if>
+			      <if test='MFC_BIZRID != null and MFC_BIZRID != "" '>
+			      AND A.MFC_BIZRID = #{MFC_BIZRID}
+			      AND A.MFC_BIZRNO = #{MFC_BIZRNO}
+			      </if>
+			      <if test='MFC_BRCH_ID != null and MFC_BRCH_ID != "" '>
+			      AND A.MFC_BRCH_ID = #{MFC_BRCH_ID}
+			      AND A.MFC_BRCH_NO = #{MFC_BRCH_NO}
+			      </if>
+			      <if test='CTNR_CD_SEL != null and CTNR_CD_SEL != "" '>
+			      AND A.CTNR_CD = #{CTNR_CD_SEL}
+			      </if>
+			      <if test='CUST_BIZRNO_SEL != null and CUST_BIZRNO_SEL != "" '>
+			      AND A.CUST_BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO_SEL})
+			      </if>
+			
+	</select>
+	
+	<select id="epce4763631_select" parameterType="map" resultType="int">
+		  SELECT COUNT(1)
+  			FROM EXCA_STD_MGNT 
+  		  WHERE EXCA_STD_CD = #{EXCA_STD_CD}
+  		      AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN CRCT_PSBL_ST_DT AND CRCT_PSBL_END_DT
+  		      AND EXCA_STAT_CD = 'S'
+  		      AND REPLACE( #{DRCT_RTRVL_DT}, '-') BETWEEN EXCA_ST_DT AND EXCA_END_DT
+	</select>
+	
+	<select id="epce4763631_select2" parameterType="map" resultType="int">
+		SELECT COUNT(1)
+		  FROM EXCA_DRCT_RTRVL_CRCT
+		WHERE 1=1
+			AND MFC_BIZRID	= #{MFC_BIZRID}
+			AND MFC_BIZRNO = #{MFC_BIZRNO}
+			AND MFC_BRCH_ID = #{MFC_BRCH_ID}
+			AND MFC_BRCH_NO = #{MFC_BRCH_NO}
+			AND CUST_BRCH_ID = #{CUST_BRCH_ID}
+			AND CUST_BRCH_NO = #{CUST_BRCH_NO}
+			AND CUST_BIZRID = #{CUST_BIZRID}
+			AND CUST_BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO})
+			AND DRCT_RTRVL_DT = REPLACE(#{DRCT_RTRVL_DT}, '-')
+			AND CTNR_CD = #{CTNR_CD}
+			AND EXCA_STD_CD = #{EXCA_STD_CD}
+	</select>
+	
+	<insert id="epce4763631_insert" parameterType="map">
+		INSERT
+			INTO EXCA_DRCT_RTRVL_CRCT
+				(
+					DRCT_RTRVL_CRCT_DOC_NO
+					,MFC_BIZRID
+					,MFC_BIZRNO
+					,MFC_BRCH_ID
+					,MFC_BRCH_NO
+					,CUST_BIZRID
+					,CUST_BIZRNO
+					,CUST_BRCH_ID
+					,CUST_BRCH_NO
+					,DRCT_RTRVL_DT
+					,CTNR_CD
+					,DRCT_RTRVL_CRCT_REG_DT
+					,DRCT_RTRVL_CRCT_STAT_CD
+					,DRCT_RTRVL_QTY
+					,DRCT_PAY_GTN
+					,DRCT_PAY_FEE
+					,REG_CUST_NM
+					,RMK
+					,EXCA_STD_CD
+					,STAC_DOC_NO
+					,REG_PRSN_ID
+					,REG_DTTM
+			  )
+			  VALUES
+			  (
+			 	 #{DRCT_RTRVL_CRCT_DOC_NO}
+				,#{MFC_BIZRID}
+				,#{MFC_BIZRNO}
+				,#{MFC_BRCH_ID}
+				,#{MFC_BRCH_NO}
+				,#{CUST_BIZRID}
+				,ECL_ENCRYPT(#{CUST_BIZRNO})
+				,#{CUST_BRCH_ID}
+				,#{CUST_BRCH_NO}
+				,REPLACE( #{DRCT_RTRVL_DT}, '-')
+				,#{CTNR_CD}
+				,TO_CHAR(SYSDATE,'YYYYMMDD')
+				,'R'
+				,#{DRCT_RTRVL_QTY}
+				,#{DRCT_RTRVL_QTY} * #{STD_DPS}
+				,#{DRCT_PAY_FEE}
+				,#{CUST_BIZRNM}
+				,#{RMK}
+				,#{EXCA_STD_CD}
+				,''
+				,#{S_USER_ID}
+				,SYSDATE
+			  )
+	</insert>
+	
+	<select id="epce4763642_select" parameterType="map" resultType="hashmap">
+		SELECT A.*
+		           ,EPCN_BIZR_NM(A.MFC_BIZRID, A.MFC_BIZRNO) AS MFC_BIZRNM
+		           ,PI_DECRYPT(A.CUST_BIZRNO) as CUST_BIZRNO_DE
+	      FROM EXCA_DRCT_RTRVL_CRCT A
+	    WHERE 1=1
+	        AND DRCT_RTRVL_CRCT_DOC_NO = #{DRCT_RTRVL_CRCT_DOC_NO}
+	        AND MFC_BIZRNO = #{MFC_BIZRNO}
+	        AND MFC_BRCH_NO = #{MFC_BRCH_NO}
+	        AND CUST_BIZRNO = #{CUST_BIZRNO}
+	        AND DRCT_RTRVL_DT = #{DRCT_RTRVL_DT}
+	        AND CTNR_CD = #{CTNR_CD}
+	</select>
+
+	<update id="epce4763642_update" parameterType="map">
+		UPDATE EXCA_DRCT_RTRVL_CRCT
+		      SET CUST_BIZRID = #{CUST_BIZRID}
+					,CUST_BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO})
+					,CUST_BRCH_ID = #{CUST_BRCH_ID}
+					,CUST_BRCH_NO = #{CUST_BRCH_NO}
+					,DRCT_RTRVL_DT = REPLACE( #{DRCT_RTRVL_DT}, '-')
+					,CTNR_CD = #{CTNR_CD}
+					,DRCT_RTRVL_QTY = #{DRCT_RTRVL_QTY}
+					,DRCT_PAY_GTN = #{DRCT_RTRVL_QTY} * #{STD_DPS}
+					,DRCT_PAY_FEE = #{DRCT_PAY_FEE}
+					,RMK = #{RMK}
+					,DRCT_RTRVL_CRCT_STAT_CD = 'R' /* 정정등록으로 수정 */
+					,REG_CUST_NM = #{CUST_BIZRNM}
+					,UPD_PRSN_ID = #{S_USER_ID}
+					,UPD_DTTM = SYSDATE
+		WHERE 1=1
+		    AND DRCT_RTRVL_CRCT_DOC_NO = #{DRCT_RTRVL_CRCT_DOC_NO}
+		    AND MFC_BIZRNO = #{MFC_BIZRNO_KEY}
+		    AND MFC_BRCH_NO = #{MFC_BRCH_NO_KEY}
+		    AND CUST_BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO_KEY})
+		    AND DRCT_RTRVL_DT = #{DRCT_RTRVL_DT_KEY}
+		    AND CTNR_CD = #{CTNR_CD_KEY}
+	</update>
+	
+	<delete id="epce4763601_delete" parameterType="map">
+		DELETE 
+		   FROM EXCA_DRCT_RTRVL_CRCT
+		 WHERE 1=1
+		    AND DRCT_RTRVL_CRCT_DOC_NO = #{DRCT_RTRVL_CRCT_DOC_NO}
+		    AND MFC_BIZRNO = #{MFC_BIZRNO}
+		    AND MFC_BRCH_NO = #{MFC_BRCH_NO}
+		    AND CUST_BIZRNO = #{CUST_BIZRNO}
+		    AND DRCT_RTRVL_DT = #{DRCT_RTRVL_DT}
+		    AND CTNR_CD = #{CTNR_CD}
+		    AND DRCT_RTRVL_CRCT_STAT_CD IN ('R', 'T')
+	</delete>
+	
+	<update id="epce4763601_update" parameterType="map">
+		UPDATE EXCA_DRCT_RTRVL_CRCT
+		      SET DRCT_RTRVL_CRCT_STAT_CD = #{DRCT_RTRVL_CRCT_STAT_CD}
+		    		,UPD_PRSN_ID = #{S_USER_ID}
+					,UPD_DTTM = SYSDATE
+		 WHERE 1=1
+		     AND DRCT_RTRVL_CRCT_DOC_NO = #{DRCT_RTRVL_CRCT_DOC_NO}
+		     AND MFC_BIZRNO = #{MFC_BIZRNO}
+		     AND MFC_BRCH_NO = #{MFC_BRCH_NO}
+		     AND CUST_BIZRNO = #{CUST_BIZRNO}
+		     AND DRCT_RTRVL_DT = #{DRCT_RTRVL_DT}
+		     AND CTNR_CD = #{CTNR_CD}
+		     
+		     <choose>
+		     	<when test='DRCT_RTRVL_CRCT_STAT_CD == "C" '>
+		     		AND DRCT_RTRVL_CRCT_STAT_CD = 'R'
+		     	</when>
+		     	<when test='DRCT_RTRVL_CRCT_STAT_CD == "R" '>
+		     		AND DRCT_RTRVL_CRCT_STAT_CD = 'C'
+		     	</when>
+		     	<when test='DRCT_RTRVL_CRCT_STAT_CD == "T" '>
+		     		AND DRCT_RTRVL_CRCT_STAT_CD = 'R'
+		     	</when>
+		     </choose>
+		     
+	</update>
+	
+	
+</mapper>

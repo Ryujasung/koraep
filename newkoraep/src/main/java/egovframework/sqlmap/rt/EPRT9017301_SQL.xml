@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.rt.ep.EPRT9017301Mapper">
+	
+	<!-- 생산자 조회 -->
+	<select id="eprt9017301_select"   parameterType="map" resultType="hashmap">
+		SELECT     
+				MFC_BRCH_ID   
+				,MFC_BRCH_NO     
+				,MFC_BIZRID
+				,MFC_BIZRNO   
+				,MFC_BIZRID||';'||MFC_BIZRNO AS MFC_BIZRID_NO
+				,ECL_DECRYPT(MFC_BIZRNO) AS MFC_BIZRNO_DE
+				,MFC_BIZRNM||'-'||MFC_BRCH_NM AS MFC_BIZRNM
+				,DRCT_RTN_SE	
+				,B.BIZR_TP_CD
+				,EPCN_ETC_NM(B.BIZR_TP_CD,'B001') AS BIZR_TP_NM
+		FROM 
+				EPCN_DTSS_CUST_INFO A
+				,EPCN_BIZR_INFO B
+		WHERE 1=1    
+		AND A.MFC_BIZRID 		= B.BIZRID
+		AND A.MFC_BIZRNO	= B.BIZRNO 
+		AND CUST_BIZRID 		= #{BIZRID}     
+		AND CUST_BIZRNO 	= #{BIZRNO}  
+		AND CUST_BRCH_ID	= #{BRCH_ID} 
+		AND CUST_BRCH_NO	= #{BRCH_NO}     
+	</select>  
+	
+	<!-- 도매업자 조회 -->
+	<select id="eprt9017301_select2"   parameterType="map" resultType="hashmap">
+		SELECT 
+					WHSDL_BRCH_ID
+					,WHSDL_BRCH_NO
+					,WHSDL_BIZRID  
+					,WHSDL_BIZRNO
+					,WHSDL_BIZRID||';'||WHSDL_BIZRNO AS WHSDL_BIZRID_NO
+					,ECL_DECRYPT(WHSDL_BIZRNO) AS WHSDL_BIZRNO_DE
+					,WHSDL_BIZRNM||'-'||WHSDL_BRCH_NM AS WHSDL_BIZRNM
+					,RTRVL_REG_SE   
+					,DRCT_PAY_SE       
+					,B.BIZR_TP_CD   
+					,EPCN_ETC_NM(B.BIZR_TP_CD,'B001') AS BIZR_TP_NM
+		FROM 
+					EPCN_RTL_CUST_INFO A   
+					,EPCN_BIZR_INFO B   
+		WHERE 1=1   
+		AND A.WHSDL_BIZRID 		= B.BIZRID
+		AND A.WHSDL_BIZRNO		= B.BIZRNO
+		AND RTL_CUST_BIZRID 		= #{BIZRID}
+	    AND RTL_CUST_BIZRNO 		= #{BIZRNO}
+		AND RTL_CUST_BRCH_ID		= #{BRCH_ID}
+		AND RTL_CUST_BRCH_NO	= #{BRCH_NO}  
+	</select>
+	          
+	 <!--생산자 직접반환구분 상태변경-->         
+   <update id="eprt9017301_update" parameterType="map">
+		UPDATE EPCN_DTSS_CUST_INFO SET
+				DRCT_RTN_SE 	= #{DRCT_RTN_SE}
+				,UPD_PRSN_ID 	= #{REG_PRSN_ID}
+				,UPD_DTTM		= SYSDATE
+		WHERE 1=1
+		AND MFC_BRCH_ID   	= #{MFC_BRCH_ID}
+		AND MFC_BRCH_NO	= #{MFC_BRCH_NO}
+		AND MFC_BIZRID    	= #{MFC_BIZRID}
+		AND MFC_BIZRNO    	= #{MFC_BIZRNO}
+		AND CUST_BRCH_ID  	= #{BRCH_ID}
+		AND CUST_BRCH_NO  = #{BRCH_NO}
+		AND CUST_BIZRID   	= #{BIZRID}
+		AND CUST_BIZRNO   	= #{BIZRNO}
+   </update>      
+	 
+	 <!-- 도매업자 회수등록구분 직접지급구분 변경 -->      
+	<update id="eprt9017301_update2" parameterType="map">
+		UPDATE EPCN_RTL_CUST_INFO SET   
+			RTRVL_REG_SE	= #{RTRVL_REG_SE}
+			,DRCT_PAY_SE		= #{DRCT_PAY_SE}
+			,UPD_PRSN_ID		= #{REG_PRSN_ID}
+			,UPD_DTTM		= SYSDATE   
+		WHERE 1=1
+		AND WHSDL_BRCH_ID   	= #{WHSDL_BRCH_ID}
+		AND WHSDL_BRCH_NO   = #{WHSDL_BRCH_NO}        
+		AND WHSDL_BIZRID    	= #{WHSDL_BIZRID}  
+		AND WHSDL_BIZRNO    	= #{WHSDL_BIZRNO}      
+		AND RTL_CUST_BIZRID 	= #{BIZRID}        
+		AND RTL_CUST_BIZRNO 	= #{BIZRNO}        
+	</update>     
+	          
+<!-- 	  
+/***********************************************************************************************************************************************
+ *	거래처추가
+ ************************************************************************************************************************************************/
+  --> 	          
+	          
+	<!-- 거래처추가 중복확인-->
+	<select id="eprt9017331_select"   parameterType="map" resultType="int">  
+		SELECT COUNT(1) FROM EPCN_RTL_CUST_INFO
+		WHERE 1=1
+		AND WHSDL_BRCH_ID   	= #{WHSDL_BRCH_ID}
+		AND WHSDL_BRCH_NO   = #{WHSDL_BRCH_NO}
+		AND WHSDL_BIZRID    	= #{WHSDL_BIZRID}
+		AND WHSDL_BIZRNO   	= #{WHSDL_BIZRNO}
+		AND RTL_CUST_BIZRNO 	= #{BIZRNO}
+	</select>    
+	          
+	<!-- 거래처추가 저장 -->      
+	<insert id="eprt9017331_insert" parameterType="map">
+		INSERT INTO 
+			EPCN_RTL_CUST_INFO
+			(
+			WHSDL_BRCH_ID
+			,WHSDL_BRCH_NO
+			,WHSDL_BIZRID
+			,WHSDL_BIZRNO
+			,RTL_CUST_BIZRNO
+			,RTL_CUST_BIZRID
+			,RTL_CUST_BRCH_ID
+			,RTL_CUST_BRCH_NO
+			,RTL_CUST_NM
+			,WHSDL_BIZRNM
+			,WHSDL_BRCH_NM
+			,BIZR_TP_CD
+			,REG_PRSN_ID
+			,REG_DTTM
+			)  
+		VALUES  
+			(
+			#{WHSDL_BRCH_ID}    
+			,#{WHSDL_BRCH_NO}   
+			,#{WHSDL_BIZRID}
+			,#{WHSDL_BIZRNO}
+			,#{BIZRNO}
+			,#{BIZRID}
+			,#{BRCH_ID}
+			,#{BRCH_NO}
+			,#{BIZRNM}
+			,#{WHSDL_BIZRNM}
+			,#{WHSDL_BRCH_NM}
+			,#{BIZR_TP_CD}
+			,#{REG_PRSN_ID}
+			,SYSDATE
+			)
+	</insert>  
+	          
+</mapper>
+

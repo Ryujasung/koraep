@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Province code="100" label="강원도" symbol="Gangwon" verticalCenterGap="5"/>
+	<Province code="200" label="경기도" symbol="Gyeonggi" horizontalCenterGap="5" verticalCenterGap="10"/>
+	<Province code="300" label="경상남도" symbol="Gyeongnam" horizontalCenterGap="-8" verticalCenterGap="-5"/>
+	<Province code="400" label="경상북도" symbol="Gyeongbuk" />
+	<Province code="500" label="광주" symbol="Gwangju"/>
+	<Province code="600" label="대구" symbol="Daegu"/>
+	<Province code="700" label="대전" symbol="Daejeon"/>
+	<Province code="800" label="부산" symbol="Busan"/>
+	<Province code="900" label="서울" symbol="Seoul" verticalCenterGap="-5"/>
+	<Province code="1000" label="울산" symbol="Ulsan" verticalCenterGap="-2"/>
+	<Province code="1100" label="인천" symbol="Incheon" horizontalCenterGap="-3"/>
+	<Province code="1200" label="전라남도" symbol="Jeonnam"/>
+	<Province code="1300" label="전라북도" symbol="Jeonbuk" horizontalCenterGap="4"/>
+	<Province code="1400" label="제주도" symbol="Jeju" verticalCenterGap="0"/>
+	<Province code="1500" label="충청남도" symbol="Chungnam" horizontalCenterGap="-5" verticalCenterGap="-8"/>
+	<Province code="1600" label="충청북도" symbol="Chungbuk" horizontalCenterGap="-3" verticalCenterGap="-22"/>
+	<Province code="1700" label="세종" symbol="Sejong"/>
+	<Province code="2100" label="강원도" symbol="Bukgangwon" verticalCenterGap="5"/>
+	<Province code="2200" label="개성" symbol="Gaeseong"/>
+	<Province code="2300" label="양강도" symbol="Yanggang"/>
+	<Province code="2400" label="자강도" symbol="Jagang" verticalCenterGap="12"/>
+	<Province code="2500" label="평안남도" symbol="Pyongnam" horizontalCenterGap="-5" verticalCenterGap="5"/>
+	<Province code="2600" label="평안북도" symbol="Pyongbuk" verticalCenterGap="8"/>
+	<Province code="2700" label="평양" symbol="Pyeongyang"/>
+	<Province code="2800" label="함경남도" symbol="Hamnam"/>
+	<Province code="2900" label="함경북도" symbol="Hambuk"/>
+	<Province code="3000" label="황해남도" symbol="Hwangnam" horizontalCenterGap="-15"/>
+	<Province code="3100" label="황해북도" symbol="Hwangbuk" horizontalCenterGap="5"/>
+	<Province code="3200" label="남포" symbol="Nampo" horizontalCenterGap="5"/>
+</Map>

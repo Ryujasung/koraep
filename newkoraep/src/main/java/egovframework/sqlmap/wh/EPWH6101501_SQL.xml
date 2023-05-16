@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.wh.ep.EPWH6101501Mapper">
+
+	<select id="epwh6101501_select" parameterType="map" resultType="hashmap">
+			
+		<if test='excelYn == null or excelYn == "" '>
+		 SELECT 
+		 			PNO 
+					,BIZRNM
+			        ,CUST_NM
+			        ,CUST_BIZRNO
+			        ,CTNR_NM
+			        ,STANDARD_NM
+			        ,PRPS_CD
+			        ,PRPS_NM
+			        ,CPCT_CD
+			        ,CPCT_NM
+			        ,DLIVY_QTY
+			        ,CRCT_DLIVY_QTY
+			        ,EXCA_DLIVY_QTY
+		  FROM (
+		</if>
+					SELECT  ROW_NUMBER()OVER(ORDER BY D.SEL_ORD, D.BIZRNM, A.CUST_NM, B.SEL_ORD) AS PNO 
+								,D.BIZRNM
+						         ,A.CUST_NM
+						         ,PI_DECRYPT(A.CUST_BIZRNO) as CUST_BIZRNO
+						         ,B.CTNR_NM
+						         ,CASE WHEN SUBSTR(B.CTNR_CD,4,2) = 00 THEN '표준용기' ELSE '비표준용기' END AS STANDARD_NM
+						         ,B.PRPS_CD
+						         ,EPCN_ETC_NM(B.PRPS_CD , 'E002') AS PRPS_NM
+						         ,B.CPCT_CD
+						         ,EPCN_ETC_NM(B.CPCT_CD , 'E001') AS CPCT_NM
+						         ,A.DLIVY_QTY
+						         ,NVL(E.DLIVY_QTY,0) AS CRCT_DLIVY_QTY
+						         ,A.DLIVY_QTY + NVL(E.DLIVY_QTY,0) AS EXCA_DLIVY_QTY
+				    FROM (
+					           SELECT A.MFC_BIZRID, A.MFC_BIZRNO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CUST_NM, B.CTNR_CD
+					                  	  ,NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+					             FROM EPDM_DLIVY_MST A
+					                  	  ,EPDM_DLIVY_INFO B
+					          WHERE 1=1
+					              AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+					              AND B.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+					              
+					              <if test='BIZRID != null and BIZRID != "" '>
+					              	AND A.MFC_BIZRID = #{BIZRID}
+					              </if>
+					              <if test='BIZRNO != null and BIZRNO != "" '>
+					              	AND A.MFC_BIZRNO = #{BIZRNO}
+					              </if>
+					              <if test='CUST_BIZRID != null and CUST_BIZRID != "" '>
+					              	AND B.CUST_BIZRID = #{CUST_BIZRID}
+					              </if>
+					              <if test='CUST_BIZRNO != null and CUST_BIZRNO != "" '>
+					              	AND B.CUST_BIZRNO = #{CUST_BIZRNO}
+					              </if>
+					              <if test='CUST_BRCH_ID != null and CUST_BRCH_ID != "" '>
+					              	AND B.CUST_BRCH_ID = #{CUST_BRCH_ID}
+					              </if>
+					              <if test='CUST_BRCH_NO != null and CUST_BRCH_NO != "" '>
+					              	AND B.CUST_BRCH_NO = #{CUST_BRCH_NO}
+					              </if>
+					              
+					           GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CUST_NM, B.CTNR_CD
+					         ) A
+					         ,EPCN_STD_CTNR_CD B
+					         ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+					         ,EPCN_BIZR_INFO D
+					         ,(
+			                      SELECT A.MFC_BIZRID, A.MFC_BIZRNO, A.CUST_BIZRID, A.CUST_BIZRNO,  A.CTNR_CD
+			                             	,NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+			                        FROM EXCA_DLIVY_CRCT A
+			                      WHERE 1=1
+			                          AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I')
+			                          AND A.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			                          
+			                      <if test='BIZRID != null and BIZRID != "" '>
+					              	AND A.MFC_BIZRID = #{BIZRID}
+					              </if>
+					              <if test='BIZRNO != null and BIZRNO != "" '>
+					              	AND A.MFC_BIZRNO = #{BIZRNO}
+					              </if>
+					              <if test='CUST_BIZRID != null and CUST_BIZRID != "" '>
+					              	AND A.CUST_BIZRID = #{CUST_BIZRID}
+					              </if>
+					              <if test='CUST_BIZRNO != null and CUST_BIZRNO != "" '>
+					              	AND A.CUST_BIZRNO = #{CUST_BIZRNO}
+					              </if>
+					              <if test='CUST_BRCH_ID != null and CUST_BRCH_ID != "" '>
+					              	AND A.CUST_BRCH_ID = #{CUST_BRCH_ID}
+					              </if>
+					              <if test='CUST_BRCH_NO != null and CUST_BRCH_NO != "" '>
+					              	AND A.CUST_BRCH_NO = #{CUST_BRCH_NO}
+					              </if>
+			                          
+			                     GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, A.CUST_BIZRID, A.CUST_BIZRNO,  A.CTNR_CD
+			                   ) E
+				   WHERE 1=1
+				       AND A.CTNR_CD = B.CTNR_CD
+				       AND B.LANG_SE_CD = C.LANG_SE_CD 
+				       AND A.MFC_BIZRID = D.BIZRID
+				       AND A.MFC_BIZRNO = D.BIZRNO
+				       
+				       AND A.MFC_BIZRID = E.MFC_BIZRID(+)
+				       AND A.MFC_BIZRNO = E.MFC_BIZRNO(+)
+		               AND A.CUST_BIZRID = E.CUST_BIZRID(+)
+		               AND A.CUST_BIZRNO = E.CUST_BIZRNO(+)
+		               AND A.CTNR_CD = E.CTNR_CD(+)
+				       
+				       <if test='PRPS_CD != null and PRPS_CD != "" '>
+				       	 AND B.PRPS_CD = #{PRPS_CD}
+				       </if>
+				       <if test='CTNR_CD != null and CTNR_CD != "" '>
+				       	 AND B.CTNR_CD = #{CTNR_CD}
+				       </if>
+				       
+				 ORDER BY D.SEL_ORD, D.BIZRNM, A.CUST_NM, B.SEL_ORD
+				 
+		<if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+        </if>		 
+				 
+	</select>
+	
+	<!--        <if test="WHSDL_BRCH_ID !=''  and WHSDL_BRCH_ID !=null">
+							AND A.WHSDL_BRCH_ID 		= #{WHSDL_BRCH_ID}
+							 AND A.WHSDL_BRCH_NO 	= #{WHSDL_BRCH_NO}					
+						</if>						 
+					 		AND EXISTS (
+									SELECT  'x'
+									FROM EPCN_DTSS_CUST_INFO T1
+									WHERE 1=1
+									AND T1.MFC_BIZRID		=A.MFC_BIZRID	
+									AND T1.MFC_BIZRNO		=A.MFC_BIZRNO
+									AND T1.MFC_BRCH_ID		=A.MFC_BRCH_ID
+									AND T1.MFC_BRCH_NO	=A.MFC_BRCH_NO
+									AND T1.CUST_BIZRID 		= #{WHSDL_BIZRID}
+					               	AND T1.CUST_BIZRNO 	= #{WHSDL_BIZRNO}
+					               	<if test="WHSDL_BRCH_ID !=''  and WHSDL_BRCH_ID !=null">
+					               	AND T1.CUST_BRCH_ID 	= #{WHSDL_BRCH_ID}
+					               	AND T1.CUST_BRCH_NO 	= #{WHSDL_BRCH_NO}
+					               	</if>
+				                 ) -->
+	
+	
+	<select id="epwh6101501_select_cnt" parameterType="map" resultType="hashmap">
+		  SELECT COUNT(1) as CNT
+		  			 ,SUM(A.DLIVY_QTY) as DLIVY_QTY
+		  			 ,SUM(NVL(E.DLIVY_QTY,0)) AS CRCT_DLIVY_QTY
+					 ,SUM(A.DLIVY_QTY + NVL(E.DLIVY_QTY,0) ) AS EXCA_DLIVY_QTY
+		    FROM (
+			           SELECT A.MFC_BIZRID, A.MFC_BIZRNO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CUST_NM, B.CTNR_CD
+			                  ,NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+			             FROM EPDM_DLIVY_MST A
+			                  ,EPDM_DLIVY_INFO B
+			            WHERE 1=1
+			              AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+			              AND B.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			              
+			              <if test='BIZRID != null and BIZRID != "" '>
+			              	AND A.MFC_BIZRID = #{BIZRID}
+			              </if>
+			              <if test='BIZRNO != null and BIZRNO != "" '>
+			              	AND A.MFC_BIZRNO = #{BIZRNO}
+			              </if>
+			              <if test='CUST_BIZRID != null and CUST_BIZRID != "" '>
+			              	AND B.CUST_BIZRID = #{CUST_BIZRID}
+			              </if>
+			              <if test='CUST_BIZRNO != null and CUST_BIZRNO != "" '>
+			              	AND B.CUST_BIZRNO = #{CUST_BIZRNO}
+			              </if>
+			              <if test='CUST_BRCH_ID != null and CUST_BRCH_ID != "" '>
+			              	AND B.CUST_BRCH_ID = #{CUST_BRCH_ID}
+			              </if>
+			              <if test='CUST_BRCH_NO != null and CUST_BRCH_NO != "" '>
+			              	AND B.CUST_BRCH_NO = #{CUST_BRCH_NO}
+			              </if>
+			              
+			           GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CUST_NM, B.CTNR_CD
+			         ) A
+			         ,EPCN_STD_CTNR_CD B
+			         ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+			         ,EPCN_BIZR_INFO D
+			         ,(
+	                      SELECT A.MFC_BIZRID, A.MFC_BIZRNO, A.CUST_BIZRID, A.CUST_BIZRNO,  A.CTNR_CD
+	                             	,NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+	                        FROM EXCA_DLIVY_CRCT A
+	                      WHERE 1=1
+	                          AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I')
+	                          AND A.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+	                          
+	                      <if test='BIZRID != null and BIZRID != "" '>
+			              	AND A.MFC_BIZRID = #{BIZRID}
+			              </if>
+			              <if test='BIZRNO != null and BIZRNO != "" '>
+			              	AND A.MFC_BIZRNO = #{BIZRNO}
+			              </if>
+			              <if test='CUST_BIZRID != null and CUST_BIZRID != "" '>
+			              	AND A.CUST_BIZRID = #{CUST_BIZRID}
+			              </if>
+			              <if test='CUST_BIZRNO != null and CUST_BIZRNO != "" '>
+			              	AND A.CUST_BIZRNO = #{CUST_BIZRNO}
+			              </if>
+			              <if test='CUST_BRCH_ID != null and CUST_BRCH_ID != "" '>
+			              	AND A.CUST_BRCH_ID = #{CUST_BRCH_ID}
+			              </if>
+			              <if test='CUST_BRCH_NO != null and CUST_BRCH_NO != "" '>
+			              	AND A.CUST_BRCH_NO = #{CUST_BRCH_NO}
+			              </if>
+	                          
+	                     GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, A.CUST_BIZRID, A.CUST_BIZRNO,  A.CTNR_CD
+	                   ) E
+		   WHERE 1=1
+		       AND A.CTNR_CD = B.CTNR_CD
+		       AND B.LANG_SE_CD = C.LANG_SE_CD 
+		       AND A.MFC_BIZRID = D.BIZRID
+		       AND A.MFC_BIZRNO = D.BIZRNO
+		       
+		       AND A.MFC_BIZRID = E.MFC_BIZRID(+)
+		       AND A.MFC_BIZRNO = E.MFC_BIZRNO(+)
+               AND A.CUST_BIZRID = E.CUST_BIZRID(+)
+               AND A.CUST_BIZRNO = E.CUST_BIZRNO(+)
+               AND A.CTNR_CD = E.CTNR_CD(+)
+		       
+		       <if test='PRPS_CD != null and PRPS_CD != "" '>
+		       	 AND B.PRPS_CD = #{PRPS_CD}
+		       </if>
+		       <if test='CTNR_CD != null and CTNR_CD != "" '>
+		       	 AND B.CTNR_CD = #{CTNR_CD}
+		       </if>
+		       
+	</select>
+	
+	<select id="epwh6101501_select2" parameterType="map" resultType="hashmap">
+			SELECT EPCN_BIZR_ABBR_NM(A.MFC_BIZRID ,A.MFC_BIZRNO) AS BIZRNM   
+				       ,NVL(SUM(DECODE(B.PRPS_CD, '0', A.DLIVY_QTY + NVL(E.DLIVY_QTY,0) )), 0) AS PRPS0
+		               ,NVL(SUM(DECODE(B.PRPS_CD, '1', A.DLIVY_QTY + NVL(E.DLIVY_QTY,0) )), 0) AS PRPS1
+		               ,NVL(SUM(DECODE(B.PRPS_CD, '2', A.DLIVY_QTY + NVL(E.DLIVY_QTY,0) )), 0) AS PRPS2
+		               ,NVL(SUM(A.DLIVY_QTY + NVL(E.DLIVY_QTY,0) ), 0) AS DLIVY_QTY
+		     FROM (
+			           SELECT A.MFC_BIZRID, A.MFC_BIZRNO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CUST_NM, B.CTNR_CD
+			                  ,NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+			             FROM EPDM_DLIVY_MST A
+			                  ,EPDM_DLIVY_INFO B
+			            WHERE 1=1
+			              AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+			              AND B.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			              
+			              <if test='BIZRID != null and BIZRID != "" '>
+			              	AND A.MFC_BIZRID = #{BIZRID}
+			              </if>
+			              <if test='BIZRNO != null and BIZRNO != "" '>
+			              	AND A.MFC_BIZRNO = #{BIZRNO}
+			              </if>
+			              <if test='CUST_BIZRID != null and CUST_BIZRID != "" '>
+			              	AND B.CUST_BIZRID = #{CUST_BIZRID}
+			              </if>
+			              <if test='CUST_BIZRNO != null and CUST_BIZRNO != "" '>
+			              	AND B.CUST_BIZRNO = #{CUST_BIZRNO}
+			              </if>
+			              <if test='CUST_BRCH_ID != null and CUST_BRCH_ID != "" '>
+			              	AND B.CUST_BRCH_ID = #{CUST_BRCH_ID}
+			              </if>
+			              <if test='CUST_BRCH_NO != null and CUST_BRCH_NO != "" '>
+			              	AND B.CUST_BRCH_NO = #{CUST_BRCH_NO}
+			              </if>
+			              
+			           GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CUST_NM, B.CTNR_CD
+			         ) A
+			         ,EPCN_STD_CTNR_CD B
+			         ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+			         ,EPCN_BIZR_INFO D
+			         ,(
+	                      SELECT A.MFC_BIZRID, A.MFC_BIZRNO, A.CUST_BIZRID, A.CUST_BIZRNO,  A.CTNR_CD
+	                             	,NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+	                        FROM EXCA_DLIVY_CRCT A
+	                      WHERE 1=1
+	                          AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I')
+	                          AND A.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+	                          
+	                      <if test='BIZRID != null and BIZRID != "" '>
+			              	AND A.MFC_BIZRID = #{BIZRID}
+			              </if>
+			              <if test='BIZRNO != null and BIZRNO != "" '>
+			              	AND A.MFC_BIZRNO = #{BIZRNO}
+			              </if>
+			              <if test='CUST_BIZRID != null and CUST_BIZRID != "" '>
+			              	AND A.CUST_BIZRID = #{CUST_BIZRID}
+			              </if>
+			              <if test='CUST_BIZRNO != null and CUST_BIZRNO != "" '>
+			              	AND A.CUST_BIZRNO = #{CUST_BIZRNO}
+			              </if>
+			              <if test='CUST_BRCH_ID != null and CUST_BRCH_ID != "" '>
+			              	AND A.CUST_BRCH_ID = #{CUST_BRCH_ID}
+			              </if>
+			              <if test='CUST_BRCH_NO != null and CUST_BRCH_NO != "" '>
+			              	AND A.CUST_BRCH_NO = #{CUST_BRCH_NO}
+			              </if>
+	                          
+	                     GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, A.CUST_BIZRID, A.CUST_BIZRNO,  A.CTNR_CD
+	                   ) E
+		   WHERE 1=1
+		       AND A.CTNR_CD = B.CTNR_CD
+		       AND B.LANG_SE_CD = C.LANG_SE_CD 
+		       AND A.MFC_BIZRID = D.BIZRID
+		       AND A.MFC_BIZRNO = D.BIZRNO
+		       
+		       AND A.MFC_BIZRID = E.MFC_BIZRID(+)
+		       AND A.MFC_BIZRNO = E.MFC_BIZRNO(+)
+               AND A.CUST_BIZRID = E.CUST_BIZRID(+)
+               AND A.CUST_BIZRNO = E.CUST_BIZRNO(+)
+               AND A.CTNR_CD = E.CTNR_CD(+)
+		       
+		       <if test='PRPS_CD != null and PRPS_CD != "" '>
+		       	 AND B.PRPS_CD = #{PRPS_CD}
+		       </if>
+		       <if test='CTNR_CD != null and CTNR_CD != "" '>
+		       	 AND B.CTNR_CD = #{CTNR_CD}
+		       </if>
+		       
+		 GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, D.SEL_ORD, D.BIZRNM
+		 ORDER BY D.SEL_ORD, D.BIZRNM
+	</select>
+
+</mapper>
+

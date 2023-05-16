@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <context:component-scan base-package="egovframework">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
+    
+    <aop:aspectj-autoproxy/>
+    <bean id="loggerAspect" class="egovframework.common.LoggerAspect" />
+
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="webBindingInitializer">
+            <bean class="egovframework.example.cmmn.web.EgovBindingInitializer"/>
+        </property>
+    </bean>
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+<!-- 
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="defaultErrorView" value="/common/egovError"/>
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.springframework.dao.DataAccessException">/common/dataAccessFailure</prop>
+                <prop key="org.springframework.transaction.TransactionException">/common/transactionFailure</prop>
+                <prop key="egovframework.rte.fdl.cmmn.exception.EgovBizException">/common/egovError</prop>
+                 
+            </props>
+        </property>
+    </bean>
+ -->
+ 
+ 	<bean class="egovframework.common.KoraExceptionController"/>
+ 	
+    <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1"
+	    p:viewClass="org.springframework.web.servlet.view.JstlView"
+	    p:prefix="/jsp/" p:suffix=".jsp"/>
+
+    <!-- For Pagination Tag -->
+    <bean id="imageRenderer" class="egovframework.example.cmmn.web.EgovImgPaginationRenderer"/>
+
+    <bean id="paginationManager" class="egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager">
+        <property name="rendererType">
+            <map>
+                <entry key="image" value-ref="imageRenderer"/>
+            </map>
+        </property>
+    </bean>
+	<!-- /For Pagination Tag -->
+
+	<!--
+    <mvc:view-controller path="/cmmn/validator.do" view-name="cmmn/validator"/>
+    -->
+    
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**/*.do" />
+            	<bean class="egovframework.koraep.interceptor.KoraepInterceptor" />
+        	</mvc:interceptor>
+        	
+      	<!-- Device Checked -->
+		<bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" />
+		<bean class="org.springframework.mobile.device.site.SitePreferenceHandlerInterceptor"/>
+
+		
+		
+    </mvc:interceptors>
+    
+    <!-- <mvc:annotation-driven>
+    	<mvc:argument-resolvers>
+        	<bean class="org.springframework.mobile.device.DeviceWebArgumentResolver"/>
+    	</mvc:argument-resolvers>
+	</mvc:annotation-driven> -->
+    
+    <!-- 
+		LinkID : 링크허브에서 발급받은 파트너 링크아이디.
+		SecretKey : 링크허브에서 발급받는 비밀키.
+		IsTest : true이면 test.popbill.com으로 연결, 기본값은 false.   실서버 적용시 변경필요!@
+	-->
+    <util:properties id="LINKHUB_CONFIG">
+		<prop key="CorpNum">1078217851</prop>
+		<prop key="UserID">KORA</prop>
+		<prop key="LinkID">KORA</prop>
+		<prop key="SecretKey">nctOep3cmvwbpqfps7X4eJXOkFB+QK5TKQWb3chuvB8=</prop>
+		<prop key="IsTest">false</prop>
+	</util:properties>
+    
+    <beans>
+	    <!-- 휴폐업조회 Service Implementation Bean registration.  -->
+		<bean id="closedownService" class="com.popbill.api.closedown.CloseDownServiceImp">
+			<property name="linkID" value="#{LINKHUB_CONFIG.LinkID}"/>
+			<property name="secretKey" value="#{LINKHUB_CONFIG.SecretKey}"/>
+			<property name="test" value="#{LINKHUB_CONFIG.IsTest}"/>
+		</bean>
+    </beans>
+</beans>

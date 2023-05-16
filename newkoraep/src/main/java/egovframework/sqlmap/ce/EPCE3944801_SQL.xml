@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3944801Mapper">
+   
+   <!-- 다국어 관리 SQL -->
+
+     <!-- 용어구분 코드 리스트  -->
+	<select id="epce3944801_select" parameterType="map" resultType="hashmap">
+		SELECT 
+			 GRP_CD, 
+			 LANG_SE_CD,
+			 ETC_CD, 
+			 ETC_CD_NM, 
+			 USE_YN,
+			 SEL_ORD
+		 FROM EPCN_ETC_CD  
+		 WHERE GRP_CD ='S001'
+		 AND LANG_SE_CD = #{LANG_SE_CD}
+		 ORDER BY SEL_ORD 
+	</select> 
+   
+   <!--다국어관리 조회 -->
+   <select id="epce3944801_select2" parameterType="map" resultType="hashmap">
+      
+        SELECT 
+	        A.LANG_CD, 
+	        A.LANG_SE_CD, 
+	        DECODE( A.USE_YN,'Y',EPCN_LANG_NM('use_y'),EPCN_LANG_NM('use_n')) AS USE_YN,
+	        A.USE_YN AS USE_YN_ORI,
+	        A.LANG_NM, 
+	        A.LANG_GRP_CD,
+	        B.ETC_CD_NM
+        FROM  EPCN_LANG_INFO A JOIN EPCN_ETC_CD B
+        ON      A.LANG_SE_CD  = B.LANG_SE_CD
+        WHERE    1=1
+        AND  B.GRP_CD ='S001'
+        AND  A.LANG_SE_CD    = #{LANG_SE_CD}
+        AND  A.LANG_GRP_CD  =  B.ETC_CD           
+        <if test='LANG_GRP_CD != ""' >
+        AND  A.LANG_GRP_CD = #{LANG_GRP_CD}
+        </if>
+        <if test='LANG_NM != ""' >
+		      AND A.LANG_NM LIKE '%' || #{LANG_NM}   || '%'
+		</if> 
+  
+	</select>
+	
+	<!-- 다국어관리 조회시 입력값이 있을경우 수정 없을경우 저장 체크 -->
+	<select id="epce3944801_select3" resultType="int" parameterType="map">
+	     SELECT 
+		  COUNT(*) 
+		  FROM EPCN_LANG_INFO
+		  WHERE 1=1
+		  AND LANG_CD       =  TRIM(#{LANG_CD})
+		  AND LANG_SE_CD   = #{LANG_SE_CD}
+		  AND LANG_GRP_CD = #{LANG_GRP_CD}
+	</select>
+	
+	<!--다국어관리 저장  -->
+	<insert id="epce3944801_insert"  parameterType="map">
+	
+	   INSERT 
+		    INTO EPCN_LANG_INFO
+			    (
+			     LANG_CD,
+			     LANG_SE_CD,
+			     LANG_GRP_CD,
+			     LANG_NM, 
+			     USE_YN, 
+			     REG_PRSN_ID, 
+			     REG_DTTM
+			     )
+		     VALUES
+		       (
+		       TRIM(#{LANG_CD}),
+			   #{LANG_SE_CD},
+			   #{LANG_GRP_CD},
+			   #{LANG_NM}, 
+			   #{USE_YN}, 
+			   #{RGST_PRSN_ID}, 
+			     SYSDATE
+		       )
+	
+	</insert>
+	
+	<!-- 다국어관리 수정-->
+	<update id="epce3944801_update"  parameterType="map">
+	
+		UPDATE
+	  	   EPCN_LANG_INFO
+		SET
+			LANG_NM        =  #{LANG_NM},
+			USE_YN            =  #{USE_YN},
+			UPD_PRSN_ID   =  #{UPD_PRSN_ID},
+			UPD_DTTM       =   SYSDATE 
+		 WHERE 1=1
+		 AND LANG_CD       = TRIM(#{LANG_CD})
+		 AND LANG_SE_CD   = #{LANG_SE_CD}
+		 AND LANG_GRP_CD =#{LANG_GRP_CD}
+   
+	
+	</update>	
+	
+	
+	</mapper>
+	

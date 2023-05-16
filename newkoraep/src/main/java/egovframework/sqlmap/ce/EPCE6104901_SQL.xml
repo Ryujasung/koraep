@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE6104901Mapper">
+
+	<select id="epce6104901_select" parameterType="map" resultType="hashmap">
+			
+		<if test='excelYn == null or excelYn == "" '>
+		 SELECT 
+		 			PNO 
+					,DLIVY_REG_DT
+	                ,BIZRNM
+	                ,BRCH_NM
+                    ,CUST_NM
+                    ,CUST_BIZRNO
+                    ,CTNR_NM
+                    ,STANDARD_NM
+			        ,PRPS_CD
+			        ,PRPS_NM
+			        ,CPCT_CD
+			        ,CPCT_NM
+                    ,ALKND_CD
+                    ,ALKND_NM
+			        ,DLIVY_QTY
+			        ,DLIVY_GTN
+				    ,DLIVY_STAT_CD
+				    ,DLIVY_STAT_NM
+				    ,DLIVY_DT
+				    ,CTNR_CD
+				    
+		  FROM (
+		</if>
+						 SELECT  ROW_NUMBER()OVER(ORDER BY A.DLIVY_REG_DT desc, D.SEL_ORD, D.BIZRNM, E.BRCH_NM, A.CUST_NM, B.SEL_ORD) AS PNO 
+					           		 ,A.DLIVY_REG_DT
+					           		 ,A.DLIVY_DT
+					                 ,D.BIZRNM
+					                 ,E.BRCH_NM
+				                     ,A.CUST_NM
+				                     ,PI_DECRYPT(A.CUST_BIZRNO) as CUST_BIZRNO
+				                     ,B.CTNR_NM
+				                     ,B.CTNR_CD
+				                     ,CASE WHEN SUBSTR(B.CTNR_CD,4,2) = 00 THEN '표준용기' ELSE '비표준용기' END AS STANDARD_NM				                     
+				                     ,B.PRPS_CD
+				                     ,EPCN_ETC_NM(B.PRPS_CD , 'E002') AS PRPS_NM
+				                     ,B.CPCT_CD
+				                     ,EPCN_ETC_NM(B.CPCT_CD , 'E001') AS CPCT_NM
+                                     ,B.ALKND_CD
+                                     ,EPCN_ETC_NM(B.ALKND_CD , 'E004') AS ALKND_NM
+				                     ,A.DLIVY_QTY
+				                     ,A.DLIVY_GTN
+				                     ,A.DLIVY_STAT_CD
+				                     ,DECODE(A.GBN, 'A', EPCN_ETC_NM(A.DLIVY_STAT_CD, 'D011'), 'B', EPCN_ETC_NM(A.DLIVY_STAT_CD, 'C001')) as DLIVY_STAT_NM
+				                    
+				           FROM (
+					                     SELECT 'A' AS GBN, A.MFC_BIZRID, A.MFC_BIZRNO, A.MFC_BRCH_ID, A.MFC_BRCH_NO
+						                            ,B.CUST_BIZRID, B.CUST_BIZRNO, B.CUST_NM
+						                            ,B.CTNR_CD
+						                            ,DLIVY_QTY
+						                            ,DLIVY_GTN
+						                            ,A.DLIVY_REG_DT
+						                            ,A.DLIVY_STAT_CD
+						                            ,B.DLIVY_DT
+					                       FROM EPDM_DLIVY_MST A
+					                            	,EPDM_DLIVY_INFO B
+					                      WHERE 1=1
+						                      AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+						                      
+						                      <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+						                      		AND B.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+											  </if>
+											  <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+						                      		 AND A.DLIVY_REG_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+											  </if>
+											 
+											  <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+															AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+												        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+												            #{type.MFC_BIZRID_NO}
+												        </foreach>
+											  </if>    
+											  <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+															AND	B.CUST_BIZRID||';'||B.CUST_BIZRNO  IN
+												        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+												            #{type.WHSDL_BIZRID_NO}
+												        </foreach>
+											  </if>
+								              <if test='BRCH_ID != null and BRCH_ID != "" '>
+								              	AND A.MFC_BRCH_ID = #{BRCH_ID}
+								              </if>
+								              <if test='BRCH_NO != null and BRCH_NO != "" '>
+								              	AND A.MFC_BRCH_NO = #{BRCH_NO}
+								              </if>
+								              <if test='DLIVY_STAT_CD != null and DLIVY_STAT_CD != "" '>
+								              	AND A.DLIVY_STAT_CD = #{DLIVY_STAT_CD}
+								              </if>
+								              
+								              UNION ALL
+								              
+								              SELECT 'B' AS GBN, A.MFC_BIZRID, A.MFC_BIZRNO, A.MFC_BRCH_ID, A.MFC_BRCH_NO
+						                             ,A.CUST_BIZRID ,A.CUST_BIZRNO, EPCN_BIZR_NM(A.CUST_BIZRID, A.CUST_BIZRNO) AS CUST_NM
+						                             ,A.CTNR_CD
+						                             ,A.DLIVY_QTY
+						                             ,A.DLIVY_GTN
+						                             ,A.DLIVY_CRCT_REG_DT AS DLIVY_REG_DT
+						                             ,A.DLIVY_CRCT_STAT_CD AS DLIVY_STAT_CD
+						                             ,A.DLIVY_DT
+					                           FROM EXCA_DLIVY_CRCT A
+					                           WHERE 1=1
+					                            AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I')
+					                            
+						                      <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+						                      		 AND A.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+											  </if>
+											  <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+						                      		 AND A.DLIVY_CRCT_REG_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+											  </if>
+											 
+											  <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+													AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+										        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+										            #{type.MFC_BIZRID_NO}
+										        </foreach>
+											  </if>    
+											  <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+													AND	A.CUST_BIZRID||';'||A.CUST_BIZRNO  IN
+										        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+										            #{type.WHSDL_BIZRID_NO}
+										        </foreach>
+											  </if>
+								              <if test='BRCH_ID != null and BRCH_ID != "" '>
+								              	AND A.MFC_BRCH_ID = #{BRCH_ID}
+								              </if>
+								              <if test='BRCH_NO != null and BRCH_NO != "" '>
+								              	AND A.MFC_BRCH_NO = #{BRCH_NO}
+								              </if>
+								              <if test='DLIVY_STAT_CD != null and DLIVY_STAT_CD != "" '>
+								              	AND A.DLIVY_CRCT_STAT_CD = #{DLIVY_STAT_CD}
+								              </if>					                            
+					                   ) A
+					                   ,EPCN_STD_CTNR_CD B
+					                   ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+					                   ,EPCN_BIZR_INFO D
+					                   ,EPCN_BRCH_INFO E
+				           WHERE 1=1
+				               AND A.CTNR_CD = B.CTNR_CD
+				               AND B.LANG_SE_CD = C.LANG_SE_CD 
+				               AND A.MFC_BIZRID = D.BIZRID
+				               AND A.MFC_BIZRNO = D.BIZRNO
+				               AND A.MFC_BIZRID = E.BIZRID
+				               AND A.MFC_BIZRNO = E.BIZRNO
+				               AND A.MFC_BRCH_ID = E.BRCH_ID
+				               AND A.MFC_BRCH_NO = E.BRCH_NO
+                               <choose>
+                                  <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+                                      AND SUBSTR(B.CTNR_CD,2,1) in ('1','2')
+                                  </when>
+                                  <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+                                      AND SUBSTR(B.CTNR_CD,2,1) in ('3','4')
+                                  </when>
+                               </choose>
+                               <choose>
+				                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "Y" '>
+				                      AND SUBSTR(B.CTNR_CD,4,2) = 00
+				                  </when>
+				                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "N" '>
+				                     AND SUBSTR(B.CTNR_CD,4,2) != 00
+				                  </when>
+				               </choose>
+                               <if test='PRPS_CD != null and PRPS_CD != "" '>
+                                 AND B.PRPS_CD = #{PRPS_CD}
+                               </if>
+                               <if test='ALKND_CD != null and ALKND_CD != "" '>
+                                 AND B.ALKND_CD = #{ALKND_CD}
+                               </if>
+						       <if test="CTNR_LIST !=null and CTNR_LIST.size >0" >
+												AND	B.CTNR_CD IN
+									        <foreach collection="CTNR_LIST"  item="type"  open="(" close=")" separator=",">
+									            #{type.CTNR_CD}
+									        </foreach>
+							   </if>
+						       
+				
+				         ORDER BY A.DLIVY_REG_DT desc, D.SEL_ORD, D.BIZRNM, E.BRCH_NM, A.CUST_NM, B.SEL_ORD
+				 
+		<if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+        </if>		 
+				 
+	</select>
+	
+	<select id="epce6104901_select_cnt" parameterType="map" resultType="hashmap">
+		  SELECT COUNT(1) as CNT
+		  			 ,SUM(A.DLIVY_QTY) as DLIVY_QTY
+				     ,SUM(A.DLIVY_GTN) as DLIVY_GTN
+		    FROM (
+	                     SELECT A.MFC_BIZRID, A.MFC_BIZRNO, A.MFC_BRCH_ID, A.MFC_BRCH_NO
+		                            ,B.CUST_BIZRID, B.CUST_BIZRNO, B.CUST_NM
+		                            ,B.CTNR_CD
+		                            ,DLIVY_QTY
+		                            ,DLIVY_GTN
+		                            ,A.DLIVY_REG_DT
+		                            ,A.DLIVY_STAT_CD
+	                       FROM EPDM_DLIVY_MST A
+	                            	,EPDM_DLIVY_INFO B
+	                      WHERE 1=1
+		                      AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+                            <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+				                    AND B.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+							 </if>
+							 <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+		                      		 AND A.DLIVY_REG_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+							 </if>
+		                      
+		                      <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+											AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+								        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+								            #{type.MFC_BIZRID_NO}
+								        </foreach>
+							 </if>    
+							  <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+											AND	B.CUST_BIZRID||';'||B.CUST_BIZRNO  IN
+								        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+								            #{type.WHSDL_BIZRID_NO}
+								        </foreach>
+							 </if>
+				              <if test='BRCH_ID != null and BRCH_ID != "" '>
+				              	AND A.MFC_BRCH_ID = #{BRCH_ID}
+				              </if>
+				              <if test='BRCH_NO != null and BRCH_NO != "" '>
+				              	AND A.MFC_BRCH_NO = #{BRCH_NO}
+				              </if>
+				              <if test='DLIVY_STAT_CD != null and DLIVY_STAT_CD != "" '>
+				              	AND A.DLIVY_STAT_CD = #{DLIVY_STAT_CD}
+				              </if>
+				              
+							UNION ALL
+								              
+				              SELECT  A.MFC_BIZRID, A.MFC_BIZRNO, A.MFC_BRCH_ID, A.MFC_BRCH_NO
+		                             ,A.CUST_BIZRID ,A.CUST_BIZRNO, EPCN_BIZR_NM(A.CUST_BIZRID, A.CUST_BIZRNO) AS CUST_NM
+		                             ,A.CTNR_CD
+		                             ,A.DLIVY_QTY
+		                             ,A.DLIVY_GTN
+		                             ,A.DLIVY_CRCT_REG_DT AS DLIVY_REG_DT
+		                             ,A.DLIVY_CRCT_STAT_CD AS DLIVY_STAT_CD
+	                           FROM EXCA_DLIVY_CRCT A
+	                           WHERE 1=1
+	                            AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I')
+	                            
+		                      <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+		                      		 AND A.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+							  </if>
+							  <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+		                      		 AND A.DLIVY_CRCT_REG_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+							  </if>
+							 
+							  <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+									AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+						        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+						            #{type.MFC_BIZRID_NO}
+						        </foreach>
+							  </if>    
+							  <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+									AND	A.CUST_BIZRID||';'||A.CUST_BIZRNO  IN
+						        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+						            #{type.WHSDL_BIZRID_NO}
+						        </foreach>
+							  </if>
+				              <if test='BRCH_ID != null and BRCH_ID != "" '>
+				              	AND A.MFC_BRCH_ID = #{BRCH_ID}
+				              </if>
+				              <if test='BRCH_NO != null and BRCH_NO != "" '>
+				              	AND A.MFC_BRCH_NO = #{BRCH_NO}
+				              </if>
+				              <if test='DLIVY_STAT_CD != null and DLIVY_STAT_CD != "" '>
+				              	AND A.DLIVY_CRCT_STAT_CD = #{DLIVY_STAT_CD}
+				              </if>					                            				              
+		                      
+	                   ) A
+	                   ,EPCN_STD_CTNR_CD B
+	                   ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+			           ,EPCN_BIZR_INFO D
+           WHERE 1=1
+               AND A.CTNR_CD = B.CTNR_CD
+               AND B.LANG_SE_CD = C.LANG_SE_CD 
+		       AND A.MFC_BIZRID = D.BIZRID
+		       AND A.MFC_BIZRNO = D.BIZRNO               
+               <choose>
+                  <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+                      AND SUBSTR(B.CTNR_CD,2,1) in ('1','2')
+                  </when>
+                  <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+                      AND SUBSTR(B.CTNR_CD,2,1) in ('3','4')
+                  </when>
+               </choose>
+               <choose>
+                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "Y" '>
+                      AND SUBSTR(B.CTNR_CD,4,2) = 00
+                  </when>
+                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "N" '>
+                     AND SUBSTR(B.CTNR_CD,4,2) != 00
+                  </when>
+               </choose>
+               <if test='PRPS_CD != null and PRPS_CD != "" '>
+                 AND B.PRPS_CD = #{PRPS_CD}
+               </if>
+               <if test='ALKND_CD != null and ALKND_CD != "" '>
+                 AND B.ALKND_CD = #{ALKND_CD}
+               </if>
+               
+		       <if test="CTNR_LIST !=null and CTNR_LIST.size >0" >
+								AND	B.CTNR_CD IN
+					        <foreach collection="CTNR_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.CTNR_CD}
+					        </foreach>
+			   </if>
+		       
+	</select>
+	
+	<select id="epce6104901_select2" parameterType="map" resultType="hashmap">
+			SELECT 
+						EPCN_BIZR_ABBR_NM(A.MFC_BIZRID ,A.MFC_BIZRNO) AS BIZRNM   
+				       ,NVL(SUM(DECODE(B.PRPS_CD, '0', A.DLIVY_QTY)), 0) AS PRPS0
+		               ,NVL(SUM(DECODE(B.PRPS_CD, '1', A.DLIVY_QTY)), 0) AS PRPS1
+		               ,NVL(SUM(DECODE(B.PRPS_CD, '2', A.DLIVY_QTY)), 0) AS PRPS2
+		               ,NVL(SUM(A.DLIVY_QTY), 0) AS DLIVY_QTY
+		     FROM (  
+			           SELECT A.MFC_BIZRID, A.MFC_BIZRNO, B.CUST_BIZRNO, B.CUST_NM, B.CTNR_CD
+			                  	  ,NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+			             FROM EPDM_DLIVY_MST A   
+			                  	  ,EPDM_DLIVY_INFO B   
+			          WHERE 1=1     
+			              AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+			              <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+			                    AND B.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+						  </if>
+						  <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+	                      		 AND A.DLIVY_REG_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+						  </if>
+			             <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+										AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+							        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+							            #{type.MFC_BIZRID_NO}
+							        </foreach>
+						 </if>    
+						  <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+										AND	B.CUST_BIZRID||';'||B.CUST_BIZRNO  IN
+							        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+							            #{type.WHSDL_BIZRID_NO}
+							        </foreach>
+						 </if>  
+			              <if test='BRCH_ID != null and BRCH_ID != "" '>
+			              	AND A.MFC_BRCH_ID = #{BRCH_ID}
+			              </if>
+			              <if test='BRCH_NO != null and BRCH_NO != "" '>
+			              	AND A.MFC_BRCH_NO = #{BRCH_NO}
+			              </if>
+			              <if test='DLIVY_STAT_CD != null and DLIVY_STAT_CD != "" '>
+			              	AND A.DLIVY_STAT_CD = #{DLIVY_STAT_CD}
+			              </if>
+			            GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, B.CUST_BIZRNO, B.CUST_NM, B.CTNR_CD
+			              
+						UNION ALL
+								              
+			              SELECT   A.MFC_BIZRID, A.MFC_BIZRNO, A.CUST_BIZRNO, EPCN_BIZR_NM(A.CUST_BIZRID, A.CUST_BIZRNO) AS CUST_NM, A.CTNR_CD
+			                  	  ,NVL(SUM(A.DLIVY_QTY),0) AS DLIVY_QTY 
+                           FROM EXCA_DLIVY_CRCT A
+                           WHERE 1=1
+                            AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I')
+                            
+	                      <if test="SEARCH_GBN.equalsIgnoreCase('1') ">
+	                      		 AND A.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+						  </if>
+						  <if test="SEARCH_GBN.equalsIgnoreCase('2') ">
+	                      		 AND A.DLIVY_CRCT_REG_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+						  </if>
+						 
+						  <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+								AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+					        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.MFC_BIZRID_NO}
+					        </foreach>
+						  </if>    
+						  <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+								AND	A.CUST_BIZRID||';'||A.CUST_BIZRNO  IN
+					        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.WHSDL_BIZRID_NO}
+					        </foreach>
+						  </if>
+			              <if test='BRCH_ID != null and BRCH_ID != "" '>
+			              	AND A.MFC_BRCH_ID = #{BRCH_ID}
+			              </if>
+			              <if test='BRCH_NO != null and BRCH_NO != "" '>
+			              	AND A.MFC_BRCH_NO = #{BRCH_NO}
+			              </if>
+			              <if test='DLIVY_STAT_CD != null and DLIVY_STAT_CD != "" '>
+			              	AND A.DLIVY_CRCT_STAT_CD = #{DLIVY_STAT_CD}
+			              </if>						              
+			          	 GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, A.CUST_BIZRNO, EPCN_BIZR_NM(A.CUST_BIZRID, A.CUST_BIZRNO), A.CTNR_CD
+			         ) A
+			         ,EPCN_STD_CTNR_CD B
+			         ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+			         ,EPCN_BIZR_INFO D
+		   WHERE 1=1
+		       AND A.CTNR_CD = B.CTNR_CD
+		       AND B.LANG_SE_CD = C.LANG_SE_CD 
+		       AND A.MFC_BIZRID = D.BIZRID
+		       AND A.MFC_BIZRNO = D.BIZRNO
+               <choose>
+                  <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+                      AND SUBSTR(B.CTNR_CD,2,1) in ('1','2')
+                  </when>
+                  <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+                      AND SUBSTR(B.CTNR_CD,2,1) in ('3','4')
+                  </when>
+               </choose>
+               <choose>
+                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "Y" '>
+                      AND SUBSTR(B.CTNR_CD,4,2) = 00
+                  </when>
+                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "N" '>
+                     AND SUBSTR(B.CTNR_CD,4,2) != 00
+                  </when>
+               </choose>
+               <if test='PRPS_CD != null and PRPS_CD != "" '>
+                 AND B.PRPS_CD = #{PRPS_CD}
+               </if>
+               <if test='ALKND_CD != null and ALKND_CD != "" '>
+                 AND B.ALKND_CD = #{ALKND_CD}
+               </if>
+
+		       <if test="CTNR_LIST !=null and CTNR_LIST.size >0" >
+								AND	B.CTNR_CD IN
+					        <foreach collection="CTNR_LIST"  item="type"  open="(" close=")" separator=",">
+					            #{type.CTNR_CD}
+					        </foreach>
+			   </if>
+		       
+		 GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, D.SEL_ORD, D.BIZRNM
+		 ORDER BY D.SEL_ORD, D.BIZRNM
+	</select>
+
+</mapper>
+

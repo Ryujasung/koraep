@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE0101801Mapper">
+
+	<select id="epce0101801_select" resultType="hashmap">
+		 SELECT A.BIZRID, A.BIZRNO, A.BIZRNM
+			        ,NVL(B.PLAN_GTN_BAL, 0) as PLAN_GTN_BAL
+			        ,NVL(B.PLAN_GTN_ADJ, 0) as PLAN_GTN_ADJ
+			        ,NVL(B.ADIT_GTN_BAL, 0) as ADIT_GTN_BAL
+			        ,NVL(B.ADIT_GTN_ADJ, 0) as ADIT_GTN_ADJ
+			        ,NVL(B.DRCT_PAY_GTN_BAL, 0) as DRCT_PAY_GTN_BAL
+			        ,NVL(B.DRCT_PAY_GTN_ADJ, 0) as DRCT_PAY_GTN_ADJ  
+                    ,NVL(D.NOTY_AMT,0) AS NOTY_AMT
+                    ,NVL(C.GTN_TOT, 0) as GTN_TOT          --미지급금
+         	        ,NVL(B.GTN_BAL, 0) as GTN_BAL  --실제잔액
+         	      
+		   FROM EPCN_BIZR_INFO A
+			        ,( SELECT MFC_BIZRID, MFC_BIZRNO
+				                  ,SUM(NVL(PLAN_GTN_BAL, 0) + NVL(GTN_INDE, 0)) AS PLAN_GTN_BAL
+				                  ,SUM(NVL(PLAN_GTN_ADJ, 0)) AS PLAN_GTN_ADJ
+				                  ,SUM(NVL(ADIT_GTN_BAL, 0)) AS ADIT_GTN_BAL
+				                  ,SUM(NVL(ADIT_GTN_ADJ, 0)) AS ADIT_GTN_ADJ
+				                  ,SUM(NVL(DRCT_PAY_GTN_BAL, 0)) AS DRCT_PAY_GTN_BAL
+				                  ,SUM(NVL(DRCT_PAY_GTN_ADJ, 0)) AS DRCT_PAY_GTN_ADJ
+				                  ,SUM(NVL(GTN_BAL, 0)) AS GTN_BAL
+			             FROM EPGM_MFC_GTN_BAL
+			           WHERE 1=1
+			               AND DEL_YN = 'N'
+			            <if test='STD_DT_SEL != null and STD_DT_SEL != "" '>
+			              AND STD_DT <![CDATA[ <= ]]> #{STD_DT_SEL}
+                          AND STD_YEAR = SUBSTR(#{STD_DT_SEL}, 1,4)
+			            </if>
+			            <if test='STD_YEAR_SEL != null and STD_YEAR_SEL != "" '>
+			              AND STD_YEAR = #{STD_YEAR_SEL}
+			            </if>
+			           GROUP BY MFC_BIZRID, MFC_BIZRNO
+			        ) B
+				   ,(	
+				    SELECT
+      				 	C.MFC_BIZRID
+				       ,SUM(A.GTN_TOT) AS GTN_TOT
+					   ,A.BIZR_ABBR_NM
+
+			       FROM
+						EPGM_PAY_INFO_LST A
+				        ,EPCN_BIZR_INFO B
+	                    ,(SELECT C.PAY_DOC_NO, C.MFC_BIZRID, C.MFC_BIZRNO  FROM EPCM_CFM_MST C GROUP BY C.PAY_DOC_NO, C.MFC_BIZRID, C.MFC_BIZRNO) C
+			 WHERE 1=1 
+			      <if test='STD_DT_SEL != null and STD_DT_SEL != "" '>
+			            and A.PAY_REG_DT = #{STD_DT_SEL} 
+			            </if>
+			            <if test='STD_YEAR_SEL != null and STD_YEAR_SEL != "" '>
+			              AND substr(PAY_REG_DT,1,4) = #{STD_YEAR_SEL}
+			            </if>
+			     AND A.PAY_BIZRID = B.BIZRID
+			     AND A.PAY_BIZRNO = B.BIZRNO
+	             AND A.PAY_DOC_NO = C.PAY_DOC_NO(+)
+               --지급예정
+			     AND A.PAY_STAT_CD  in ( 'S', 'L')
+           --
+           GROUP BY A.BIZR_ABBR_NM,C.MFC_BIZRID
+           ) C
+            ,
+           (SELECT  B.BIZRID
+
+			         ,B.BIZRNM as MFC_BIZRNM
+			          ,sum(A.NOTY_AMT) as NOTY_AMT
+				     FROM EPGM_BILL_LST A
+				          	  ,EPCN_BIZR_INFO B
+						  WHERE 1=1
+						  
+						    <if test='STD_DT_SEL != null and STD_DT_SEL != "" '>
+			            and A.BILL_ISSU_DT = #{STD_DT_SEL} 
+			            </if>
+			            <if test='STD_YEAR_SEL != null and STD_YEAR_SEL != "" '>
+			              AND substr(BILL_ISSU_DT,1,4) = #{STD_YEAR_SEL}
+			            </if>
+						      AND A.ISSU_STAT_CD = 'I' /* 고지등록 */
+						      AND A.MFC_BIZRID = B.BIZRID
+						      AND A.MFC_BIZRNO = B.BIZRNO
+
+				          --보증금 , 보증금(조정) 만 조회
+				          AND A.BILL_SE_CD IN ('G','M')
+				          --
+		      GROUP BY B.BIZRID,B.BIZRNM
+          ) D
+			WHERE 1=1
+			    AND A.BIZRID = B.MFC_BIZRID(+)
+			    AND A.BIZRNO = B.MFC_BIZRNO(+)
+			    AND A.BIZRID = C.MFC_BIZRID(+)
+			    AND A.BIZRID = D.BIZRID(+)
+			    AND A.BIZR_TP_CD IN ('M1', 'M2')
+			    AND A.BIZR_STAT_CD = 'Y'
+			ORDER BY A.SEL_ORD
+	</select>
+	
+	<select id="epce0101888_select" resultType="hashmap">		
+		 SELECT MFC_BIZRID, MFC_BIZRNO, BAL_SN
+		 			,TO_CHAR(TO_DATE(STD_DT, 'YYYYMMDD'), 'YYYY-MM-DD') as STD_DT
+			        ,CASE WHEN PLAN_GTN_ADJ IS NOT NULL THEN '1'
+			              WHEN ADIT_GTN_ADJ IS NOT NULL THEN '2'
+			              WHEN DRCT_PAY_GTN_ADJ IS NOT NULL THEN '3'
+			          END AS ADJ_ITEM
+			        ,CASE WHEN PLAN_GTN_ADJ IS NOT NULL THEN PLAN_GTN_ADJ
+			              WHEN ADIT_GTN_ADJ IS NOT NULL THEN ADIT_GTN_ADJ
+			              WHEN DRCT_PAY_GTN_ADJ IS NOT NULL THEN DRCT_PAY_GTN_ADJ
+			          END AS ADJ_AMT
+			        ,ADJ_RSN
+		   FROM EPGM_MFC_GTN_BAL
+		 WHERE 1=1
+		    AND DEL_YN = 'N'
+		    AND MFC_BIZRID = #{BIZRID}
+		    AND MFC_BIZRNO = #{BIZRNO}
+		    AND (PLAN_GTN_ADJ IS NOT NULL OR ADIT_GTN_ADJ IS NOT NULL OR DRCT_PAY_GTN_ADJ IS NOT NULL)
+		 ORDER BY STD_DT DESC, BAL_SN DESC
+	</select>
+
+	<!-- 조정금액관리 저장 -->
+	<insert id="epce0101888_insert"  parameterType="hashmap">
+		INSERT INTO EPGM_MFC_GTN_BAL
+		 (
+			  MFC_BIZRID
+			  ,MFC_BIZRNO
+			  ,STD_DT
+			  ,STD_YEAR
+			  ,BAL_SN
+			  
+			  <choose>
+			  	<when test='ADJ_ITEM == "1" '>
+			  		,PLAN_GTN_ADJ
+			  	</when>
+			  	<when test='ADJ_ITEM == "2" '>
+			  		,ADIT_GTN_ADJ
+			  	</when>
+			  	<when test='ADJ_ITEM == "3" '>
+			  		,DRCT_PAY_GTN_ADJ
+			  	</when>
+			  </choose>
+			  
+			  ,ADJ_RSN
+			  ,PRCS_ID
+			  ,PRCS_DTTM
+			  ,DEL_YN
+		 )
+		 VALUES
+		 (
+			  #{MFC_BIZRID}
+			  ,#{MFC_BIZRNO}
+			  ,#{STD_DT}
+			  ,SUBSTR(#{STD_DT}, 1, 4)
+			  ,TEMP_SEQ.NEXTVAL
+			  ,#{ADJ_AMT}
+			  ,#{ADJ_RSN}
+			  ,#{S_USER_ID}
+			  ,SYSDATE
+			  ,'N'
+		 )
+	</insert>
+	
+	<!-- 조정금액관리 저장 -->
+	<update id="epce0101888_update"  parameterType="hashmap">
+		UPDATE EPGM_MFC_GTN_BAL 
+		      SET PLAN_GTN_ADJ = <choose><when test='ADJ_ITEM == "1" '>#{ADJ_AMT}</when><otherwise>''</otherwise></choose>
+		      		,ADIT_GTN_ADJ = <choose><when test='ADJ_ITEM == "2" '>#{ADJ_AMT}</when><otherwise>''</otherwise></choose>
+		      		,DRCT_PAY_GTN_ADJ = <choose><when test='ADJ_ITEM == "3" '>#{ADJ_AMT}</when><otherwise>''</otherwise></choose>
+		      		,ADJ_RSN = #{ADJ_RSN}
+				    ,UPD_PRSN_ID = #{S_USER_ID}
+				    ,UPD_DTTM = SYSDATE
+		 WHERE 1=1
+		     AND MFC_BIZRID = #{MFC_BIZRID}
+		     AND MFC_BIZRNO = #{MFC_BIZRNO}
+		     AND STD_DT = #{STD_DT}
+		     AND BAL_SN = #{BAL_SN}
+	</update>
+
+</mapper>

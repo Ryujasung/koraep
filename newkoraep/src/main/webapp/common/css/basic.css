@@ -1,0 +1,118 @@
+@charset "utf-8";
+
+*{margin:0; padding:0}
+*{-webkit-text-size-adjust:none;}
+html,body{width:100%; height:100%}
+html{overflow:auto;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button {margin:0;padding:0}
+body,h1,h2,h3,h4,th,td,input,select,textarea,button{font-family:'굴림',Gulim,Helvetica,AppleSDGothicNeo,sans-serif; font-size:12px; color:#555}
+body{background-color:#fff; *word-break:break-all;-ms-word-break:break-all}
+img,fieldset,iframe{border:0 none} 
+dl,ul,ol,li{list-style:none}
+input,select,button{vertical-align:middle}
+img{vertical-align:top}
+i,em,address{font-style:normal}
+label,button{cursor:pointer}
+button{margin:0; padding:0; border:none}
+a{color:#555; text-decoration:none}
+a:hover{color:#333; text-decoration:none}
+a:active {background-color:transparent}
+a.link{color:#005ae1}
+a.link:hover{text-decoration:underline; color:#0b30d1}
+html:first-child select{height:20px; padding-right:6px}
+option{}
+hr{display:none}
+legend{*width:0; overflow:hidden; height:0}
+table{border-collapse:collapse; border-spacing:0}
+input::-ms-clear{display:none}
+header,main,aside,article,footer{display:block}
+
+input[type='text'],input[type='password']{width:108px; margin-right:1px; padding:5px 5px 4px; border:1px solid #b4b4b4}
+input[type='text'].disabled{background:#f4f4f4}
+input[type='radio'],input[type='submit']{border:none; padding:0; margin:0}
+input[type='checkbox']{border:none; padding:0; margin:-2px 0 0 0;}
+input[type='file']{border:1px solid #b4b4b4; padding:2px 2px; margin:0; vertical-align:middle}
+select{width:120px; height:25px; margin-right:1px; padding:2px 2px 2px 0; border:1px solid #b4b4b4;-webkit-padding:50px}
+
+.placeholder {color:#aaa;}
+:-ms-input-placeholder {color:#bbbb;} 
+::-webkit-input-placeholder {color:#bbbb;}
+::-moz-placeholder{color:#bbbb;}
+
+/* Common */
+.show{display:block}
+.hide{display:none}
+.blind,legend{display:block; overflow:hidden; position:absolute; top:-1000em; left:0}
+
+.floatL{float:left !important}
+.floatR{float:right !important}
+.textL{text-align:left !important}
+.textC{text-align:center!important; padding-right:0 !important; padding-left:0 !important}
+.textR{text-align:right !important}
+.textJ{text-align:justify !important}
+.f_normal{font-weight:normal !important}
+.lt_sp{letter-spacing:-1px !important}
+.bdB_none{border-bottom:none !important} 
+.bg_none{background:none !important}
+.dip_lb{display:inline-block !important}
+.va_t{vertical-align:top}
+.clear{clear:both}
+
+.w_90{display:inline-block; width:90px !important}
+.w_130{display:inline-block; width:130px !important}
+.w_359{width:359px !important}
+.w_382{width:382px !important}
+
+.mg0{margin:0 !important}
+.mgT0{margin-top:0 !important}
+.mgB0{margin-bottom:0 !important}
+.mgR-1{margin-right:-1px !important}
+.mgT1{margin-top:1px !important}
+.mgT10{margin-top:10px !important}
+.mgT15{margin-top:15px !important}
+.mgB15{margin-bottom:15px !important}
+
+.pd0{padding:0 !important}
+.pdT0{padding-top:0 !important}
+.pdT5{padding-top:5px !important}
+.pdT10{padding-top:10px !important}
+.pdT20{padding-top:20px !important}
+.pdR2{padding-right:2px !important}
+.pdR10{padding-right:10px !important}
+.pdR12{padding-right:12px !important}
+.pdR20{padding-right:20px !important}
+.pdB5{padding-bottom:5px !important}
+.pdB40{padding-bottom:40px !important}
+
+
+/*버튼*/
+.btn_b{display:inline-block; padding:7px 15px 6px 15px; font-family:'돋움',Dotum; font-weight:bold; border:1px solid #9f9f9f; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px}
+.btn_b.orange{padding:7px 9px 6px 9px; color:#fff; border:1px solid #f79242; background:#f79242}
+.btn_b.y_green{color:#fff; border:1px solid #81bc3c; background:#81bc3c}
+
+.btn{display:inline-block; padding:6px 7px 5px 7px; font-family:'돋움',Dotum; border:1px solid #9f9f9f; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px}
+.btn.excel{padding-left:28px; background:url(/images/icon_excel.gif) no-repeat 8px 5px}
+.btn.print{padding-left:29px; background:url(/images/icon_print.png) no-repeat 8px 5px}
+.btn.change{padding-left:26px; background:url(/images/icon_change.png) no-repeat 8px 8px}
+.btn.minus{padding-left:24px; background:url(/images/icon_minus.png) no-repeat 8px 12px}
+.btn.plus{padding-left:24px; background:url(/images/icon_plus.png) no-repeat 8px 8px}
+.btn.save{padding-left:24px; background:url(/images/icon_save.png) no-repeat 8px 8px}
+
+.btn_s{display:inline-block; padding:5px 5px 4px 5px; font-family:'돋움',Dotum; border:1px solid #9f9f9f; -webkit-border-radius:2px; -moz-border-radius:2px; border-radius:2px}
+.btn_s.gray{color:#fff; border:1px solid #626c79; background:#788496}
+
+.buttonR_top{position:absolute; top:0; right:0}
+.buttonR_bottom{position:absolute; right:0; bottom:-5px}
+.buttonList{padding:10px 0}
+.buttonBox{padding:15px 0 0 0}
+.buttonList span, .buttonBox span,
+.buttonList a, .buttonBox a{display:inline-block; margin-left:1px; vertical-align:middle}
+.buttonBox:after{content:""; clear:both; display:block; visibility:hidden}
+
+
+/* 그리드 css 수정 
+.rMateH5__CheckBoxHeaderSelector{top:4px !important}
+.rMateH5__CheckBox{top:30%}
+.rMateH5__RadioButton{top:5px}
+.rMateH5__UITextField{margin-top:-2px !important}
+*/

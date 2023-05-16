@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF5580901Mapper">
+
+	<!-- 사용자 권한 메뉴 모두 조회 -->
+	<select id="epmf5580901_select1" parameterType="map" resultType="hashmap">
+		SELECT DISTINCT
+					C.MENU_CD
+					,C.LANG_SE_CD
+					,C.MENU_GRP_NM
+					,C.MENU_GRP_CD
+					,C.MENU_SET_CD
+					,C.MENU_NM
+					,C.MENU_URL
+					,C.MENU_ORD
+		FROM 
+			EPCN_ATH_GRP_USER A
+			INNER JOIN EPCN_ATH_GRP_MENU B
+			ON A.ATH_GRP_CD = B.ATH_GRP_CD
+				AND A.BIZRID = B.BIZRID
+				AND A.BIZRNO = B.BIZRNO
+			INNER JOIN EPCN_MENU C
+			ON B.MENU_CD = C.MENU_CD
+				AND B.LANG_SE_CD = C.LANG_SE_CD
+		WHERE 1=1
+			AND A.USER_ID = #{USER_ID}
+			AND C.USE_YN = 'Y'
+			AND C.MENU_LVL IN ('1', '2')
+			AND C.MENU_GRP_CD != '55'
+		ORDER BY C.MENU_GRP_CD, C.MENU_ORD
+	</select>
+	
+	<!-- 등록된 마이메뉴 조회 -->
+	<select id="epmf5580901_select2" parameterType="map" resultType="hashmap">
+		SELECT B.MENU_CD
+			,B.LANG_SE_CD
+			,B.MENU_GRP_NM
+			,B.MENU_GRP_CD
+			,B.MENU_SET_CD
+			,B.MENU_NM
+			,B.MENU_URL
+			,B.MENU_ORD
+		FROM 
+			EPCN_USER_MY_MENU A
+			INNER JOIN EPCN_MENU B
+			ON A.MENU_CD = B.MENU_CD
+				AND A.LANG_SE_CD = B.LANG_SE_CD
+		WHERE A.USER_ID = #{USER_ID}
+			AND B.USE_YN = 'Y'
+			AND B.MENU_LVL IN ('1', '2')
+		ORDER BY B.MENU_GRP_CD
+			,B.MENU_ORD
+	</select>
+	
+	<!-- 마이메뉴 저장 -->
+	<insert id="epmf5580901_insert"  parameterType="map">
+		INSERT INTO EPCN_USER_MY_MENU(
+			USER_ID			
+			,MENU_CD			
+			,LANG_SE_CD
+			,INDICT_ORD		
+			,RGST_PRSN_ID		
+			,RGST_DTTM
+		)VALUES(
+			#{USER_ID}			
+			,#{MENU_CD}			
+			,#{LANG_SE_CD}
+			,(SELECT NVL(MAX(INDICT_ORD), 0) + 1
+			    FROM EPCN_USER_MY_MENU 
+			  WHERE USER_ID = #{USER_ID} AND LANG_SE_CD = #{LANG_SE_CD}
+			  )
+			,#{RGST_PRSN_ID}
+			,SYSDATE
+		)
+	</insert>
+	
+	<!-- 마이메뉴 삭제 -->
+	<delete id="epmf5580901_delete"  parameterType="map">
+		DELETE FROM EPCN_USER_MY_MENU
+		WHERE USER_ID = #{USER_ID}
+			AND MENU_CD = #{MENU_CD}
+			AND LANG_SE_CD = #{LANG_SE_CD}
+	</delete>
+	
+</mapper>

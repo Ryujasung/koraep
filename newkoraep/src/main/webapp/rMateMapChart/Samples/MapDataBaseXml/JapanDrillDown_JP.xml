@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Region code="100" label="北海道" symbol="Hokkaido"/>
+	<Region code="200" label="東北" symbol="Tohoku" horizontalCenterGap="5">
+		<Province code="201" label="青森県" symbol="Aomori" verticalCenterGap="30"/>
+		<Province code="202" label="秋田県" symbol="Akita"/>
+		<Province code="203" label="岩手県" symbol="Iwate"/>
+		<Province code="204" label="山形県" symbol="Yamagata"/>
+		<Province code="205" label="宮城県" symbol="Miyagi" verticalCenterGap="-10"/>
+		<Province code="206" label="福島県" symbol="Fukushima"/>
+	</Region>
+	<Region code="300" label="関東" symbol="Kanto">
+		<Province code="301" label="栃木県" symbol="Tochigi"/>
+		<Province code="302" label="群馬県" symbol="Gunma"/>
+		<Province code="303" label="茨城県" symbol="Ibaraki"/>
+		<Province code="304" label="埼玉県" symbol="Saitama"/>
+		<Province code="305" label="東京都" symbol="Tokyo"/>
+		<Province code="306" label="神奈川県" symbol="Kanagawa"/>
+		<Province code="307" label="千葉県" symbol="Chiba"/>
+	</Region>
+	<Region code="400" label="中部" symbol="Chubu" verticalCenterGap="20">
+		<Province code="401" label="新潟県" symbol="Nigata" verticalCenterGap="40"/>
+		<Province code="402" label="石川県" symbol="Ishikawa" horizontalCenterGap="-15" verticalCenterGap="55"/>
+		<Province code="403" label="富山県" symbol="Toyama"/>
+		<Province code="404" label="長野県" symbol="Nagano"/>
+		<Province code="405" label="山梨県" symbol="Yamanashi"/>
+		<Province code="406" label="福井県" symbol="Fukui" horizontalCenterGap="10" verticalCenterGap="-10"/>
+		<Province code="407" label="岐阜県" symbol="Gifu"/>
+		<Province code="408" label="愛知県" symbol="Aichi"/>
+		<Province code="409" label="静岡県" symbol="Shizuoka" horizontalCenterGap="-15" verticalCenterGap="10"/>
+	</Region>
+	<Region code="500" label="関西" symbol="Kansai" verticalCenterGap="-10">
+		<Province code="501" label="兵庫県" symbol="Hyogo"/>
+		<Province code="502" label="京都府" symbol="Kyoto"/>
+		<Province code="503" label="滋賀県" symbol="Shiga"/>
+		<Province code="504" label="大阪府" symbol="Osaka" horizontalCenterGap="25"/>
+		<Province code="505" label="奈良県" symbol="Nara"/>
+		<Province code="506" label="三重県" symbol="Mie"/>
+		<Province code="507" label="和歌山県" symbol="Wakayama" horizontalCenterGap="-20"/>
+	</Region>
+	<Region code="600" label="中国" symbol="Chugoku" horizontalCenterGap="10" verticalCenterGap="-5">
+		<Province code="601" label="鳥取県" symbol="Tottori" verticalCenterGap="-15"/>
+		<Province code="602" label="島根県" symbol="Shimane" verticalCenterGap="-15"/>
+		<Province code="603" label="岡山県" symbol="Okayama"/>
+		<Province code="604" label="広島県" symbol="Hiroshima"/>
+		<Province code="605" label="山口県" symbol="Yamaguchi"/>
+	</Region>
+	<Region code="700" label="四国" symbol="Shikoku">
+		<Province code="701" label="香川県" symbol="Kagawa"/>
+		<Province code="702" label="徳島県" symbol="Tokushima"/>
+		<Province code="703" label="愛媛県" symbol="Ehime" verticalCenterGap="-20"/>
+		<Province code="704" label="高知県" symbol="Kochi" verticalCenterGap="-70"/>
+	</Region>
+	<Region code="800" label="九州" symbol="Kyushu" horizontalCenterGap="10" verticalCenterGap="-20">
+		<Province code="801" label="福岡県" symbol="Fukuoka"/>
+		<Province code="802" label="佐賀県" symbol="Saga"/>
+		<Province code="803" label="大分県" symbol="Oita" verticalCenterGap="10"/>
+		<Province code="804" label="長崎県" symbol="Nagasaki" horizontalCenterGap="40" verticalCenterGap="90"/>
+		<Province code="805" label="熊本県" symbol="Kumamoto" horizontalCenterGap="25" verticalCenterGap="-20"/>
+		<Province code="806" label="宮崎県" symbol="Miyazaki"/>
+		<Province code="807" label="鹿児島県" symbol="Kagoshima" horizontalCenterGap="-13" verticalCenterGap="-65"/>
+	</Region>
+	<Region code="900" label="沖縄県" symbol="Okinawa"/>
+	<Region code="10" label=" " symbol="Line">
+	</Region>
+</Map>

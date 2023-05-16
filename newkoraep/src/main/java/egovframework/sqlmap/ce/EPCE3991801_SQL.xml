@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3991801Mapper">
+
+	<!-- 메뉴 리스트 -->
+	<select id="epce3991801_select" resultType="hashmap">
+		<![CDATA[
+		  SELECT A.MENU_CD
+		  			 , LEVEL
+		  			 , A.MENU_NM AS MENU_NM
+		  			 , A.MENU_SET_CD||A.MENU_GRP_CD||'<br>/'||A.MENU_GRP_NM AS MENU_GRP_NM
+		  			 , A.LANG_SE_CD
+			         , #{ATH_GRP_CD} as ATH_GRP_CD
+			         , #{BIZRID} as BIZRID
+			         , #{BIZRNO} as BIZRNO
+			         , A.UP_MENU_CD
+		    FROM EPCN_MENU A
+			         ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') B
+			         ,(
+				           SELECT ATH_GRP_CD, BIZRID, BIZRNO, MENU_CD, LANG_SE_CD
+				             FROM EPCN_ATH_GRP_MENU 
+				            WHERE 1=1
+				              AND ATH_GRP_CD = #{ATH_GRP_CD}
+				              AND BIZRID = #{BIZRID}
+				              AND BIZRNO = #{BIZRNO}
+			          ) C
+			         ,EPCN_MENU D
+		   WHERE 1=1
+			     AND A.LANG_SE_CD = B.LANG_SE_CD
+			     AND A.MENU_CD = C.MENU_CD(+)
+			     AND A.LANG_SE_CD = C.LANG_SE_CD(+)
+			     AND A.USE_YN = 'Y' 
+			     AND D.USE_YN = 'Y'
+			     AND A.LANG_SE_CD = D.LANG_SE_CD
+			     AND A.UP_MENU_CD = D.MENU_CD
+		 START WITH A.MENU_CD = C.MENU_CD AND A.LANG_SE_CD = C.LANG_SE_CD CONNECT BY PRIOR A.MENU_CD = A.UP_MENU_CD
+		  ORDER SIBLINGS BY D.MENU_ORD, A.MENU_ORD
+		 ]]>
+	</select>
+	
+	<!-- 버튼 리스트 -->
+	<select id="epce3991801_select2" resultType="hashmap">
+		  SELECT A.MENU_CD, A.LANG_SE_CD, A.BTN_CD, A.BTN_NM
+		  			 ,A.BTN_SE_CD
+		  			 ,EPCN_ETC_NM(A.BTN_SE_CD, 'M004') AS BTN_SE_NM
+		  			 ,A.BTN_LC_SE
+		  			 ,EPCN_ETC_NM(A.BTN_LC_SE, 'M006') AS BTN_LC_SE_NM
+		  			 ,DECODE(B.ATH_GRP_CD, '', 'N', 'Y') as SELECTED
+		  			 ,D.MENU_NM
+		  			 ,D.MENU_GRP_NM
+		  			 ,<![CDATA[ '<a href="javascript:fn_btch_aplc();" style="text-decoration:underline">'||C.LANG_NM||'</a>' ]]>as BTCH_APLC
+		    FROM EPCN_BTN A
+		    		 ,(
+						  SELECT ATH_GRP_CD, BIZRID, BIZRNO, BTN_CD, MENU_CD, LANG_SE_CD
+				            FROM EPCN_ATH_GRP_BTN 
+				          WHERE 1=1
+				              AND ATH_GRP_CD = #{ATH_GRP_CD}
+				              AND BIZRID = #{BIZRID}
+				              AND BIZRNO = #{BIZRNO}
+				              AND MENU_CD = #{MENU_CD}
+				              AND LANG_SE_CD = #{LANG_SE_CD}
+		    		  ) B
+		    		 ,(
+						 SELECT LANG_NM
+						   FROM EPCN_LANG_INFO A
+						        	,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') B
+						 WHERE A.LANG_CD = 'btch_aplc'
+						     AND A.LANG_SE_CD = B.LANG_SE_CD
+		    		 ) C
+		    		 ,EPCN_MENU D
+		  WHERE 1=1
+		      AND A.MENU_CD = #{MENU_CD}
+		      AND A.LANG_SE_CD = #{LANG_SE_CD}
+		      AND A.BTN_CD = B.BTN_CD(+)
+		      AND A.MENU_CD = B.MENU_CD(+)
+		      AND A.LANG_SE_CD = B.LANG_SE_CD(+) 
+		      AND NVL(A.DEL_YN, 'N') = 'N'
+		      AND A.MENU_CD = D.MENU_CD
+		      AND A.LANG_SE_CD = D.LANG_SE_cD
+		  ORDER BY A.BTN_LC_SE, A.SEL_ORD
+	</select>
+	
+	<!-- 권한그룹 삭제 -->
+	<delete id="epce3991801_delete"  parameterType="hashmap">
+		DELETE 
+		   FROM EPCN_ATH_GRP_BTN 
+		 WHERE 1=1
+		     AND ATH_GRP_CD = #{ATH_GRP_CD}
+		     AND BIZRID = #{BIZRID}
+		     AND BIZRNO = #{BIZRNO}
+		     AND MENU_CD = #{MENU_CD}
+		     AND LANG_SE_CD = #{LANG_SE_CD}
+	</delete>
+	
+	<!-- 권한그룹 등록 -->
+	<update id="epce3991801_insert"  parameterType="hashmap">
+		INSERT INTO EPCN_ATH_GRP_BTN
+	    (
+		    ATH_GRP_CD, 
+	        BIZRID, 
+	        BIZRNO, 
+	        BTN_CD, 
+	        MENU_CD, 
+	        LANG_SE_CD, 
+	        REG_PRSN_ID, 
+	        REG_DTTM
+	    )
+	    VALUES
+	    (
+	    	TRIM(#{ATH_GRP_CD}), 
+		    #{BIZRID}, 
+		    #{BIZRNO}, 
+       		#{BTN_CD},
+		    #{MENU_CD}, 
+		    #{LANG_SE_CD}, 
+		    #{S_USER_ID}, 
+		    SYSDATE
+	    )
+	</update>
+	
+	<!-- 권한 리스트 -->
+	<select id="epce3991888_select" resultType="hashmap">
+		SELECT  A.ATH_GRP_CD, A.BIZRID, A.BIZRNO
+					,C.BIZRNM, A.STD_YN, A.ATH_GRP_NM
+					,A.BIZR_TP_CD
+					,EPCN_ETC_NM(A.BIZR_TP_CD, 'B001') as BIZR_TP_NM
+					,A.MENU_SET_CD
+					,EPCN_ETC_NM(A.MENU_SET_CD, 'M001') as MENU_SET_NM
+			        ,B.BTN_CD
+			        ,DECODE(B.BTN_CD, '', 'N', 'Y') AS SELECTED
+		   FROM EPCN_ATH_GRP_INFO A
+			        ,EPCN_ATH_GRP_BTN B
+			        ,EPCN_BIZR_INFO C
+		WHERE 1=1
+		    AND A.BIZRID = C.BIZRID
+		    AND A.BIZRNO = C.BIZRNO
+		    AND A.ATH_GRP_CD = B.ATH_GRP_CD(+)
+		    AND A.BIZRID = B.BIZRID(+)
+		    AND A.BIZRNO = B.BIZRNO(+)
+		    AND B.BTN_CD(+) = #{BTN_CD}
+		    AND B.MENU_CD(+) = #{MENU_CD}
+		    AND B.LANG_SE_CD(+) = #{LANG_SE_CD}
+		    AND EXISTS (
+		                SELECT 'X'
+		                  FROM EPCN_ATH_GRP_MENU EA
+			                       ,EPCN_MENU EB
+			                       ,(SELECT * FROM EPCN_MENU WHERE MENU_CD = #{MENU_CD} AND LANG_SE_CD = #{LANG_SE_CD}) EC
+		               WHERE EA.MENU_CD = EB.MENU_CD
+		                   AND EA.LANG_SE_CD = EB.LANG_SE_CD
+		                   AND EB.MENU_CD = DECODE(EC.MENU_LVL, '2', EC.MENU_CD, EC.UP_MENU_CD)
+		                   AND EB.LANG_SE_CD = EC.LANG_SE_CD
+		                   AND EA.ATH_GRP_CD = A.ATH_GRP_CD
+		                   AND EA.BIZRID = A.BIZRID
+		                   AND EA.BIZRNO = A.BIZRNO
+		               )
+		    AND A.USE_YN = 'Y'
+		 ORDER BY ATH_GRP_NM
+	</select>
+
+	<!-- 권한그룹 삭제 -->
+	<delete id="epce3991888_delete"  parameterType="hashmap">
+		DELETE 
+		   FROM EPCN_ATH_GRP_BTN 
+		 WHERE 1=1
+		     AND ATH_GRP_CD = #{ATH_GRP_CD}
+		     AND BIZRID = #{BIZRID}
+		     AND BIZRNO = #{BIZRNO}
+		     AND MENU_CD = #{MENU_CD}
+		     AND LANG_SE_CD = #{LANG_SE_CD}
+		     AND BTN_CD = #{BTN_CD}
+	</delete>
+	
+	<!-- 권한그룹 등록 -->
+	<update id="epce3991888_insert"  parameterType="hashmap">
+		MERGE INTO EPCN_ATH_GRP_BTN 
+		USING DUAL 
+		ON (ATH_GRP_CD = #{ATH_GRP_CD} AND BIZRID = #{BIZRID} AND BIZRNO = #{BIZRNO}
+				AND BTN_CD = #{BTN_CD} AND MENU_CD = #{MENU_CD} AND LANG_SE_CD = #{LANG_SE_CD}
+			)
+		WHEN MATCHED THEN
+			UPDATE SET
+				UPD_PRSN_ID = #{S_USER_ID}
+				,UPD_DTTM = SYSDATE
+		WHEN NOT MATCHED THEN
+			INSERT(
+				ATH_GRP_CD, 
+		        BIZRID, 
+		        BIZRNO, 
+		        BTN_CD, 
+		        MENU_CD, 
+		        LANG_SE_CD, 
+		        REG_PRSN_ID, 
+		        REG_DTTM
+			)
+			VALUES(
+				#{ATH_GRP_CD}, 
+			    #{BIZRID}, 
+			    #{BIZRNO}, 
+	       		#{BTN_CD},
+			    #{MENU_CD}, 
+			    #{LANG_SE_CD}, 
+			    #{S_USER_ID}, 
+			    SYSDATE
+			)
+	</update>
+
+</mapper>

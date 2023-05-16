@@ -1,0 +1,102 @@
+@CHARSET "UTF-8";
+
+body {
+	margin: 0 auto;
+	font-family: 'Malgun Gothic', Dotum,Verdana,AppleGothic,Sans-serif;
+	font-size: 12px;
+	color: #666666;
+	line-height: 1.5;
+	letter-spacing: -0.5px;
+}
+
+#installVP_wrap {
+    text-align: center;
+}
+
+#installVP_wrap #container {
+    width: 320px;
+    margin: 0 auto;
+    margin-top: 6px;
+}
+
+
+#ie_progress {
+	margin-top: 30px;
+}
+
+
+#downVP_ie #title, #downVP_multi #title {
+	font-size: 15px;
+	font-weight: bold;
+	color: #f36f21;
+	text-align: left;
+	margin-left: 40px;
+}
+
+#downVP_ie #msg, #downVP_multi #msg, #downVP_msg {
+	*margin: -10px 0; /*ie6,7 호환용*/
+}
+
+#downVP_ie #msg li, #downVP_multi #msg li, #downVP_msg li {
+	width: 270px;
+	text-align: left;
+	letter-spacing: -1px;
+	margin-bottom: 1px;
+	margin-left: -7px;
+	*margin-left: -37px; /*ie6,7 호환용*/
+}
+
+#downVP_ie #msg li, #downVP_multi #msg li{
+	list-style: none;
+}
+
+
+
+#downVP_btn {
+	text-align: center;
+	margin: 12px 0 12px 0;
+	*margin-top: 12px; /*ie6,7 호환용*/
+}
+
+#downVP_btn button {
+	width: 100px;
+	height: 40px;
+	font-family: 'Malgun Gothic', Dotum,Verdana,AppleGothic,Sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #ffffff;
+	background-color: #f36f21;
+	border: 1px solid #ffffff;
+	cursor: pointer;
+	margin: 0 5px;
+}
+#inn {
+	width : 290px;
+}
+label {
+	display : inline;
+	width: 160px;
+	height : 40px;
+	float: left;
+	line-height: 40px;
+	text-align: right;	
+}
+.instxt {
+	width: 100px;
+	height: 40px;
+	font-family: 'Malgun Gothic', Dotum,Verdana,AppleGothic,Sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 40px;
+}
+
+a {
+	font-weight: bold;
+	color: #f36f21;
+	text-decoration: none;
+}
+a:hover {
+	color: #e99d6f;
+	text-decoration: none;
+}
+

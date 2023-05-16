@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Seat code="A01" label="A01" symbol="A01"/>
+	<Seat code="A02" label="A02" symbol="A02"/>
+	<Seat code="A06" label="A06" symbol="A06"/>
+	<Seat code="A07" label="A07" symbol="A07"/>
+	<Seat code="A08" label="A08" symbol="A08"/>
+	<Seat code="A09" label="A09" symbol="A09"/>
+	<Seat code="A13" label="A13" symbol="A13"/>
+	<Seat code="A14" label="A14" symbol="A14"/>
+	<Seat code="A19" label="A19" symbol="A19"/>
+	<Seat code="A20" label="A20" symbol="A20"/>
+	<Seat code="A21" label="A21" symbol="A21"/>
+	<Seat code="A22" label="A22" symbol="A22"/>
+	<Seat code="A23" label="A23" symbol="A23"/>
+	<Seat code="A24" label="A24" symbol="A24"/>
+	<Seat code="A25" label="A25" symbol="A25"/>
+	<Seat code="A26" label="A26" symbol="A26"/>
+	<Seat code="A27" label="A27" symbol="A27"/>
+	<Seat code="A28" label="A28" symbol="A28"/>
+	<Seat code="A29" label="A29" symbol="A29"/>
+	<Seat code="A30" label="A30" symbol="A30"/>
+	<Seat code="A31" label="A31" symbol="A31"/>
+	<Seat code="A32" label="A32" symbol="A32"/>
+	<Seat code="A33" label="A33" symbol="A33"/>
+	<Seat code="A34" label="A34" symbol="A34"/>
+	<Seat code="A35" label="A35" symbol="A35"/>
+	<Seat code="A36" label="A36" symbol="A36"/>
+	<Seat code="A37" label="A37" symbol="A37"/>
+	<Seat code="A38" label="A38" symbol="A38"/>
+	<Seat code="A39" label="A39" symbol="A39"/>
+	<Seat code="B06" label="B06" symbol="B06"/>
+	<Seat code="B07" label="B07" symbol="B07"/>
+	<Seat code="B08" label="B08" symbol="B08"/>
+	<Seat code="B09" label="B09" symbol="B09"/>
+	<Seat code="B13" label="B13" symbol="B13"/>
+	<Seat code="B14" label="B14" symbol="B14"/>
+	<Seat code="B19" label="B19" symbol="B19"/>
+	<Seat code="B20" label="B20" symbol="B20"/>
+	<Seat code="B21" label="B21" symbol="B21"/>
+	<Seat code="B22" label="B22" symbol="B22"/>
+	<Seat code="B23" label="B23" symbol="B23"/>
+	<Seat code="B24" label="B24" symbol="B24"/>
+	<Seat code="B25" label="B25" symbol="B25"/>
+	<Seat code="B26" label="B26" symbol="B26"/>
+	<Seat code="B27" label="B27" symbol="B27"/>
+	<Seat code="B28" label="B28" symbol="B28"/>
+	<Seat code="B29" label="B29" symbol="B29"/>
+	<Seat code="B30" label="B30" symbol="B30"/>
+	<Seat code="B31" label="B31" symbol="B31"/>
+	<Seat code="B32" label="B32" symbol="B32"/>
+	<Seat code="B33" label="B33" symbol="B33"/>
+	<Seat code="B34" label="B34" symbol="B34"/>
+	<Seat code="B35" label="B35" symbol="B35"/>
+	<Seat code="B36" label="B36" symbol="B36"/>
+	<Seat code="B37" label="B37" symbol="B37"/>
+	<Seat code="B38" label="B38" symbol="B38"/>
+	<Seat code="B39" label="B39" symbol="B39"/>
+	<Seat code="C01" label="C01" symbol="C01"/>
+	<Seat code="C02" label="C02" symbol="C02"/>
+	<Seat code="C06" label="C06" symbol="C06"/>
+	<Seat code="C07" label="C07" symbol="C07"/>
+	<Seat code="C08" label="C08" symbol="C08"/>
+	<Seat code="C09" label="C09" symbol="C09"/>
+	<Seat code="C19" label="C19" symbol="C19"/>
+	<Seat code="C20" label="C20" symbol="C20"/>
+	<Seat code="C21" label="C21" symbol="C21"/>
+	<Seat code="C22" label="C22" symbol="C22"/>
+	<Seat code="C23" label="C23" symbol="C23"/>
+	<Seat code="C24" label="C24" symbol="C24"/>
+	<Seat code="C25" label="C25" symbol="C25"/>
+	<Seat code="C26" label="C26" symbol="C26"/>
+	<Seat code="C27" label="C27" symbol="C27"/>
+	<Seat code="C28" label="C28" symbol="C28"/>
+	<Seat code="C29" label="C29" symbol="C29"/>
+	<Seat code="C30" label="C30" symbol="C30"/>
+	<Seat code="C31" label="C31" symbol="C31"/>
+	<Seat code="C32" label="C32" symbol="C32"/>
+	<Seat code="C33" label="C33" symbol="C33"/>
+	<Seat code="C34" label="C34" symbol="C34"/>
+	<Seat code="C35" label="C35" symbol="C35"/>
+	<Seat code="C36" label="C36" symbol="C36"/>
+	<Seat code="C37" label="C37" symbol="C37"/>
+	<Seat code="C38" label="C38" symbol="C38"/>
+	<Seat code="C39" label="C39" symbol="C39"/>
+	<Seat code="E19" label="E19" symbol="E19"/>
+	<Seat code="E20" label="E20" symbol="E20"/>
+	<Seat code="E21" label="E21" symbol="E21"/>
+	<Seat code="E22" label="E22" symbol="E22"/>
+	<Seat code="E23" label="E23" symbol="E23"/>
+	<Seat code="E24" label="E24" symbol="E24"/>
+	<Seat code="E25" label="E25" symbol="E25"/>
+	<Seat code="E26" label="E26" symbol="E26"/>
+	<Seat code="E27" label="E27" symbol="E27"/>
+	<Seat code="E28" label="E28" symbol="E28"/>
+	<Seat code="E29" label="E29" symbol="E29"/>
+	<Seat code="E30" label="E30" symbol="E30"/>
+	<Seat code="E31" label="E31" symbol="E31"/>
+	<Seat code="E32" label="E32" symbol="E32"/>
+	<Seat code="E33" label="E33" symbol="E33"/>
+	<Seat code="E34" label="E34" symbol="E34"/>
+	<Seat code="E35" label="E35" symbol="E35"/>
+	<Seat code="E36" label="E36" symbol="E36"/>
+	<Seat code="E37" label="E37" symbol="E37"/>
+	<Seat code="E38" label="E38" symbol="E38"/>
+	<Seat code="E39" label="E39" symbol="E39"/>
+	<Seat code="H06" label="H06" symbol="H06"/>
+	<Seat code="H07" label="H07" symbol="H07"/>
+	<Seat code="H08" label="H08" symbol="H08"/>
+	<Seat code="H09" label="H09" symbol="H09"/>
+	<Seat code="H19" label="H19" symbol="H19"/>
+	<Seat code="H20" label="H20" symbol="H20"/>
+	<Seat code="H21" label="H21" symbol="H21"/>
+	<Seat code="H22" label="H22" symbol="H22"/>
+	<Seat code="H23" label="H23" symbol="H23"/>
+	<Seat code="H24" label="H24" symbol="H24"/>
+	<Seat code="H25" label="H25" symbol="H25"/>
+	<Seat code="H26" label="H26" symbol="H26"/>
+	<Seat code="H27" label="H27" symbol="H27"/>
+	<Seat code="H28" label="H28" symbol="H28"/>
+	<Seat code="H29" label="H29" symbol="H29"/>
+	<Seat code="H30" label="H30" symbol="H30"/>
+	<Seat code="H31" label="H31" symbol="H31"/>
+	<Seat code="H32" label="H32" symbol="H32"/>
+	<Seat code="H33" label="H33" symbol="H33"/>
+	<Seat code="H34" label="H34" symbol="H34"/>
+	<Seat code="H35" label="H35" symbol="H35"/>
+	<Seat code="H36" label="H36" symbol="H36"/>
+	<Seat code="H37" label="H37" symbol="H37"/>
+	<Seat code="H38" label="H38" symbol="H38"/>
+	<Seat code="H39" label="H39" symbol="H39"/>
+	<Seat code="J06" label="J06" symbol="J06"/>
+	<Seat code="J07" label="J07" symbol="J07"/>
+	<Seat code="J08" label="J08" symbol="J08"/>
+	<Seat code="J09" label="J09" symbol="J09"/>
+	<Seat code="J10" label="J10" symbol="J10"/>
+	<Seat code="J19" label="J19" symbol="J19"/>
+	<Seat code="J20" label="J20" symbol="J20"/>
+	<Seat code="J21" label="J21" symbol="J21"/>
+	<Seat code="J22" label="J22" symbol="J22"/>
+	<Seat code="J23" label="J23" symbol="J23"/>
+	<Seat code="J24" label="J24" symbol="J24"/>
+	<Seat code="J25" label="J25" symbol="J25"/>
+	<Seat code="J26" label="J26" symbol="J26"/>
+	<Seat code="J27" label="J27" symbol="J27"/>
+	<Seat code="J28" label="J28" symbol="J28"/>
+	<Seat code="J29" label="J29" symbol="J29"/>
+	<Seat code="J30" label="J30" symbol="J30"/>
+	<Seat code="J31" label="J31" symbol="J31"/>
+	<Seat code="J32" label="J32" symbol="J32"/>
+	<Seat code="J33" label="J33" symbol="J33"/>
+	<Seat code="J34" label="J34" symbol="J34"/>
+	<Seat code="J35" label="J35" symbol="J35"/>
+	<Seat code="J36" label="J36" symbol="J36"/>
+	<Seat code="J37" label="J37" symbol="J37"/>
+	<Seat code="J38" label="J38" symbol="J38"/>
+	<Seat code="J39" label="J39" symbol="J39"/>
+	<Seat code="K01" label="K01" symbol="K01"/>
+	<Seat code="K02" label="K02" symbol="K02"/>
+	<Seat code="K06" label="K06" symbol="K06"/>
+	<Seat code="K07" label="K07" symbol="K07"/>
+	<Seat code="K08" label="K08" symbol="K08"/>
+	<Seat code="K09" label="K09" symbol="K09"/>
+	<Seat code="K10" label="K10" symbol="K10"/>
+	<Seat code="K19" label="K19" symbol="K19"/>
+	<Seat code="K20" label="K20" symbol="K20"/>
+	<Seat code="K21" label="K21" symbol="K21"/>
+	<Seat code="K22" label="K22" symbol="K22"/>
+	<Seat code="K23" label="K23" symbol="K23"/>
+	<Seat code="K24" label="K24" symbol="K24"/>
+	<Seat code="K25" label="K25" symbol="K25"/>
+	<Seat code="K26" label="K26" symbol="K26"/>
+	<Seat code="K27" label="K27" symbol="K27"/>
+	<Seat code="K28" label="K28" symbol="K28"/>
+	<Seat code="K29" label="K29" symbol="K29"/>
+	<Seat code="K30" label="K30" symbol="K30"/>
+	<Seat code="K31" label="K31" symbol="K31"/>
+	<Seat code="K32" label="K32" symbol="K32"/>
+	<Seat code="K33" label="K33" symbol="K33"/>
+	<Seat code="K34" label="K34" symbol="K34"/>
+	<Seat code="K35" label="K35" symbol="K35"/>
+	<Seat code="K36" label="K36" symbol="K36"/>
+	<Seat code="K37" label="K37" symbol="K37"/>
+	<Seat code="K38" label="K38" symbol="K38"/>
+	<Seat code="K39" label="K39" symbol="K39"/>
+	<Seat code="seatIndex" label="Seat Index" symbol="seat_index" />
+	<Seat code="seatInfo" label="Seat Info" symbol="seat_info" />
+	<Galley code="g01" label="Galley1" symbol="galley1" />
+	<Galley code="g02" label="Galley2" symbol="galley2" />
+	<Galley code="g03" label="Galley3" symbol="galley3" />
+	<Galley code="g04" label="Galley4" symbol="galley4" />
+	<Galley code="g05" label="Galley5" symbol="galley5" />
+	<Galley code="g06" label="Galley6" symbol="galley6" />
+	<Galley code="g07" label="Galley7" symbol="galley7" />
+	<Lavatory code="lv01" label="Lavatory1" symbol="lavatory1" />
+	<Lavatory code="lv02" label="Lavatory2" symbol="lavatory2" />
+	<Lavatory code="lv03" label="Lavatory3" symbol="lavatory3" />
+	<Lavatory code="lv04" label="Lavatory4" symbol="lavatory4" />
+	<Lavatory code="lv05" label="Lavatory5" symbol="lavatory5" />
+	<Lavatory code="lv06" label="Lavatory6" symbol="lavatory6" />
+	<Lavatory code="lv07" label="Lavatory7" symbol="lavatory7" />
+	<Closet code="cs1" label="Closet1" symbol="closet1"/>
+	<Closet code="cs2" label="Closet2" symbol="closet2"/>
+	<Closet code="cs3" label="Closet3" symbol="closet3"/>
+	<Exit_row code="ex" label="Exit" symbol="exit_row" />
+	<Exitdoor code="ed" label="Exit Door" symbol="exit_doors" />
+	<body code="body" label="Body" symbol="body" />
+</Map>

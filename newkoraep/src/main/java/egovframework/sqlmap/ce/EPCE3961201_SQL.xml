@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 실행이력조회 -->
+
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3961201Mapper">
+
+	<!--메뉴명조회 -->
+	<select id="epce3961201_select" parameterType="map" resultType="hashmap">
+		SELECT
+					 A.MENU_NM
+					,A.MENU_CD
+		FROM EPCN_MENU A
+		 JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+		 ON A.LANG_SE_CD = C.LANG_SE_CD
+		
+		WHERE 1=1
+		<if test="MENU_GRP_CD != ''">
+		AND	MENU_GRP_CD = #{MENU_GRP_CD}
+		AND  MENU_LVL  IN ('2', '3')
+		</if>
+		<if test="MENU_SET_CD != '' and MENU_SET_CD !=null">
+		AND	MENU_SET_CD = #{MENU_SET_CD}
+		</if>
+		order by A.MENU_NM
+	</select>
+
+    <!--버튼명조회 -->
+   <select id="epce3961201_select2" parameterType="map" resultType="hashmap">
+	SELECT
+				  A.BTN_CD
+				, A.BTN_NM
+				, A.BTN_SE_CD
+				, A.BTN_LC_SE
+
+	FROM EPCN_BTN A
+	 JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') B
+	 ON A.LANG_SE_CD = B.LANG_SE_CD
+	 JOIN EPCN_MENU C       
+	 ON  A.MENU_CD = C.MENU_CD
+	   
+	WHERE 1=1
+	AND    C.MENU_GRP_CD = #{MENU_GRP_CD}
+   <if test="MENU_CD != ''">
+	AND   C.MENU_CD = #{MENU_CD}
+   </if>
+   <if test="MENU_SET_CD != '' and MENU_SET_CD !=null">
+		AND	MENU_SET_CD = #{MENU_SET_CD}
+	</if>
+   </select>
+
+  <!--실행이력조회  -->  
+  <select id="epce3961201_select3" parameterType="map" resultType="hashmap">
+  
+  	<if test='excelYn == null or excelYn == "" '>
+   	SELECT 
+  				PNO 
+		 			, USER_ID
+					, ACSS_IP	
+					, USER_NM
+					, BIZRNM
+					,ETC_CD_NM
+					,MENU_GRP_NM
+					, MENU_NM	
+					, BTN_NM	
+				    , REG_TIME
+				    ,BRCH_NM
+				    ,REG_DTTM
+				   , PARAM
+	FROM(			    
+		
+	</if>
+			     <![CDATA[
+			     SELECT
+			     		ROW_NUMBER()OVER(ORDER BY A.REG_TIME DESC ) AS PNO
+			     	  ,	 USER_ID
+						, ACSS_IP	
+						, USER_NM
+						, BIZRNM
+						, DECODE(GBN, 'A', EPCN_ETC_NM(A.MENU_GRP_CD, 'M002'), MENU_GRP_CD)  as ETC_CD_NM
+					 	, DECODE(GBN, 'A', DECODE(MENU_LVL ,'2', MENU_NM , (SELECT MENU_NM FROM EPCN_MENU B WHERE A.UP_MENU_CD = B.MENU_CD AND B.LANG_SE_CD = A.LANG_SE_CD) ), UP_MENU_CD)  as MENU_GRP_NM
+						, MENU_NM	
+						, BTN_NM	
+					    , REG_TIME
+						, EPCN_BRCH_NM(BRCH_ID, BRCH_NO, BIZRID, BIZRNO) as BRCH_NM
+						, REG_DTTM
+	                    , CASE WHEN MENU_CD LIKE '%0140142%' AND BTN_CD = 'btn_reg' THEN '' ELSE PARAM END PARAM
+			     FROM (
+					  SELECT 'A' AS GBN 
+							, A.USER_ID
+							, A.ACSS_IP	
+							, A.MENU_GRP_CD
+							, B.USER_NM
+							, B.BRCH_ID, B.BRCH_NO, B.BIZRID, B.BIZRNO
+							, C.BIZRNM
+						 	, E.MENU_LVL
+						 	, E.UP_MENU_CD
+							, E.MENU_NM	
+							, F.BTN_NM	
+						    , TO_CHAR(TO_DATE(SUBSTR(A.REG_DT||''||A.REG_TM,1,14), 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS REG_TIME
+							, A.REG_DTTM
+		                    , A.MENU_CD
+		                    , A.BTN_CD
+							, '<a href="javascript:link();" class="gridLink">'||'확인'||'</a>' AS PARAM
+							,L.LANG_SE_CD
+					  ]]>
+				   FROM 
+						 	EPCN_EXEC_HIST  A 
+						   ,EPCN_USER_INFO B    
+						   ,EPCN_BIZR_INFO  C  
+						   ,EPCN_MENU E 
+						   ,EPCN_BTN  F
+						   ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') L
+				   WHERE 1=1
+					 AND A.USER_ID = B.USER_ID
+				     AND B.BIZRID = C.BIZRID
+					 AND B.BIZRNO = C.BIZRNO
+					 AND A.MENU_CD = E.MENU_CD
+					 AND A.BTN_CD = F.BTN_CD
+					 AND A.MENU_CD = F.MENU_CD
+					 AND E.LANG_SE_CD = L.LANG_SE_CD
+					 AND F.LANG_SE_CD = L.LANG_SE_CD
+					 AND A.REG_DT||SUBSTR(A.REG_TM,1,2) BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}  
+			
+				    <if test="MENU_GRP_CD != ''  "    >
+					   AND A.MENU_GRP_CD = #{MENU_GRP_CD}   
+				    </if>
+				    <if test="BTN_CD != ''">		
+					   AND A.BTN_CD = #{BTN_CD}  
+					</if>
+			        <if test="USER_ID != ''">
+					   AND A.USER_ID LIKE '%' || #{USER_ID} || '%'
+					</if>
+					<if test="MENU_CD != ''">
+					   AND E.MENU_CD = #{MENU_CD}
+					</if>
+					UNION ALL
+         
+          			<![CDATA[
+			        SELECT 'B' AS GBN
+			              , USER_ID
+			              , ACSS_IP
+			              , DECODE(SYS_SE, 'A', MENU_GRP_CD_NM, LK_API_CD_NM)
+			              , USER_NM
+			              , '', '', '', ''
+			              , BIZR_NM
+			              , ''
+			              , MENU_GRP_CD_NM
+			              , MENU_CD_NM
+			              , HIST_PRCS_SE_NM
+			              , TO_CHAR(TO_DATE(SUBSTR(A.RGST_DT||''||A.RGST_TM,1,14), 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS REG_TIME
+			              , RGST_DTTM
+			              , ''
+			              , ''
+			              , '<a href="javascript:link();" class="gridLink">'||'확인'||'</a>' AS PARAM
+			              , ''
+			         ]]>
+			         FROM EPCN_EXEC_HIST_BF A
+				     WHERE 1=1
+				     AND A.RGST_DT||SUBSTR(A.RGST_TM,1,2) BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}  
+				  ) A
+				 ORDER BY A.REG_TIME DESC
+	  
+	  <if test='excelYn == null or excelYn == "" '>
+            ) A
+         WHERE 1=1
+             AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+      </if>
+	  
+	  
+  </select>
+
+  <!--실행이력조회  -->  
+  <select id="epce3961201_select3_cnt" parameterType="map" resultType="int">
+	  SELECT SUM(CNT)
+	  		FROM (
+		  		SELECT COUNT(1) CNT
+				   FROM 
+						 	EPCN_EXEC_HIST  A 
+						   ,EPCN_USER_INFO B    
+						   ,EPCN_BIZR_INFO  C  
+						   ,EPCN_MENU E 
+						   ,EPCN_BTN  F
+						   ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') L
+				   WHERE 1=1
+					 AND A.USER_ID = B.USER_ID
+				     AND B.BIZRID = C.BIZRID
+					 AND B.BIZRNO = C.BIZRNO
+					 AND A.MENU_CD = E.MENU_CD
+					 AND A.BTN_CD = F.BTN_CD
+					 AND A.MENU_CD = F.MENU_CD
+					 AND E.LANG_SE_CD = L.LANG_SE_CD
+					 AND F.LANG_SE_CD = L.LANG_SE_CD
+					 AND A.REG_DT||SUBSTR(A.REG_TM,1,2) BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM} 
+			
+			    <if test="MENU_GRP_CD != ''  "    >
+				   AND A.MENU_GRP_CD = #{MENU_GRP_CD}   
+			    </if>
+			    <if test="BTN_CD != ''">		
+				   AND A.BTN_CD = #{BTN_CD}  
+				</if>
+		        <if test="USER_ID != ''">
+				   AND A.USER_ID LIKE '%' || #{USER_ID} || '%'
+				</if>
+				<if test="MENU_CD != ''">
+				   AND E.MENU_CD = #{MENU_CD}
+				</if>
+					UNION ALL
+	         
+			        SELECT COUNT(1)
+			         FROM EPCN_EXEC_HIST_BF A
+				     WHERE 1=1
+				     AND A.RGST_DT||SUBSTR(A.RGST_TM,1,2) BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}  
+			)
+
+
+  </select>
+
+  <!--실행이력조회 상세조회  -->  
+  <select id="epce3961201_select4" parameterType="map" resultType="String">
+
+	    SELECT PRAM 
+	      FROM EPCN_EXEC_HIST
+	    WHERE 1=1
+	    	AND REG_DTTM =#{REG_DTTM}
+	    	
+	    UNION ALL
+	    
+	    SELECT CALL_URL
+	      FROM EPCN_EXEC_HIST_BF
+	    WHERE 1=1
+	    	AND RGST_DTTM =#{REG_DTTM}	    	
+
+  </select>
+  
+  
+   <select id="epce3961201_excel" parameterType="map" resultType="hashmap">
+  
+			     <![CDATA[
+			     SELECT
+			     		ROW_NUMBER()OVER(ORDER BY A.REG_TIME DESC ) AS PNO
+			     	  ,	 USER_ID
+						, ACSS_IP	
+						, USER_NM
+						, BIZRNM
+						, DECODE(GBN, 'A', EPCN_ETC_NM(A.MENU_GRP_CD, 'M002'), MENU_GRP_CD)  as ETC_CD_NM
+					 	, DECODE(GBN, 'A', DECODE(MENU_LVL ,'2', MENU_NM , (SELECT MENU_NM FROM EPCN_MENU B WHERE A.UP_MENU_CD = B.MENU_CD AND B.LANG_SE_CD = A.LANG_SE_CD) ), UP_MENU_CD)  as MENU_GRP_NM
+						, MENU_NM	
+						, BTN_NM	
+					    , REG_TIME
+						, EPCN_BRCH_NM(BRCH_ID, BRCH_NO, BIZRID, BIZRNO) as BRCH_NM
+					
+			     FROM (
+					  SELECT 'A' AS GBN 
+							, A.USER_ID
+							, A.ACSS_IP	
+							, A.MENU_GRP_CD
+							, B.USER_NM
+							, B.BRCH_ID, B.BRCH_NO, B.BIZRID, B.BIZRNO
+							, C.BIZRNM
+						 	, E.MENU_LVL
+						 	, E.UP_MENU_CD
+							, E.MENU_NM	
+							, F.BTN_NM	
+						    , TO_CHAR(TO_DATE(SUBSTR(A.REG_DT||''||A.REG_TM,1,14), 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS REG_TIME
+							, A.REG_DTTM
+		                    , A.MENU_CD
+		                    , A.BTN_CD
+							, '<a href="javascript:link();" class="gridLink">'||'확인'||'</a>' AS PARAM
+							,L.LANG_SE_CD
+					  ]]>
+				   FROM 
+						 	EPCN_EXEC_HIST  A 
+						   ,EPCN_USER_INFO B    
+						   ,EPCN_BIZR_INFO  C  
+						   ,EPCN_MENU E 
+						   ,EPCN_BTN  F
+						   ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') L
+				   WHERE 1=1
+					 AND A.USER_ID = B.USER_ID
+				     AND B.BIZRID = C.BIZRID
+					 AND B.BIZRNO = C.BIZRNO
+					 AND A.MENU_CD = E.MENU_CD
+					 AND A.BTN_CD = F.BTN_CD
+					 AND A.MENU_CD = F.MENU_CD
+					 AND E.LANG_SE_CD = L.LANG_SE_CD
+					 AND F.LANG_SE_CD = L.LANG_SE_CD
+					 AND A.REG_DT||SUBSTR(A.REG_TM,1,2) BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}  
+			
+				    <if test="MENU_GRP_CD != ''  "    >
+					   AND A.MENU_GRP_CD = #{MENU_GRP_CD}   
+				    </if>
+				    <if test="BTN_CD != ''">		
+					   AND A.BTN_CD = #{BTN_CD}  
+					</if>
+			        <if test="USER_ID != ''">
+					   AND A.USER_ID LIKE '%' || #{USER_ID} || '%'
+					</if>
+					<if test="MENU_CD != ''">
+					   AND E.MENU_CD = #{MENU_CD}
+					</if>
+					UNION ALL
+         
+          			<![CDATA[
+			        SELECT 'B' AS GBN
+			              , USER_ID
+			              , ACSS_IP
+			              , DECODE(SYS_SE, 'A', MENU_GRP_CD_NM, LK_API_CD_NM)
+			              , USER_NM
+			              , '', '', '', ''
+			              , BIZR_NM
+			              , ''
+			              , MENU_GRP_CD_NM
+			              , MENU_CD_NM
+			              , HIST_PRCS_SE_NM
+			              , TO_CHAR(TO_DATE(SUBSTR(A.RGST_DT||''||A.RGST_TM,1,14), 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS REG_TIME
+			              , RGST_DTTM
+			              , ''
+			              , ''
+			              , '<a href="javascript:link();" class="gridLink">'||'확인'||'</a>' AS PARAM
+			              , ''
+			         ]]>
+			         FROM EPCN_EXEC_HIST_BF A
+				     WHERE 1=1
+				     AND A.RGST_DT||SUBSTR(A.RGST_TM,1,2) BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}  
+				  ) A
+				 ORDER BY A.REG_TIME DESC
+	  
+  </select>
+
+</mapper>
+   

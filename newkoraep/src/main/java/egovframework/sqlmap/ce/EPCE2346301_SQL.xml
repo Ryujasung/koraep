@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE2346301Mapper">
+
+	<select id="epce2346301_select" parameterType="map" resultType="hashmap">
+		   SELECT A.BILL_DOC_NO
+		   			  ,A.BILL_ISSU_DT
+		   			  ,A.BILL_SE_CD
+			          ,EPCN_ETC_NM(A.BILL_SE_CD, 'D031') AS BILL_SE_NM
+			          ,A.ISSU_STAT_CD
+			          ,B.BIZRNM as MFC_BIZRNM
+			          ,TO_CHAR(A.NOTY_AMT) as NOTY_AMT
+			          ,A.ADD_GTN
+			          ,ECL_DECRYPT(A.VACCT_NO) AS VACCT_NO
+				      ,CASE WHEN LENGTH(PI_DECRYPT(A.VACCT_NO)) > 11 THEN SUBSTR(PI_DECRYPT(A.VACCT_NO),LENGTH(PI_DECRYPT(A.VACCT_NO))-10,11) 
+				         ELSE PI_DECRYPT(A.VACCT_NO) 
+				       END RVACCT_NO
+		     FROM EPGM_BILL_LST A
+		          	  ,EPCN_BIZR_INFO B
+		  WHERE 1=1
+		      AND A.BILL_ISSU_DT BETWEEN REPLACE(#{BILL_START_DT}, '-', '') AND REPLACE(#{BILL_END_DT}, '-', '')
+		    <if test='BIZRID != null and BIZRID != "" '>
+		      AND A.MFC_BIZRID = #{BIZRID}
+		    </if>
+		    <if test='BIZRNO != null and BIZRNO != "" '>
+		      AND A.MFC_BIZRNO = #{BIZRNO}
+		    </if>
+
+		      AND A.ISSU_STAT_CD = 'I' /* 고지등록 */
+		      AND A.MFC_BIZRID = B.BIZRID
+		      AND A.MFC_BIZRNO = B.BIZRNO
+		      
+		  ORDER BY A.BILL_ISSU_DT, B.SEL_ORD
+	</select>
+	
+	<select id="epce2346301_select2" parameterType="map" resultType="hashmap">
+	    SELECT VACCT_NO,
+			       TR_IL, 
+			       TR_TIME, 
+			       TR_NO, 
+			       SUM_AMT * DECODE(PROC_STAT_CD, '1', 1, -1) AS SUM_AMT, 
+			       CHK_AMT, 
+			       CASH_AMT, 
+			       SEND_MAN, 
+			       PROC_STAT_CD,
+			       FEE_AMT, 
+			       CUST_CD, 
+			       VACCT_ANO, 
+			       NVL(ACP_CFM_YN, 'N') AS ACP_CFM_YN 
+		  FROM EPGM_VACCT_ACP_LK  A
+		WHERE 1=1
+		    AND TR_IL BETWEEN REPLACE(#{ACP_START_DT}, '-', '') AND REPLACE(#{ACP_END_DT}, '-', '') 
+		    AND NVL(ACP_CFM_YN, 'N') = 'N'
+		  <if test='VACCT_NO != null and VACCT_NO != "" '> 
+		    AND VACCT_NO = #{VACCT_NO} 
+		  </if>
+		  
+		  <if test='BIZRID != null and BIZRID != "" and BIZRNO != null and BIZRNO != ""'>
+		    AND EXISTS (
+		     				 SELECT 'X' 
+		     				   FROM
+			    					(
+							           SELECT CASE WHEN LENGTH(PI_DECRYPT(MFC_DPS_VACCT_NO)) > 11 
+									                  	  THEN SUBSTR(PI_DECRYPT(MFC_DPS_VACCT_NO),LENGTH(PI_DECRYPT(MFC_DPS_VACCT_NO))-10,11) 
+									               ELSE PI_DECRYPT(MFC_DPS_VACCT_NO) 
+									              END AS VACCT_NO 
+							             FROM EPCN_BIZR_INFO 
+							           WHERE 1=1
+								            AND BIZR_TP_CD IN ('M1','M2')
+								            AND BIZR_STAT_CD = 'Y' 
+										    AND BIZRID = #{BIZRID}
+										    AND BIZRNO = #{BIZRNO}
+							             UNION 
+							           SELECT CASE WHEN LENGTH(PI_DECRYPT(MFC_FEE_VACCT_NO)) > 11 
+									                  	  THEN SUBSTR(PI_DECRYPT(MFC_FEE_VACCT_NO),LENGTH(PI_DECRYPT(MFC_FEE_VACCT_NO))-10,11) 
+									               ELSE PI_DECRYPT(MFC_FEE_VACCT_NO) 
+									              END AS VACCT_NO 
+							             FROM EPCN_BIZR_INFO 
+							           WHERE 1=1
+							               AND BIZR_TP_CD IN ('M1','M2')
+							               AND BIZR_STAT_CD = 'Y' 
+										   AND BIZRID = #{BIZRID}
+										   AND BIZRNO = #{BIZRNO}
+							         ) E
+							  WHERE 1=1
+							     AND A.VACCT_NO = E.VACCT_NO
+		    				)
+		  </if>
+		  
+		ORDER BY TR_IL DESC  
+	</select>
+
+	<select id="epce2346301_select3" parameterType="map" resultType="hashmap">
+		 SELECT CASE WHEN LENGTH(A.VACCT_NO) > 11 THEN SUBSTR(A.VACCT_NO,LENGTH(A.VACCT_NO)-10,11) ELSE A.VACCT_NO END AS VACCT_NO 
+		    FROM 
+			         (
+			           SELECT BIZRNO, 
+				                  BIZRNM, 
+				                  MFC_VACCT_BANK_CD AS VACCT_BANK_CD, 
+				                  PI_DECRYPT(MFC_DPS_VACCT_NO) AS VACCT_NO 
+			             FROM EPCN_BIZR_INFO 
+			           WHERE 1=1
+				            AND BIZR_TP_CD IN ('M1','M2')
+				            AND BIZR_STAT_CD = 'Y' 
+				            AND MFC_DPS_VACCT_NO IS NOT NULL
+				            <if test='BIZRID != null and BIZRID != "" '>
+						      AND BIZRID = #{BIZRID}
+						    </if>
+						    <if test='BIZRNO != null and BIZRNO != "" '>
+						      AND BIZRNO = #{BIZRNO}
+						    </if> 
+				            
+			               UNION 
+			               
+			           SELECT BIZRNO AS BIZRNO, 
+				                  BIZRNM, 
+				                  MFC_VACCT_BANK_CD AS VACCT_BANK_CD, 
+				                  PI_DECRYPT(MFC_FEE_VACCT_NO) AS VACCT_NO 
+			             FROM EPCN_BIZR_INFO 
+			           WHERE 1=1
+			               AND BIZR_TP_CD IN ('M1','M2')
+			               AND BIZR_STAT_CD = 'Y' 
+			               AND MFC_FEE_VACCT_NO IS NOT NULL
+			                <if test='BIZRID != null and BIZRID != "" '>
+						      AND BIZRID = #{BIZRID}
+						    </if>
+						    <if test='BIZRNO != null and BIZRNO != "" '>
+						      AND BIZRNO = #{BIZRNO}
+						    </if> 
+			         ) A
+	     WHERE 1=1 
+	  ORDER BY A.VACCT_NO  
+	</select>
+
+	<!-- 중복처리대상 조회 -->
+    <select id="epce2346301_select4" parameterType="map" resultType="int">
+		 SELECT COUNT(1) AS NCNT 
+		   FROM EPGM_BILL_LST 
+		 WHERE 1=1
+		     AND BILL_DOC_NO = #{BILL_DOC_NO}
+		     AND ISSU_STAT_CD = 'A' /* 수납확인 */
+    </select>
+    
+    <update id="epce2346301_update" parameterType="hashmap">
+    	
+    	DECLARE
+		    BEGIN
+	    	
+		    	 UPDATE EPGM_BILL_LST 
+				       SET ISSU_STAT_CD = #{ISSU_STAT_CD}
+						     ,ACP_DT = #{TR_IL}
+						     ,ACP_TM = #{TR_TIME}
+						     ,ACP_CFM_SEQ = #{ACP_CFM_SEQ}
+						     ,ACP_CFM_DT = TO_CHAR(SYSDATE, 'YYYYMMDD')
+						     ,ACP_CFM_MNUL_YN = #{ACP_CFM_MNUL_YN}
+						     ,UPD_PRSN_ID = #{S_USER_ID}
+						     ,UPD_DTTM = SYSDATE 
+				 WHERE 1=1
+				     AND BILL_DOC_NO = #{BILL_DOC_NO} 
+    			;
+    			
+    			UPDATE EPDM_DLIVY_MST
+				      SET DLIVY_STAT_CD = #{STAT_CD} 
+						    ,UPD_PRSN_ID = #{S_USER_ID} 
+						    ,UPD_DTTM = SYSDATE 
+				 WHERE MAPP_BILL_DOC_NO = #{BILL_DOC_NO} 
+				;
+				
+				UPDATE EPDM_DRCT_RTRVL_MST
+				      SET DRCT_RTRVL_STAT_CD = #{STAT_CD}
+				      		,UPD_PRSN_ID = #{S_USER_ID}
+				       		,UPD_DTTM = SYSDATE
+				 WHERE MAPP_BILL_DOC_NO = #{BILL_DOC_NO} 
+    			;
+    			
+    			UPDATE EPCM_CFM_MST
+				      SET RTN_STAT_CD = #{STAT_CD}
+						    ,BF_RTN_STAT_CD = RTN_STAT_CD
+						    ,UPD_PRSN_ID = #{S_USER_ID}
+						    ,UPD_DTTM = SYSDATE
+				 WHERE MAPP_BILL_DOC_NO = #{BILL_DOC_NO} 
+    			;
+    			
+    			UPDATE EPCM_RTN_MST A
+				      SET RTN_STAT_CD = #{STAT_CD}
+						    ,BF_RTN_STAT_CD = RTN_STAT_CD
+						    ,UPD_PRSN_ID = #{S_USER_ID}
+						    ,UPD_DTTM = SYSDATE
+				 WHERE EXISTS (
+				 						 SELECT 'X' 
+				 						   FROM EPCM_CFM_MST B
+				 						 WHERE 1=1
+				 						     AND A.RTN_DOC_NO = B.RTN_DOC_NO
+				 						     AND B.MAPP_BILL_DOC_NO = #{BILL_DOC_NO} 
+				 						)
+    			;
+    			
+    	END;
+    	
+    </update>
+    
+    <update id="epce2346301_update2" parameterType="hashmap">
+	     UPDATE EPGM_VACCT_ACP_LK 
+		       SET ACP_CFM_YN = 'Y'
+		       		 ,ACP_CFM_SEQ = #{ACP_CFM_SEQ} 
+		  WHERE 1=1
+		      AND VACCT_NO = #{VACCT_NO} 
+		      AND TR_IL = #{TR_IL} 
+		      AND TR_TIME = #{TR_TIME} 
+		      AND TR_NO = #{TR_NO}
+    </update>
+    
+    <update id="epce2346301_update3" parameterType="hashmap">
+	     UPDATE EPGM_VACCT_ACP_LK 
+		       SET ACP_CFM_YN = 'Y'
+		       		 ,RMK = '착오입력 수기확인'
+		  WHERE 1=1
+		      AND VACCT_NO = #{VACCT_NO} 
+		      AND TR_IL = #{TR_IL} 
+		      AND TR_TIME = #{TR_TIME} 
+		      AND TR_NO = #{TR_NO}
+    </update>
+    
+    <update id="epce2346301_insert" parameterType="map" >
+		INSERT INTO EPGM_MFC_GTN_BAL
+			 (
+				  MFC_BIZRID
+				  ,MFC_BIZRNO
+				  ,STD_DT
+				  ,STD_YEAR
+				  ,BAL_SN
+				  ,MAPP_DOC_NO
+				  ,GTN_BAL
+				  ,PRCS_ID
+				  ,PRCS_DTTM
+				  ,DEL_YN
+			 )
+			 (
+			   SELECT MFC_BIZRID
+						  ,MFC_BIZRNO
+						  ,ACP_DT
+						  ,STD_YEAR
+						  ,TEMP_SEQ.NEXTVAL
+						  ,BILL_DOC_NO
+						  ,NOTY_AMT
+						  ,#{S_USER_ID}
+						  ,SYSDATE
+						  ,'N'
+			      FROM EPGM_BILL_LST A
+			    WHERE 1=1
+			        AND BILL_DOC_NO = #{BILL_DOC_NO}
+			        AND BILL_SE_CD != 'F' /* 취급수수료 제외처리 */
+			 )
+	</update>
+
+	<!-- 연계처리 new  NEOE.FI_Z_KORA_ECDOCU@DBSVR -->
+    <insert id="INSERT_FI_Z_KORA_ECDOCU" parameterType="hashmap">
+    	<selectKey resultType="int" keyProperty="ORI_RGST_SN" order="BEFORE">
+	        (SELECT NVL(MAX(NO_ECLINE),0) AS ORI_RGST_SN 
+	           FROM NEOE.FI_Z_KORA_ECDOCU@DBSVR /* NEOE.FI_Z_KORA_ECDOCU@DBSVR */
+	         WHERE NO_EC = #{BILL_ISSU_DT}||#{BILL_ISSU_TM}||#{TP_EC}
+	         )        
+	    </selectKey>
+    	INSERT INTO NEOE.FI_Z_KORA_ECDOCU@DBSVR /* NEOE.FI_Z_KORA_ECDOCU@DBSVR */
+			   (
+			    CD_COMPANY
+			    ,NO_EC
+			    ,NO_ECLINE
+			    ,NO_ECDOCU
+			    ,CD_PC
+			    ,TP_EC
+			    ,YY_CALC
+			    ,TP_CALC
+			    ,DT_ACCT
+			    ,AM_EC1
+			    ,AM_EC2
+			    ,AM_VAT1
+			    ,AM_EC3
+			    ,AM_VAT2
+			    ,CD_PARTNER1
+			    ,CD_BANK1
+			    ,NO_DEPOSIT1
+			    ,NM_BANK1
+			    ,CD_PARTNER2
+			    ,CD_BANK2
+			    ,NO_DEPOSIT2
+			    ,NM_BANK2
+			    ,CD_CMSTRA
+			    ,CD_BANK3
+			    ,NO_DEPOSIT3
+			    ,NM_BANK3
+			    ,ST_PROC1
+			    ,ST_PROC2
+			    ,NO_DOCU1
+			    ,NO_DOCU2
+			    ,ID_INSERT
+			    ,DTS_INSERT
+			    ,ID_UPDATE
+			    ,DTS_UPDATE   
+			    ,AM_EC4
+			    ,YN_RE
+			    ,YN_BEGIN
+			   )
+			   (
+			    SELECT
+				          'COSMO'
+				          ,#{BILL_ISSU_DT}||#{BILL_ISSU_TM}||#{TP_EC} 
+				          ,#{ORI_RGST_SN} + 1 /* 일련번호 */
+				          ,#{BILL_DOC_NO} /* 고지서 문서번호 */
+				          ,'5000'
+				          ,#{TP_EC} /* 1 일반지급, 2 도매업자정산지급, 3 보증금수납, 4 취급수수료수납, 5 도매업자정산수납, 6 생산자정산수납, 7 생산자정산지급  */
+  						  ,B.STD_YEAR
+				          ,'0' /* 0:비정산 , 1:정산 */
+				          ,#{TR_IL} /* 일자 */
+				          ,B.NOTY_AMT
+				          ,0
+				          ,0
+				          ,0
+				          ,0
+				          ,A.ERP_BIZR_CD
+				          ,'088' 
+				          ,(SELECT RSV_ITEM1 FROM EPCN_ETC_CD WHERE GRP_CD = 'D035' AND ETC_CD = '21') /* 보증금 모계좌번호 */
+				          ,A.BIZR_ABBR_NM
+				          ,A.ERP_BIZR_CD
+				          ,''
+				          ,''
+				          ,''
+				          ,'' 
+				          ,''
+				          ,''
+				          ,''
+				          ,'0' /* 0:미처리, 1:집금전표+집금데이타생성 , 2:이체전표생성  */
+				          ,'0' /* 0:집금미실행 , 1:집금실행 */
+				          ,''
+				          ,''
+				          ,'SHINHAN'
+				          ,TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')  
+				          ,''
+				          ,''
+				          ,''
+				          ,'N'
+				          ,CASE WHEN B.STD_YEAR = SUBSTR(#{TR_IL}, 0, 4) THEN 'N' ELSE 'Y' END /* 기준년도와 실행년도가 다를경우 Y */
+				  FROM EPCN_BIZR_INFO A
+				  		   ,EPGM_BILL_LST B
+				WHERE 1=1
+				    AND A.BIZRID = B.MFC_BIZRID
+				    AND A.BIZRNO = B.MFC_BIZRNO
+				    AND B.BILL_DOC_NO = #{BILL_DOC_NO}
+			 )
+    </insert>
+
+	<!-- 연계처리 new -->
+    <insert id="INSERT_FI_Z_KORA_ECDOCU_F" parameterType="hashmap">
+    	<selectKey resultType="int" keyProperty="ORI_RGST_SN" order="BEFORE">
+	        (SELECT NVL(MAX(NO_ECLINE),0) AS ORI_RGST_SN 
+	           FROM NEOE.FI_Z_KORA_ECDOCU@DBSVR /* NEOE.FI_Z_KORA_ECDOCU@DBSVR */
+	         WHERE NO_EC = #{BILL_ISSU_DT}||#{BILL_ISSU_TM}||#{TP_EC}
+	         )        
+	    </selectKey>
+    	INSERT INTO NEOE.FI_Z_KORA_ECDOCU@DBSVR /* NEOE.FI_Z_KORA_ECDOCU@DBSVR */
+			   (
+			    CD_COMPANY
+			    ,NO_EC
+			    ,NO_ECLINE
+			    ,NO_ECDOCU
+			    ,CD_PC
+			    ,TP_EC
+			    ,YY_CALC
+			    ,TP_CALC
+			    ,DT_ACCT
+			    ,AM_EC1
+			    ,AM_EC2
+			    ,AM_VAT1
+			    ,AM_EC3
+			    ,AM_VAT2
+			    ,CD_PARTNER1
+			    ,CD_BANK1
+			    ,NO_DEPOSIT1
+			    ,NM_BANK1
+			    ,CD_PARTNER2
+			    ,CD_BANK2
+			    ,NO_DEPOSIT2
+			    ,NM_BANK2
+			    ,CD_CMSTRA
+			    ,CD_BANK3
+			    ,NO_DEPOSIT3
+			    ,NM_BANK3
+			    ,ST_PROC1
+			    ,ST_PROC2
+			    ,NO_DOCU1
+			    ,NO_DOCU2
+			    ,ID_INSERT
+			    ,DTS_INSERT
+			    ,ID_UPDATE
+			    ,DTS_UPDATE   
+			    ,AM_EC4
+			    ,YN_RE
+			    ,YN_BEGIN
+			   )
+			   (
+			    SELECT
+				          'COSMO'
+				          ,#{BILL_ISSU_DT}||#{BILL_ISSU_TM}||#{TP_EC}
+				          ,#{ORI_RGST_SN} + ROW_NUMBER()OVER(ORDER BY C.DTL_SN) /* 일련번호 */
+				          ,#{BILL_DOC_NO} /* 빈용기 묶음 문서번호 */
+				          ,'5000'
+				          ,#{TP_EC} /* 1 일반지급, 2 도매업자정산지급, 3 보증금수납, 4 취급수수료수납, 5 도매업자정산수납, 6 생산자정산수납, 7 생산자정산지급  */
+				          ,B.STD_YEAR
+				          ,'0' /* 0:비정산 , 1:정산 */
+				          ,#{TR_IL} /* 일자 */
+ 						  ,0
+				          ,C.WRHS_WHSL_FEE
+				          ,C.WRHS_WHSL_FEE_STAX
+				          ,C.WRHS_RTL_FEE
+				          ,0
+				          ,A.ERP_BIZR_CD
+				          ,'088' 
+				          ,(SELECT RSV_ITEM1 FROM EPCN_ETC_CD WHERE GRP_CD = 'D035' AND ETC_CD = '22')  /* 취급수수료 모계좌번호 */
+				          ,A.BIZR_ABBR_NM
+				          ,A.ERP_BIZR_CD
+				          ,''
+				          ,''
+				          ,''
+				          ,'' 
+				          ,''
+				          ,''
+				          ,''
+				          ,'0' /* 0:미처리, 1:집금전표+집금데이타생성 , 2:이체전표생성  */
+				          ,'0' /* 0:집금미실행 , 1:집금실행 */
+				          ,''
+				          ,''
+				          ,'SHINHAN'
+				          ,TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')  
+				          ,''
+				          ,''
+				          ,''
+				          ,'N'
+				          ,CASE WHEN B.STD_YEAR = SUBSTR(#{TR_IL}, 0, 4) THEN 'N' ELSE 'Y' END /* 기준년도와 실행년도가 다를경우 Y */
+				  FROM EPCN_BIZR_INFO A
+				  		   ,EPGM_BILL_LST B
+				  		   ,EPGM_BILL_DTL C
+				WHERE 1=1
+					AND B.BILL_DOC_NO = C.BILL_DOC_NO
+					AND B.MFC_BIZRID = A.BIZRID
+					AND B.MFC_BIZRNO = A.BIZRNO
+				    AND B.BILL_DOC_NO = #{BILL_DOC_NO} 
+			 )
+			 
+    </insert>
+
+</mapper>

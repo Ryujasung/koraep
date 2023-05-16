@@ -1,0 +1,798 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE9000501Mapper">
+
+<select id="epce9000501_select2" resultType="hashmap">
+	<if test='excelYn == null or excelYn == "" '>
+	SELECT 
+	   PAGENO,
+	   URM_NO,
+       URM_NM,
+       URM_CE_NO,
+       SERIAL_NO,
+       AREA_NM,
+       START_DT,
+       END_DT,
+       PNO,
+       ADDR,
+       USE_YN ,
+       USE_NM ,
+       REG_PRSN_ID,
+       REG_DTTM,
+       UPD_PRSN_ID,
+       UPD_DTTM
+  FROM (
+		</if>
+
+		SELECT 
+			<![CDATA[
+			ROW_NUMBER()OVER(ORDER BY A.REG_DTTM DESC, A.URM_NO DESC) AS PAGENO,
+			A.URM_NO,
+	     '<a href="javascript:fn_page()" class="gridLink">' || A.URM_NM || '</a>' as URM_NM,
+	       A.URM_NM as URM_NM_ORI,
+	       A.URM_CE_NO,
+	       A.SERIAL_NO,
+	       A.AREA_CD,
+	      	EPCN_ETC_NM(A.AREA_CD , 'B010') AS AREA_NM,
+	        TO_CHAR(TO_DATE(A.START_DT,'yyyy-mm-dd'),'YYYY-MM-DD') START_DT,
+	       TO_CHAR(TO_DATE(A.END_DT,'yyyy-mm-dd'),'YYYY-MM-DD') END_DT,
+	       A.PNO,
+	       ADDR1||' '||ADDR2 AS ADDR,
+	       A.USE_YN,
+	       CASE
+				WHEN A.USE_YN = 'Y' THEN '사용중'
+				WHEN A.USE_YN = 'M' THEN '이동'
+				ELSE '폐기'
+			END AS USE_NM ,
+	       A.REG_PRSN_ID,
+	       A.REG_DTTM,
+	       A.UPD_PRSN_ID,
+	       A.UPD_DTTM
+	       ]]>
+  	FROM EPCM_URM_INFO_TEST1 A
+				   
+				WHERE  1=1
+		   <if test='BIZRNM_SEL != "" and BIZRNM_SEL != null and BIZRNM_SEL != "전체"'  >
+	   	  	AND A.URM_CODE_NO = #{BIZRNM_SEL}
+	   	   </if>
+	   	   <if test="URM_CE_NO !=''  and URM_CE_NO !=null  and   URM_CE_NO != '전체'" >
+	          AND A.URM_CE_NO = #{URM_CE_NO}
+	      </if>
+		   <if test='AreaCdList_SEL != "" and AreaCdList_SEL != null '>
+	   	  	AND A.AREA_CD = #{AreaCdList_SEL}
+	   	   </if>
+	   	   <if test="SERIAL_NO !=''  and SERIAL_NO !=null">
+	          AND A.SERIAL_NO like  '%'||#{SERIAL_NO}||'%'
+	      </if>
+	      <if test="USE_YN !=''  and USE_YN !=null">
+	          AND A.USE_YN = #{USE_YN}
+	      </if>
+
+	   	  ORDER BY A.URM_NO DESC, A.REG_DTTM DESC 
+	   	  
+	   	  <if test='excelYn == null or excelYn == "" '>
+	            ) 
+          WHERE 1=1
+              AND PAGENO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+          </if>
+</select>
+
+<select id="epce9000501_select3" resultType="hashmap">
+		SELECT 
+		PAGENO,
+		URM_NO,
+       URM_NM,
+       SERIAL_NO,
+       AREA_NM,
+       START_DT,
+       END_DT,
+       PNO,
+       ADDR1||' '||ADDR2 as ADDR,
+       USE_TOT,
+        USE_YN ,
+       REG_PRSN_ID,
+       REG_DTTM,
+       UPD_PRSN_ID,
+       UPD_DTTM
+  FROM (
+
+		SELECT 
+			<![CDATA[
+			ROW_NUMBER()OVER(ORDER BY A.REG_DTTM DESC, A.URM_NO DESC) AS PAGENO,
+			A.URM_NO,
+	        A.URM_NM,
+
+	       A.SERIAL_NO,
+	       A.AREA_CD,
+	      	EPCN_ETC_NM(A.AREA_CD , 'B010') AS AREA_NM,
+	        TO_CHAR(TO_DATE(A.START_DT,'yyyy-mm-dd'),'YYYY-MM-DD') START_DT,
+	       TO_CHAR(TO_DATE(A.END_DT,'yyyy-mm-dd'),'YYYY-MM-DD') END_DT,
+	       A.PNO,
+	       A.ADDR1,
+	       A.ADDR2,
+	       A.USE_TOT,
+	       CASE
+				WHEN A.USE_YN = 'Y' THEN '사용중'
+				WHEN A.USE_YN = 'M' THEN '이동'
+				ELSE '폐기'
+			END AS USE_YN ,
+	       A.REG_PRSN_ID,
+	       A.REG_DTTM,
+	       A.UPD_PRSN_ID,
+	       A.UPD_DTTM
+	       ]]>
+  	FROM EPCM_URM_INFO_TEST1 A
+
+	   
+		  WHERE 1 = 1
+		   <if test='BIZRNM_SEL != "" and BIZRNM_SEL != null and BIZRNM_SEL != "전체"'  >
+	   	  	AND A.URM_CODE_NO = #{BIZRNM_SEL}
+	   	   </if>
+	   	   <if test='BIZRNO_SEL != "" and BIZRNO_SEL != null and BIZRNO_SEL != "전체"' >
+	   	  	AND A.SERIAL_NO = #{BIZRNO_SEL} 
+	   	   </if>
+		   <if test='AreaCdList_SEL != "" and AreaCdList_SEL != null '>
+	   	  	AND A.AREA_CD = #{AreaCdList_SEL}
+	   	   </if>
+
+	   	  ORDER BY A.REG_DTTM DESC, A.URM_NO DESC
+	   	  )
+	   	  
+</select>
+
+<select id="urm_select"  parameterType="map"  resultType="hashmap">
+
+SELECT   RTL_CUST_NM, RTL_CUST_BIZRNO
+	FROM     EPCN_RTL_CUST_INFO
+	WHERE STAT_CD = 'Y'
+	<!-- AND ROWNUM <![CDATA[<=]]> 100 -->
+	GROUP BY RTL_CUST_NM, RTL_CUST_BIZRNO
+	 </select>
+<select id="urm_list_select" parameterType="map" resultType="hashmap">
+	SELECT DISTINCT URM_NM, URM_CODE_NO 
+	  FROM EPCM_URM_INFO_TEST1 
+
+</select>
+	 
+	 <select id="urm_fix_select"  parameterType="map"  resultType="hashmap">
+
+	SELECT URM_FIX_CD,URM_EXP_NM FROM EPCM_URM_FIX_CD GROUP BY
+	URM_FIX_CD,URM_EXP_NM
+	 </select>
+	 
+	 <select id="fix_date_select"  parameterType="map"  resultType="hashmap">
+			SELECT  A.URM_FIX_CD
+				  , B.URM_EXP_NM 
+				  , A.SUP_FEE 
+			  FROM EPCM_FIX_FEE_MGNT A 
+			      ,EPCM_URM_FIX_CD B 
+			 WHERE A.URM_FIX_CD = B.URM_FIX_CD 
+			  AND TO_CHAR(SYSDATE,'yyyymmdd') BETWEEN  A.APLC_ST_DT AND  A.APLC_END_DT
+			  
+	  <choose>
+		<when test="RTRVL_DT !=null and RTRVL_DT !='' ">
+			AND REPLACE(#{RTRVL_DT}, '-') BETWEEN  A.APLC_ST_DT AND  A.APLC_END_DT
+		</when>      
+		<otherwise>   
+			AND TO_CHAR(SYSDATE,'yyyymmdd') BETWEEN  A.APLC_ST_DT AND  A.APLC_END_DT
+		</otherwise>        
+	 </choose>
+	  
+	  
+	 </select>
+	 
+	 <select id="urm_select2"  parameterType="map"  resultType="hashmap">
+		  SELECT
+			DISTINCT SERIAL_NO,
+			URM_CE_NO
+		FROM
+			EPCM_URM_INFO_TEST1
+		WHERE 1 = 1
+			ORDER BY URM_CE_NO DESC
+	 </select>
+	 
+	 <select id="serial_list_select"  parameterType="map"  resultType="hashmap">
+
+		SELECT SERIAL_NO,URM_CE_NO FROM EPCM_URM_INFO_TEST1 WHERE URM_CODE_NO = #{URM_CODE_NO}
+		 <if test='USE_YN != "" and USE_YN != null '>
+	   	  	AND USE_YN = #{USE_YN}
+	   	   </if>
+	 </select>
+	 
+
+<select id="epce9000532_select2" resultType="hashmap">
+	<if test='excelYn == null or excelYn == "" '>
+		SELECT
+			PAGENO,
+			REG_SN,
+	       SERIAL_NO,
+	       URM_FIX_DT,
+	       URM_EXP_NM,
+	       URM_CNT,
+	       TOT_PAY,
+	       CEN_PAY,
+	       RET_PAY,
+	       CUST_PAY
+		FROM (
+		</if>
+
+		SELECT 
+			<![CDATA[
+			ROW_NUMBER()OVER(ORDER BY A.URM_FIX_DT DESC, A.SERIAL_NO DESC) AS PAGENO,
+			A.REG_SN,
+	        '<a href="javascript:fn_page()" class="gridLink">' || A.SERIAL_NO || '</a>' as SERIAL_NO,
+	       A.URM_FIX_DT,
+	       A.URM_EXP_NM,
+	       A.URM_CNT,
+	       A.TOT_PAY,
+	       A.CEN_PAY,
+	       A.RET_PAY,
+	       A.CUST_PAY
+	       ]]>
+  	FROM EPCM_URM_FIX A
+
+	   
+		  WHERE 1 = 1
+		  AND A.URM_FIX_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+	   	   <if test='SERIAL_NO != "" and SERIAL_NO != null '>
+	   	  	AND A.SERIAL_NO = #{SERIAL_NO}
+	   	   </if>
+
+	   	  ORDER BY A.URM_FIX_DT DESC, A.SERIAL_NO DESC
+	   	  
+	   	  <if test='excelYn == null or excelYn == "" '>
+	            ) 
+          WHERE 1=1
+              <!-- AND PAGENO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE} -->
+          </if>
+</select>
+
+<select id="epce9000532_select3" resultType="hashmap">
+	<if test='excelYn == null or excelYn == "" '>
+		SELECT
+			PAGENO,
+			REG_SN,
+	       SERIAL_NO,
+	       URM_FIX_DT,
+	       URM_EXP_NM,
+	       URM_CNT,
+	       TOT_PAY,
+	       CEN_PAY,
+	       RET_PAY,
+	       CUST_PAY
+		FROM (
+		</if>
+
+		SELECT 
+			<![CDATA[
+			ROW_NUMBER()OVER(ORDER BY A.URM_FIX_DT DESC, A.SERIAL_NO DESC) AS PAGENO,
+			A.REG_SN,
+	        A.SERIAL_NO ,
+	       A.URM_FIX_DT,
+	       A.URM_EXP_NM,
+	       A.URM_CNT,
+	       A.TOT_PAY,
+	       A.CEN_PAY,
+	       A.RET_PAY,
+	       A.CUST_PAY
+	       ]]>
+  	FROM EPCM_URM_FIX A
+
+	   
+		  WHERE 1 = 1
+		  AND A.URM_FIX_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+	   	   <if test='SERIAL_NO != "" and SERIAL_NO != null '>
+	   	  	AND A.SERIAL_NO = #{SERIAL_NO}
+	   	   </if>
+
+	   	  ORDER BY A.URM_FIX_DT DESC, A.SERIAL_NO DESC
+	   	  
+	   	  <if test='excelYn == null or excelYn == "" '>
+	            ) 
+          WHERE 1=1
+              <!-- AND PAGENO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE} -->
+          </if>
+</select>
+
+
+	<select id="epce9000516_select" parameterType="map" resultType="hashmap">
+		  SELECT 
+			
+			A.URM_NO,
+	   		A.URM_NM,
+	       A.SERIAL_NO,
+	       A.AREA_CD,
+	      	EPCN_ETC_NM(A.AREA_CD , 'B010') AS AREA_NM,
+	       TO_CHAR(TO_DATE(A.START_DT,'yyyymmdd'),'YYYY-MM-DD') START_DT,
+	       TO_CHAR(TO_DATE(A.END_DT,'yyyymmdd'),'YYYY-MM-DD') END_DT,
+	       A.PNO,
+	       A.ADDR1,
+	       A.ADDR2,
+	       A.ADDR1||' '||A.ADDR2 AS ADDR,
+	       TO_CHAR(NVL(USE_TOT,0),'9,999,999,999,999') AS USE_TOT,
+	       TO_CHAR(  NVL(C.CNT,0) , '999,999,999,999,999') AS USE_CNT_TOT,
+	       TO_CHAR(  NVL(C.USE_RTRVL_TOT,0) , '999,999,999,999,999') AS USE_RTRVL_TOT,
+	       TO_CHAR(NVL(USE_TOT - C.USE_RTRVL_TOT,0),'9,999,999,999,999') AS USE_REST_TOT,
+	       A.TELNO,
+	       A.EMAIL,
+	       A.URM_TYPE,
+	       DECODE(A.URM_TYPE,'A','독립형','매립형') URM_TYPE_NM ,
+	       A.URM_CE_NO,
+	       TO_CHAR(TO_DATE(A.URM_USE_DT,'yyyymmdd'),'YYYY-MM-DD') URM_USE_DT,
+	       TO_CHAR(TO_DATE(A.URM_DE_DT,'yyyymmdd'),'YYYY-MM-DD') URM_DE_DT,
+	       CASE
+				WHEN A.USE_YN = 'Y' THEN '사용중'
+				WHEN A.USE_YN = 'M' THEN '이동'
+				ELSE '폐기'
+			END AS USE_YN ,
+	       A.REG_PRSN_ID,
+	       A.REG_DTTM,
+	       A.UPD_PRSN_ID,
+	       A.UPD_DTTM
+  	FROM ( SELECT  B.SERIAL_NO ,C.URM_NO ,
+		  COUNT(*) AS CNT, NVL(SUM(B.URM_QTY_TOT),0) AS USE_RTRVL_TOT
+					  FROM	EPCM_URM_MST B
+						   ,EPCM_URM_INFO_TEST1 C
+		 			 WHERE 1=1
+					   AND B.SERIAL_NO = C.SERIAL_NO
+					   AND C.URM_USE_DT <![CDATA[<=]]> B.RTRVL_DT
+					   GROUP BY B.SERIAL_NO,C.URM_NO 
+					   ) C
+		  	,EPCM_URM_INFO_TEST1 A
+				   
+				WHERE  1=1
+				AND A.URM_NO = C.URM_NO(+)
+				AND A.URM_NO = #{URM_NO}
+				
+	</select>
+
+<select id="epce9000536_select" parameterType="map" resultType="hashmap">
+ 	SELECT REG_SN,
+	       SERIAL_NO,
+	       to_char(to_date(URM_FIX_DT,'yyyymmdd'),'yyyy-mm-dd') URM_FIX_DT,
+	       URM_FIX_CD,
+	       URM_EXP_NM,
+	       URM_CNT,
+	       TOT_PAY,
+	       CEN_PAY,
+	       RET_PAY,
+	       CUST_PAY,
+	       REG_PRSN_ID,
+	       REG_DTTM,
+	       UPD_PRSN_ID,
+	       UPD_DTTM
+	FROM   EPCM_URM_FIX
+				   
+				WHERE  1=1
+				AND REG_SN = #{REG_SN}
+				
+	</select>
+
+
+
+	 <select id="numbercnt"  resultType="Long">
+	   SELECT nvl(MAX(URM_NO),0) as URM_NO FROM EPCM_URM_INFO_TEST1
+	    </select>
+
+<!-- 무인회수기정보 수정 -->
+<update id="epce9000531_update"  parameterType="map" >
+	   UPDATE 
+	   EPCM_URM_INFO_TEST1 SET
+	       START_DT = #{START_DT},
+	       TELNO = #{TELNO},
+	       EMAIL = #{EMAIL},
+	       URM_TYPE = #{URM_TYPE},
+	       USE_TOT = #{USE_TOT},
+	       URM_USE_DT = #{URM_USE_DT},
+	       URM_DE_DT = #{URM_DE_DT},
+	       UPD_PRSN_ID = #{S_USER_ID},
+	       UPD_DTTM = sysdate
+         WHERE SERIAL_NO = #{SERIAL_NO}
+          AND URM_CE_NO = #{URM_CE_NO}
+          
+         <!--  URM_NM = #{URM_NM},
+	       AREA_CD = (SELECT ETC_CD FROM EPCN_ETC_CD WHERE decode(SUBSTR(#{ADDR1}, 0, INSTR(#{ADDR1}, ' ', 1, 1)) , '제주특별자치도 ' ,'제주도 ','세종특별자치시 ' ,'세종시 ','경남 ' ,'경상남도 ' ,SUBSTR(#{ADDR1}, 0, INSTR(#{ADDR1}, ' ', 1, 1))) = ETC_CD_NM||' '),
+	       PNO = #{PNO},
+	       ADDR1 = #{ADDR1},
+	       ADDR2 = #{ADDR2},
+	       URM_CE_NO = #{URM_CE_NO}, -->
+	
+</update>
+
+<!-- 무인회수기소모품정보 수정 -->
+<update id="epce9000537_update"  parameterType="map" >
+	   UPDATE EPCM_URM_FIX
+		SET    
+		       SERIAL_NO = #{SERIAL_NO},
+		       URM_FIX_DT = #{URM_FIX_DT},
+		       URM_FIX_CD = #{URM_FIX_CD},
+		       URM_EXP_NM = #{URM_EXP_NM},
+		       URM_CNT = #{URM_CNT},
+		       URM_PAY = #{URM_PAY},
+		       UPD_PRSN_ID = #{S_USER_ID},
+		       UPD_DTTM = sysdate
+		WHERE REG_SN = #{REG_SN}
+	
+</update>
+
+<!-- 무인회수기정보 변경이력 -->
+<update id="epce9000531_update_hist"  parameterType="map" >
+	   INSERT
+INTO   EPCM_URM_INFO_HIST
+       (
+              URM_UPD_DT,
+              SERIAL_NO,
+              URM_NM,
+              URM_CODE_NO,
+              AREA_CD,
+              START_DT,
+              END_DT,
+              PNO,
+              ADDR1,
+              ADDR2,
+              TELNO,
+              EMAIL,
+              URM_TYPE,
+              URM_CE_NO,
+              URM_USE_DT,
+              URM_DE_DT,
+              USE_TOT,
+              USE_YN,
+              REG_PRSN_ID,
+              REG_DTTM
+       )
+SELECT sysdate AS URM_UPD_DT,
+       SERIAL_NO,
+       URM_NM,
+       URM_CODE_NO,
+       AREA_CD,
+       START_DT,
+       END_DT,
+       PNO,
+       ADDR1,
+       ADDR2,
+       TELNO,
+       EMAIL,
+       URM_TYPE,
+       URM_CE_NO,
+       URM_USE_DT,
+       URM_DE_DT,
+       USE_TOT,
+       USE_YN,
+       #{S_USER_ID}  AS REG_PRSN_ID,
+       sysdate AS REG_DTTM
+FROM   EPCM_URM_INFO_TEST1
+WHERE  SERIAL_NO = #{SERIAL_NO} 
+  AND URM_NO = #{URM_NO} 
+	
+</update>
+
+<!-- 무인회수기정보 변경이력 -->
+<update id="epce9000531_hist"  parameterType="map" >
+	   INSERT
+INTO   EPCM_URM_INFO_HIST
+       (
+              URM_UPD_DT,
+              SERIAL_NO,
+              URM_NM,
+              URM_CODE_NO,
+              AREA_CD,
+              START_DT,
+              END_DT,
+              PNO,
+              ADDR1,
+              ADDR2,
+              TELNO,
+              EMAIL,
+              URM_TYPE,
+              URM_CE_NO,
+              URM_USE_DT,
+              URM_DE_DT,
+              USE_TOT,
+              USE_YN,
+              REG_PRSN_ID,
+              REG_DTTM
+       )
+SELECT sysdate AS URM_UPD_DT,
+       SERIAL_NO,
+       URM_NM,
+       URM_CODE_NO,
+       AREA_CD,
+       START_DT,
+       END_DT,
+       PNO,
+       ADDR1,
+       ADDR2,
+       TELNO,
+       EMAIL,
+       URM_TYPE,
+       URM_CE_NO,
+       URM_USE_DT,
+       URM_DE_DT,
+       USE_TOT,
+       USE_YN,
+       #{S_USER_ID}  AS REG_PRSN_ID,
+       sysdate AS REG_DTTM
+FROM   EPCM_URM_INFO_TEST1
+WHERE  SERIAL_NO = #{SERIAL_NO}
+  AND  URM_NO = #{URM_NO}
+	
+</update>
+
+<!-- 무인회수기정보 저장 -->
+<update id="epce9000531_insert"  parameterType="map" >
+	    INSERT
+	      INTO EPCM_URM_INFO_TEST1
+	      (URM_NO, 
+	       URM_CODE_NO, 
+	       URM_NM, 
+	       SERIAL_NO, 
+	       AREA_CD, 
+	       START_DT, 
+	       PNO, 
+	       ADDR1, 
+	       ADDR2, 
+	       TELNO, 
+	       EMAIL, 
+	       URM_TYPE, 
+	       URM_CE_NO, 
+	       URM_USE_DT, 
+	       URM_DE_DT, 
+	       USE_TOT, 
+	       USE_YN, 
+	       REG_PRSN_ID, 
+	       REG_DTTM, 
+	       UPD_PRSN_ID, 
+	       UPD_DTTM)
+	       VALUES
+	       (
+	       (SELECT NVL(MAX(URM_NO),0)+1 FROM EPCM_URM_INFO_TEST1 ) ,
+	       #{URM_CODE_NO},
+	       #{URM_NM},
+	       #{SERIAL_NO},
+	       <!-- (SELECT ETC_CD FROM EPCN_ETC_CD WHERE decode(SUBSTR(#{ADDR1}, 0, INSTR(#{ADDR1}, ' ', 1, 1)) , '제주특별자치도 ' ,'제주도 ','세종특별자치시 ' ,'세종시 ','경남 ' ,'경상남도 ' ,SUBSTR(#{ADDR1}, 0, INSTR(#{ADDR1}, ' ', 1, 1))) = ETC_CD_NM||' '), -->
+	       #{AREA_CD},
+	       #{START_DT},
+	       #{PNO},
+	       #{ADDR1},
+	       #{ADDR2},
+	       #{TELNO},
+	       #{EMAIL},
+	       #{URM_TYPE},
+	       #{URM_CE_NO},
+	       #{URM_USE_DT},
+	       #{URM_DE_DT},
+	       #{USE_TOT},
+	       'Y',
+	       #{S_USER_ID},
+	       sysdate,
+	       '',
+	       ''
+	       )
+
+	
+</update>
+<!-- 무인회수기 이동 저장 -->
+<update id="epce9000531_insert_old"  parameterType="map" >
+		INSERT INTO 
+		EPCM_URM_INFO_TEST1
+			(URM_NO,
+			URM_NM,
+			SERIAL_NO,
+			AREA_CD,
+			START_DT,
+			PNO,
+			ADDR1,
+			ADDR2,
+			TELNO, 
+	        EMAIL, 
+			URM_TYPE,
+			URM_CE_NO,
+			URM_USE_DT,
+			URM_DE_DT,
+			USE_TOT,
+			USE_YN,
+			REG_PRSN_ID,
+			REG_DTTM,
+			URM_CODE_NO)
+		SELECT (SELECT max(URM_NO)+1 FROM EPCM_URM_INFO_TEST1)AS URM_NO ,
+			   #{URM_NM},       
+			   #{SERIAL_NO}AS SERIAL_NO,
+		       AREA_CD,
+		       #{START_DT} AS START_DT,
+		       PNO,
+		       ADDR1,
+		       ADDR2,
+		       #{TELNO},
+	           #{EMAIL},
+		       #{URM_TYPE} AS URM_TYPE,
+		       #{URM_CE_NO} AS URM_CE_NO,
+		       #{URM_USE_DT} AS URM_USE_DT,
+		       #{URM_DE_DT} AS URM_DE_DT,
+		       #{USE_TOT} AS USE_TOT,
+		       'Y' AS USE_YN,
+		       #{S_USER_ID} AS REG_PRSN_ID,
+		       sysdate AS REG_DTTM,
+		       #{URM_CODE_NO}
+		FROM   EPCM_URM_INFO_TEST1
+		WHERE  URM_CODE_NO = #{URM_CODE_NO}
+		AND ROWNUM = 1
+	
+</update>
+<!-- 무인회수기소모품정보 저장 -->
+<update id="epce9000533_insert"  parameterType="map" >
+			       
+	 INSERT
+			INTO   EPCM_URM_FIX VALUES
+			       (
+			              '',
+			              #{SERIAL_NO},
+			              #{URM_FIX_DT},
+			              #{URM_FIX_CD},
+			              #{URM_EXP_NM},
+			              #{URM_CNT},
+			              (select TOT_PAY from( select TOT_PAY from EPCM_URM_FIX_CD WHERE URM_FIX_CD = #{URM_FIX_CD} order by REG_DT DESC) where ROWNUM = 1)*#{URM_CNT},
+		                    (select CEN_PAY from( select CEN_PAY from EPCM_URM_FIX_CD WHERE URM_FIX_CD = #{URM_FIX_CD} order by REG_DT DESC) where ROWNUM = 1)*#{URM_CNT},
+		                    (select RET_PAY from( select RET_PAY from EPCM_URM_FIX_CD WHERE URM_FIX_CD = #{URM_FIX_CD} order by REG_DT DESC) where ROWNUM = 1)*#{URM_CNT},
+		                    (select CUST_PAY from( select CUST_PAY from EPCM_URM_FIX_CD WHERE URM_FIX_CD = #{URM_FIX_CD} order by REG_DT DESC) where ROWNUM = 1)*#{URM_CNT},
+			              #{S_USER_ID},
+			              SYSDATE,
+			              '',
+			              ''
+			       )
+
+	
+</update>
+
+<select id="epce9000501_select2_cnt" resultType="int">
+
+	      SELECT COUNT(1)
+			FROM EPCM_URM_INFO_TEST1 A
+				   
+				WHERE  1=1
+		   <if test='BIZRNM_SEL != "" and BIZRNM_SEL != null and BIZRNM_SEL != "전체"'  >
+	   	  	AND A.URM_CODE_NO = #{BIZRNM_SEL}
+	   	   </if>
+	   	   <if test="URM_CE_NO !=''  and URM_CE_NO !=null  and   URM_CE_NO != '전체'" >
+	          AND A.URM_CE_NO = #{URM_CE_NO}
+	      </if>
+		   <if test='AreaCdList_SEL != "" and AreaCdList_SEL != null '>
+	   	  	AND A.AREA_CD = #{AreaCdList_SEL}
+	   	   </if>
+	   	   <if test="SERIAL_NO !=''  and SERIAL_NO !=null">
+	          AND A.SERIAL_NO like  '%'||#{SERIAL_NO}||'%'
+	      </if>
+	      <if test="USE_YN !=''  and USE_YN !=null">
+	          AND A.USE_YN = #{USE_YN}
+	      </if>
+
+
+</select>
+
+<update id="epce900050142_update" parameterType="hashmap">
+	UPDATE EPCM_URM_INFO_TEST1
+	   SET USE_YN = #{USE_YN}
+	   <if test = 'USE_YN != "Y"'>
+	   	  ,END_DT =to_char(SYSDATE,'yyyymmdd')
+	   </if>
+	   <if test = 'USE_YN == "Y"'>
+	   	  ,END_DT = null
+	   </if>
+	      ,UPD_PRSN_ID = #{S_USER_ID}
+	      ,UPD_DTTM = SYSDATE
+	 WHERE URM_NO = #{URM_NO}
+	
+</update>
+
+<update id="EPCE9000538_select" parameterType="hashmap">
+	DELETE FROM EPCM_URM_FIX WHERE REG_SN = #{REG_SN}
+</update>
+
+<!-- 시리얼번호 중복체크 -->	
+<select id="serialNoCheck"  parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) CNT 
+		  FROM EPCM_URM_INFO_TEST1
+		WHERE SERIAL_NO = #{SERIAL_NO}
+		  AND USE_YN ='Y'
+</select>
+<!-- 소매점코드 중복체크 -->	
+<select id="urmcodeNoCheck"  parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) CNT 
+		  FROM EPCM_URM_INFO_TEST1
+		WHERE URM_CODE_NO = #{URM_CODE_NO}
+		  AND USE_YN ='Y'
+</select>
+
+
+<select id="urmCeNoCheck"  parameterType="hashmap" resultType="String">
+		SELECT concat('K-RVM-',max(SUBSTR(URM_CE_NO,7))+1) AS URM_CE_NO
+		  FROM EPCM_URM_INFO_TEST1
+</select>
+
+<!-- 사업자 변경이력 조회 -->	
+<select id="epce9000501_2_select" resultType="hashmap">
+SELECT TO_CHAR(URM_UPD_DT,'yyyy-mm-dd') URM_UPD_DT,
+       SERIAL_NO,
+       URM_NM,
+       AREA_CD,
+       TO_CHAR(TO_DATE(START_DT,'yyyymmdd'),'YYYY-MM-DD') START_DT,
+	     TO_CHAR(TO_DATE(END_DT,'yyyymmdd'),'YYYY-MM-DD') END_DT,
+       PNO ,
+       ADDR1 || ADDR2 as ADDR,
+       TELNO,
+       EMAIL,
+       URM_TYPE,
+       DECODE(URM_TYPE,'A','독립형','매립형') URM_TYPE_NM,
+       URM_CE_NO,
+       TO_CHAR(TO_DATE(URM_USE_DT,'yyyymmdd'),'YYYY-MM-DD') URM_USE_DT,
+       TO_CHAR(TO_DATE(URM_DE_DT,'yyyymmdd'),'YYYY-MM-DD') URM_DE_DT,
+       TO_CHAR(NVL(USE_TOT,0),'9,999,999,999,999') AS USE_TOT,
+       CASE
+		WHEN USE_YN = 'Y' THEN '사용중'
+		WHEN USE_YN = 'M' THEN '이동'
+		ELSE '폐기'
+	   END AS USE_YN,
+       REG_PRSN_ID,
+       TO_CHAR(REG_DTTM,'YYYY-MM-DD HH24:MI:SS') REG_DTTM
+FROM   EPCM_URM_INFO_HIST
+WHERE SERIAL_NO = #{SERIAL_NO}
+		 ORDER BY REG_DTTM DESC
+		 
+		 
+</select>
+
+<!-- 무인회수기 이동 저장 -->
+<update id="epce9000588_update"  parameterType="map" >
+		INSERT INTO 
+		EPCM_URM_INFO_TEST1
+			(URM_NO,
+			URM_NM,
+			SERIAL_NO,
+			AREA_CD,
+			START_DT,
+			PNO,
+			ADDR1,
+			ADDR2,
+			URM_TYPE,
+			URM_CE_NO,
+			URM_USE_DT,
+			URM_DE_DT,
+			USE_TOT,
+			USE_YN,
+			REG_PRSN_ID,
+			REG_DTTM,
+			URM_CODE_NO)
+		SELECT (SELECT max(URM_NO)+1 FROM EPCM_URM_INFO_TEST1)AS URM_NO ,
+			   URM_NM,       
+			   #{SERIAL_NO}AS SERIAL_NO,
+		       AREA_CD,
+		       to_char(sysdate,'yyyymmdd') AS START_DT ,
+		       PNO,
+		       ADDR1,
+		       ADDR2,
+		       C.URM_TYPE,
+		       C.URM_CE_NO,
+		       C.URM_USE_DT,
+		       C.URM_DE_DT,
+		       C.USE_TOT,
+		       'Y' AS USE_YN,
+		       #{S_USER_ID} AS REG_PRSN_ID,
+		       sysdate AS REG_DTTM,
+		       URM_CODE_NO
+		FROM ( SELECT  URM_TYPE,
+		       URM_CE_NO,
+		       URM_USE_DT,
+		       URM_DE_DT,
+		       USE_TOT
+					  FROM	EPCM_URM_INFO_TEST1
+		 			 WHERE 1=1
+		 			 AND SERIAL_NO =#{SERIAL_NO}
+		 			 AND URM_NO =#{URM_NO}
+					   ) C
+					   ,   EPCM_URM_INFO_TEST1 A
+		WHERE  A.URM_CODE_NO = #{URM_CODE_NO}
+		AND ROWNUM = 1
+	
+</update>
+
+</mapper>

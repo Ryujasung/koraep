@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3965801Mapper">
+          
+          <!-- 생산자제품코드관리관리 조회 -->
+          <select id="epce3965801_select" parameterType="map" resultType="hashmap">
+				SELECT 
+					MFC_BIZRID
+					, MFC_BIZRNO
+					, DTL_SN
+					, MFC_CTNR_CD
+					, SE_CD1
+					, SE_CD2
+					, SE_CD3
+					, MFC_CTNR_NM
+					, MAPP_CTNR_CD
+					, USE_YN
+					, (SELECT CTNR_NM FROM EPCN_STD_CTNR_CD WHERE CTNR_CD = A.MAPP_CTNR_CD) AS MAPP_CTNR_NM
+				FROM 
+					EPCN_MFC_CTNR_INFO A
+				WHERE 1=1
+					<if test='MFC_CTNR_NM != null and MFC_CTNR_NM != "" '>
+					AND MFC_CTNR_NM like '%' || #{MFC_CTNR_NM} || '%'
+					</if>
+					<if test='MFC_CTNR_CD != null and MFC_CTNR_CD != "" '>
+					AND MFC_CTNR_CD like '%' || #{MFC_CTNR_CD} || '%'
+					</if>
+					<if test='BIZRID != null and BIZRID != "" '>
+					AND MFC_BIZRID = #{BIZRID}
+					</if>
+					<if test='BIZRNO != null and BIZRNO != "" '>
+					AND MFC_BIZRNO = #{BIZRNO}
+					</if>
+				ORDER BY 
+					REG_DTTM DESC
+          </select>
+          
+          <!-- 생산자제품코드관리관리 조회시 입력값이 있을경우 수정 없을경우 저장 체크 -->
+          <select id="epce3965801_select2" resultType="int" parameterType="map">
+	          SELECT 
+			  		COUNT(*) 
+			  FROM 
+			  		EPCN_MFC_CTNR_INFO
+			  WHERE 1=1
+				  	AND MFC_BIZRID = #{MFC_BIZRID}
+				 	AND MFC_BIZRNO = #{MFC_BIZRNO}
+				  	AND MFC_CTNR_CD = #{MFC_CTNR_CD}
+				  	AND SE_CD1 = #{SE_CD1}
+				  	AND SE_CD2 = #{SE_CD2}
+				  	AND SE_CD3 = #{SE_CD3}
+				  	<if test='DTL_SN == null or DTL_SN == "" '>
+					AND MFC_BIZRNO = (SELECT COUNT(*) FROM EPCN_MFC_CTNR_INFO WHERE MFC_BIZRID = #{MFC_BIZRID} AND MFC_BIZRNO = #{MFC_BIZRNO})+1
+					</if>
+					<if test='DTL_SN != null and DTL_SN != "" '>
+					AND DTL_SN = #{DTL_SN}
+					</if>
+          </select>
+          
+          <!-- 생산자제품코드관리관리 입력 -->
+          <insert id="epce3965801_insert" parameterType="map">
+              
+            INSERT 
+		    INTO EPCN_MFC_CTNR_INFO
+			    (
+				MFC_BIZRID
+				, MFC_BIZRNO
+				, DTL_SN
+				, MFC_CTNR_CD
+				, SE_CD1
+				, SE_CD2
+				, SE_CD3
+				, MFC_CTNR_NM
+				, MAPP_CTNR_CD
+				, USE_YN
+				, REG_DTTM
+			) VALUES (
+		        #{MFC_BIZRID}
+				, #{MFC_BIZRNO}
+				, (SELECT COUNT(*) FROM EPCN_MFC_CTNR_INFO WHERE MFC_BIZRID = #{MFC_BIZRID} AND MFC_BIZRNO = #{MFC_BIZRNO})+1
+				, #{MFC_CTNR_CD}
+				, #{SE_CD1}
+				, #{SE_CD2}
+				, #{SE_CD3}
+				, #{MFC_CTNR_NM}
+				, #{MAPP_CTNR_CD}
+				, #{USE_YN}
+				, SYSDATE
+		       )
+          
+          </insert>
+          
+          <!-- 생산자제품코드관리관리 수정 -->
+          <update id="epce3965801_update" parameterType="map">
+	          	UPDATE
+		  	    	EPCN_MFC_CTNR_INFO
+				SET
+					 MFC_CTNR_NM = #{MFC_CTNR_NM}
+					, MAPP_CTNR_CD = #{MAPP_CTNR_CD}
+					, USE_YN = #{USE_YN}
+					,UPD_DTTM = SYSDATE 
+				 WHERE 1=1
+				 	AND MFC_BIZRID = #{MFC_BIZRID}
+				 	AND MFC_BIZRNO = #{MFC_BIZRNO}
+				  	AND DTL_SN = #{DTL_SN}
+				  	AND MFC_CTNR_CD = #{MFC_CTNR_CD}
+				  	AND SE_CD1 = #{SE_CD1}
+				  	AND SE_CD2 = #{SE_CD2}
+				  	AND SE_CD3 = #{SE_CD3}
+	          
+          </update>
+          
+    <!-- 빈용기명 조회  -->
+    <select id="epce3965801_select5" parameterType="map" resultType="hashmap">
+	      SELECT A.CTNR_CD
+		             ,A.CTNR_NM
+		             ,C.STD_DPS
+		             ,A.PRPS_CD
+		             ,A.CPCT_CD
+		             ,EPCN_ETC_NM(PRPS_CD , 'E002') AS CPCT_NM1
+		             ,EPCN_ETC_NM(CPCT_CD , 'E001') AS CPCT_NM2
+   			FROM EPCN_STD_CTNR_CD A
+		             JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E ON A.LANG_SE_CD = E.LANG_SE_CD
+		             ,EPCN_ETC_CD B 
+		             ,EPCN_STD_DPS_MGNT C
+	      WHERE  1=1
+	          AND A.USE_YN = 'Y'
+	          AND B.USE_YN = 'Y'
+	          AND C.USE_YN = 'Y'
+		      AND A.MFC_SE_CD = B.ETC_CD
+		      AND A.LANG_SE_CD = E.LANG_SE_CD
+		      AND B.GRP_CD = 'E003'
+		      AND C.CTNR_CD = A.CTNR_CD
+		      AND C.LANG_SE_CD = A.LANG_SE_CD
+		      
+		      AND A.PRPS_CD IN ('0', '1')
+		      
+	      	<if test="BIZR_TP_CD != ''">
+			     <choose>
+			         <when test='BIZR_TP_CD == "M1"'>
+					   AND B.RSV_ITEM2 IN (#{BIZRNO}, '0000000000')
+			         </when>
+			         <when test='BIZR_TP_CD == "M2"'>
+			           AND B.RSV_ITEM2 = #{BIZRNO}
+			         </when>
+			     </choose>
+			 </if>
+       ORDER BY A.SEL_ORD, A.CTNR_CD, A.CTNR_NM
+       
+    </select>
+          
+          
+</mapper>

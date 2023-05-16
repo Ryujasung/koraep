@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE2308801Mapper">
+
+	<select id="epce2308801_select" parameterType="map" resultType="hashmap">
+	
+		 SELECT A.BILL_DOC_NO
+			        ,A.ACP_DT
+			        ,ECL_DECRYPT(A.VACCT_NO) AS VACCT_NO
+			        ,A.NOTY_AMT
+			        ,A.BILL_SE_CD
+			        ,EPCN_ETC_NM(A.BILL_SE_CD, 'D031') AS BILL_SE_NM
+			        ,EPCN_BIZR_NM(A.MFC_BIZRID, A.MFC_BIZRNO) AS MFC_BIZRNM
+			        ,A.BILL_ISSU_DT
+			        ,A.ACP_CFM_DT
+			        ,<![CDATA[ '<a href="javascript:fn_page()" class="gridLink">' || TO_CHAR(TO_DATE(A.BILL_ISSU_DT,'YYYYMMDD'),'YYYY-MM-DD') || '</A>' AS BILL_ISSU_DT_PAGE ]]>
+			        ,<![CDATA[ '<a href="javascript:fn_pop()" class="gridLink">' || TO_CHAR(TO_DATE(A.ACP_CFM_DT,'YYYYMMDD'),'YYYY-MM-DD') || '</A>' AS ACP_CFM_DT_PAGE ]]>
+			        ,A.ACP_CFM_MNUL_YN
+			        ,EPCN_ETC_NM(A.ACP_CFM_MNUL_YN, 'D036') AS CFM_SE_NM
+			        ,A.ACP_CFM_SEQ
+		   FROM EPGM_BILL_LST A
+	     WHERE 1=1
+		     AND A.ISSU_STAT_CD = 'A' /* 수납확인 */
+		     AND A.ACP_DT BETWEEN REPLACE(#{START_DT_SEL}, '-') AND REPLACE(#{END_DT_SEL}, '-')
+		   <if test='BIZRID != null and BIZRID != "" '>
+		     AND A.MFC_BIZRID = #{BIZRID}
+		   </if>
+		   <if test='BIZRNO != null and BIZRNO != "" '>
+		     AND A.MFC_BIZRNO = #{BIZRNO}
+		   </if>
+		   
+		   <if test="BILL_SE_CD_SEL != null and BILL_SE_CD_SEL.size > 0 " >
+				AND A.BILL_SE_CD IN 
+			        <foreach collection="BILL_SE_CD_SEL"  item="item"  open="(" close=")" separator=",">
+			            #{item}
+			        </foreach>
+			</if>
+		   
+		   <if test='ACP_CFM_MNUL_YN_SEL != null and ACP_CFM_MNUL_YN_SEL != "" '>
+		     AND A.ACP_CFM_MNUL_YN = #{ACP_CFM_MNUL_YN_SEL}
+		   </if>
+		     
+		 ORDER BY A.ACP_DT DESC
+		 
+	</select>
+	
+	<select id="epce2308888_select" parameterType="map" resultType="hashmap">
+		 SELECT EPCN_BIZR_NM(MFC_BIZRID, MFC_BIZRNO) AS MFC_BIZRNM
+		 			,A.BILL_ISSU_DT
+		 			,EPCN_ETC_NM(A.BILL_SE_CD, 'D031') AS BILL_SE_NM
+		 			,A.NOTY_AMT
+		   FROM EPGM_BILL_LST A
+		 WHERE 1=1
+		     AND ACP_CFM_SEQ = #{ACP_CFM_SEQ} 
+		 ORDER BY ACP_DT DESC
+	</select>
+	
+	<select id="epce2308888_select2" parameterType="map" resultType="hashmap">
+		SELECT VACCT_NO, 
+			       SEND_MAN, 
+			       TR_IL, 
+			       SUM_AMT 
+		  FROM EPGM_VACCT_ACP_LK 
+		WHERE ACP_CFM_YN = 'Y' 
+		    AND ACP_CFM_SEQ = #{ACP_CFM_SEQ} 
+		ORDER BY TR_IL	   
+	</select>
+
+</mapper>

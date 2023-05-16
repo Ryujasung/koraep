@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE0122701Mapper">
+   
+
+	
+    <!-- 기준보증금관리 조회 -->
+	<select id="epce0122701_select" parameterType="map" resultType="hashmap">
+	    
+	    SELECT 
+			A.CTNR_CD
+			,A.LANG_SE_CD
+			,A.REG_SN
+			,A.STD_DPS
+			,A.PSBL_ST_DPS
+			,A.PSBL_END_DPS
+			,A.APLC_ST_DT
+			,A.APLC_END_DT
+			,NVL(A.PSBL_ST_DPS,0)||' ~ '||NVL(A.PSBL_END_DPS,0) AS PSBL_DPS 
+			,CASE 
+	           WHEN A.APLC_ST_DT IS NOT NULL 
+	           AND   A.APLC_END_DT IS NOT NULL 
+	           THEN TO_CHAR(TO_DATE(A.APLC_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(A.APLC_END_DT,'YYYYMMDD'),'YYYY-MM-DD') 
+	           ELSE '' 
+	         END AS APLC_DT 
+			,B.CTNR_NM
+
+	   FROM EPCN_STD_DPS_MGNT A
+	            ,EPCN_STD_CTNR_CD  B
+	   WHERE 1=1
+	   AND  A.CTNR_CD			=  B.CTNR_CD
+	   AND  A.LANG_SE_CD	=  B.LANG_SE_CD
+	   AND  A.USE_YN           =  'Y'
+	   AND  A.CTNR_CD			=  #{CTNR_CD}
+	   AND  A.LANG_SE_CD	=  #{LANG_SE_CD}
+	   ORDER BY APLC_ST_DT DESC
+	</select>
+	
+	
+    <!-- 기준보증금관리 삭제가능한지  조회 -->
+	<select id="epce0122701_select2" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)  AS NCNT 
+		FROM EPCN_STD_DPS_MGNT
+		WHERE   1=1
+		AND  CTNR_CD			=  #{CTNR_CD}
+		AND  LANG_SE_CD	    =  #{LANG_SE_CD}
+		AND	 REG_SN            =  #{REG_SN}
+		AND    APLC_ST_DT &lt;= TO_CHAR(SYSDATE,'YYYYMMDD')
+	</select>
+	
+	
+	<!-- 기준보증금관리 삭제 -->
+    <delete id="epce0122701_delete" parameterType="map" >
+
+	     UPDATE 
+	           EPCN_STD_DPS_MGNT
+	      SET
+				USE_YN			    =  'N'
+				,UPD_PRSN_ID		=  #{RGST_PRSN_ID}
+				,UPD_DTTM        =  SYSDATE 
+	     WHERE  1=1
+	     AND	CTNR_CD          = #{CTNR_CD}
+	     AND  LANG_SE_CD    = #{LANG_SE_CD}
+		 AND	 REG_SN            = #{REG_SN}
+  
+   </delete>
+
+    <!--기준보증금저장 및 수정 시 중복 적용기간조회  -->
+   	<select id="epce0122731_select" parameterType="map" resultType="int">
+
+		 SELECT COUNT(1) AS NCNT 
+		 FROM EPCN_STD_DPS_MGNT 
+		 WHERE  CTNR_CD  = #{CTNR_CD}
+		 AND    LANG_SE_CD =  #{LANG_SE_CD}
+		 AND    USE_YN           = 'Y'
+	     AND APLC_END_DT >= #{START_DT}   
+	     AND APLC_ST_DT &lt;= #{END_DT}
+		<if test='SAVE_CHK== "U"'>
+	      AND REG_SN		 	!=		#{REG_SN}
+		</if> 
+			
+    </select>
+
+    <!--등록순번  -->
+   	<select id="epce0122731_select2" parameterType="map" resultType="string">
+	             
+                 SELECT NVL(MAX(REG_SN),0) + 1 AS REG_SN 
+				 FROM EPCN_STD_DPS_MGNT 
+			     WHERE  1=1
+			     AND     CTNR_CD      =  #{CTNR_CD}
+			     AND     LANG_SE_CD =  #{LANG_SE_CD}
+	
+    </select>
+
+     <!-- 기준보증금등록 적용기간 시작날자 끝날짜 조회 -->
+	<select id="epce0122731_select3" parameterType="map" resultType="hashmap">
+
+		 SELECT 
+			 TO_CHAR(NVL(TO_DATE(MAX(APLC_END_DT),'YYYYMMDD')+1,SYSDATE),'YYYY-MM-DD') AS APLC_ST_DT 
+			,TO_CHAR(NVL(TO_DATE(MAX(APLC_END_DT),'YYYYMMDD')+30,SYSDATE+30),'YYYY-MM-DD') AS APLC_END_DT 
+		 FROM EPCN_STD_DPS_MGNT 
+		 WHERE  1=1
+		 AND     USE_YN           = 'Y'
+		 AND		CTNR_CD = #{CTNR_CD}
+		 AND		LANG_SE_CD =  #{LANG_SE_CD}
+
+    </select>
+
+
+
+    <!--기준보증금관리 추가  -->
+    <insert id="epce0122731_insert" parameterType="map">
+         
+        INSERT 
+			    INTO EPCN_STD_DPS_MGNT
+				    (
+				      CTNR_CD
+				     ,LANG_SE_CD
+				     ,REG_SN
+				     ,STD_DPS
+				     ,PSBL_ST_DPS
+				     ,PSBL_END_DPS
+				     ,APLC_ST_DT
+				     ,APLC_END_DT
+				     ,REG_PRSN_ID 
+				     ,REG_DTTM
+				     )
+			     VALUES
+			       (
+				   #{CTNR_CD}
+				   ,#{LANG_SE_CD}
+				   ,#{REG_SN}
+			       ,#{STD_DPS}
+				   ,#{PSBL_ST_DPS}
+				   ,#{PSBL_END_DPS}
+				   ,#{START_DT}
+				   ,#{END_DT}
+				   ,#{RGST_PRSN_ID}
+				     ,SYSDATE
+			       )
+			       
+    </insert>
+    <!--기준보증금관리이력 추가  -->
+    <insert id="epce0122731_insert2" parameterType="map">
+         
+        INSERT 
+			    INTO EPCN_STD_DPS_ALT_HIST
+				    (
+				     ALT_DTTM
+				     ,CTNR_CD
+				     ,LANG_SE_CD
+				     ,REG_SN
+				     ,BTN_SE_CD
+				     ,STD_DPS
+				     ,PSBL_ST_DPS
+				     ,PSBL_END_DPS
+				     ,APLC_ST_DT
+				     ,APLC_END_DT
+				     ,REG_PRSN_ID 
+				     ,REG_DTTM
+				     )
+			    VALUES
+			       (
+			            ( SELECT
+				         TO_CHAR(SYSTIMESTAMP,'YYYYMMDDHH24MISSFF1')
+					       SYSTIMESTAMP
+					       FROM DUAL	  
+				       	 )
+				   ,#{CTNR_CD}
+				   ,#{LANG_SE_CD}
+                   ,#{REG_SN}
+				   ,#{BTN_SE_CD}
+			       ,#{STD_DPS}
+				   ,#{PSBL_ST_DPS}
+				   ,#{PSBL_END_DPS}
+				   ,#{START_DT}
+				   ,#{END_DT}
+				   ,#{RGST_PRSN_ID}
+				     ,SYSDATE
+			       )
+			       
+    </insert>
+
+   <!-- 기준보증금관리 수정-->
+   <update id="epce0122742_update" parameterType="map">
+   
+            UPDATE
+		  	        EPCN_STD_DPS_MGNT
+			SET
+					 STD_DPS			=  #{STD_DPS}
+					,PSBL_ST_DPS     =  #{PSBL_ST_DPS}
+					,PSBL_END_DPS	=  #{PSBL_END_DPS}
+					,APLC_ST_DT		=  #{START_DT}
+					,APLC_END_DT    =  #{END_DT}
+					,UPD_PRSN_ID		=  #{RGST_PRSN_ID}
+					,UPD_DTTM        =  SYSDATE 
+			 WHERE 1=1
+			 AND  USE_YN          = 'Y'
+			 AND	 CTNR_CD          = #{CTNR_CD}
+		     AND	 LANG_SE_CD		= #{LANG_SE_CD}
+			 AND	 REG_SN				= #{REG_SN}
+				 
+   </update>
+
+
+</mapper>
+

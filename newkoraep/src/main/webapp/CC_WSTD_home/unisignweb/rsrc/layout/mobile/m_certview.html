@@ -1,0 +1,63 @@
+<div id="m-us-div-cert-view" class="m-us-layout-cert-view" oncontextmenu="return false" onselectstart="return false">
+    <div id="m-us-div-view-title" class="m-us-layer-title">
+		<p id="m-us-view-lbl-title" class="m-us-layer-lbl-title"></p>
+    </div>    
+    <div id="m-us-div-view-body" class="m-us-layer-sbody">
+        <ul id="m-us-view-tab" class="m-us-layout-view-tab">
+        	<li class="m-us-view-tab1">
+        		<a href="#none" id="m-us-view-tab-simple" class="m-us-view-tab-tag active"></a>
+            	<div id="m-us-view-simple" class="m-us-layout-view-content" style="display:block;">
+                	<div class="m-us-layout-view-simple m-us-view-tab-content">
+                        <dl>
+                            <dt id="m-us-view-cert-info" class="m-us-layout-view-cert-info"></dt>
+                            <dd>
+                                <p class="m-us-layout-view-cert-img"><img id="m-us-view-cert-status-img" /></p>
+                                <div id="m-us-view-cert-status-msg" class="m-us-layout-view-cert-status"></div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt id="m-us-view-cert-subject-name"></dt>
+                            <dd id="m-us-view-cert-subject-name-data"></dd>
+                        </dl>
+                        <dl>
+                            <dt id="m-us-view-cert-issuer-name"></dt>
+                            <dd id="m-us-view-cert-issuer-name-data"></dd>
+                        </dl>
+                        <dl>
+                            <dt id="m-us-view-cert-validity-date"></dt>
+                            <dd><span id="m-us-view-cert-validity-date-from"></span> ~ <span id="m-us-view-cert-validity-date-to"></span></dd>
+                        </dl>
+                        <div id="m-us-view-cert-purpose" class="m-us-layout-view-cert-purpose"></div>
+                    </div>
+                </div>
+            </li>
+            <li class="m-us-view-tab2">
+            	<a href="#none" id="m-us-view-tab-detail" class="m-us-view-tab-tag"></a>
+                <div id="m-us-view-detail" class="m-us-layout-view-content">                                        
+                    <div class="m-us-layout-view-detail m-us-view-tab-content">                                            
+                        <div id="m-us-view-list" class="m-us-layout-view-list">
+                            <div id="m-us-view-list-inner" class="m-us-layout-view-list-inner">
+                                <table id="m-us-view-tbl-list" class="m-us-layout-view-tbl-list">
+                                    <caption id="m-us-view-tbl-list-caption" class="m-us-layout-view-tbl-list-caption"> </caption>
+                                    <thead><tr><th id="m-us-view-tbl-list-th" class="m-us-layout-view-tbl-list-th"> </th></tr></thead>
+                                    <tbody><tr><td id="m-us-view-tbl-list-td" class="m-us-layout-view-tbl-list-td"> </td></tr></tbody>
+                                    <tfoot><tr><td> </td></tr></tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="m-us-view-detail-data" class="m-us-layout-view-detail-data">
+                            <textarea id="m-us-view-detail-text-box" class="m-us-layout-view-detail-text-box" readonly="readonly"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class="m-us-layer-btns">
+            <ul>
+                <li><input type="button" class="m-us-layout-normal-btn" id="m-us-view-cert-cps-btn" /></li>
+                <li><input type="button" class="m-us-layout-normal-btn bstyle-btn" id="m-us-view-cert-confirm-btn" /></li>
+            </ul>                                    
+        </div>                                        
+    </div>
+    <button id="m-us-view-cls-img-btn" class="m-us-layer-cls-btn" type="button"><img id="m-us-view-cls-btn-img" /></button>        
+</div>

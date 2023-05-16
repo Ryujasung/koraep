@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF6120901Mapper">
+
+	<select id="epmf6120901_select" parameterType="map" resultType="hashmap">
+	
+		   SELECT C.BIZRID, C.BIZRNO, C.BIZRNM
+			          ,NVL(REG_CNT, 0) AS REG_CNT
+			          ,LST_REG_HR 
+		     FROM (
+			          	SELECT A.MFC_BIZRID, A.MFC_BIZRNO
+				                   ,COUNT(1) AS REG_CNT
+				                   ,TO_CHAR(MAX(B.REG_DTTM), 'HH24:MI:SS') AS LST_REG_HR 
+			              FROM EPDM_DLIVY_MST A
+			                   		,EPDM_DLIVY_INFO B
+			            WHERE 1=1
+			                AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+			                AND A.DLIVY_REG_DT = REPLACE(#{START_DT}, '-')
+			            GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO
+			           ) A
+			          ,EPCN_BIZR_INFO C
+		   WHERE 1=1
+		       AND C.BIZR_TP_CD IN ('M1', 'M2')
+		       AND C.BIZRID = A.MFC_BIZRID(+)
+		       AND C.BIZRNO = A.MFC_BIZRNO(+)
+		  ORDER BY C.SEL_ORD, C.BIZRNM
+	
+	</select>
+
+</mapper>
+

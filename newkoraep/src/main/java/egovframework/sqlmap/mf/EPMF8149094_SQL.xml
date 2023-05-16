@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF8149094Mapper">
+    
+    <resultMap id="notiMap" type="hashmap">
+		<result property="NOTI_SEQ" column="NOTI_SEQ" />
+		<result property="SBJ" column="SBJ" />
+		<result property="CNTN_TP" column="CNTN_TP"  />
+		<result property="CNTN" column="CNTN"  javaType="java.lang.String" jdbcType="CLOB" />
+		<result property="SEL_CNT" column="SEL_CNT"  />
+	</resultMap>
+    
+    <!-- 공지사항 등록 순번 조회 -->
+    <select id="epmf8149094_select1" resultType="hashmap">
+        SELECT NVL(MAX(NOTI_SEQ), 0)+1 AS NOTI_SEQ
+          FROM EPCN_NOTI
+    </select>
+    
+    <!-- 공지사항 등록 -->
+    <insert id="epmf8149094_update1" parameterType="map">
+        INSERT
+          INTO EPCN_NOTI
+          		(
+          			NOTI_SEQ,
+          			SBJ,
+          			CNTN_TP,
+          			CNTN,
+          			SEL_CNT,
+          			REG_PRSN_ID,
+          			REG_DTTM
+          		)
+          		VALUES
+          		(
+          			#{NOTI_SEQ},
+          			#{SBJ},
+          			#{CNTN_TP},
+          			#{CNTN2:CLOB},
+          			0,
+          			#{REG_PRSN_ID},
+          			SYSDATE
+          		)
+    </insert>
+    
+    <!-- 공지사항 수정 -->
+    <update id="epmf8149094_update3" parameterType="map">
+        UPDATE EPCN_NOTI
+           SET SBJ = #{SBJ},
+               CNTN = #{CNTN2:CLOB},
+               UPD_PRSN_ID = #{UPD_PRSN_ID},
+               UPD_DTTM = SYSDATE
+         WHERE NOTI_SEQ = #{NOTI_SEQ}
+    </update>
+    
+	<!-- 공지사항 첨부파일 등록 -->
+	<insert id="epmf8149094_update2" parameterType="map">
+	    INSERT
+	      INTO EPCN_NOTI_FILE
+	      		(
+	      			NOTI_SEQ,
+	      			REG_SN,
+	      			FILE_NM,
+	      			SAVE_FILE_NM,
+	      			FILE_PATH,
+	      			REG_PRSN_ID,
+	      			REG_DTTM
+	      		)
+	      		VALUES
+	      		(
+	      			#{NOTI_SEQ},
+	      			#{REG_SN},
+	      			#{FILE_NM},
+	      			#{SAVE_FILE_NM},
+	      			#{FILE_PATH},
+	      			#{REG_PRSN_ID},
+	      			SYSDATE
+	      		)
+	</insert>
+	
+	<!-- 공지사항 상세조회 -->
+	<select id="epmf8149094_select2" parameterType="map" resultMap="notiMap">
+	    SELECT NOTI_SEQ,
+	    	   SBJ,
+	    	   CNTN_TP,
+	    	   CNTN,
+	    	   SEL_CNT,
+	    	   TO_CHAR(REG_DTTM, 'YYYYMMDD') AS REG_DTTM
+	      FROM EPCN_NOTI
+	     WHERE 1=1
+	       AND NOTI_SEQ = #{NOTI_SEQ}
+    </select>
+    
+	<!-- 공지사항 첨부파일 조회 -->
+	<select id="epmf8149094_select3" parameterType="map" resultType="hashmap">
+	    SELECT NOTI_SEQ,
+	    	   REG_SN,
+	    	   FILE_NM,
+	    	   SAVE_FILE_NM,
+	    	   FILE_PATH
+	      FROM EPCN_NOTI_FILE
+	     WHERE 1=1
+	       AND NOTI_SEQ = #{NOTI_SEQ}
+	     ORDER BY NOTI_SEQ, REG_SN
+	</select>
+	
+	<!-- 삭제할 공지사항 첨부파일 이름조회 -->
+	<select id="epmf8149094_select4" parameterType="map" resultType="hashmap">
+	    SELECT NOTI_SEQ,
+	    	   REG_SN,
+	    	   FILE_NM,
+	    	   SAVE_FILE_NM,
+	    	   FILE_PATH
+	      FROM EPCN_NOTI_FILE
+	     WHERE 1=1
+	       AND NOTI_SEQ = #{NOTI_SEQ}
+	       AND REG_SN = #{REG_SN}
+	     ORDER BY NOTI_SEQ, REG_SN
+	</select>
+	
+	<!-- 공지사항 첨부파일 이름삭제 -->
+	<delete id="epmf8149094_delete" parameterType="map">
+	    DELETE
+	      FROM EPCN_NOTI_FILE
+	     WHERE 1=1
+	       AND NOTI_SEQ = #{NOTI_SEQ}
+	       AND REG_SN = #{REG_SN}
+	</delete>
+	
+	<!-- 공지사항 기존 첨부파일 리스트 조회 -->
+	<select id="epmf8149094_select5" parameterType="map" resultType="hashmap">
+	    SELECT NOTI_SEQ,
+	    	   FILE_NM,
+	    	   SAVE_FILE_NM,
+	    	   FILE_PATH
+	      FROM EPCN_NOTI_FILE
+	     WHERE 1=1
+	       AND NOTI_SEQ = #{NOTI_SEQ}
+	     ORDER BY REG_SN
+	</select>
+	
+	<!-- 공지사항 기존 첨부파일 순번 재조정 -->
+	<update id="epmf8149094_update4" parameterType="map">
+	    UPDATE EPCN_NOTI_FILE
+	       SET REG_SN = #{REG_SN}
+	     WHERE 1=1
+	       AND NOTI_SEQ = #{NOTI_SEQ}
+	       AND FILE_NM = #{FILE_NM}
+	       AND SAVE_FILE_NM = #{SAVE_FILE_NM}
+	       AND FILE_PATH = #{FILE_PATH}
+	</update>
+	
+</mapper>

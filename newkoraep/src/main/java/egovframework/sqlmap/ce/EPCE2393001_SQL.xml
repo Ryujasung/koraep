@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE2393001Mapper">
+
+	<select id="epce2393001_select" parameterType="map" resultType="hashmap">
+	
+		   SELECT A.BILL_DOC_NO
+		   			  ,A.BILL_ISSU_DT
+		   			  ,<![CDATA['<a href="javascript:fn_page()" class="gridLink">' || TO_CHAR(TO_DATE(A.BILL_ISSU_DT, 'YYYYMMDD'), 'YYYY-MM-DD') || '</a>' as BILL_ISSU_DT_PAGE]]>
+			          ,A.BILL_SE_CD
+			          ,EPCN_ETC_NM(A.BILL_SE_CD, 'D031') AS BILL_SE_NM
+			          ,A.ISSU_STAT_CD
+			          ,EPCN_ETC_NM(A.ISSU_STAT_CD, 'D032') AS ISSU_STAT_NM
+			          ,B.BIZRNM
+			          ,EPCN_ETC_NM(A.VACCT_BANK_CD, 'S090') AS BANK_NM
+			          ,ECL_DECRYPT(A.VACCT_NO) AS VACCT_NO
+			          ,NVL(A.NOTY_AMT, 0) AS NOTY_AMT
+			          ,NVL(A.ADD_GTN, 0) AS ADD_GTN
+			          ,CASE WHEN A.BILL_SE_CD = 'F' THEN NVL(A.ADD_BILL_REFN_GTN, 0) ELSE NVL(A.FEE_PAY_GTN, 0) END AS FEE_PAY_GTN
+                      ,A.STD_YEAR
+		     FROM EPGM_BILL_LST A
+		          	  ,EPCN_BIZR_INFO B
+		  WHERE 1=1
+		      AND A.BILL_ISSU_DT BETWEEN REPLACE(#{START_DT_SEL}, '-', '') AND REPLACE(#{END_DT_SEL}, '-', '')
+            <if test='STD_YEAR_SEL != null and STD_YEAR_SEL != "" '>
+              AND A.STD_YEAR = #{STD_YEAR_SEL}
+            </if>
+		    <if test='BIZRID != null and BIZRID != "" '>
+		      AND A.MFC_BIZRID = #{BIZRID}
+		    </if>
+		    <if test='BIZRNO != null and BIZRNO != "" '>
+		      AND A.MFC_BIZRNO = #{BIZRNO}
+		    </if>
+		    
+		    <if test="BILL_SE_CD_SEL != null and BILL_SE_CD_SEL.size > 0 " >
+				AND A.BILL_SE_CD IN 
+			        <foreach collection="BILL_SE_CD_SEL"  item="item"  open="(" close=")" separator=",">
+			            #{item}
+			        </foreach>
+			</if>
+			<if test="ISSU_STAT_CD_SEL != null and ISSU_STAT_CD_SEL.size > 0 " >
+				AND A.ISSU_STAT_CD IN 
+			        <foreach collection="ISSU_STAT_CD_SEL"  item="item"  open="(" close=")" separator=",">
+			            #{item}
+			        </foreach>
+			</if>
+		    
+		     AND A.MFC_BIZRID = B.BIZRID
+		     AND A.MFC_BIZRNO = B.BIZRNO
+		     
+		     AND A.ISSU_STAT_CD IN ('I', 'A', 'C')
+		      
+		  ORDER BY A.BILL_ISSU_DT DESC, B.SEL_ORD, B.BIZRNM
+	
+	</select>
+	
+	<!-- 상세조회 -->
+	<select id="epce2393064_select" resultType="hashmap">
+		 SELECT B.BIZRNM
+			        ,ECL_DECRYPT(B.BIZRNO) AS BIZRNO
+			        ,A.BILL_SE_CD
+			        ,A.ISSU_STAT_CD
+			        ,A.BILL_DOC_NO
+			        ,B.RPST_NM
+			        ,B.ADDR1 || ' ' || B.ADDR2 AS ADDR
+			        ,B.RPST_TEL_NO1 || '-' || B.RPST_TEL_NO2 || '-' || B.RPST_TEL_NO3 AS RPST_TEL_NO
+			        ,EPCN_ETC_NM(A.VACCT_BANK_CD, 'S090') AS BANK_NM
+			        ,ECL_DECRYPT(A.VACCT_NO) AS VACCT_NO
+			        ,NVL(NOTY_AMT, 0) as NOTY_AMT
+					,NVL(GTN_TOT, 0) as GTN_TOT
+					,NVL(WHSL_FEE_TOT, 0) as WHSL_FEE_TOT
+					,NVL(WHSL_FEE_STAX_TOT, 0) as WHSL_FEE_STAX_TOT
+					,NVL(RTL_FEE_TOT, 0) as RTL_FEE_TOT
+					,NVL(FEE_PAY_GTN, 0) as FEE_PAY_GTN
+					,NVL(ADD_GTN, 0) as ADD_GTN
+					,NVL(ADD_BILL_REFN_GTN, 0) as ADD_BILL_REFN_GTN
+					,NVL(ADD_GTN_ACMT, 0) as ADD_GTN_ACMT
+					,NVL(ADD_GTN_BAL, 0) as ADD_GTN_BAL
+					,NVL(DRCT_PAY_GTN_ACMT, 0) as DRCT_PAY_GTN_ACMT
+					,NVL(DRCT_PAY_GTN, 0) as DRCT_PAY_GTN
+					,NVL(DRCT_PAY_ADJ_AMT, 0) as DRCT_PAY_ADJ_AMT
+					,NVL(DRCT_PAY_GTN_BAL, 0) as DRCT_PAY_GTN_BAL
+					,NVL(DRCT_RTRVL_ADJ_AMT, 0) as DRCT_RTRVL_ADJ_AMT
+					,NVL(PLAN_BAL, 0) as PLAN_BAL
+                    ,CASE WHEN NVL(DRCT_PAY_ADJ_AMT, 0) <![CDATA[<]]> 0 
+                          THEN NVL(DRCT_RTRVL_ADJ_AMT, 0) + NVL(DRCT_PAY_ADJ_AMT, 0) 
+                          ELSE NVL(DRCT_RTRVL_ADJ_AMT, 0) 
+                     END AS RTRVL_ADJ_AMT
+					,A.ADD_ISSU_YN
+					,A.ADD_AMT_SE
+					,DECODE(A.ADD_AMT_SE, 'G', '보증금', 'F', '수수료', 'E', '기타') AS ADD_AMT_SE_NM
+					,A.ADD_AMT
+					,A.RISU_RSN
+					,A.RISU_DT
+					,C.CNL_REQ_SEQ
+                    ,A.MFC_BIZRNO
+		   FROM EPGM_BILL_LST A
+		        	,EPCN_BIZR_INFO B
+		        	,(SELECT * 
+		        	  FROM   EPGM_BILL_CNL_REQ_INFO 
+		        	  WHERE  CNL_REQ_SEQ = (SELECT MAX(CNL_REQ_SEQ) FROM EPGM_BILL_CNL_REQ_INFO WHERE BILL_DOC_NO = #{BILL_DOC_NO} ))  C
+		WHERE 1=1
+		    AND A.MFC_BIZRID = B.BIZRID
+		    AND A.MFC_BIZRNO = B.BIZRNO
+		    AND A.BILL_DOC_NO = C.BILL_DOC_NO(+)
+		    AND A.BILL_DOC_NO = #{BILL_DOC_NO} 
+	</select>
+
+	<select id="epce2393064_select2" parameterType="map" resultType="hashmap">
+		 SELECT B.MFC_BIZRID, B.MFC_BIZRNO, B.STD_YEAR
+		 			,C.BIZRNM, C.BRCH_NM
+		 			,B.DLIVY_DOC_NO
+		 			,B.DLIVY_REG_DT
+		 			,<![CDATA['<a href="javascript:fn_page2()" class="gridLink">' || TO_CHAR(TO_DATE(B.DLIVY_REG_DT, 'YYYYMMDD'), 'YYYY-MM-DD') || '</a>' as DLIVY_REG_DT_PAGE]]>
+		 			,B.DLIVY_QTY_TOT
+		 			,B.DLIVY_GTN_TOT
+		        	,EPCN_ETC_NM(A.MAPP_SE_CD, 'D033') AS MAPP_SE_NM
+		   FROM EPGM_BILL_DTL A
+			        ,EPDM_DLIVY_MST B
+			        ,EPCN_BRCH_INFO C
+		WHERE 1=1
+		    AND A.MAPP_DLIVY_DOC_NO = B.DLIVY_DOC_NO
+		    AND B.MFC_BIZRID = C.BIZRID
+		    AND B.MFC_BIZRNO = C.BIZRNO
+		    AND B.MFC_BRCH_ID = C.BRCH_ID
+		    AND B.MFC_BRCH_NO = C.BRCH_NO
+		    AND A.BILL_DOC_NO = #{BILL_DOC_NO}
+		    AND A.MAPP_SE_CD = '1' /* 출고 */
+		 ORDER BY B.DLIVY_REG_DT DESC, C.BRCH_NM
+	</select>
+	
+	<select id="epce2393064_select3" parameterType="map" resultType="hashmap">
+		 SELECT B.WRHS_DOC_NO, B.RTN_DOC_NO
+					,B.MFC_BIZRID, B.MFC_BIZRNO, B.MFC_BRCH_ID, B.MFC_BRCH_NO
+					,B.WHSDL_BIZRID, ecl_decrypt(B.WHSDL_BIZRNO) as WHSDL_BIZRNO
+		 			,C.BIZRNM AS MFC_BIZRNM, C.BRCH_NM AS MFC_BRCH_NM, D.BIZRNM AS WHSDL_BIZRNM
+		            ,B.WRHS_CFM_DT
+		            ,<![CDATA['<a href="javascript:fn_page2()" class="gridLink">' || TO_CHAR(TO_DATE(B.WRHS_CFM_DT, 'YYYYMMDD'), 'YYYY-MM-DD') || '</a>' as WRHS_CFM_DT_PAGE]]>
+		            ,A.WRHS_QTY
+		            ,A.WRHS_RTL_FEE + A.WRHS_WHSL_FEE AS WRHS_FEE
+		            ,A.WRHS_WHSL_FEE_STAX AS WRHS_FEE_STAX
+		            ,A.WRHS_FEE_TOT
+		            ,A.WRHS_GTN
+		   FROM EPGM_BILL_DTL A
+		            ,EPCM_CFM_MST B
+		            ,EPCN_BRCH_INFO C
+		            ,EPCN_BIZR_INFO D
+		WHERE 1=1
+		    AND A.MAPP_WRHS_DOC_NO = B.WRHS_DOC_NO
+		    AND B.MFC_BIZRID = C.BIZRID
+		    AND B.MFC_BIZRNO = C.BIZRNO
+		    AND B.MFC_BRCH_ID = C.BRCH_ID
+		    AND B.MFC_BRCH_NO = C.BRCH_NO
+        	AND B.WHSDL_BIZRID = D.BIZRID
+		    AND B.WHSDL_BIZRNO = D.BIZRNO
+		    AND A.BILL_DOC_NO = #{BILL_DOC_NO}
+		 ORDER BY B.WRHS_CFM_DT DESC, C.BRCH_NM, D.SEL_ORD
+	</select>
+	
+	<select id="epce2393064_select4" parameterType="map" resultType="hashmap">
+		  SELECT A.BILL_DOC_NO
+		  			 ,A.BILL_ISSU_DT
+		  			 ,<![CDATA['<a href="javascript:fn_page3()" class="gridLink">' || TO_CHAR(TO_DATE(A.BILL_ISSU_DT, 'YYYYMMDD'), 'YYYY-MM-DD') || '</a>' as BILL_ISSU_DT_PAGE]]>
+		  			 ,C.BIZRNM
+		  			 ,B.WRHS_QTY
+		  			 ,A.ADD_BILL_REFN_GTN
+		    FROM EPGM_BILL_LST A
+			         ,(SELECT BILL_DOC_NO, SUM(WRHS_QTY) AS WRHS_QTY
+			             FROM EPGM_BILL_DTL
+			            WHERE 1=1
+			                AND MAPP_SE_CD = '2' /* 입고 */
+			           GROUP BY BILL_DOC_NO
+			          ) B
+			         ,EPCN_BIZR_INFO C
+		 WHERE 1=1
+		     AND A.BILL_DOC_NO = B.BILL_DOC_NO
+		     AND A.MFC_BIZRID = C.BIZRID
+		     AND A.MFC_BIZRNO = C.BIZRNO
+		     AND A.ADD_BILL_DOC_NO = #{BILL_DOC_NO}
+	</select>
+	
+	<select id="epce2393064_select5" parameterType="map" resultType="hashmap">
+			SELECT C.BIZRNM, C.BRCH_NM, B.DRCT_RTRVL_DOC_NO
+				 	   ,B.DRCT_RTRVL_REG_DT
+			           ,B.DRCT_RTRVL_DT
+			           ,<![CDATA['<a href="javascript:fn_page4()" class="gridLink">' || TO_CHAR(TO_DATE(B.DRCT_RTRVL_DT, 'YYYYMMDD'), 'YYYY-MM-DD') || '</a>' as DRCT_RTRVL_DT_PAGE]]>
+		  			   ,B.DRCT_RTRVL_QTY_TOT
+			           ,B.DRCT_PAY_GTN_TOT
+			           ,EPCN_ETC_NM(A.MAPP_SE_CD, 'D033') AS MAPP_SE_NM
+		       FROM EPGM_BILL_DTL A
+			            ,EPDM_DRCT_RTRVL_MST B
+			            ,EPCN_BRCH_INFO C
+		    WHERE 1=1
+		        AND A.MAPP_DRCT_RTRVL_DOC_NO = B.DRCT_RTRVL_DOC_NO
+		        AND B.MFC_BIZRID = C.BIZRID
+		        AND B.MFC_BIZRNO = C.BIZRNO
+		        AND B.MFC_BRCH_ID = C.BRCH_ID
+		        AND B.MFC_BRCH_NO = C.BRCH_NO
+		        AND A.BILL_DOC_NO = #{BILL_DOC_NO}
+		        AND A.MAPP_SE_CD = '3' /* 직접회수 */
+		     ORDER BY B.DRCT_RTRVL_REG_DT DESC, C.BRCH_NM
+	</select>
+	
+	<select id="epce2393064_select6" parameterType="map" resultType="hashmap">
+		SELECT BILL_DOC_NO
+				   ,ISSU_STAT_CD
+				   ,BILL_SE_CD
+				   ,NVL(ADD_ISSU_YN, 'N') as ADD_ISSU_YN
+		  FROM EPGM_BILL_LST
+		WHERE 1=1
+		    AND BILL_DOC_NO = #{BILL_DOC_NO}
+	</select>
+	
+	<update id="epce2393064_update" parameterType="map">
+		UPDATE EPGM_BILL_LST
+	          SET ADD_ISSU_YN = NULL
+	                ,ADD_BILL_DOC_NO = NULL
+	                ,UPD_PRSN_ID = #{S_USER_ID}
+	                ,UPD_DTTM = SYSDATE
+	     WHERE 1=1
+	         AND BILL_SE_CD = 'F' /* 취급수수료 고지서 */
+	    	 AND ADD_BILL_DOC_NO = #{BILL_DOC_NO}
+	</update>
+	
+	<update id="epce2393064_update2" parameterType="map">
+        UPDATE EPDM_DRCT_RTRVL_MST
+	          SET DRCT_RTRVL_STAT_CD = 'RG',
+	                MAPP_BILL_DOC_NO = NULL,
+	                UPD_PRSN_ID = #{S_USER_ID},
+	                UPD_DTTM = SYSDATE
+         WHERE MAPP_BILL_DOC_NO = #{BILL_DOC_NO}
+	</update>
+	
+	<update id="epce2393064_update3" parameterType="map">
+        UPDATE EPDM_DLIVY_MST
+           	  SET DLIVY_STAT_CD = 'RG'
+	                ,MAPP_BILL_DOC_NO = NULL
+	                ,UPD_PRSN_ID = #{S_USER_ID}
+	                ,UPD_DTTM = SYSDATE
+         WHERE MAPP_BILL_DOC_NO = #{BILL_DOC_NO}
+    </update>
+    
+    <update id="epce2393064_update4" parameterType="map">
+	    	UPDATE EPCM_CFM_MST
+		          SET RTN_STAT_CD = BF_RTN_STAT_CD
+		               ,BF_RTN_STAT_CD = RTN_STAT_CD
+		               ,MAPP_BILL_DOC_NO = NULL
+		               ,UPD_PRSN_ID = #{S_USER_ID}
+		               ,UPD_DTTM = SYSDATE
+	        WHERE MAPP_BILL_DOC_NO = #{BILL_DOC_NO}
+	            AND RTN_STAT_CD = 'IB' /* 고지등록 */
+    </update>
+    
+    <update id="epce2393064_update5" parameterType="map">
+	     UPDATE EPCM_RTN_MST A
+	           SET RTN_STAT_CD = BF_RTN_STAT_CD
+	                 ,BF_RTN_STAT_CD = RTN_STAT_CD
+	                 ,UPD_PRSN_ID = #{S_USER_ID}
+	                 ,UPD_DTTM = SYSDATE
+         WHERE 1=1
+             AND RTN_STAT_CD = 'IB' /* 고지등록 */
+             AND EXISTS (
+		                        SELECT 'X'
+		                          FROM EPCM_CFM_MST B
+		                         WHERE 1=1
+		                           AND B.MAPP_BILL_DOC_NO = #{BILL_DOC_NO}
+		                           AND A.RTN_DOC_NO = B.RTN_DOC_NO
+		                       )
+    </update>
+    
+    <update id="epce2393064_update6" parameterType="map">
+	     UPDATE EPGM_BILL_LST A
+	           SET ISSU_STAT_CD = 'I' /* 발급 */
+	                 ,UPD_PRSN_ID = #{S_USER_ID}
+	                 ,UPD_DTTM = SYSDATE
+         WHERE 1=1
+             AND BILL_DOC_NO = #{BILL_DOC_NO}
+             AND ISSU_STAT_CD = 'C' /* 취소요청 */
+    </update>
+    
+    <update id="epce2393064_update7" parameterType="map">
+	     UPDATE EPGM_BILL_CNL_REQ_INFO A
+	           SET REQ_STAT_CD = #{REQ_STAT_CD}
+	                 ,PRCS_ID = #{S_USER_ID}
+	                 ,PRCS_DTTM = SYSDATE
+         WHERE 1=1
+             AND CNL_REQ_SEQ = #{CNL_REQ_SEQ}
+    </update>
+    
+	<update id="epce2393064_delete" parameterType="map">
+		UPDATE EPGM_MFC_GTN_BAL 
+		      SET DEL_YN = 'Y' 
+		      		,UPD_PRSN_ID = #{S_USER_ID}
+				    ,UPD_DTTM = SYSDATE
+		 WHERE MAPP_DOC_NO = #{BILL_DOC_NO}
+	</update>
+	
+	<update id="epce2393064_delete2" parameterType="map">
+		DECLARE
+		    BEGIN
+			    DELETE FROM EPGM_BILL_DTL WHERE BILL_DOC_NO = #{BILL_DOC_NO};
+  				DELETE FROM EPGM_BILL_LST WHERE BILL_DOC_NO = #{BILL_DOC_NO};
+	   		 END;
+	</update>
+	
+	<update id="epce2393088_update" parameterType="map">
+		 UPDATE EPGM_BILL_LST
+			   SET NOTY_AMT = (NOTY_AMT - NVL(ADD_AMT,0)) + #{ADD_AMT}
+			         ,RISU_SE = 'R' /* 재고지 */
+			         ,RISU_RSN = #{RISU_RSN}
+			         ,RISU_DT = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			         ,ADD_AMT = #{ADD_AMT}
+			         ,ADD_AMT_SE = #{ADD_AMT_SE}
+			         ,UPD_PRSN_ID = #{S_USER_ID}
+		             ,UPD_DTTM = SYSDATE
+		  WHERE 1=1
+			  AND BILL_DOC_NO = #{BILL_DOC_NO}
+			  AND ISSU_STAT_CD = 'I' /* 발급 */
+	</update>
+	
+	<!-- 취소사유 조회 -->  
+  <select id="epce23930882_select" parameterType="map" resultType="String">
+		SELECT REQ_RSN
+		  FROM EPGM_BILL_CNL_REQ_INFO
+		WHERE 1=1
+		 	AND CNL_REQ_SEQ = #{CNL_REQ_SEQ}
+  </select>
+  
+  <!-- 재고지 취소 -->
+  <update id="epce2393064_update8" parameterType="map">
+		 UPDATE EPGM_BILL_LST
+			   SET NOTY_AMT = (NOTY_AMT - NVL(ADD_AMT,0))
+			         ,RISU_SE = ''
+			         ,RISU_RSN = ''
+			         ,RISU_DT = ''
+			         ,ADD_AMT = ''
+			         ,ADD_AMT_SE = ''
+			         ,UPD_PRSN_ID = #{S_USER_ID}
+		             ,UPD_DTTM = SYSDATE
+		  WHERE 1=1
+			  AND BILL_DOC_NO = #{BILL_DOC_NO}
+			  AND ISSU_STAT_CD = 'I' /* 발급 */
+	</update>
+	
+</mapper>

@@ -1,0 +1,1839 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.api.ApiMapper">
+
+	<!-- 인증키 검증 -->
+	<select id="SELECT_API_MBR_ISSU_KEY" parameterType="java.lang.String"  resultType="hashmap">
+		SELECT BIZR_TP_CD
+				   ,BIZR_STAT_CD
+				   ,BIZR_ISSU_KEY
+		  FROM EPCN_BIZR_INFO
+		WHERE 1=1
+		    AND BIZRNO = PI_ENCRYPT(#{BIZRNO})
+		    AND BIZR_STAT_CD = 'Y'
+	</select>
+	
+	<!-- 출고등록 중복체크 -->
+	<select id="SELECT_DUPLE_CHECK_AP_R01" parameterType="map" resultType="int">
+		  SELECT COUNT(*)
+			FROM EPDM_DLIVY_MST A
+					 ,EPDM_DLIVY_INFO B 
+		WHERE 1=1
+			AND A.DLIVY_DOC_NO		= B.DLIVY_DOC_NO
+			AND A.MFC_BIZRNO			= ECL_ENCRYPT(#{MFC_BIZRNO})
+			AND A.MFC_BRCH_NO		= #{DTSS_NO}
+			AND B.CUST_BRCH_NO		= '9999999999'
+			AND B.CUST_BIZRNO		= ECL_ENCRYPT(#{WHSLD_BIZRNO})
+			AND A.DLIVY_REG_DT		= TO_CHAR(SYSDATE,'YYYYMMDD')
+			AND B.DLIVY_DT				= REPLACE(#{DLIVY_DT}, '-')
+			AND B.CTNR_CD				= #{STD_CTNR_CD}
+	</select>
+	
+	<!-- 출고정보 요약 임시 데이타 등록 -->
+	<insert id="INSERT_AP_R01_EPDM_DLIVY_LST_TMP" parameterType="map">
+		
+		INSERT INTO EPDM_DLIVY_LST_TMP
+		(
+		    DLIVY_REG_DTTM
+		    ,MFC_BIZRNO
+		    ,DLIVY_DT        
+		    ,CTNR_CD
+			,DLIVY_QTY				
+			,REG_PRSN_ID
+			,REG_DTTM
+		)VALUES( 
+			#{DLIVY_REG_DT}		
+			,ECL_ENCRYPT(#{MFC_BIZRNO})
+			,#{DLIVY_DT}			
+			,#{STD_CTNR_CD}
+			,#{DLIVY_QTY}			
+			,#{REG_PRSN_ID}
+			,SYSDATE
+		)
+
+	</insert>
+
+	<!-- 출고정보 상세 임시 데이타 등록 -->
+	<insert id="INSERT_AP_R01_EPDM_DLIVY_DTL_TMP" parameterType="map">
+
+		INSERT INTO EPDM_DLIVY_DTL_TMP(
+			DLIVY_REG_DTTM					
+			,MFC_BIZRNO			
+			,MFC_BRCH_NO
+			,CUST_BIZRNO					
+			,DLIVY_DT			
+			,CTNR_CD
+			,SYS_SE							
+			,DLIVY_STAT_CD		
+			,DLIVY_QTY
+			,REG_CUST_NM		
+			,DLIVY_SE			
+			,RMK				
+			,REG_PRSN_ID
+			,REG_DTTM	
+		)VALUES ( 
+			#{DLIVY_REG_DT}				
+			,ECL_ENCRYPT(#{MFC_BIZRNO})		
+			,#{DTSS_NO}
+			,ECL_ENCRYPT(#{WHSLD_BIZRNO})	
+			,#{DLIVY_DT}					
+			,#{STD_CTNR_CD}
+			,#{SYS_SE}						
+			,#{DLIVY_STAT_CD}				
+			,#{DLIVY_QTY}
+			,#{WHSLD_ENP_NM}		
+			,''
+			,#{RMK}							
+			,#{REG_PRSN_ID}
+			,SYSDATE	
+		)
+		
+	</insert>
+	
+	
+	<!-- 출고정보 요약 및 상세 데이타 검증 -->
+	<select id="SELECT_AP_R01_EPDM_DLIVY_RSLT"  parameterType="map" resultType="int">
+		
+		SELECT
+			COUNT(*)
+		FROM 
+				(
+				  SELECT DLIVY_DT
+							 ,CTNR_CD
+							 ,NVL(DLIVY_QTY,0) AS DLIVY_QTY
+					FROM EPDM_DLIVY_LST_TMP
+				  WHERE 1=1
+				      AND DLIVY_REG_DTTM = #{DLIVY_REG_DT}
+					  AND MFC_BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) 
+				  ) A
+
+		FULL OUTER JOIN
+
+			(
+				SELECT DLIVY_DT
+						   ,CTNR_CD
+						   ,SUM(NVL(DLIVY_QTY,0)) AS TOT_QTY
+			  	  FROM EPDM_DLIVY_DTL_TMP 
+				WHERE 1=1
+				    AND DLIVY_REG_DTTM = #{DLIVY_REG_DT}
+					AND MFC_BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) 
+				GROUP BY DLIVY_DT, CTNR_CD 
+			) B
+			
+		ON A.DLIVY_DT = B.DLIVY_DT AND A.CTNR_CD = B.CTNR_CD
+		    
+		WHERE  (NVL(A.DLIVY_QTY,0)-NVL(B.TOT_QTY,0)) != 0
+		
+	</select>
+	
+	<update id="INSERT_AP_R01_EPDM_DLIVY_MST" parameterType="map" >
+	
+		INSERT
+				INTO EPDM_DLIVY_MST
+					(
+						DLIVY_DOC_NO
+						,MFC_BIZRID
+						,MFC_BIZRNO
+						,MFC_BRCH_ID
+						,MFC_BRCH_NO
+						,DLIVY_REG_DT
+						,STD_YEAR
+						,SYS_SE
+						,DLIVY_STAT_CD
+						,RMK
+						,REG_PRSN_ID
+						,REG_DTTM
+				  )
+				  VALUES
+				  (
+				 	 #{DLIVY_DOC_NO}
+					,(SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1)
+					,ECL_ENCRYPT(#{MFC_BIZRNO})
+					,(SELECT BRCH_ID FROM EPCN_BRCH_INFO WHERE BRCH_NO = #{DTSS_NO} AND BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) AND STAT_CD = 'Y' AND ROWNUM = 1)
+					,#{DTSS_NO}
+					,TO_CHAR(SYSDATE,'YYYYMMDD')
+					,#{STD_YEAR}
+					,'A' /* 연계API */
+					,'RG'
+					,''
+					,'API'
+					,SYSDATE
+				  )
+	
+	</update>
+	
+	<!-- 출고정보 실제 등록 -->
+	<update id="INSERT_AP_R01_EPDM_DLIVY_INFO" parameterType="map" >
+		
+		INSERT
+			INTO EPDM_DLIVY_INFO
+				(
+					 DLIVY_DOC_NO
+					,CUST_BIZRNO
+					,DLIVY_DT
+					,CTNR_CD
+					,CUST_BRCH_ID
+					,CUST_BRCH_NO
+					,CUST_BIZRID
+					,DLIVY_SE
+					,DLIVY_QTY
+					,DLIVY_GTN
+					,CUST_NM
+					,REG_CUST_NM
+					,RMK
+					,REG_PRSN_ID
+					,REG_DTTM
+				)
+				VALUES
+				(
+					 #{DLIVY_DOC_NO}
+					 ,ECL_ENCRYPT(#{CUST_BIZRNO})
+					,REPLACE( #{DLIVY_DT}, '-')
+					,#{STD_CTNR_CD}
+					,(SELECT BRCH_ID FROM EPCN_BRCH_INFO WHERE BRCH_NO = '9999999999' AND BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO}) AND ROWNUM = 1)
+					,'9999999999'
+					,#{CUST_BIZRID}
+					,'D'
+					,#{DLIVY_QTY}
+					,(SELECT STD_DPS * #{DLIVY_QTY}
+						FROM EPCN_STD_DPS_MGNT 
+					  WHERE 1=1
+					     AND CTNR_CD = #{STD_CTNR_CD} 
+					     AND USE_YN = 'Y' 
+					     AND LANG_SE_CD = 'KOR' 
+					     AND REPLACE( #{DLIVY_DT}, '-') BETWEEN APLC_ST_DT AND APLC_END_DT
+					     AND ROWNUM = 1
+					  )
+					,#{CUST_BIZRNM}
+					,''
+					,''
+					,'API'
+					,SYSDATE
+				)
+		
+	</update>
+	
+	<!-- 출고정보 실제 등록 -->
+	<update id="INSERT_AP_R01_EPCN_CAP_DTL" parameterType="map" >
+		
+		INSERT
+		INTO   EPCN_CAP_DTL
+		       (
+		              MFC_BIZRNO,
+		              DTSS_CD,
+		              WHSLD_BIZRNO,
+		              CTNR_CD,
+		              SE_CD,
+		              RGST_DT,
+		              PROC_DT,
+		              DEL_YN,
+		              PROC_SE_CD,
+		              MAPP_DOC_NO,
+		              DLIVY_QTY,
+		              DRCT_RTRVL_QTY,
+		              RTN_QTY,
+		              CFM_QTY,
+		              CRCT_CFM_QTY,
+		              ACRH_CFM_QTY,
+		              RGST_PRSN_ID,
+		              RGST_DTTM
+		       )
+		SELECT A.MFC_BIZRNO,
+			       A.DTSS_NO AS DTSS_CD,
+			       A.WHSLD_BIZRNO,
+			       A.STD_CTNR_CD,
+			       '1'                              AS SE_CD,
+			       TO_CHAR(A.RGST_DTTM, 'YYYYMMDD') AS RGST_DT,
+			       A.DLIVY_DT,
+			       'N' AS DEL_YN,
+			       '1' AS PROC_SE_CD,
+			       #{DLIVY_DOC_NO},
+			       A.DLIVY_QTY,
+			       '0' AS DRCT_RTRVL_QTY,
+			       '0' AS RTN_QTY,
+			       '0' AS CFM_QTY,
+			       '0' AS CRCT_CFM_QTY,
+			       '0' AS ACRH_CFM_QTY,
+			       A.RGST_PRSN_ID,
+			       A.RGST_DTTM
+		FROM EPDM_DLIVY_DTL_TMP A
+	  WHERE A.DLIVY_RGST_DT = #{DLIVY_RGST_DT}
+		  AND A.MFC_BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO})
+		  AND A.DLIVY_DT > 20180000
+		  AND A.DLIVY_DT <![CDATA[ < ]]> TO_CHAR(SYSDATE+1, 'YYYYMMDD')
+		
+	</update>
+	
+	<!-- 직배송등록 중복체크 -->
+	<select id="SELECT_DUPLE_CHECK_AP_R02" parameterType="map" resultType="int">
+		SELECT COUNT(*) FROM EPDM_DRCT_DVRY_INFO 
+		WHERE DVRY_RGST_DT = SUBSTR(#{DVRY_RGST_DT}, 0, 8)
+			AND MFC_BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO})	
+			AND SYS_SE = #{SYS_SE}
+	</select>
+	
+	
+	<!-- 직접배송 요약 임시 데이타 등록 -->
+	<insert id="INSERT_AP_R02_EPDM_DRCT_DVRY_LST_TMP" parameterType="map">
+		INSERT INTO EPDM_DRCT_DVRY_LST_TMP(
+			DVRY_RGST_DT		,MFC_BIZRNO		,BSS_YM
+			,STD_CTNR_CD		,DLIVY_QTY		,RTRVL_QTY
+			,RTN_QTY			,RTL_PAY_GTN	,RTL_PAY_FEE
+			,RGST_PRSN_ID		,RGST_DTTM
+		)VALUES ( 
+			#{DVRY_RGST_DT}		,ECL_ENCRYPT(#{MFC_BIZRNO})	,#{BSS_YM}
+			,#{STD_CTNR_CD}		,#{DLIVY_QTY}				,#{RTRVL_QTY}
+			,#{RTN_QTY}			,#{RTL_PAY_GTN}			,#{RTL_PAY_FEE}
+			,#{RGST_PRSN_ID}	,SYSDATE
+		)
+	</insert>
+
+	<!-- 직접배송 상세 임시 데이타 등록 -->
+	<insert id="INSERT_AP_R02_EPDM_DRCT_DVRY_DTL_TMP" parameterType="map">
+		INSERT INTO EPDM_DRCT_DVRY_DTL_TMP(
+			DVRY_RGST_DT			,MFC_BIZRNO			,DTSS_NO
+			,BSS_YM					,STD_CTNR_CD		,SYS_SE
+			,DRCT_DVRY_STAT_CD		,DLIVY_QTY			,RTRVL_QTY
+			,RTN_QTY				,RTL_PAY_GTN		,RTL_PAY_FEE	
+			,RTL_ENP_NM				,RTL_BIZRNO			,RMK		
+			,RGST_PRSN_ID			,RGST_DTTM
+		)VALUES ( 
+			#{DVRY_RGST_DT}			,ECL_ENCRYPT(#{MFC_BIZRNO})	,#{DTSS_NO}
+			,#{BSS_YM}				,#{STD_CTNR_CD}				,#{SYS_SE}
+			,#{DRCT_DVRY_STAT_CD}	,#{DLIVY_QTY}				,#{RTRVL_QTY}
+			,#{RTN_QTY}				,#{RTL_PAY_GTN}			,#{RTL_PAY_FEE}			
+			,#{RTL_ENP_NM}			,ECL_ENCRYPT(#{RTL_BIZRNO})	,#{RMK}						
+			,#{RGST_PRSN_ID}		,SYSDATE	
+		)
+	</insert>
+	
+	<!-- 미반환수량, 출고보증금, 회수 보증금, 반환보증금, 미반환 보증금 계산 -->
+	<update id="UPDATE_AP_R02_EPDM_DRCT_DVRY_DTL_TMP" parameterType="map">
+		MERGE INTO EPDM_DRCT_DVRY_DTL_TMP A
+		USING EPCN_STD_CTNR_CD B
+		ON (A.STD_CTNR_CD = B.CTNR_CD)
+		WHEN MATCHED THEN
+			UPDATE SET
+				NY_RTN_QTY	= A.RTRVL_QTY - A.RTN_QTY		<!-- 미반환수량 = 회수수량 - 반환수량 -->
+				,DLIVY_GTN	= A.DLIVY_QTY * B.GTN_UTPC		<!-- 출고보증금 = 출고수량 * 표준용기코드 단가	 -->
+				,RTRVL_GTN	= A.RTRVL_QTY * B.GTN_UTPC		<!-- 회수보증금 = 회수수량 * 표준용기코드 단가	 -->
+				,RTN_GTN 	= A.RTN_QTY * B.GTN_UTPC		<!-- 반환보증금 = 반환수량 * 표준용기코드 단가	-->
+				,NY_RTN_GTN = (A.RTRVL_QTY - A.RTN_QTY) * B.GTN_UTPC	<!-- 미반환보증금 = 미반환수량 * 표준용기코드 단가-->
+			WHERE DVRY_RGST_DT = #{DVRY_RGST_DT}
+				AND MFC_BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO})
+				AND BSS_YM > 201800
+	</update>
+	
+	
+	<!-- 직접배송 요약 및 상세 데이타 검증 -->
+	<select id="SELECT_AP_R02_EPDM_DRCT_DVRY_RSLT"  parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM 
+			(SELECT 
+			    BSS_YM				,STD_CTNR_CD
+			    ,DLIVY_QTY			,RTRVL_QTY		,RTN_QTY
+				,RTL_PAY_GTN		,RTL_PAY_FEE
+			FROM EPDM_DRCT_DVRY_LST_TMP
+			WHERE DVRY_RGST_DT = #{DVRY_RGST_DT}
+				AND MFC_BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) ) A
+				
+		FULL OUTER JOIN
+		
+			(SELECT 
+				BSS_YM				,STD_CTNR_CD
+			    ,SUM(DLIVY_QTY) AS TOT_DLIVY_QTY 			
+			    ,SUM(RTRVL_QTY) AS TOT_RTRVL_QTY
+			    ,SUM(RTN_QTY) AS TOT_RTN_QTY
+				,SUM(RTL_PAY_GTN) AS TOT_RTL_PAY_GTN		
+				,SUM(RTL_PAY_FEE) AS TOT_RTL_PAY_FEE
+			FROM EPDM_DRCT_DVRY_DTL_TMP 
+			WHERE DVRY_RGST_DT = #{DVRY_RGST_DT}
+				AND MFC_BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) 
+			GROUP BY BSS_YM, STD_CTNR_CD ) B
+			
+		ON A.BSS_YM = B.BSS_YM
+		    AND A.STD_CTNR_CD = B.STD_CTNR_CD
+		    
+		WHERE  (NVL(A.DLIVY_QTY,0) - NVL(B.TOT_DLIVY_QTY,0)) != 0
+			OR (NVL(A.RTRVL_QTY,0) - NVL(B.TOT_RTRVL_QTY,0)) != 0
+			OR (NVL(A.RTN_QTY,0) - NVL(B.TOT_RTN_QTY,0)) != 0
+			OR (NVL(A.RTL_PAY_GTN,0) - NVL(B.TOT_RTL_PAY_GTN,0)) != 0
+			OR (NVL(A.RTL_PAY_FEE,0) - NVL(B.TOT_RTL_PAY_FEE,0)) != 0
+	</select>
+	
+	<!-- 직접배송 실제 등록 -->
+	<update id="INSERT_AP_R02_EPDM_DRCT_DVRY_INFO" parameterType="map" >
+		INSERT INTO EPDM_DRCT_DVRY_INFO(
+			DVRY_RGST_DT		,MFC_BIZRNO			,DTSS_NO
+			,BSS_YM				,STD_CTNR_CD		,SYS_SE
+			,DRCT_DVRY_STAT_CD	,DLIVY_QTY			,RTRVL_QTY
+			,RTN_QTY			,NY_RTN_QTY			,DLIVY_GTN
+			,RTRVL_GTN			,RTN_GTN			,NY_RTN_GTN
+			,RTL_PAY_GTN		,RTL_PAY_FEE		,RTL_ENP_NM
+			,RTL_BIZRNO			,RMK				,RGST_PRSN_ID
+			,RGST_DTTM
+		)
+		SELECT
+			SUBSTR(DVRY_RGST_DT, 0, 8) AS DVRY_RGST_DT	,MFC_BIZRNO			,DTSS_NO
+			,BSS_YM				,STD_CTNR_CD		,SYS_SE
+			,DRCT_DVRY_STAT_CD	,DLIVY_QTY			,RTRVL_QTY
+			,RTN_QTY			,NY_RTN_QTY			,DLIVY_GTN
+			,RTRVL_GTN			,RTN_GTN			,NY_RTN_GTN
+			,RTL_PAY_GTN		,RTL_PAY_FEE		,RTL_ENP_NM
+			,RTL_BIZRNO			,RMK				,RGST_PRSN_ID
+			,RGST_DTTM
+		FROM EPDM_DRCT_DVRY_DTL_TMP
+		WHERE DVRY_RGST_DT = #{DVRY_RGST_DT}
+			AND MFC_BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO})
+			AND BSS_YM > 201800
+	</update>
+	
+	
+	<!-- 회수등록 중복체크 -->
+	<select id="SELECT_DUPLE_CHECK_AP_R03" parameterType="map" resultType="int">
+		 SELECT COUNT(*)
+			FROM EPCM_RTRVL_MST  A
+					 ,EPCM_RTRVL_INFO B 
+		WHERE 1=1
+			AND A.RTRVL_DOC_NO			= B.RTRVL_DOC_NO
+			AND	A.WHSDL_BIZRNO		= ECL_ENCRYPT(#{WHSLD_BIZRNO})
+			AND	A.WHSDL_BRCH_NO		= '9999999999'
+			AND	A.RTL_CUST_BIZRNO	= ECL_ENCRYPT(#{RTL_BIZRNO})
+			AND	A.RTL_CUST_BRCH_NO	= '9999999999'
+			AND	A.RTRVL_REG_DT		= TO_CHAR(SYSDATE,'YYYYMMDD')
+			AND	B.RTRVL_DT				= REPLACE(#{RTRVL_DT}, '-')
+			AND	B.RTRVL_CTNR_CD		= #{RTRVL_CTNR_CD}   
+	</select>
+	
+	<!-- 회수정보 요약 등록 -->
+	<insert id="INSERT_EPCM_RTRVL_LST_TMP" parameterType="map">
+		INSERT INTO EPCM_RTRVL_LST_TMP(
+			RTRVL_REG_DT			
+			,WHSLD_BIZRNO			
+			,RTRVL_DT
+			,RTRVL_CTNR_CD			
+			,RTRVL_QTY				
+			,RTRVL_GTN
+			,RTL_FEE				
+			,REG_PRSN_ID			
+			,REG_DTTM
+		)VALUES(
+			#{RTRVL_REG_DT}		
+			,ECL_ENCRYPT(#{WHSLD_BIZRNO})	
+			,#{RTRVL_DT}
+			,#{RTRVL_CTNR_CD}		
+			,#{RTRVL_QTY}					
+			,#{RTRVL_GTN}
+			,#{RTL_FEE}				
+			,#{REG_PRSN_ID}
+			,SYSDATE
+		)
+	</insert>
+	
+	<!-- 회수정보 상세 등록 -->
+	<insert id="INSERT_EPCM_RTRVL_DTL_TMP" parameterType="map">
+		INSERT INTO EPCM_RTRVL_DTL_TMP(
+			RTRVL_REG_DT			
+			,WHSLD_BIZRNO			
+			,RTL_BIZRNO
+			,RTRVL_DT				
+			,RTRVL_CTNR_CD			
+			,SYS_SE
+			,CUST_SE				
+			,RTRVL_QTY				
+			,RTRVL_GTN
+			,RTL_FEE				
+			,RTL_ENP_NM				
+			,RMK
+			,RTL_BANK_CD			
+			,RTL_ACCT_NO			
+			,REG_PRSN_ID			
+			,REG_DTTM
+		)VALUES(
+			#{RTRVL_REG_DT}		
+			,ECL_ENCRYPT(#{WHSLD_BIZRNO})	
+			,ECL_ENCRYPT(#{RTL_BIZRNO})
+			,#{RTRVL_DT}			
+			,#{RTRVL_CTNR_CD}				
+			,#{SYS_SE}
+			,#{BCNC_SE}				
+			,#{RTRVL_QTY}					
+			,#{RTRVL_GTN}
+			,#{RTL_FEE}				
+			,#{RTL_ENP_NM}					
+			,#{RMK}
+			,#{RTL_BANK_CD}			
+			,#{RTL_ACCT_NO}					
+			,#{REG_PRSN_ID}		
+			,SYSDATE
+		)
+	</insert>
+	
+	<!-- 회수 임시등록 검증 -->
+	<select id="SELECT_AP_R03_EPCM_RTRVL_RSLT"  parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM 
+				(SELECT RTRVL_DT	,RTRVL_CTNR_CD, RTRVL_QTY, RTRVL_GTN, RTL_FEE
+					FROM EPCM_RTRVL_LST_TMP
+				  WHERE RTRVL_REG_DT = #{RTRVL_REG_DT}
+					  AND WHSLD_BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) 
+				  ) A
+				
+		FULL OUTER JOIN
+		
+			(SELECT RTRVL_DT	,RTRVL_CTNR_CD		
+						,SUM(RTRVL_QTY) AS TOT_RTRVL_QTY
+					    ,SUM(RTRVL_GTN) AS TOT_RTRVL_GTN
+						,SUM(RTL_FEE) AS TOT_RTL_FEE	
+			   FROM EPCM_RTRVL_DTL_TMP 
+			 WHERE RTRVL_REG_DT = #{RTRVL_REG_DT}
+				 AND WHSLD_BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) 
+			 GROUP BY RTRVL_DT	,RTRVL_CTNR_CD 
+			) B
+			
+		ON A.RTRVL_DT = B.RTRVL_DT
+		    AND A.RTRVL_CTNR_CD = B.RTRVL_CTNR_CD
+		    
+		WHERE  (NVL(A.RTRVL_QTY,0) - NVL(B.TOT_RTRVL_QTY,0)) != 0
+			OR (NVL(A.RTRVL_GTN,0) - NVL(B.TOT_RTRVL_GTN,0)) != 0
+			OR (NVL(A.RTL_FEE,0) - NVL(B.TOT_RTL_FEE,0)) != 0
+			
+	</select>
+	<select id="SELECT_AP_R03_EPCN_RTRVL_CTNR_CD"  parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM 
+			EPCN_RTRVL_CTNR_CD
+		WHERE RTRVL_CTNR_CD = #{RTRVL_CTNR_CD}
+	</select>
+	
+	<!-- 회수정보관리 회수등록구분 -->
+	<select id="SELECT_AP_R03_EPCM_RTRVL_STAT_CD" parameterType="map" resultType="String">
+					SELECT     
+									CASE     
+										WHEN RTRVL_REG_SE = 'M' 
+								       	THEN 'VC'
+								      	WHEN RTRVL_REG_SE = 'P' 
+								       	THEN 'WG'
+								       	WHEN RTRVL_REG_SE = 'D' 
+								       	THEN 'RG'
+								    END AS STAT_CD_NM 	
+					FROM 
+								EPCN_RTL_CUST_INFO
+					WHERE 1=1
+					AND WHSDL_BRCH_NO   	= '9999999999'
+					AND WHSDL_BIZRID    	= (SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1)
+					AND WHSDL_BIZRNO    	= ECL_ENCRYPT(#{WHSLD_BIZRNO})
+					AND RTL_CUST_BIZRNO 	= ECL_ENCRYPT(#{RTL_BIZRNO})
+					AND ROWNUM = 1
+	</select>
+	
+	<update id="INSERT_AP_R03_EPCM_RTRVL_MST"  parameterType="map">
+			INSERT INTO EPCM_RTRVL_MST
+				(
+					RTRVL_DOC_NO
+					,WHSDL_BIZRID
+					,WHSDL_BIZRNO
+					,WHSDL_BRCH_ID
+					,WHSDL_BRCH_NO
+					,RTL_CUST_BIZRNO
+					,RTL_CUST_BIZRID
+					,RTL_CUST_BRCH_ID
+					,RTL_CUST_BRCH_NO
+					,REG_CUST_NM
+					,SYS_SE
+					,RTRVL_REG_DT    
+					,RTRVL_STAT_CD      
+					<if test="RTRVL_STAT_CD.equalsIgnoreCase('VC') ">  
+						,RTRVL_CFM_DT
+					</if>
+					,REG_PRSN_ID    
+					,REG_DTTM   
+				)
+				VALUES
+				(
+				 	 #{RTRVL_DOC_NO}
+					,(SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1)
+					,ECL_ENCRYPT(#{WHSLD_BIZRNO})
+					,(SELECT BRCH_ID FROM EPCN_BRCH_INFO WHERE BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) AND BRCH_NO = '9999999999' AND STAT_CD = 'Y' AND ROWNUM = 1)
+					,'9999999999'
+					,ECL_ENCRYPT(#{CUST_BIZRNO})
+					,#{CUST_BIZRID}
+					,(SELECT BRCH_ID FROM EPCN_BRCH_INFO WHERE BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO}) AND BRCH_NO = '9999999999' AND ROWNUM = 1)
+					,'9999999999'
+					,(SELECT BIZRNM FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO}) AND ROWNUM = 1)
+					,'A' /* 연계API */
+					, TO_CHAR(SYSDATE,'YYYYMMDD')
+					,#{RTRVL_STAT_CD}
+					<if test="RTRVL_STAT_CD.equalsIgnoreCase('VC') ">
+						,TO_CHAR(SYSDATE,'YYYYMMDD')
+					</if>
+					,'API'
+					,SYSDATE
+				 )
+	</update>
+	
+	<!-- 회수 정보 실제 등록 -->
+	<update id="INSERT_AP_R03_EPCM_RTRVL_INFO"  parameterType="map">
+			INSERT INTO
+		 			EPCM_RTRVL_INFO  
+				 		(  
+							RTRVL_DOC_NO
+							,RTRVL_DT
+							,RTRVL_CTNR_CD
+							,RTRVL_QTY
+							,RTRVL_GTN
+							,REG_RTRVL_FEE   
+							,RTRVL_RTL_FEE
+							,RMK
+							,REG_PRSN_ID
+							,REG_DTTM
+				 		)   
+				 		VALUES
+	 					(
+							#{RTRVL_DOC_NO}
+							,REPLACE(#{RTRVL_DT}, '-')
+							,#{RTRVL_CTNR_CD}
+							,#{RTRVL_QTY}
+							,#{RTRVL_GTN}
+							,#{RTL_FEE}
+							
+							,(SELECT RTRVL_FEE * #{RTRVL_QTY}
+								FROM EPCN_RTRVL_FEE_MGNT 
+							  WHERE 1=1
+							     AND RTRVL_CTNR_CD = #{RTRVL_CTNR_CD} 
+							     AND LANG_SE_CD = 'KOR' 
+							     AND REPLACE( #{RTRVL_DT}, '-') BETWEEN APLC_ST_DT AND APLC_END_DT
+							     AND ROWNUM = 1
+							  )
+							,''
+							,'API'
+							,SYSDATE
+				 		)
+	</update>
+	
+	<delete id="DELETE_AP_R03_EPCM_RTRVL_DTL_TMP"  parameterType="map">
+	    DELETE FROM EPCM_RTRVL_DTL_TMP 
+	    WHERE RTRVL_REG_DT = SUBSTR(#{RTRVL_REG_DT}, 0, 8)
+	    	AND WHSLD_BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO})
+	</delete>
+	<delete id="DELETE_AP_R03_EPCM_RTRVL_LST_TMP"  parameterType="map">
+		DELETE FROM EPCM_RTRVL_LST_TMP 
+		WHERE RTRVL_REG_DT = SUBSTR(#{RTRVL_REG_DT}, 0, 8)
+			AND WHSLD_BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO})
+	</delete>
+	<delete id="DELETE_AP_R03_EPCM_RTRVL_INFO"  parameterType="map">
+		DELETE FROM EPCM_RTRVL_INFO 
+	    WHERE RTRVL_REG_DT = SUBSTR(#{RTRVL_REG_DT}, 0, 8)
+	    	AND WHSLD_BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO})
+	</delete>
+	
+	<select id="SELECT_AP_R05_CHK_DT" parameterType="map"  resultType="int">
+		SELECT TO_DATE(#{SEARCH_END_DT},'YYYYMMDD') - TO_DATE(#{SEARCH_FROM_DT},'YYYYMMDD') FROM DUAL
+	</select>
+	
+	<!-- 입고확인 조회 -->
+	<select id="SELECT_AP_R05_EPCM_RTN_INFO" parameterType="map"  resultType="hashmap">
+		SELECT
+			A.RTRVL_RGST_DT
+			,ECL_DECRYPT(A.WHSLD_BIZRNO) AS WHSLD_BIZRNO
+			,A.DTSS_NO
+			,A.RGST_SN
+			,A.STD_CTNR_CD
+			,A.RTRVL_QTY
+			,A.DMGB_QTY
+			,A.VRSB_QTY
+			,A.ERWH_QTY
+			,A.ERWH_CRCT_QTY
+			,A.BOX_QTY
+			,A.CFM_QTY
+			,A.RTRVL_GTN
+			,A.WRHS_GTN
+			,A.RTRVL_WHSL_FEE
+			,A.RTRVL_RTL_FEE
+			,A.WRHS_WHSL_FEE
+			,A.WRHS_RTL_FEE
+			,A.RTRVL_DT
+			,A.WRHS_CFM_DT
+			,A.CAR_NO
+			,A.RTRVL_DOC_NO
+		FROM EPCM_RTN_INFO A
+		WHERE A.MFC_BIZRNO = ECL_ENCRYPT(#{BIZRNO})
+		    AND A.RTRVL_STAT_CD IN ('2','6','7','8','9','10','11')
+		    AND A.WRHS_CFM_DT BETWEEN #{SEARCH_FROM_DT} AND #{SEARCH_END_DT} 
+	</select>
+	
+		
+	<!-- 직접회수 등록 중복체크 -->
+	<select id="SELECT_DUPLE_CHECK_AP_R06" parameterType="map" resultType="int">
+		 SELECT COUNT(*)
+			FROM EPDM_DRCT_RTRVL_MST A
+					 ,EPDM_DRCT_RTRVL_INFO B 
+		WHERE 1=1
+			AND A.DRCT_RTRVL_DOC_NO	= B.DRCT_RTRVL_DOC_NO
+			AND A.MFC_BIZRNO					= ECL_ENCRYPT(#{MFC_BIZRNO})
+			AND A.MFC_BRCH_NO				= #{DTSS_NO}
+			AND B.CUST_BRCH_NO				= '9999999999'
+			AND B.CUST_BIZRNO				= ECL_ENCRYPT(#{RTL_BIZRNO})
+			AND A.DRCT_RTRVL_REG_DT		= TO_CHAR(SYSDATE,'YYYYMMDD')
+			AND A.DRCT_RTRVL_DT			= REPLACE(#{DRCT_RTRVL_DT}, '-', '')
+			AND B.CTNR_CD						= #{STD_CTNR_CD}
+	</select>
+	
+	
+	<!-- 직접회수 요약 임시 데이타 등록 -->
+	<insert id="INSERT_AP_R06_EPDM_DRCT_RTRVL_LST_TMP" parameterType="map">
+		INSERT INTO EPDM_DRCT_RTRVL_LST_TMP(
+			DRCT_RTRVL_REG_DTTM
+			,MFC_BIZRNO			
+			,DRCT_RTRVL_DT
+			,CTNR_CD			
+			,DRCT_RTRVL_QTY		
+			,DRCT_PAY_GTN
+			,DRCT_PAY_FEE			
+			,REG_PRSN_ID		
+			,REG_DTTM
+			
+		)VALUES ( 
+			#{DRCT_RTRVL_REG_DT}		
+			,ECL_ENCRYPT(#{MFC_BIZRNO})		
+			,#{DRCT_RTRVL_DT}
+			,#{STD_CTNR_CD}
+			,#{DRCT_RTRVL_QTY}				
+			,#{DRCT_PYMT_GTN}
+			,#{DRCT_PYMT_FEE}			
+			,#{REG_PRSN_ID}				
+			,SYSDATE
+		)
+	</insert>
+
+	<!-- 직접회수 상세 임시 데이타 등록 -->
+	<insert id="INSERT_AP_R06_EPDM_DRCT_RTRVL_DTL_TMP" parameterType="map">
+		INSERT INTO EPDM_DRCT_RTRVL_DTL_TMP(
+			DRCT_RTRVL_REG_DTTM
+			,MFC_BIZRNO				
+			,MFC_BRCH_NO
+			,DRCT_RTRVL_DT			
+			,CUST_BIZRNO				
+			,CTNR_CD
+			,SYS_SE					
+			,DRCT_RTRVL_STAT_CD		
+			,DRCT_RTRVL_QTY
+			,DRCT_PAY_GTN			
+			,DRCT_PAY_FEE			
+			,REG_CUST_NM
+			,RMK					
+			,REG_PRSN_ID			
+			,REG_DTTM
+		)VALUES ( 
+			#{DRCT_RTRVL_REG_DT}		
+			,ECL_ENCRYPT(#{MFC_BIZRNO})		
+			,#{DTSS_NO}
+			,#{DRCT_RTRVL_DT}			
+			,ECL_ENCRYPT(#{RTL_BIZRNO})		
+			,#{STD_CTNR_CD}
+			,#{SYS_SE}					
+			,#{DRCT_RTRVL_STAT_CD}			
+			,#{DRCT_RTRVL_QTY}
+			,#{DRCT_PYMT_GTN}			
+			,#{DRCT_PYMT_FEE}				
+			,#{RTL_ENP_NM}
+			,#{RMK}						
+			,#{REG_PRSN_ID}				
+			,SYSDATE	
+		)
+	</insert>
+	
+
+	
+	
+	<!-- 직접회수 요약 및 상세 데이타 검증 -->
+	<select id="SELECT_AP_R06_EPDM_DRCT_RTRVL_RSLT"  parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		  FROM 
+					(SELECT DRCT_RTRVL_DT
+								,CTNR_CD
+								,DRCT_RTRVL_QTY
+								,DRCT_PAY_GTN
+								,DRCT_PAY_FEE
+					   FROM EPDM_DRCT_RTRVL_LST_TMP
+				 	 WHERE DRCT_RTRVL_REG_DTTM = #{DRCT_RTRVL_REG_DT}
+						 AND MFC_BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) 
+					 ) A
+					
+		FULL OUTER JOIN
+		
+				(SELECT DRCT_RTRVL_DT		
+							,CTNR_CD
+						    ,SUM(NVL(DRCT_RTRVL_QTY,0)) AS TOT_DRCT_RTRVL_QTY			
+						    ,SUM(NVL(DRCT_PAY_GTN,0)) AS TOT_DRCT_PAY_GTN
+						    ,SUM(NVL(DRCT_PAY_FEE,0)) AS TOT_DRCT_PAY_FEE
+				   FROM EPDM_DRCT_RTRVL_DTL_TMP 
+				WHERE DRCT_RTRVL_REG_DTTM = #{DRCT_RTRVL_REG_DT}
+					AND MFC_BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) 
+				GROUP BY DRCT_RTRVL_DT, CTNR_CD 
+				) B
+		
+		ON A.DRCT_RTRVL_DT = B.DRCT_RTRVL_DT
+		    AND A.CTNR_CD = B.CTNR_CD
+		    
+		WHERE (NVL(A.DRCT_RTRVL_QTY,0) - NVL(B.TOT_DRCT_RTRVL_QTY,0)) != 0
+			OR (NVL(A.DRCT_PAY_GTN,0) - NVL(B.TOT_DRCT_PAY_GTN,0)) != 0
+			OR (NVL(A.DRCT_PAY_FEE,0) - NVL(B.TOT_DRCT_PAY_FEE,0)) != 0
+			
+	</select>
+	
+	
+	<!-- 직접회수 등록순번 조회 -->
+	<select id="SELECT_RGST_SN_EPDM_DRCT_RTRVL_INFO" parameterType="map" resultType="int" >
+		SELECT NVL(MAX(RGST_SN),0)+1 FROM EPDM_DRCT_RTRVL_INFO
+		WHERE MFC_BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO})
+			AND DRCT_RTRVL_RGST_DT = TO_CHAR(SYSDATE, 'YYYYMMDD')
+	</select>
+	
+	<insert id="INSERT_AP_R06_EPDM_DRCT_RTRVL_MST" parameterType="map">
+		INSERT
+			INTO EPDM_DRCT_RTRVL_MST
+			(
+				DRCT_RTRVL_DOC_NO
+				,MFC_BIZRID
+				,MFC_BIZRNO
+				,MFC_BRCH_ID
+				,MFC_BRCH_NO
+				,DRCT_RTRVL_REG_DT
+				,DRCT_RTRVL_DT
+				,SYS_SE
+				,DRCT_RTRVL_STAT_CD
+				,RMK
+				,REG_PRSN_ID
+				,REG_DTTM
+			  )
+			  VALUES
+			  (
+			 	 #{DRCT_RTRVL_DOC_NO}
+				,(SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1)
+				,ECL_ENCRYPT(#{MFC_BIZRNO})
+				,(SELECT BRCH_ID FROM EPCN_BRCH_INFO WHERE BRCH_NO = #{DTSS_NO} AND BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) AND STAT_CD = 'Y' AND ROWNUM = 1)
+				,#{DTSS_NO}
+				,TO_CHAR(SYSDATE,'YYYYMMDD')
+				,REPLACE(#{DRCT_RTRVL_DT}, '-' ,'')
+				,'A' /* 연계API */
+				,'RG'
+				,''
+				,'API'
+				,SYSDATE
+			  )
+	</insert>
+	
+	<insert id="INSERT_AP_R06_EPDM_DRCT_RTRVL_INFO" parameterType="map" >
+		INSERT
+			INTO EPDM_DRCT_RTRVL_INFO
+				(
+				 	DRCT_RTRVL_DOC_NO
+					,CUST_BIZRNO
+					,CTNR_CD
+					,CUST_BRCH_ID
+					,CUST_BRCH_NO
+					,CUST_BIZRID
+					,DRCT_RTRVL_QTY
+					,DRCT_PAY_GTN
+					,DRCT_PAY_FEE
+					,CUST_NM
+					,RMK
+					,REG_PRSN_ID
+					,REG_DTTM
+				)
+				VALUES
+				(
+					 #{DRCT_RTRVL_DOC_NO}
+					,ECL_ENCRYPT(#{CUST_BIZRNO})
+					,#{STD_CTNR_CD}
+					,(SELECT BRCH_ID FROM EPCN_BRCH_INFO WHERE BRCH_NO = '9999999999' AND BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO}) AND ROWNUM = 1)
+					,'9999999999'
+					,#{CUST_BIZRID}
+					,#{DRCT_RTRVL_QTY}
+					,#{DRCT_PYMT_GTN}
+					,#{DRCT_PYMT_FEE}
+					,#{CUST_BIZRNM}
+					,''
+					,'API'
+					,SYSDATE
+				)
+	</insert>
+	
+	<!-- 직접회수 실제 등록 -->
+	<update id="INSERT_AP_R06_EPCN_CAP_DTL" parameterType="map" >
+		
+		INSERT
+		INTO   EPCN_CAP_DTL
+		       (
+		              MFC_BIZRNO,
+		              DTSS_CD,
+		              WHSLD_BIZRNO,
+		              CTNR_CD,
+		              SE_CD,
+		              RGST_DT,
+		              PROC_DT,
+		              DEL_YN,
+		              PROC_SE_CD,
+		              MAPP_DOC_NO,
+		              DLIVY_QTY,
+		              DRCT_RTRVL_QTY,
+		              RTN_QTY,
+		              CFM_QTY,
+		              CRCT_CFM_QTY,
+		              ACRH_CFM_QTY,
+		              RGST_PRSN_ID,
+		              RGST_DTTM
+		       )
+		SELECT A.MFC_BIZRNO,
+		       A.DTSS_NO AS DTSS_CD,
+		       A.RTL_BIZRNO,
+		       A.STD_CTNR_CD,
+		       '2'                              AS SE_CD,
+		       TO_CHAR(A.RGST_DTTM, 'YYYYMMDD') AS RGST_DT,
+		       A.DRCT_RTRVL_RGST_DT,
+		       'N' AS DEL_YN,
+		       '1' AS PROC_SE_CD,
+		       '',
+		       '0' AS DLIVY_QTY,
+		       A.DRCT_RTRVL_QTY,
+		       '0' AS RTN_QTY,
+		       '0' AS CFM_QTY,
+		       '0' AS CRCT_CFM_QTY,
+		       '0' AS ACRH_CFM_QTY,
+		       A.RGST_PRSN_ID,
+		       A.RGST_DTTM
+		FROM   EPDM_DRCT_RTRVL_DTL_TMP A
+		WHERE  A.DLIVY_RGST_DT = #{DLIVY_RGST_DT}
+		AND    A.MFC_BIZRNO    = ECL_ENCRYPT(#{MFC_BIZRNO})
+		
+	</update>
+	
+	<insert id="INSERT_EPCN_EXEC_HIST" parameterType="map" >
+		 INSERT INTO EPCN_API_HIST
+		 (
+		    BIZR_ISSU_KEY, 
+		    REG_DTTM, 
+		    LK_API_CD, 
+		    CALL_URL, 
+		    ACSS_IP, 
+		    ERR_YN, 
+		    ERR_CD, 
+		    ERR_MSG, 
+		    ACPT_ERR, 
+		    REG_DT, 
+		    REG_TM
+		 )
+		 VALUES
+		 (
+		    #{BIZR_ISSU_KEY}, 
+		    TO_CHAR(SYSTIMESTAMP,'YYYYMMDDHH24MISSFF6'), 
+		    #{LK_API_CD}, 
+		    #{CALL_URL}, 
+		    #{ACSS_IP}, 
+		    '', 
+		    '', 
+		    '', 
+		    '', 
+		    TO_CHAR(SYSDATE, 'YYYYMMDD'), 
+		    TO_CHAR(SYSDATE, 'HH24MMSS')
+		 )
+	</insert>
+	
+	<!-- 거래처 사업자 및 지점 등록 여부 -->
+	<select id="SELECT_BIZR_INFO" resultType="hashmap">
+		 SELECT A.BIZRID as CUST_BIZRID
+			 		,A.BIZRNO as CUST_BIZRNO
+			 		,A.BIZR_TP_CD as CUST_BIZR_TP_CD
+			 		,NVL(B.BRCH_ID, 'N') as CUST_BRCH_ID
+		   FROM EPCN_BIZR_INFO A
+		   			,EPCN_BRCH_INFO B
+	    WHERE 1=1
+		    AND A.BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO})
+		    AND A.BIZRID = B.BIZRID(+)
+		    AND A.BIZRNO = B.BIZRNO(+)
+		    AND B.BRCH_NO(+) = '9999999999'
+		    AND ROWNUM = 1
+    </select>
+	
+	<update id="INSERT_EPCN_BIZR_INFO">
+		INSERT INTO EPCN_BIZR_INFO
+		  (
+		    BIZRID, 
+		    BIZRNO, 
+		    BIZRNM, 
+		    BIZR_TP_CD, 
+		    BIZR_STAT_CD, 
+		    BIZR_SE_CD, 
+		    REG_PRSN_ID, 
+		    REG_DTTM
+		  )
+		  VALUES
+		  (
+		  	#{CUST_BIZRID}, 
+		    ECL_ENCRYPT(#{CUST_BIZRNO}), 
+		    #{CUST_BIZRNM}, 
+		    #{BIZR_TP_CD},
+		    'Y',
+		    'H',
+		    'API',
+		    SYSDATE
+		  )
+  	</update>
+	
+	<update id="INSERT_EPCN_BRCH_INFO">
+		 INSERT INTO EPCN_BRCH_INFO
+		 (
+		    BRCH_ID, 
+		    BRCH_NO, 
+		    BIZRID, 
+		    BIZRNO, 
+		    BIZRNM, 
+		    BRCH_NM, 
+		    BIZR_TP_CD,
+		    STAT_CD, 
+		    REG_PRSN_ID, 
+		    REG_DTTM
+		 )
+		 VALUES
+		 (
+		 	'9999999999',
+		    '9999999999', 
+		    #{CUST_BIZRID}, 
+		    ECL_ENCRYPT(#{CUST_BIZRNO}), 
+		    #{CUST_BIZRNM}, 
+		    (   
+		        SELECT LANG_NM
+				  FROM EPCN_LANG_INFO A
+				        	,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') B
+			    WHERE A.LANG_CD = 'hq'
+				    AND A.LANG_SE_CD = B.LANG_SE_CD
+    		 ), 
+		    #{BIZR_TP_CD},
+		    'Y', 
+		    'API', 
+		    SYSDATE
+		 )
+	</update>	
+	
+	<!-- 지점 등록 여부 -->
+	<select id="SELECT_BRCH_INFO" resultType="hashmap">
+		 SELECT NVL(BRCH_ID, 'N') as BRCH_ID
+		   FROM EPCN_BRCH_INFO
+	    WHERE 1=1
+		    AND BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO})
+		    AND BRCH_NO = #{DTSS_NO}
+		    AND STAT_CD = 'Y'
+		    AND ROWNUM = 1
+    </select>
+    
+    <!-- 반환정보 등록 중복체크 -->
+    <select id="SELECT_DUPLE_CHECK_AP_R07" parameterType="map" resultType="int">
+         SELECT COUNT(*)
+            FROM EPCM_RTN_MST A
+                     ,EPCM_RTN_INFO B 
+        WHERE 1=1
+            AND A.RTN_DOC_NO = B.RTN_DOC_NO
+            
+            AND A.MFC_BIZRNO                    = ECL_ENCRYPT(#{MFC_BIZRNO})
+            AND A.MFC_BRCH_NO               = #{DTSS_NO}
+            AND B.CUST_BRCH_NO              = '9999999999'
+            AND B.CUST_BIZRNO               = ECL_ENCRYPT(#{RTL_BIZRNO})
+            AND A.DRCT_RTRVL_REG_DT     = TO_CHAR(SYSDATE,'YYYYMMDD')
+            AND A.DRCT_RTRVL_DT         = REPLACE(#{DRCT_RTRVL_DT}, '-', '')
+            AND B.CTNR_CD                       = #{STD_CTNR_CD}
+    </select>
+    
+    
+    <!-- 반환정보 요약 임시 데이타 등록 -->
+    <insert id="INSERT_AP_R07_EPCM_RTN_LST_TMP" parameterType="map">
+
+        INSERT INTO EPCM_RTN_LST_TMP
+        (
+            RTN_REG_DT
+            ,REG_SN
+            ,WHSLD_BIZRNO
+            ,RTN_DT
+            ,CTNR_CD
+            ,RTN_QTY
+            ,REG_PRSN_ID
+            ,REG_DTTM
+        )VALUES(
+             #{RTN_REG_DT}
+            ,#{REG_SN}
+            ,ECL_ENCRYPT(#{WHSLD_BIZRNO})
+            ,#{RTN_DT}
+            ,#{STD_CTNR_CD}
+            ,#{RTRVL_QTY}
+            ,#{REG_PRSN_ID}
+            ,SYSDATE
+        )
+
+    </insert>
+
+    <!-- 반환정보 상세 임시 데이타 등록 -->
+    <insert id="INSERT_AP_R07_EPCM_RTN_DTL_TMP" parameterType="map">
+
+        INSERT INTO EPCM_RTN_DTL_TMP(
+            RTN_REG_DT
+            ,REG_SN
+            ,WHSLD_BIZRNO
+            ,RTN_DT
+            ,CTNR_CD
+            ,MFC_BIZRNO
+            ,MFC_BRCH_NO
+            ,SYS_SE
+            ,RTN_QTY
+            ,BOX_QTY
+            ,CAR_NO
+            ,REG_PRSN_ID
+            ,REG_DTTM
+        )VALUES (
+            #{RTN_REG_DT}
+            ,#{REG_SN}
+            ,ECL_ENCRYPT(#{WHSLD_BIZRNO})
+            ,#{RTN_DT}
+            ,#{STD_CTNR_CD}
+            ,ECL_ENCRYPT(#{MFC_BIZRNO})
+            ,#{DTSS_NO}
+            ,#{SYS_SE}
+            ,#{RTRVL_QTY}
+            ,#{BOX_QTY}
+            ,#{CAR_NO}
+            ,#{REG_PRSN_ID}
+            ,SYSDATE    
+        )
+        
+    </insert>
+    
+    <!-- 반환정보 요약 및 상세 데이타 검증 -->
+    <select id="SELECT_AP_R07_EPCM_RTN_RSLT"  parameterType="map" resultType="int">
+        SELECT COUNT(*)
+          FROM 
+                    (SELECT RTN_DT
+                                ,CTNR_CD
+                                ,RTN_QTY
+                       FROM EPCM_RTN_LST_TMP
+                     WHERE RTN_REG_DT = #{RTN_REG_DT}
+                         AND WHSLD_BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) 
+                         AND REG_SN = #{REG_SN}
+                     ) A
+                    
+        FULL OUTER JOIN
+        
+                (SELECT RTN_DT       
+                            ,CTNR_CD
+                            ,SUM(NVL(RTN_QTY,0)) AS RTN_QTY           
+                   FROM EPCM_RTN_DTL_TMP 
+                WHERE RTN_REG_DT = #{RTN_REG_DT}
+                    AND WHSLD_BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) 
+                    AND REG_SN = #{REG_SN}
+                GROUP BY RTN_DT, CTNR_CD 
+                ) B
+        
+        ON A.RTN_DT = B.RTN_DT
+            AND A.CTNR_CD = B.CTNR_CD
+            
+        WHERE (NVL(A.RTN_QTY,0) - NVL(B.RTN_QTY,0)) != 0
+    </select>
+    
+    <!-- 반환관리 마스터 등록 -->
+    <insert id="INSERT_AP_R07_EPCM_RTN_MST_TMP" parameterType="map" >
+        INSERT
+            INTO EPCM_RTN_MST_TMP
+                (
+                    RTN_DOC_NO
+                    ,WHSDL_BIZRID
+                    ,WHSDL_BIZRNO
+                    ,WHSDL_BRCH_ID
+                    ,WHSDL_BRCH_NO
+                    ,MFC_BIZRID
+                    ,MFC_BIZRNO
+                    ,MFC_BRCH_ID
+                    ,MFC_BRCH_NO
+                    ,SYS_SE
+                    ,RTN_REG_DT
+                    ,RTN_DT
+                    ,CAR_NO
+                    ,RTN_STAT_CD
+                    ,REG_PRSN_ID
+                    ,REG_DTTM
+                    ,REG_SN
+              )
+              VALUES
+              (
+                 #{RTN_DOC_NO}
+                ,(SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) AND ROWNUM = 1)
+                ,ECL_ENCRYPT(#{WHSLD_BIZRNO})
+                ,(SELECT BRCH_ID FROM EPCN_BRCH_INFO WHERE BRCH_NO = '9999999999' AND BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) AND ROWNUM = 1)
+                ,'9999999999'
+                ,(SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1)
+                ,ECL_ENCRYPT(#{MFC_BIZRNO})
+                ,#{MFC_BRCH_ID}
+                ,#{MFC_BRCH_NO}
+                ,#{SYS_SE}
+                , TO_CHAR(SYSDATE,'YYYYMMDD')
+                ,REPLACE(#{RTN_DT}, '-')
+                ,#{CAR_NO}
+                ,#{RTN_STAT_CD}
+                ,#{REG_PRSN_ID}
+                ,SYSDATE
+                ,#{REG_SN}
+              )
+    </insert>    
+    
+    <!-- 반환관리상세 등록 -->
+    <insert id="INSERT_AP_R07_EPCM_RTN_INFO_TMP" parameterType="map" >
+        INSERT
+            INTO EPCM_RTN_INFO_TMP
+                (
+                 RTN_DOC_NO
+                ,CTNR_CD
+                ,BOX_QTY
+                ,RTN_QTY
+                ,RTN_GTN
+                ,RTN_WHSL_FEE
+                ,RTN_WHSL_FEE_STAX
+                ,RTN_RTL_FEE
+                ,REG_PRSN_ID
+                ,REG_DTTM
+                ,RTN_GTN_UTPC
+                ,RTN_WHSL_FEE_UTPC
+                ,RTN_RTL_FEE_UTPC
+                ,REG_SN
+                )
+                VALUES   
+                (
+                 #{RTN_DOC_NO}
+                ,#{STD_CTNR_CD}
+                ,#{BOX_QTY}
+                ,#{RTRVL_QTY}
+                ,#{RTN_GTN}
+                ,#{RTN_WHSL_FEE}
+                ,#{RTN_WHSL_FEE_STAX}
+                ,#{RTN_RTL_FEE}
+                ,#{REG_PRSN_ID}
+                ,SYSDATE
+                ,#{RTN_GTN_UTPC}
+                ,#{RTN_WHSL_FEE_UTPC}  
+                ,#{RTN_RTL_FEE_UTPC}
+                ,#{REG_SN}
+                )
+    </insert>    
+    
+    <!-- 반환관리 마스터 sum 변경 -->
+    <update id="UPDATE_AP_R07_EPCM_RTN_MST_TMP" parameterType="map" >
+        UPDATE  
+             EPCM_RTN_MST_TMP  SET
+                (
+                 FB_RTN_QTY_TOT
+                , FH_RTN_QTY_TOT
+                , DRCT_RTN_QTY_TOT
+                , RTN_GTN_TOT
+                , RTN_WHSL_FEE_TOT
+                , RTN_WHSL_FEE_STAX_TOT
+                , RTN_RTL_FEE_TOT
+                 ) = (
+                        SELECT 
+                                SUM(DECODE(B.PRPS_CD,'0',RTN_QTY,0))
+                                ,SUM(DECODE(B.PRPS_CD,'1',RTN_QTY,0))
+                                ,SUM(DECODE(B.PRPS_CD,'2',RTN_QTY,0))
+                                ,SUM(RTN_GTN)
+                                ,SUM(RTN_WHSL_FEE)
+                                ,SUM(RTN_WHSL_FEE_STAX)
+                                ,SUM(RTN_RTL_FEE)
+                        FROM
+                                EPCM_RTN_INFO_TMP A
+                                ,EPCN_STD_CTNR_CD B
+                                ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+                                    
+                        WHERE 1=1
+                        AND A.CTNR_CD       = B.CTNR_CD
+                        AND B.LANG_SE_CD    = E.LANG_SE_CD
+                        AND RTN_DOC_NO  = #{RTN_DOC_NO}
+                      )
+            WHERE 1=1
+            AND RTN_DOC_NO =#{RTN_DOC_NO}
+    </update>    
+    
+    <!-- 표준용기코드 등록여부 확인 -->
+    <select id="SELECT_AP_R08_EPCN_STD_CTNR_CD_CNT"  parameterType="map" resultType="int">
+        SELECT COUNT(*) AS CNT
+          FROM EPCN_STD_CTNR_CD 
+         WHERE 1=1 
+               AND CTNR_CD = #{STD_CTNR_CD}
+               AND LANG_SE_CD = (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1')  
+    </select>    
+    
+    <!-- 생산자빈용기상세 임시 등록 -->
+    <insert id="INSERT_AP_R08_EPCN_MFC_CTNR_TMP" parameterType="map" >
+        INSERT
+          INTO EPCN_MFC_CTNR_TMP
+               (
+                   MFC_BIZRNO
+                   ,MFC_CTNR_CD
+                   ,SE_CD1
+                   ,SE_CD2
+                   ,SE_CD3
+                   ,MAPP_CTNR_CD
+                   ,REG_SE
+                   ,SYS_SE
+                   ,MFC_CTNR_NM
+                   ,REG_PRSN_ID
+                   ,REG_DTTM
+               )
+               VALUES
+               (
+                    #{MFC_BIZRNO}
+                    ,#{MFC_CTNR_CD}
+                    ,NVL(#{SE_CD1},'NA00')
+                    ,NVL(#{SE_CD2},'NA00')
+                    ,NVL(#{SE_CD3},'NA00')
+                    ,#{STD_CTNR_CD}
+                    ,#{REG_SE}
+                    ,#{SYS_SE}
+                    ,#{MFC_CTNR_NM}
+                    ,#{REG_PRSN_ID}
+                    ,SYSDATE
+               )    
+    </insert>
+    
+    <!-- 생산자빈용기정보 등록 -->
+    <insert id="INSERT_AP_R08_EPCN_MFC_CTNR_INFO" parameterType="map" >
+        INSERT
+          INTO EPCN_MFC_CTNR_INFO
+               (
+                   MFC_BIZRID
+                   ,MFC_BIZRNO
+                   ,DTL_SN
+                   ,MFC_CTNR_CD
+                   ,SE_CD1
+                   ,SE_CD2
+                   ,SE_CD3
+                   ,MFC_CTNR_NM
+                   ,MAPP_CTNR_CD
+                   ,USE_YN
+                   ,REG_DTTM
+               )
+               VALUES
+               (
+                   (SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1)
+                   ,ECL_ENCRYPT(#{MFC_BIZRNO})
+                   ,(SELECT NVL(MAX(DTL_SN),0) +1 AS DTL_SN FROM EPCN_MFC_CTNR_INFO A WHERE A.MFC_BIZRID = (SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1) AND A.MFC_BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}))    
+                   ,#{MFC_CTNR_CD}
+                   ,NVL(#{SE_CD1},'NA00')
+                   ,NVL(#{SE_CD2},'NA00')
+                   ,NVL(#{SE_CD3},'NA00')
+                   ,#{MFC_CTNR_NM}
+                   ,#{STD_CTNR_CD}
+                   ,#{USE_YN}
+                   ,SYSDATE
+               )    
+    </insert>
+
+    
+    <!-- 생산자빈용기정보 삭제 -->
+    <update id="DELETE_AP_R08_EPCN_MFC_CTNR_INFO" parameterType="map" >
+        UPDATE EPCN_MFC_CTNR_INFO 
+               SET USE_YN = #{USE_YN}
+                  ,UPD_DTTM = SYSDATE
+         WHERE MFC_BIZRID = (SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1)
+               AND MFC_BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO})
+               AND MFC_CTNR_CD = #{MFC_CTNR_CD}
+               AND SE_CD1 = NVL(#{SE_CD1},'NA00')
+               AND SE_CD2 = NVL(#{SE_CD2},'NA00')
+               AND SE_CD3 = NVL(#{SE_CD3},'NA00')
+               AND MAPP_CTNR_CD = #{STD_CTNR_CD}
+    </update>
+    
+
+    <!-- 생산자입고정보 목록 임시 등록 -->
+    <insert id="INSERT_AP_R09_EPCN_MFC_CFM_LST_TMP" parameterType="map" >
+        INSERT
+          INTO EPCN_MFC_CFM_LST_TMP
+               (
+                    MFC_CFM_REG_DT
+                    ,MFC_BIZRNO
+                    ,CFM_DT
+                    ,MFC_CTNR_CD
+                    ,CFM_QTY
+                    ,CFM_GTN
+                    ,CFM_FEE
+                    ,CFM_FEE_STAX
+                    ,REG_PRSN_ID
+                    ,REG_DTTM
+               )
+               VALUES
+               (
+                    #{MFC_CFM_REG_DT}
+                    ,#{MFC_BIZRNO}
+                    ,#{CFM_DT}
+                    ,#{MFC_CTNR_CD}
+                    ,#{CFM_QTY}
+                    ,#{CFM_GTN}
+                    ,#{CFM_FEE}
+                    ,#{CFM_FEE_STAX}
+                    ,#{REG_PRSN_ID}
+                    ,SYSDATE
+               )
+    </insert>
+
+
+    <!-- 생산자입고정보 상세 임시 등록 -->
+    <insert id="INSERT_AP_R09_EPCN_MFC_CFM_DTL_TMP" parameterType="map" >
+        INSERT
+          INTO EPCN_MFC_CFM_DTL_TMP
+               (
+                    MFC_CFM_REG_DT
+                    ,MFC_BIZRNO
+                    ,CFM_DT
+                    ,MFC_CTNR_CD
+                    ,MFC_BRCH_NO
+                    ,WHSLD_BIZRNO
+                    ,SE_CD1
+                    ,SE_CD2
+                    ,SE_CD3
+                    ,SYS_SE
+                    ,CFM_QTY
+                    ,CFM_GTN
+                    ,CFM_FEE
+                    ,CFM_FEE_STAX
+                    ,REG_PRSN_ID
+                    ,REG_DTTM
+               )
+               VALUES
+               (
+                    #{MFC_CFM_REG_DT}
+                    ,#{MFC_BIZRNO}
+                    ,#{CFM_DT}
+                    ,#{MFC_CTNR_CD}
+                    ,#{DTSS_NO}
+                    ,#{CUST_BIZRNO}
+                    ,NVL(#{SE_CD1},'NA00')
+                    ,NVL(#{SE_CD2},'NA00')
+                    ,NVL(#{SE_CD3},'NA00')
+                    ,#{SYS_SE}
+                    ,#{CFM_QTY}
+                    ,#{CFM_GTN}
+                    ,#{CFM_FEE}
+                    ,#{CFM_FEE_STAX}
+                    ,#{REG_PRSN_ID}
+                    ,SYSDATE
+               )
+    </insert>
+
+
+    <!-- 생산자입고 요약 및 상세 데이타 검증 -->
+    <select id="SELECT_AP_R09_EPCN_MFC_CFM_TMP"  parameterType="map" resultType="int">
+        SELECT COUNT(*) AS CNT 
+          FROM EPCN_MFC_CFM_LST_TMP A, 
+               (SELECT MFC_CFM_REG_DT ,
+                      MFC_BIZRNO ,
+                      CFM_DT ,
+                      MFC_CTNR_CD  ,
+                      SUM(CFM_QTY) AS CFM_QTY ,
+                      SUM(CFM_GTN) AS CFM_GTN ,
+                      SUM(CFM_FEE) AS CFM_FEE ,
+                      SUM(CFM_FEE_STAX) AS CFM_FEE_STAX 
+                 FROM EPCN_MFC_CFM_DTL_TMP B 
+                GROUP BY MFC_CFM_REG_DT ,
+                      MFC_BIZRNO ,
+                      CFM_DT ,
+                      MFC_CTNR_CD 
+               ) B 
+         WHERE A.MFC_CFM_REG_DT = B.MFC_CFM_REG_DT 
+               AND A.MFC_BIZRNO = B.MFC_BIZRNO 
+               AND A.CFM_DT = B.CFM_DT 
+               AND A.MFC_CTNR_CD = B.MFC_CTNR_CD 
+               AND A.CFM_QTY = B.CFM_QTY 
+               AND A.CFM_GTN = B.CFM_GTN 
+               AND A.CFM_FEE = B.CFM_FEE 
+               AND A.CFM_FEE_STAX = B.CFM_FEE_STAX
+               AND A.MFC_CFM_REG_DT = #{MFC_CFM_REG_DT} 
+               AND A.MFC_BIZRNO = #{MFC_BIZRNO} 
+    </select>
+
+
+    <!-- 생산자입고확인정보 등록 -->
+    <insert id="INSERT_AP_R09_EPCN_MFC_CFM_INFO" parameterType="map" >
+        INSERT
+          INTO EPCN_MFC_CFM_INFO
+               (
+                    MFC_BIZRID
+                    ,MFC_BIZRNO
+                    ,MFC_BRCH_ID
+                    ,MFC_BRCH_NO
+                    ,WHSDL_BIZRID
+                    ,WHSDL_BIZRNO
+                    ,WHSDL_BRCH_ID
+                    ,WHSDL_BRCH_NO
+                    ,CFM_DT
+                    ,DTL_SN
+                    ,MFC_CTNR_CD
+                    ,SE_CD1
+                    ,SE_CD2
+                    ,SE_CD3
+                    ,CFM_QTY
+                    ,CFM_GTN
+                    ,CFM_FEE
+                    ,CFM_FEE_STAX
+                    ,REG_PRSN_ID
+                    ,REG_DTTM
+               )
+               VALUES
+               (
+                    (SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1)
+                    ,ECL_ENCRYPT(#{MFC_BIZRNO})
+                    ,(SELECT BRCH_ID FROM EPCN_BRCH_INFO WHERE BRCH_NO = #{DTSS_NO} AND BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) AND STAT_CD = 'Y' AND ROWNUM = 1)
+                    ,#{DTSS_NO}
+                    ,(SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1)
+                    ,ECL_ENCRYPT(#{CUST_BIZRNO})
+                    ,(SELECT BRCH_ID FROM EPCN_BRCH_INFO WHERE BRCH_NO = '9999999999' AND BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO}) AND STAT_CD = 'Y' AND ROWNUM = 1)
+                    ,'9999999999'
+                    ,#{CFM_DT}
+                    ,(SELECT NVL(MAX(DTL_SN),0) +1 AS DTL_SN FROM EPCN_MFC_CFM_INFO WHERE MFC_BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) AND MFC_BRCH_NO = #{DTSS_NO} AND WHSDL_BIZRNO = ECL_ENCRYPT(#{CUST_BIZRNO})) 
+                    ,#{MFC_CTNR_CD}
+                    ,NVL(#{SE_CD1},'NA00')
+                    ,NVL(#{SE_CD2},'NA00')
+                    ,NVL(#{SE_CD3},'NA00')
+                    ,#{CFM_QTY}
+                    ,#{CFM_GTN}
+                    ,#{CFM_FEE}
+                    ,#{CFM_FEE_STAX}
+                    ,#{REG_PRSN_ID}
+                    ,SYSDATE
+               )
+    </insert>
+
+
+    <!-- API수신이력 순번 채번 -->
+    <select id="SELECT_EPCN_API_DTL_HIST_SEQ" resultType="int">
+        SELECT SEQ_API_DTL_HIST.nextval AS SEQ FROM DUAL
+    </select>
+
+    <!-- API수신이력 등록 -->
+    <insert id="INSERT_EPCN_API_DTL_HIST" parameterType="map">
+        INSERT INTO EPCN_API_DTL_HIST(
+            REG_DT
+            ,REG_SN
+            ,REG_TM
+            ,PRAM
+        )VALUES(
+             #{REG_DT}
+            ,#{REG_SN}
+            ,#{REG_TM}
+            ,#{PRAM}
+        )
+    </insert>
+    
+    <!-- API수신 후 처리결과 반영 -->
+    <update id="UPDATE_EPCN_API_DTL_HIST_ANSR" parameterType="map" >
+        UPDATE EPCN_API_DTL_HIST 
+               SET ANSR_RST = #{ANSR_RST} , 
+               ANSR_TM = #{ANSR_TM} 
+         WHERE REG_DT = #{REG_DT} 
+               AND REG_SN = #{REG_SN}    
+    </update>
+    
+    
+    <!-- 빈용기명 조회  보증금 ,취급수수료-->
+    <select id="SELECT_AP_R07_EPCN_INDV_FEE_MGNT" parameterType="map" resultType="hashmap">
+        SELECT  
+                 A.LANG_SE_CD
+                , A.CTNR_CD
+                , A.REG_SN
+                , A.WHSL_FEE AS RTN_WHSL_FEE_UTPC
+                , A.RTL_FEE AS RTN_RTL_FEE_UTPC
+                , A.CUST_BIZRID 
+                , A.CUST_BIZRNO 
+                , A.CUST_BRCH_ID
+                , A.CUST_BRCH_NO 
+                , A.STD_FEE_YN
+                , B.CTNR_NM
+                , B.CTNR_CD
+                , EPCN_ETC_NM(B.CPCT_CD , 'E001') AS CPCT_NM
+                , EPCN_ETC_NM(B.PRPS_CD , 'E002') AS PRPS_NM
+                , B.PRPS_CD
+                , DECODE( SUBSTR(B.CTNR_CD,2,1),3,2,1) AS BIZR_TP_CD
+                , C.STD_DPS AS RTN_GTN_UTPC
+                , ( C.STD_DPS * #{RTRVL_QTY} ) AS RTN_GTN
+                , ( A.WHSL_FEE * #{RTRVL_QTY} ) AS RTN_WHSL_FEE
+                , TRUNC(( ((A.WHSL_FEE * #{RTRVL_QTY}) + (A.RTL_FEE * #{RTRVL_QTY} )) * 0.1 )) AS RTN_WHSL_FEE_STAX
+                , ( A.RTL_FEE * #{RTRVL_QTY} ) AS RTN_RTL_FEE 
+                , ( C.STD_DPS * #{RTRVL_QTY} ) + ( A.WHSL_FEE * #{RTRVL_QTY} ) + TRUNC(( ((A.WHSL_FEE * #{RTRVL_QTY}) + (A.RTL_FEE * #{RTRVL_QTY} )) * 0.1 ))  + ( A.RTL_FEE * #{RTRVL_QTY} ) AS AMT_TOT
+                , G.MFC_BIZRNM
+                , G.MFC_BRCH_NM
+                , G.MFC_BRCH_ID
+                , G.MFC_BRCH_NO
+                , G.MFC_BIZRID
+                , G.MFC_BIZRNO
+                , G.MFC_BIZRID||';'||G.MFC_BIZRNO AS MFC_BIZRNM_CD 
+                , G.MFC_BRCH_ID||';'||G.MFC_BRCH_NO AS MFC_BRCH_NM_CD
+                , #{RTRVL_QTY} AS RTN_QTY
+                , #{BOX_QTY} AS BOX_QTY
+                , #{CAR_NO} AS CAR_NO
+                , #{RTN_DT} AS RTN_DT
+                ,DECODE( SUBSTR(A.CTNR_CD,2,1),'3' ,'2' ,'1') AS CTNR_SE
+                , 'aplc' AS RTL_FEE_SELECT
+        FROM 
+               EPCN_INDV_FEE_MGNT A
+               ,EPCN_STD_CTNR_CD B
+               ,EPCN_STD_DPS_MGNT C
+               ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+               ,(SELECT CTNR_CD, LANG_SE_CD, REG_SN, MIN(STD_FEE_YN)  AS STD_FEE_YN 
+                   FROM EPCN_INDV_FEE_MGNT 
+                    WHERE 1=1
+                    AND MFC_BIZRID   = (SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1)
+                    AND MFC_BIZRNO   = ECL_ENCRYPT(#{MFC_BIZRNO})
+                    AND MFC_BRCH_ID  = #{MFC_BRCH_ID}
+                    AND MFC_BRCH_NO  = #{MFC_BRCH_NO}
+                    AND CUST_BIZRID  = (SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1) 
+                    AND CUST_BIZRNO  = ECL_ENCRYPT(#{WHSLD_BIZRNO})
+                    AND CUST_BRCH_ID = (SELECT BRCH_ID FROM EPCN_BRCH_INFO WHERE BRCH_NO = '9999999999' AND BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) AND STAT_CD = 'Y' AND ROWNUM = 1)
+                    AND CUST_BRCH_NO = '9999999999'
+                    GROUP BY CTNR_CD, LANG_SE_CD, REG_SN
+                 ) F
+                 ,( SELECT * FROM EPCN_DTSS_CUST_INFO WHERE 1=1              
+                    AND STAT_CD      ='Y'
+                    AND MFC_BIZRID   = (SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1)
+                    AND MFC_BIZRNO   = ECL_ENCRYPT(#{MFC_BIZRNO})
+                    AND MFC_BRCH_ID  = #{MFC_BRCH_ID}
+                    AND MFC_BRCH_NO  = #{MFC_BRCH_NO}
+                    AND CUST_BIZRID  = (SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1) 
+                    AND CUST_BIZRNO  = ECL_ENCRYPT(#{WHSLD_BIZRNO})
+                    AND CUST_BRCH_ID = (SELECT BRCH_ID FROM EPCN_BRCH_INFO WHERE BRCH_NO = '9999999999' AND BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) AND STAT_CD = 'Y' AND ROWNUM = 1)
+                    AND CUST_BRCH_NO = '9999999999'
+                 ) G
+        WHERE 1=1
+            AND A.CTNR_CD       = B.CTNR_CD
+            AND A.LANG_SE_CD    = B.LANG_SE_CD
+            AND A.CTNR_CD       = C.CTNR_CD
+            AND A.LANG_SE_CD    = C.LANG_SE_CD
+            AND A.LANG_SE_CD    = E.LANG_SE_CD       
+            AND A.CTNR_CD       = F.CTNR_CD
+            AND A.LANG_SE_CD    = F.LANG_SE_CD
+            AND A.REG_SN        = F.REG_SN
+            AND A.STD_FEE_YN    = F.STD_FEE_YN  
+            AND A.MFC_BIZRID    = (SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{MFC_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1)
+            AND A.MFC_BIZRNO    = ECL_ENCRYPT(#{MFC_BIZRNO})
+            AND A.MFC_BRCH_ID   = #{MFC_BRCH_ID}
+            AND A.MFC_BRCH_NO   = #{MFC_BRCH_NO}
+            AND A.CUST_BIZRID   = (SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1) 
+            AND A.CUST_BIZRNO   = ECL_ENCRYPT(#{WHSLD_BIZRNO})
+            AND A.CUST_BRCH_ID  = (SELECT BRCH_ID FROM EPCN_BRCH_INFO WHERE BRCH_NO = '9999999999' AND BIZRNO = ECL_ENCRYPT(#{WHSLD_BIZRNO}) AND STAT_CD = 'Y' AND ROWNUM = 1)
+            AND A.CUST_BRCH_NO  = '9999999999'
+            AND A.CTNR_CD       = #{STD_CTNR_CD}        
+            AND REPLACE(#{RTN_DT}, '-') BETWEEN  C.APLC_ST_DT and  C.APLC_END_DT 
+            AND REPLACE(#{RTN_DT}, '-') BETWEEN  A.APLC_ST_DT and  A.APLC_END_DT
+    </select>
+    
+
+    <!-- 지점 정보 조회 -->
+    <select id="SELECT_MFC_BRCH_INFO" resultType="hashmap">
+        SELECT BRCH_ID AS MFC_BRCH_ID, 
+               BRCH_NO AS MFC_BRCH_NO 
+          FROM EPCN_BRCH_INFO 
+         WHERE BRCH_BIZRNO = ECL_ENCRYPT(#{DTSS_NO}) 
+               AND BIZRNO  = ECL_ENCRYPT(#{MFC_BIZRNO}) 
+               AND STAT_CD = 'Y' 
+               AND ROWNUM  = 1
+    </select>
+    
+    <!-- ERP_CD 업데이트 -->
+    <update id="UPDATE_AP_R07_ERP_CD" parameterType="map" >
+        UPDATE EPCN_BIZR_INFO 
+           SET ERP_CD = #{ERP_CD} , 
+               ERP_LK_DT = #{TRMS_DT} 
+         WHERE BIZRNO = ECL_ENCRYPT(#{BIZRNO})
+           AND (NVL(ERP_CD, 0)  != #{ERP_CD} OR ERP_LK_DT IS NULL)
+    </update>
+    
+    
+    <!-- 무인회수기 등록 채번 -->
+    <select id="SELECT_EPCN_URM_HIST_SEQ" resultType="int">
+        SELECT SEQ_URM_API_HIST.nextval AS SEQ FROM DUAL
+    </select>
+     <!-- 무인회수기 수신이력 등록 -->
+    <insert id="INSERT_EPCN_URM_HIST" parameterType="map">
+        INSERT INTO EPCN_URM_HIST(
+            REG_DT
+            ,REG_SN
+            ,REG_TM
+            ,PRAM
+            ,ACSS_IP
+            ,CALL_URL
+            
+        )VALUES(
+             #{REG_DT}
+            ,#{REG_SN}
+            ,#{REG_TM}
+            ,#{PRAM}
+            ,#{ACSS_IP}
+            ,#{CALL_URL}
+           
+        )
+    </insert>
+    <!-- 무인회수기 데이터 수신 후 처리결과 반영 -->
+    <update id="UPDATE_EPCN_URM_HIST_ANSR" parameterType="map" >
+        UPDATE EPCN_URM_HIST 
+               SET ANSR_RST = #{ANSR_RST} , 
+               ERR_YN = #{ERR_YN} 
+         WHERE REG_DT = #{REG_DT} 
+               AND REG_SN = #{REG_SN}    
+    </update>
+    <update id="INSERT_EPCM_URM_MST_TMP"  parameterType="map">
+			INSERT INTO
+		 			EPCM_URM_MST_TMP  
+				 		(  
+							RTRVL_DT,
+							URM_RTRVL_REG_DT,
+							RTRVL_CTNR_CD,
+							PRPS_CD,
+							SERIAL_NO,
+							URM_NM,
+							URM_CODE_NO,
+							AREA_CD,
+							URM_RECEIPT_NO,
+							RECEIPT_SN,
+							URM_QTY_TOT,
+							URM_GTN_TOT,
+							URM_RTL_FEE_TOT,
+							REG_PRSN_ID,
+							REG_DTTM
+				 		)   
+				 		VALUES
+	 					(
+							REPLACE(#{date}, '-')
+							,#{URM_RTRVL_REG_DT}
+							,#{container_code}
+							,#{purpose_code}
+							,#{serial_no}
+							,#{branch_name}
+							,#{branch_code}
+							,#{area_code}
+							,#{receipt_no}
+							,#{sibling_seq}
+							,#{qty}
+							,#{deposit_value}
+							,(SELECT RTRVL_FEE * #{qty}
+								FROM EPCN_RTRVL_FEE_MGNT 
+							  WHERE 1=1
+							     AND RTRVL_CTNR_CD = #{container_code} 
+							     AND LANG_SE_CD = 'KOR' 
+							     AND REPLACE( #{date}, '-') BETWEEN APLC_ST_DT AND APLC_END_DT
+							     AND ROWNUM = 1
+							  )
+							,#{reg_id}
+							,SYSDATE
+				 		)
+	</update>
+	
+	<update id="INSERT_EPCM_URM_MST"  parameterType="map">
+			INSERT INTO EPCM_URM_MST
+				(
+					URM_DOC_NO, 
+					URM_CODE_NO, 
+					URM_RECEIPT_NO, 
+					SERIAL_NO,
+					URM_RTRVL_REG_DT, 
+					RTRVL_DT,
+					SYS_SE, 
+					REG_PRSN_ID, 
+					REG_DTTM 
+				)
+				VALUES
+				(
+				 	#{URM_DOC_NO}, 
+					#{branch_code}, 
+					#{receipt_no}, 
+					#{serial_no},
+					#{URM_RTRVL_REG_DT}, 
+					#{date}, 
+					#{SYS_SE},
+					#{reg_id}, 
+					SYSDATE
+				 )
+	</update>
+	
+	<!-- 회수 정보 실제 등록 -->
+	<update id="INSERT_EPCM_URM_LST"  parameterType="map">
+			INSERT INTO
+		 			EPCM_URM_LST_TEST
+						(
+							URM_DOC_NO,
+							URM_RTRVL_REG_DT,
+							RTRVL_DT,
+							RTRVL_CTNR_CD,
+							PRPS_CD,
+							URM_RECEIPT_NO,
+							RECEIPT_SN,
+							URM_QTY,
+							URM_GTN,
+							RTRVL_RTL_FEE,
+							REG_PRSN_ID,
+							REG_DTTM
+							
+				 		)   
+				 		VALUES
+	 					(
+							#{URM_DOC_NO},
+							#{URM_RTRVL_REG_DT},
+							#{date},
+							#{container_code},
+							#{purpose_code},
+							#{receipt_no},
+							#{sibling_seq},
+							#{qty},
+							#{deposit_value},
+							(SELECT RTRVL_FEE * #{qty}
+								FROM EPCN_RTRVL_FEE_MGNT 
+							  WHERE 1=1
+							     AND RTRVL_CTNR_CD = #{container_code} 
+							     AND LANG_SE_CD = 'KOR' 
+							     AND REPLACE( #{date}, '-') BETWEEN APLC_ST_DT AND APLC_END_DT
+							     AND ROWNUM = 1
+							  ),
+							#{reg_id},
+							SYSDATE
+				 		)
+	</update>
+	 <update id="EPCM_URM_SUM_UPDATE" parameterType="map" >    
+			UPDATE    
+				 EPCM_URM_MST  SET
+					(
+					 URM_QTY_TOT   
+					, URM_GTN_TOT
+					, URM_RTL_FEE_TOT    
+					 ) = (
+							SELECT    
+										SUM(URM_QTY)
+										,SUM(URM_GTN)   
+										,SUM(RTRVL_RTL_FEE)
+							FROM
+										EPCM_URM_LST_TEST A
+										,EPCN_RTRVL_CTNR_CD B
+										,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+										
+							WHERE 1=1
+							AND A.RTRVL_CTNR_CD 		= B.RTRVL_CTNR_CD
+							AND B.LANG_SE_CD  			= E.LANG_SE_CD
+							AND URM_DOC_NO 			= #{URM_DOC_NO}
+						  )
+				WHERE 1=1
+				AND URM_DOC_NO =#{URM_DOC_NO}   
+	</update>
+	<!-- 회수등록 중복체크 -->
+	<select id="SELECT_DUPLE_CHECK_URM" parameterType="map" resultType="int">
+		 SELECT COUNT(*) FROM EPCM_URM_MST_TMP
+			WHERE 1 = 1 
+			  AND  RTRVL_DT =#{date}
+			  AND SERIAL_NO =#{serial_no}
+			  AND URM_RECEIPT_NO =#{receipt_no}
+			  AND RTRVL_CTNR_CD = #{container_code}
+	</select>
+	
+    
+</mapper>

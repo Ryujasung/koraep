@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE9000701Mapper">
+      
+    <!-- 지역별 무인회수기현황 조회  -->
+	<select id="epce9000701_select" parameterType="map" resultType="hashmap">
+		<if test='CollecList_SEL == 3'>   
+			SELECT 
+				ROW_NUMBER()OVER(ORDER BY SUM(C.RTN_QTY) DESC) AS PNO,
+				C.AREA_CD,
+	     		C.AREA_NM,
+       			SUM(C.RTN_QTY) AS RTN_QTY,
+       			SUM(C.RTN_QTY)/
+         			(SELECT SUM(RTN_QTY)
+         			FROM  (SELECT   
+         							EPCN_ETC_NM(C.AREA_CD , 'B010') AS AREA_NM,
+         							C.AREA_CD,
+         							SUM(A.URM_QTY_TOT) AS RTN_QTY
+								FROM     EPCM_URM_MST A, EPCM_URM_INFO_TEST1 C 
+								WHERE    1=1
+								AND C.URM_CODE_NO =A.URM_CODE_NO
+								AND C.SERIAL_NO =A.SERIAL_NO 
+								AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+								GROUP BY AREA_CD
+								UNION ALL
+								SELECT 
+						  	 		EPCN_ETC_NM(AREA_CD, 'B010') AS AREA_NM,
+					       			AREA_CD,
+					       			SUM(B.RTN_QTY) AS RTN_QTY
+								FROM EPCM_RCS_LST B
+								WHERE 1=1
+								AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+								GROUP BY AREA_CD)
+					)*100 AS RTN_QTY_RT,
+         			SUM(C.RTN_GTN) AS RTN_GTN
+				FROM
+					(SELECT  
+	  		 			'무인회수기' AS FLAG,
+         				EPCN_ETC_NM(C.AREA_CD , 'B010') AS AREA_NM,
+         				C.AREA_CD,
+         				SUM(A.URM_QTY_TOT) AS RTN_QTY,
+         				SUM(A.URM_QTY_TOT)/
+         						(SELECT SUM(URM_QTY_TOT)
+         						FROM    EPCM_URM_MST
+         						WHERE RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+         				)*100 AS RTN_QTY_RT,
+         				SUM(A.URM_GTN_TOT) AS RTN_GTN
+					FROM     EPCM_URM_MST A, EPCM_URM_INFO_TEST1 C
+					WHERE    1=1
+					AND C.URM_CODE_NO =A.URM_CODE_NO
+					AND C.SERIAL_NO =A.SERIAL_NO 
+					AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+					GROUP BY C.AREA_CD
+			UNION ALL
+					SELECT 
+	  					'반환수집소' AS FLAG,
+	  	 				EPCN_ETC_NM(AREA_CD, 'B010') AS AREA_NM,
+       					AREA_CD,
+       					SUM(B.RTN_QTY) AS RTN_QTY,
+       					SUM(RTN_QTY) /
+       							(SELECT SUM(RTN_QTY) 
+       							 FROM EPCM_RCS_LST
+        						WHERE RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+        						)*100 AS RTN_QTY_RT,
+       							SUM(RTN_GTN) AS RTN_GTN
+			FROM EPCM_RCS_LST B
+			WHERE 1=1
+			AND RTRVL_DT BETWEEN  REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			GROUP BY AREA_CD) C
+			GROUP BY C.AREA_CD, C.AREA_NM
+			ORDER BY C.AREA_CD
+		</if>
+  	     <if test='colleList_SEL  == 100'>
+  	     	SELECT 
+				ROW_NUMBER()OVER(ORDER BY SUM(C.RTN_QTY) DESC) AS PNO,
+				C.AREA_CD,
+	     		C.AREA_NM,
+       			SUM(C.RTN_QTY) AS RTN_QTY,
+       			SUM(C.RTN_QTY)/
+         			(SELECT SUM(RTN_QTY)
+         			FROM  (SELECT   
+         							EPCN_ETC_NM(AREA_CD , 'B010') AS AREA_NM,
+         							AREA_CD,
+         							SUM(A.RTN_QTY) AS RTN_QTY
+								FROM     EPCM_URM_LST A
+								WHERE    1=1
+								AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+								GROUP BY AREA_CD
+								UNION ALL
+								SELECT 
+						  	 		EPCN_ETC_NM(AREA_CD, 'B010') AS AREA_NM,
+					       			AREA_CD,
+					       			SUM(B.RTN_QTY) AS RTN_QTY
+								FROM EPCM_RCS_LST B
+								WHERE 1=1
+								AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+								GROUP BY AREA_CD)
+					)*100 AS RTN_QTY_RT,
+         			SUM(C.RTN_GTN) AS RTN_GTN
+				FROM
+					(SELECT  
+	  		 			'무인회수기' AS FLAG,
+         				EPCN_ETC_NM(AREA_CD , 'B010') AS AREA_NM,
+         				AREA_CD,
+         				SUM(A.RTN_QTY) AS RTN_QTY,
+         				SUM(RTN_QTY)/
+         						(SELECT SUM(RTN_QTY)
+         						FROM    EPCM_URM_MST A
+					        	 		 , EPCM_URM_INFO_TEST1 C 
+								WHERE    1=1
+								AND C.URM_CODE_NO =A.URM_CODE_NO
+								AND C.SERIAL_NO =A.SERIAL_NO 
+         						AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+         				)*100 AS RTN_QTY_RT,
+         				SUM(RTN_GTN) AS RTN_GTN
+					FROM     EPCM_URM_LST A
+					WHERE    1=1
+					AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+					GROUP BY AREA_CD
+			UNION ALL
+					SELECT 
+	  					'반환수집소' AS FLAG,
+	  	 				EPCN_ETC_NM(AREA_CD, 'B010') AS AREA_NM,
+       					AREA_CD,
+       					SUM(B.RTN_QTY) AS RTN_QTY,
+       					SUM(RTN_QTY) /
+       							(SELECT SUM(RTN_QTY) 
+       							 FROM EPCM_RCS_LST
+        						WHERE RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+        						)*100 AS RTN_QTY_RT,
+       							SUM(RTN_GTN) AS RTN_GTN
+			FROM EPCM_RCS_LST B
+			WHERE 1=1
+			AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			GROUP BY AREA_CD) C
+			GROUP BY C.AREA_CD, C.AREA_NM
+			ORDER BY C.AREA_CD
+  	     </if>
+  	    <if test='CollecList_SEL == 2'>
+  	    	SELECT   ROW_NUMBER()OVER(ORDER BY SUM(RTN_QTY) DESC) AS PNO,
+         		 EPCN_ETC_NM(AREA_CD , 'B010') AS AREA_NM,
+			     AREA_CD,
+			     SUM(RTN_QTY) AS RTN_QTY,
+			     SUM(RTN_QTY)/
+         			 (SELECT SUM(RTN_QTY)
+        	 		 FROM EPCM_RCS_LST WHERE RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+        	 		 )*100 AS RTN_QTY_RT,
+         		 SUM(RTN_GTN) AS RTN_GTN
+			FROM   EPCM_RCS_LST
+			WHERE    1=1
+			AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			GROUP BY AREA_CD
+			ORDER BY RTN_QTY DESC
+  	    </if> 
+  	    
+  	    <if test='CollecList_SEL == 1'>
+  	    	SELECT ROW_NUMBER()OVER(ORDER BY SUM(URM_QTY_TOT) DESC) AS PNO,
+         		EPCN_ETC_NM(C.AREA_CD , 'B010') AS AREA_NM,
+			    C.AREA_CD,
+			    SUM(A.URM_QTY_TOT) AS RTN_QTY,
+			    SUM(A.URM_QTY_TOT)/
+         			 (SELECT SUM(URM_QTY_TOT)
+        	 		 FROM    EPCM_URM_MST A
+					        	 		 , EPCM_URM_INFO_TEST1 C 
+								WHERE    1=1
+								AND C.URM_CODE_NO =A.URM_CODE_NO
+								AND C.SERIAL_NO =A.SERIAL_NO 
+         						AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+        	 		 )*100 AS RTN_QTY_RT,
+         		SUM(A.URM_GTN_TOT) AS RTN_GTN
+			FROM  EPCM_URM_MST A, EPCM_URM_INFO_TEST1 C 
+			WHERE    1=1
+			AND C.URM_CODE_NO =A.URM_CODE_NO
+			AND C.SERIAL_NO =A.SERIAL_NO 
+			AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			GROUP BY C.AREA_CD
+			ORDER BY RTN_QTY DESC
+  	    </if> 
+    </select>
+    
+    <!-- 지역별_생산자별 무인회수기현황 조회  -->
+    <select id="epce9000701_select2" parameterType="map" resultType="hashmap">
+	    <if test='CollecList_SEL == 1'>
+			SELECT   ROW_NUMBER()OVER(ORDER BY SUM(A.URM_QTY_TOT) DESC) AS PNO,
+	         	EPCN_ETC_NM(B.AREA_CD , 'B010') AS AREA_NM,
+	        	 B.AREA_CD ,
+	        	 '무인회수기' AS FLAG,
+	       	 	B.URM_NM AS COLL_NM,
+	         	A.SERIAL_NO,
+	         	SUM(A.URM_QTY_TOT) AS COLL_RTN_QTY,
+	         	SUM(A.URM_QTY_TOT)/
+	        			(SELECT SUM(URM_QTY_TOT)
+	         			FROM   EPCM_URM_MST A, EPCM_URM_INFO_TEST1 B
+						WHERE    1=1
+						AND B.URM_CODE_NO =A.URM_CODE_NO
+						AND B.SERIAL_NO =A.SERIAL_NO 
+	         			AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+	         			AND B.AREA_CD = #{AREA_CD})*100 AS COLL_QTY_RT,
+	         		SUM(URM_GTN_TOT) AS RTN_GTN
+			FROM EPCM_URM_MST A, EPCM_URM_INFO_TEST1 B
+			WHERE    1=1
+			AND B.URM_CODE_NO =A.URM_CODE_NO
+			AND B.SERIAL_NO =A.SERIAL_NO 
+			AND      B.AREA_CD = #{AREA_CD}
+			AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			GROUP BY B.AREA_CD,
+	         A.SERIAL_NO,
+	         B.URM_NM
+			ORDER BY COLL_RTN_QTY DESC, COLL_NM
+	 	</if>
+
+	 	<if test='CollecList_SEL == 2'>
+			 SELECT ROW_NUMBER()OVER(ORDER BY SUM(A.RTN_QTY) DESC) AS PNO,
+				  	 EPCN_ETC_NM(A.AREA_CD,'B010') AS AREA_NM,
+			       A.AREA_CD,
+			       '반환수집소' AS FLAG,
+			       B.RCS_NM AS COLL_NM,
+			       B.RCS_NO,
+			       SUM(A.RTN_QTY) AS COLL_RTN_QTY,
+			       SUM(A.RTN_QTY) /
+			       	(SELECT SUM(RTN_QTY) FROM EPCM_RCS_LST A, EPCM_RCS_INFO B WHERE 1=1 AND A.RCS_NO = B.RCS_NO 
+			       	AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			       	AND A.AREA_CD = #{AREA_CD})*100 AS COLL_QTY_RT,
+			       SUM(A.RTN_GTN) AS RTN_GTN
+			FROM EPCM_RCS_LST A, EPCM_RCS_INFO B
+			WHERE 1=1
+			AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			AND A.RCS_NO = B.RCS_NO
+			AND A.AREA_CD = #{AREA_CD}
+			GROUP BY A.AREA_CD,
+			         B.RCS_NM,
+			         B.RCS_NO
+			ORDER BY COLL_RTN_QTY DESC, B.RCS_NO
+			</if> 
+
+			<if test='CollecList_SEL == 3'>
+				SELECT ROW_NUMBER()OVER(ORDER BY C.COLL_RTN_QTY DESC) AS PNO,
+			C.AREA_CD,
+			C.AREA_NM,
+			C.FLAG,
+			C.COLL_NM,
+			C.SERIAL_NO,
+			C.COLL_RTN_QTY,
+			C.COLL_RTN_QTY/
+				(SELECT SUM(COLL_RTN_QTY) AS COLL_RTN_QTY
+					FROM
+								(SELECT
+								         EPCN_ETC_NM(B.AREA_CD , 'B010') AS AREA_NM,
+								         B.AREA_CD ,
+								         '무인회수기' AS FLAG,
+								         B.URM_NM AS COLL_NM,
+								         A.SERIAL_NO,
+								          SUM(A.URM_QTY_TOT) AS COLL_RTN_QTY
+								FROM EPCM_URM_MST A, EPCM_URM_INFO_TEST1 B
+								WHERE    1=1
+								AND B.URM_CODE_NO =A.URM_CODE_NO
+								AND B.SERIAL_NO =A.SERIAL_NO
+								AND      B.AREA_CD = #{AREA_CD}
+								AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+								GROUP BY B.AREA_CD,
+								         A.SERIAL_NO,
+								         B.URM_NM
+								UNION ALL
+								 SELECT
+									  	 EPCN_ETC_NM(A.AREA_CD,'B010') AS AREA_NM,
+								       A.AREA_CD,
+								       '반환수집소' AS FLAG,
+								       B.RCS_NM AS COLL_NM,
+								       TO_CHAR(B.RCS_NO) AS SERIAL_NO,
+								       SUM(A.RTN_QTY) AS COLL_RTN_QTY
+								FROM EPCM_RCS_LST A, EPCM_RCS_INFO B
+								WHERE 1=1
+								AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+								AND A.RCS_NO = B.RCS_NO
+								AND A.AREA_CD = #{AREA_CD}
+								GROUP BY A.AREA_CD,
+								         B.RCS_NM,
+								         B.RCS_NO)) *100 AS COLL_QTY_RT,
+			         C.RTN_GTN
+			FROM
+			(SELECT   ROW_NUMBER()OVER(ORDER BY SUM(A.URM_QTY_TOT) DESC) AS PNO,
+			         EPCN_ETC_NM(B.AREA_CD , 'B010') AS AREA_NM,
+			         B.AREA_CD ,
+			         '무인회수기' AS FLAG,
+			         B.URM_NM AS COLL_NM,
+			         A.SERIAL_NO,
+			         SUM(A.URM_QTY_TOT) AS COLL_RTN_QTY,
+			         SUM(A.URM_QTY_TOT)/
+			        (SELECT SUM(URM_QTY_TOT)
+			         FROM    EPCM_URM_MST A, EPCM_URM_INFO_TEST1 B
+			         WHERE 1=1 
+					 AND B.URM_CODE_NO =A.URM_CODE_NO
+					 AND B.SERIAL_NO =A.SERIAL_NO 
+			         AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			         AND B.AREA_CD = #{AREA_CD})*100 AS COLL_QTY_RT,
+			         SUM(URM_GTN_TOT) AS RTN_GTN
+			FROM EPCM_URM_MST A, EPCM_URM_INFO_TEST1 B
+			WHERE    1=1
+			AND B.URM_CODE_NO =A.URM_CODE_NO
+			AND B.SERIAL_NO =A.SERIAL_NO 
+			AND      B.AREA_CD = #{AREA_CD}
+			AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			GROUP BY B.AREA_CD,
+			         A.SERIAL_NO,
+			         B.URM_NM
+			UNION ALL
+			 SELECT ROW_NUMBER()OVER(ORDER BY SUM(A.RTN_QTY) DESC) AS PNO,
+				  	 EPCN_ETC_NM(A.AREA_CD,'B010') AS AREA_NM,
+			       A.AREA_CD,
+			       '반환수집소' AS FLAG,
+			       B.RCS_NM AS COLL_NM,
+			       TO_CHAR(B.RCS_NO) AS SERIAL_NO,
+			       SUM(A.RTN_QTY) AS COLL_RTN_QTY,
+			       SUM(A.RTN_QTY) /
+			       	(SELECT SUM(RTN_QTY) FROM EPCM_RCS_LST A, EPCM_RCS_INFO B WHERE 1=1 AND A.RCS_NO = B.RCS_NO 
+			       	AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			       	AND A.AREA_CD = #{AREA_CD})*100 AS COLL_QTY_RT,
+			       SUM(A.RTN_GTN) AS RTN_GTN
+			FROM EPCM_RCS_LST A, EPCM_RCS_INFO B
+			WHERE 1=1
+			AND RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			AND A.RCS_NO = B.RCS_NO
+			AND A.AREA_CD =#{AREA_CD}
+			GROUP BY A.AREA_CD,
+			         B.RCS_NM,
+			         B.RCS_NO) C
+			ORDER BY C.FLAG, C.COLL_RTN_QTY DESC
+			</if>
+    </select>
+    
+    <select id="epce9000761_select" resultType="hashmap">
+        SELECT ROW_NUMBER() OVER(ORDER BY YYYY ASC) AS SN
+	 		 , YYYY
+		     , SUM("01") AS MONTH1
+		     , SUM("02") AS MONTH2
+		     , SUM("03") AS MONTH3
+		     , SUM("04") AS MONTH4
+		     , SUM("05") AS MONTH5
+		     , SUM("06") AS MONTH6
+		     , SUM("07") AS MONTH7
+		     , SUM("08") AS MONTH8
+		     , SUM("09") AS MONTH9
+		     , SUM("10") AS MONTH10
+		     , SUM("11") AS MONTH11
+		     , SUM("12") AS MONTH12
+		     , SUM(URM_QTY_TOT) AS YYYYTOTAL
+		
+		FROM (
+		SELECT  SUBSTR(RTRVL_DT,0,4) AS YYYY
+			   ,URM_QTY_TOT
+			   ,DECODE(SUBSTR(RTRVL_DT,5,2),'01',URM_QTY_TOT,0) AS "01"	
+			   ,DECODE(SUBSTR(RTRVL_DT,5,2),'02',URM_QTY_TOT,0) AS "02"	
+			   ,DECODE(SUBSTR(RTRVL_DT,5,2),'03',URM_QTY_TOT,0) AS "03"	
+			   ,DECODE(SUBSTR(RTRVL_DT,5,2),'04',URM_QTY_TOT,0) AS "04"	
+			   ,DECODE(SUBSTR(RTRVL_DT,5,2),'05',URM_QTY_TOT,0) AS "05"	
+			   ,DECODE(SUBSTR(RTRVL_DT,5,2),'06',URM_QTY_TOT,0) AS "06"	
+			   ,DECODE(SUBSTR(RTRVL_DT,5,2),'07',URM_QTY_TOT,0) AS "07"	
+			   ,DECODE(SUBSTR(RTRVL_DT,5,2),'08',URM_QTY_TOT,0) AS "08"	
+			   ,DECODE(SUBSTR(RTRVL_DT,5,2),'09',URM_QTY_TOT,0) AS "09"	
+			   ,DECODE(SUBSTR(RTRVL_DT,5,2),'10',URM_QTY_TOT,0) AS "10"	
+			   ,DECODE(SUBSTR(RTRVL_DT,5,2),'11',URM_QTY_TOT,0) AS "11"	
+			   ,DECODE(SUBSTR(RTRVL_DT,5,2),'12',URM_QTY_TOT,0) AS "12"	
+		FROM EPCM_URM_MST A , EPCM_URM_INFO_TEST1 B 
+		WHERE 1 = 1 
+		  AND A.SERIAL_NO = B.SERIAL_NO 
+		  AND SUBSTR(RTRVL_DT,0,4) BETWEEN 2017 AND TO_CHAR(SYSDATE,'YYYY')
+		)GROUP BY YYYY
+		ORDER BY YYYY ASC
+	</select>
+</mapper>

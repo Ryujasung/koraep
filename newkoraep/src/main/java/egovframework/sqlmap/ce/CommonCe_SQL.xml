@@ -1,0 +1,2815 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.CommonCeMapper">
+
+	<!-- 사용자 상세 정보 -->
+	<select id="SELECT_USER_VO" resultType="userVo" parameterType="hashmap">
+		/* CommonCeMapper.SELECT_USER_VO  */
+		SELECT 
+					A.USER_ID
+					,A.USER_NM
+					,B.BIZRNM
+					,ECL_DECRYPT(A.BIZRNO) AS BIZRNO
+					,A.BIZRNO AS BIZRNO_ORI
+					,A.BIZRID
+					,A.BRCH_ID
+					,A.BRCH_NO
+					,B.BIZR_STAT_CD
+					,B.BIZR_TP_CD
+					,B.CNTR_DT
+					,A.USER_SE_CD
+					,A.USER_STAT_CD
+					,A.USER_PWD
+					,ECL_DECRYPT(A.EMAIL) AS EMAIL
+					,A.MBIL_NO1
+					,A.MBIL_NO2
+					,PI_DECRYPT(A.MBIL_NO3) AS MBIL_NO3
+					,A.TEL_NO1
+					,A.TEL_NO2
+					,A.TEL_NO3
+					,A.DEPT_CD
+					,A.CET_BRCH_CD
+					,A.PWD_ALT_REQ_YN
+					,A.PWD_ALT_DT
+					,A.LST_LGN_DTTM
+					,NVL(A.LGN_ERR_TMS, 0) AS LGN_ERR_TMS
+					,NVL(TRUNC(MONTHS_BETWEEN(SYSDATE, TO_DATE(NVL(A.PWD_ALT_DT, TO_CHAR(A.REG_DTTM, 'YYYYMMDD')), 'YYYYMMDD'))), 0)  AS PWD_CHG_MM
+					,A.SYS_AGR_YN
+					,A.PRSN_INFO_AGR_YN
+					,A.PRSN_INFO_CMM_AGR_YN
+					,A.REG_PRSN_ID
+					,A.REG_DTTM
+					,A.UPD_PRSN_ID
+					,A.UPD_DTTM
+					,(SELECT TO_CHAR(TO_DATE(SUBSTR(MAX(REG_DTTM), 1, 14), 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS')
+						FROM EPCN_LGN_HIST  WHERE USER_ID = A.USER_ID) AS LAST_LGN_DT
+					,B.ALT_REQ_STAT_CD
+                    ,A.PRSN_INFO_CHG_AGR_YN
+                    ,C.AFF_OGN_CD
+                    ,(SELECT ATH_GRP_CD FROM EPCN_ATH_GRP_USER WHERE USER_ID = #{USER_ID} AND ROWNUM = 1 ) AS ATH_GRP_CD
+                    ,(SELECT B.ATH_GRP_NM FROM EPCN_ATH_GRP_USER A, EPCN_ATH_GRP_INFO B WHERE A.USER_ID = #{USER_ID} AND A.ATH_GRP_CD = B.ATH_GRP_CD AND ROWNUM = 1) as ATH_GRP_NM
+                    ,(SELECT B.ATH_SE_CD FROM EPCN_ATH_GRP_USER A, EPCN_ATH_GRP_INFO B WHERE A.USER_ID = #{USER_ID} AND A.ATH_GRP_CD = B.ATH_GRP_CD AND ROWNUM = 1) as ATH_SE_CD
+                    ,B.ERP_CD
+                    ,B.ERP_CFM_YN
+                    ,B.ERP_CD_NM
+		  FROM EPCN_USER_INFO A
+				   ,EPCN_BIZR_INFO B
+                   ,EPCN_BRCH_INFO C                   
+		WHERE 1=1
+		    AND A.BIZRID = B.BIZRID
+			AND A.BIZRNO = B.BIZRNO
+            AND A.BRCH_ID = C.BRCH_ID(+)
+            AND A.BRCH_NO = C.BRCH_NO(+)
+            AND A.BIZRID = C.BIZRID(+)
+            AND A.BIZRNO = C.BIZRNO(+)
+		    AND A.USER_ID = #{USER_ID}
+		    <if test='MBL_LOGIN != null and MBL_LOGIN != "" '>
+		    	AND B.BIZR_TP_CD IN ('W1','W2','R1')
+		    </if>
+		    
+	</select>
+	
+	
+	<!-- 회원아이디 찾기 -->
+	<select id="SELECT_SEARCH_USER_ID" resultType="hashmap" parameterType="hashmap" >
+		SELECT A.USER_ID
+		FROM EPCN_USER_INFO A
+		WHERE A.BIZRNO = ECL_ENCRYPT(#{BIZRNO})
+			AND A.USER_NM = #{USER_NM}
+			AND A.MBIL_NO1 = #{MBIL_PHON1}
+			AND A.MBIL_NO2 = #{MBIL_PHON2}
+			AND A.MBIL_NO3 = ECL_ENCRYPT(#{MBIL_PHON3})
+	</select>
+	
+	
+	<!-- 회원발급키 생성을 위한 사업자번호,약정일자,회원구분,관리자id 조회 -->
+	<select id="SELECT_BIZR_ISSU_KEY_INFO" resultType="hashmap" parameterType="java.lang.String" >
+		SELECT 
+			CNTR_DT		,BIZR_TP_CD	,ADMIN_ID
+		FROM EPCN_BIZR_INFO
+		WHERE BIZRNO = ECL_ENCRYPT(#{BIZRNO})
+	</select>
+	
+	
+	<!-- 사용자 메뉴리스트 -->
+	<select id="SELECT_USER_MENU_LIST" resultType="hashmap" parameterType="userVo">
+		SELECT * FROM
+		(
+		SELECT A.ATH_GRP_CD	
+	              ,B.MENU_CD
+	              ,C.MENU_SET_CD||C.MENU_GRP_CD as MENU_GRP_CD
+	              ,C.MENU_GRP_NM
+	              ,C.MENU_NM
+	              ,C.MENU_LVL
+	              ,C.UP_MENU_CD
+	              ,C.MENU_URL
+	              ,C.MENU_ORD
+	              ,F.SEL_ORD
+         FROM EPCN_ATH_GRP_USER A
+	              ,EPCN_ATH_GRP_MENU B
+	              ,EPCN_MENU C
+	              ,EPCN_USER_INFO D
+	              ,EPCN_ATH_GRP_INFO E
+	              ,(SELECT ETC_CD, SEL_ORD, LANG_SE_CD FROM EPCN_ETC_CD WHERE GRP_CD = 'M002' ) F
+                  ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') G
+        WHERE 1=1
+            AND A.ATH_GRP_CD = B.ATH_GRP_CD
+            AND A.BIZRID = B.BIZRID
+            AND A.BIZRNO = B.BIZRNO
+        	AND B.MENU_CD = C.MENU_CD
+        	AND B.LANG_SE_CD = C.LANG_SE_CD
+            AND A.ATH_GRP_CD = E.ATH_GRP_CD
+            AND A.BIZRID = E.BIZRID
+            AND A.BIZRNO = E.BIZRNO
+            AND C.LANG_SE_CD = G.LANG_SE_CD
+            AND C.MENU_GRP_CD = F.ETC_CD
+            AND C.LANG_SE_CD = F.LANG_SE_CD
+            AND E.USE_YN = 'Y'
+        	AND C.USE_YN = 'Y'
+            AND C.MENU_LVL = '2'
+            AND A.USER_ID = D.USER_ID 
+            AND D.USER_ID = #{USER_ID} 
+            AND C.MENU_GRP_CD NOT IN ('72') /* 모바일 */
+        
+        UNION ALL
+
+	      SELECT A.ATH_GRP_CD  
+		              ,B.MENU_CD
+		              ,H.MENU_SET_CD || '55' AS MENU_GRP_CD
+		              ,ETC_CD_NM AS MENU_GRP_NM
+		              ,H.MENU_NM
+		              ,H.MENU_LVL
+		              ,H.MENU_SET_CD || '55' AS UP_MENU_CD
+		              ,H.MENU_URL
+		              ,C.INDICT_ORD + 50 AS MENU_ORD
+		              ,F.SEL_ORD
+	        FROM EPCN_ATH_GRP_USER A
+		             ,EPCN_ATH_GRP_MENU B
+		             ,EPCN_USER_MY_MENU C
+		             ,EPCN_USER_INFO D
+		             ,EPCN_ATH_GRP_INFO E
+		             ,(SELECT ETC_CD, ETC_CD_NM, SEL_ORD, LANG_SE_CD FROM EPCN_ETC_CD WHERE GRP_CD = 'M002') F
+		             ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') G
+		             ,EPCN_MENU H
+	     WHERE 1=1
+	         AND A.ATH_GRP_CD = B.ATH_GRP_CD
+	         AND A.BIZRID = B.BIZRID
+	         AND A.BIZRNO = B.BIZRNO
+	         AND B.MENU_CD = C.MENU_CD
+	         AND A.ATH_GRP_CD = E.ATH_GRP_CD
+	         AND A.BIZRID = E.BIZRID
+	         AND A.BIZRNO = E.BIZRNO
+	         AND B.LANG_SE_CD = C.LANG_SE_CD
+	         AND C.LANG_SE_CD = G.LANG_SE_CD
+	         AND F.ETC_CD = '55' /* 마이메뉴 */
+	         AND C.LANG_SE_CD = F.LANG_SE_CD
+	         AND E.USE_YN = 'Y'
+	         AND A.USER_ID = D.USER_ID 
+	         AND D.USER_ID = C.USER_ID
+	         AND D.USER_ID = #{USER_ID} 
+	         AND C.MENU_CD = H.MENU_CD
+	         AND C.LANG_SE_CD = H.LANG_SE_CD
+	   )      
+	    ORDER BY TO_NUMBER(SEL_ORD), MENU_ORD 
+
+	</select>
+	
+	<!-- 사용자 메뉴리스트 -->
+	<select id="SELECT_USER_MENU_LIST_M" resultType="hashmap" parameterType="userVo">
+		SELECT * FROM
+		(
+		SELECT A.ATH_GRP_CD	
+	              ,B.MENU_CD
+	              ,C.MENU_SET_CD||C.MENU_GRP_CD as MENU_GRP_CD
+	              ,C.MENU_GRP_NM
+	              ,C.MENU_NM
+	              ,C.MENU_LVL
+	              ,C.UP_MENU_CD
+	              ,C.MENU_URL
+	              ,C.MENU_ORD
+	              ,F.SEL_ORD
+         FROM EPCN_ATH_GRP_USER A
+	              ,EPCN_ATH_GRP_MENU B
+	              ,EPCN_MENU C
+	              ,EPCN_USER_INFO D
+	              ,EPCN_ATH_GRP_INFO E
+	              ,(SELECT ETC_CD, SEL_ORD, LANG_SE_CD FROM EPCN_ETC_CD WHERE GRP_CD = 'M002' ) F
+                  ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') G
+        WHERE 1=1
+            AND A.ATH_GRP_CD = B.ATH_GRP_CD
+            AND A.BIZRID = B.BIZRID
+            AND A.BIZRNO = B.BIZRNO
+        	AND B.MENU_CD = C.MENU_CD
+        	AND B.LANG_SE_CD = C.LANG_SE_CD
+            AND A.ATH_GRP_CD = E.ATH_GRP_CD
+            AND A.BIZRID = E.BIZRID
+            AND A.BIZRNO = E.BIZRNO
+            AND C.LANG_SE_CD = G.LANG_SE_CD
+            AND C.MENU_GRP_CD = F.ETC_CD
+            AND C.LANG_SE_CD = F.LANG_SE_CD
+            AND E.USE_YN = 'Y'
+        	AND C.USE_YN = 'Y'
+            AND C.MENU_LVL = '2'
+            AND A.USER_ID = D.USER_ID
+            AND D.USER_ID = #{USER_ID}
+            AND C.MENU_SE_CD = 'S' /* 메뉴구분 모바일포함 */
+        )      
+	    ORDER BY TO_NUMBER(SEL_ORD), MENU_ORD 
+
+	</select>
+	
+	<!-- 비밀번호 오류횟수 등록-->
+	<update id="UPDATE_PW_ERR_ADD" parameterType="hashmap">
+		UPDATE EPCN_USER_INFO 
+			  SET LGN_ERR_TMS = decode(NVL(LGN_ERR_TMS, 0), 6, 6, NVL(LGN_ERR_TMS, 0)+1)
+					,UPD_PRSN_ID = #{UPD_PRSN_ID}
+					,UPD_DTTM = SYSDATE
+		WHERE USER_ID = #{USER_ID}
+	</update>
+		
+	<!-- 비밀번호 변경요청 -->
+	<update id="UPDATE_USER_PWDCHG" parameterType="hashmap">
+		UPDATE EPCN_USER_INFO 
+			  SET ALT_REQ_PWD = #{ALT_REQ_PWD}
+					,PWD_ALT_REQ_DTTM = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+					,PWD_ALT_REQ_YN = 'Y'
+					,UPD_PRSN_ID = #{UPD_PRSN_ID}
+					,UPD_DTTM = SYSDATE
+		WHERE USER_ID = #{USER_ID}
+	</update>
+	
+	<!-- 관리자 패스워드 변경요청 -->
+	<update id="UPDATE_USER_ADMIN_PWDCHG" parameterType="hashmap">
+	    UPDATE EPCN_USER_INFO 
+	    	SET	USER_PWD = #{ALT_REQ_PWD}
+				    ,PWD_ALT_DT = TO_CHAR(SYSDATE, 'YYYYMMDD')
+				    ,LGN_ERR_TMS = 0
+				    ,UPD_PRSN_ID = #{UPD_PRSN_ID}
+					,UPD_DTTM = SYSDATE
+		WHERE USER_ID = #{USER_ID}
+	</update>
+	
+	<!-- 은행 코드조회 -->
+	<select id="SELECT_BANK_CD_LIST" resultType="hashmap">
+		SELECT 
+			BANK_CD		,BANK_NM	,SEL_ORD
+		FROM EPCN_BANK_CD A
+		WHERE USE_YN = 'Y'
+		ORDER BY TO_NUMBER(SEL_ORD), BANK_NM
+	</select>
+
+	<!-- 언어구분 조회 -->
+	<select id="SELECT_LANG_SE_CD_LIST" resultType="hashmap">
+		 SELECT
+				LANG_SE_CD,
+				LANG_SE_NM,
+				USE_YN,
+				SEL_ORD,
+				STD_YN
+		FROM   EPCN_LANG_CD
+		WHERE 1=1
+		AND  USE_YN = 'Y'
+	    ORDER BY STD_YN DESC , TO_NUMBER(SEL_ORD)
+	</select>
+
+	<!-- 공통(기타) 코드조회 -->
+	<select id="SELECT_COMMON_CD_LIST_NEW" resultType="hashmap">
+		SELECT B.GRP_CD, B.GRP_NM, A.ETC_CD, A.ETC_CD_NM
+		           , A.RSV_ITEM1, A.RSV_ITEM2, A.RSV_ITEM3 
+	      FROM EPCN_ETC_CD A
+	          	  ,EPCN_ETC_CD_GRP B
+	          	  ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+	    WHERE A.GRP_CD = B.GRP_CD
+	        AND A.LANG_SE_CD = B.LANG_SE_CD
+	        AND A.USE_YN = 'Y'
+	        AND B.USE_YN = 'Y'
+	        AND A.GRP_CD = #{GRP_CD}
+	        AND A.LANG_SE_CD = C.LANG_SE_CD
+	    ORDER BY TO_NUMBER(SEL_ORD)
+	</select>
+	
+	<!-- 공통(기타) 코드조회 그룹코드 추가시-->
+	<select id="SELECT_COMMON_CD_LIST_NEW2" resultType="hashmap">
+		SELECT B.GRP_CD, B.GRP_NM, A.ETC_CD, A.ETC_CD_NM
+		           , A.RSV_ITEM1, A.RSV_ITEM2, A.RSV_ITEM3 
+	      FROM EPCN_ETC_CD A
+	          	  ,EPCN_ETC_CD_GRP B
+	    WHERE A.GRP_CD = B.GRP_CD
+	        AND A.LANG_SE_CD = B.LANG_SE_CD
+	        AND A.USE_YN = 'Y'
+	        AND B.USE_YN = 'Y'
+	        AND A.GRP_CD = #{GRP_CD}	        AND A.LANG_SE_CD =#{LANG_SE_CD}
+	    ORDER BY TO_NUMBER(SEL_ORD)
+	</select>
+	
+	<!-- 공통(기타) 코드조회 -->
+	<select id="SELECT_COMMON_CD_LIST" resultType="hashmap">
+		SELECT 
+			A.GRP_CD    ,A.GRP_NM
+		    ,A.CD_SE	,B.ETC_CD	,B.ETC_CD_NM	,B.PPR_ITEM
+		FROM EPCN_ETC_CD_GRP A
+			,EPCN_ETC_CD B
+		WHERE A.GRP_CD = B.GRP_CD
+			AND A.USE_YN = 'Y'
+		    AND B.USE_YN = 'Y'
+		ORDER BY A.GRP_CD, TO_NUMBER(B.SEL_ORD), B.ETC_CD
+	</select>
+	
+	<!-- 오류 코드조회 -->
+	<select id="SELECT_ERR_CD_LIST" resultType="hashmap">
+		SELECT ERR_SE
+					,ERR_CD
+					,ERR_MSG 
+					,LANG_SE_CD
+	  	  FROM EPCN_ERR_CD A
+		WHERE 1=1
+	</select>
+	
+	<!-- 오류 코드조회 NEW -->
+	<select id="SELECT_ERR_CD_LIST_NEW" resultType="hashmap">
+		SELECT 
+			 A.ERR_SE
+			,A.ERR_CD
+			,A.ERR_MSG 
+			,A.LANG_SE_CD
+		FROM EPCN_ERR_CD A
+			     ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+		WHERE 1=1
+		      AND A.LANG_SE_CD = C.LANG_SE_CD
+		      AND A.ERR_SE = #{ERR_SE}
+		      AND A.ERR_CD= #{ERR_CD}
+	</select>
+	
+	<!-- 로그인 이력 등록 -->
+	<update id="UPDATE_LAST_LOGIN_DTTM" parameterType="hashmap">
+		UPDATE EPCN_USER_INFO SET 
+			LST_LGN_DTTM = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+			,LGN_ERR_TMS = 0 /* 비밀번호 오류횟수 초기화 */
+			,UPD_PRSN_ID = #{UPD_PRSN_ID}
+			,UPD_DTTM = SYSDATE
+		WHERE USER_ID = #{USER_ID}
+	</update>
+	
+	<insert id="INSERT_LOGIN_HIST" parameterType="hashmap">
+		INSERT INTO EPCN_LGN_HIST(
+			USER_ID			,REG_DTTM			,ACSS_IP		
+			,ACCS_BRSR		,LGN_DT				,LGN_TM
+		)VALUES(
+			#{USER_ID} 		,TO_CHAR(SYSTIMESTAMP, 'YYYYMMDDHH24MISSFF6')	,#{ACSS_IP}		
+			,#{ACCS_BRSR}	,TO_CHAR(SYSDATE, 'YYYYMMDD')	,TO_CHAR(SYSDATE, 'HH24MISS')
+		)
+	</insert>
+	
+	<!-- 로그아웃시간 기록 -->
+	<update id="UPDATE_LOGIN_HIST" parameterType="hashmap">
+		UPDATE EPCN_LGN_HIST SET 
+			LGOT_DT = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			,LGOT_TM = TO_CHAR(SYSDATE, 'HH24MISS')
+		WHERE USER_ID = #{USER_ID}
+			AND REG_DTTM = (SELECT MAX(REG_DTTM) FROM EPCN_LGN_HIST WHERE USER_ID = #{USER_ID})
+	</update>
+	
+	<!-- 로그아웃시간 브라우즈 종료된 경우 기록  -->
+	<update id="UPDATE_FORCE_LOGOUT_HIST" parameterType="hashmap">
+		UPDATE EPCN_LGN_HIST SET 
+			LGOT_DT = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			,LGOT_TM = TO_CHAR(SYSDATE, 'HH24MISS')
+		WHERE USER_ID = #{USER_ID}
+			AND  (LGOT_DT IS NULL OR LGOT_DT = '')
+	</update>
+
+	<!-- 시스템 프로세스 실행이력 -->
+	<insert id="INSERT_EPCN_EXEC_HIST" parameterType="hashmap">
+		INSERT INTO EPCN_EXEC_HIST(
+			USER_ID			
+			,REG_DTTM	
+			,MENU_GRP_CD		
+			,MENU_CD		
+			,BTN_CD		
+			,PRAM
+			,ACSS_IP		
+			,REG_DT		
+			,REG_TM
+		)VALUES(
+			#{USER_ID} 			
+			,TO_CHAR(SYSTIMESTAMP
+			,'YYYYMMDDHH24MISSFF6')	
+			,#{MENU_GRP_CD}			
+			,#{MENU_CD}			
+			,#{BTN_CD}										
+			,#{PRAM,jdbcType=CLOB}
+			,#{ACSS_IP}			
+			,TO_CHAR(SYSDATE, 'YYYYMMDD')					
+			,TO_CHAR(SYSDATE, 'HH24MISS')
+		)
+	</insert>
+	
+	<update id="UPDATE_ERP_PROC_BSNM_SEND_INFO" statementType="CALLABLE" parameterType="hashmap">
+		<![CDATA[	
+			{CALL PROC_SEND_ERP_BIZR_INFO(
+				#{REG_ID, mode=IN, jdbcType=VARCHAR}
+			)}	
+		]]>
+	</update>
+	
+	<!-- 정산기준정보 조회 :정산기준처리상태 - 1: 예정, 2: 진행, 3: 종료 -->
+	<select id="SELECT_EPCN_EXCA_BSS_MGNT_LIST" resultType="hashmap">
+		SELECT
+			EXCA_BSS_CD
+			,EXCA_ST_DT
+			,EXCA_END_DT
+			,EXCA_PSBL_ST_DT
+			,EXCA_PSBL_END_DT
+			,(CASE WHEN 
+				TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN EXCA_PSBL_ST_DT AND EXCA_PSBL_END_DT 
+			THEN 'Y' ELSE 'N' END) PSBL_YN 
+			,EXCA_BSS_NM
+			,EXCA_SE_CD
+			,EXCA_SE_YEAR
+			,EXCA_SE_QTRMT
+		FROM EPCN_EXCA_BSS_MGNT 
+		WHERE EXCA_PSBL_STAT_CD = '2'
+	</select>	
+	
+	<!-- 조건별 사업자 콤보박스 조회 -->
+	<select id="bizr_select"  resultType="hashmap">
+	 	 SELECT BIZRID, BIZRNO, BIZRID||';'||BIZRNO AS BIZRID_NO, BIZRNM
+		   FROM EPCN_BIZR_INFO
+		 WHERE 1=1
+		     AND BIZR_STAT_CD = 'Y'
+		     
+		   <if test='BIZR_TP_CD != null and BIZR_TP_CD != "" '>
+		     AND BIZR_TP_CD = #{BIZR_TP_CD}
+		   </if>
+		   <if test='BIZR_SE_CD != null and BIZR_SE_CD != "" '>
+		     AND BIZR_SE_CD = #{BIZR_SE_CD}
+		   </if>
+		    
+		 ORDER BY TO_NUMBER(SEL_ORD)
+	</select>
+	
+	<!--센터 로그인 모든 생산자조회  -->
+	<select id="mfc_bizrnm_select" parameterType="hashmap"  resultType="hashmap">
+			SELECT
+					   ECL_DECRYPT(BIZRNO) AS BIZRNO
+					   ,BIZRNM
+					   ,BIZR_TP_CD
+					   ,BIZRID
+					   ,BIZRNO || ';' || BIZR_TP_CD AS BIZR_NO_TP_CD
+					   ,BIZRID || ';' || BIZRNO AS BIZRID_NO
+			  FROM
+			   		   EPCN_BIZR_INFO A
+			WHERE 1 = 1
+			
+			<choose>
+				<when test='BIZR_TP_CD !="" and BIZR_TP_CD !=null '>
+					AND BIZR_TP_CD = #{BIZR_TP_CD}
+				</when>
+				<otherwise>
+					AND BIZR_TP_CD IN ( 'M1', 'M2' )
+				</otherwise>
+			</choose>
+			
+			 AND BIZR_SE_CD = 'S' /* 시스템사용 */
+			 
+			<if test='BIZR_STAT_CD !="" and BIZR_STAT_CD !=null '>
+		 	 AND BIZR_STAT_CD = #{BIZR_STAT_CD}
+		 	</if>
+		 	
+		 	<if test='T_USER_ID !="" and T_USER_ID !=null '>
+		 	 AND EXISTS (
+			                   SELECT 'X'
+			                     FROM EPCN_DTSS_CUST_INFO S0 
+			                     		  ,EPCN_BRCH_INFO S1
+				                          ,EPCN_ATH_GRP_USER S2
+				                          ,EPCN_ATH_GRP_BIZR S3
+			                  WHERE 1=1
+			                      AND A.BIZRID = S0.MFC_BIZRID
+		                          AND A.BIZRNO = S0.MFC_BIZRNO
+		                          AND S0.CUST_BIZRID = S1.BIZRID
+		                          AND S0.CUST_BIZRNO = S1.BIZRNO
+		                          AND S0.CUST_BRCH_ID = S1.BRCH_ID
+		                          AND S0.CUST_BRCH_NO = S1.BRCH_NO
+			                      AND S2.USER_ID = #{T_USER_ID}
+			                      AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+			                      AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+			                      AND S1.AREA_CD = S3.AREA_CD
+			                      AND ROWNUM = 1
+			                  )
+			</if>  
+		 	
+		  ORDER BY TO_NUMBER(SEL_ORD), BIZRNM
+	</select>
+	
+	<!--  생산자 총괄직매장  -->
+	<select id="grp_brch_no_select"  resultType="hashmap">
+			SELECT 
+						BRCH_ID
+						,BRCH_NO
+						,BRCH_NM
+						,BRCH_ID||';'||BRCH_NO AS BRCH_ID_NO
+			FROM 
+						EPCN_BRCH_INFO  
+			WHERE 1=1
+			AND GRP_YN	='Y'
+			AND BIZRID		=#{BIZRID}
+			AND BIZRNO		=#{BIZRNO}
+		ORDER BY BRCH_NM
+	</select>
+	
+	<!-- 도매업자로그인 생산자조회  -->
+	<select id="mfc_bizrnm_select_wh"  resultType="hashmap">
+		  SELECT * FROM
+		  (
+		  SELECT DISTINCT
+						ECL_DECRYPT(A.MFC_BIZRNO) AS BIZRNO
+						,A.MFC_BIZRNO
+						,A.MFC_BIZRID AS BIZRID
+						,A.MFC_BIZRNM AS BIZRNM
+						,B.BIZR_TP_CD
+						,A.MFC_BIZRNO || ';' || B.BIZR_TP_CD AS BIZR_NO_TP_CD
+						,A.MFC_BIZRID||';'||A.MFC_BIZRNO AS BIZRID_NO
+			FROM 
+					EPCN_DTSS_CUST_INFO 	A
+					,EPCN_BRCH_INFO		 	B
+			WHERE 1=1
+				AND A.MFC_BRCH_ID	= B.BRCH_ID
+				AND A.MFC_BRCH_NO	= B.BRCH_NO
+				AND A.MFC_BIZRID		= B.BIZRID
+				AND A.MFC_BIZRNO		= B.BIZRNO
+				AND A.CUST_BIZRID	= #{BIZRID}
+				AND A.CUST_BIZRNO	= #{BIZRNO}
+
+				<if test="BIZR_STAT_CD !='' and BIZR_STAT_CD !=null ">
+			 	AND B.STAT_CD = #{BIZR_STAT_CD}
+			 	</if>
+				<if test="BRCH_NO !=null and BRCH_NO !='' ">
+                   	AND EXISTS (
+				                           SELECT 'X'
+				                             FROM EPCN_BRCH_INFO C
+				                           WHERE 1=1
+				                               AND A.CUST_BIZRID 		= C.BIZRID
+				                               AND A.CUST_BIZRNO 		= C.BIZRNO
+		                                       AND A.CUST_BRCH_ID 		= C.BRCH_ID
+				                               AND A.CUST_BRCH_NO 	= C.BRCH_NO 
+			                                   AND EXISTS (
+					                                              SELECT 'X'
+					                                                FROM EPCN_BRCH_INFO D
+					                                              WHERE 1=1
+					                                                  AND C.BIZRID 	= D.BIZRID
+					                                                  AND C.BIZRNO = D.BIZRNO
+					                                                  AND (
+						                                                        (C.BRCH_ID = D.BRCH_ID AND C.BRCH_NO = D.BRCH_NO)
+						                                                      OR C.GRP_BRCH_NO = DECODE(D.GRP_YN, 'Y', D.BRCH_NO, '')                            
+					                                                         ) 
+					                                                  AND D.BRCH_ID = #{BRCH_ID} 
+					                                                  AND D.BRCH_NO = #{BRCH_NO}
+						                                          )                 
+		                         		)
+				                   	
+					</if>
+			)	
+			ORDER BY EPCN_BIZR_SEL_ORD(BIZRID, MFC_BIZRNO), BIZRNM
+	</select>
+	
+	<!-- 생산자 로그인 생산자조회  -->
+	<select id="mfc_bizrnm_select_mf"  resultType="hashmap">
+			SELECT ECL_DECRYPT(BIZRNO) AS BIZRNO
+					   ,BIZRNM
+					   ,BIZR_TP_CD
+					   ,BIZRID
+					   ,BIZRNO || ';' || BIZR_TP_CD AS BIZR_NO_TP_CD
+					   ,BIZRID || ';' || BIZRNO AS BIZRID_NO
+			  FROM EPCN_BIZR_INFO
+			WHERE 1 = 1
+				AND BIZRNO =#{BIZRNO}
+				AND BIZRID =#{BIZRID}
+				AND BIZR_SE_CD = 'S' /* 시스템사용 */
+				<if test="BIZR_STAT_CD !='' and BIZR_STAT_CD !=null ">
+			 	 AND BIZR_STAT_CD = #{BIZR_STAT_CD}
+			 	</if>
+			ORDER BY TO_NUMBER(SEL_ORD), BIZRNM
+	</select>
+	
+	<!-- 도매업자,공병상이랑 거래중인 생산자 조회 -->
+	<select id="mfc_bizrnm_select2" parameterType="map"  resultType="hashmap">
+		SELECT * FROM
+		(
+			SELECT DISTINCT
+						A.MFC_BIZRID
+						,A.MFC_BIZRNO
+						,A.MFC_BIZRNM
+						,A.MFC_BIZRID||';'||A.MFC_BIZRNO AS MFC_BIZRID_NO
+						,B.SEL_ORD, B.BIZRNM
+			  FROM  EPCN_DTSS_CUST_INFO A
+			  			,EPCN_BIZR_INFO B
+			WHERE  1=1
+				AND  A.CUST_BIZRID		= #{CUST_BIZRID}
+				AND	A.CUST_BIZRNO		= #{CUST_BIZRNO}
+				AND	A.CUST_BRCH_ID	= #{CUST_BRCH_ID}
+				AND	A.CUST_BRCH_NO	= #{CUST_BRCH_NO}
+				<if test="STAT_CD !='' and STAT_CD !=null ">
+				AND A.STAT_CD = 'Y'
+				</if>
+				AND A.MFC_BIZRID = B.BIZRID
+				AND A.MFC_BIZRNO = B.BIZRNO
+		)	
+		ORDER BY SEL_ORD, BIZRNM
+			
+	</select>
+	
+	<!-- 도매업자,공병상이랑 거래중인 생산자 조회 -->
+	<select id="mfc_bizrnm_select6" parameterType="map"  resultType="hashmap">
+		SELECT * FROM
+		(
+			SELECT DISTINCT
+						A.MFC_BIZRID
+						,A.MFC_BIZRNO
+						,A.MFC_BIZRNM
+						,A.MFC_BIZRID||';'||A.MFC_BIZRNO||';'||A.BIZR_TP_CD AS MFC_BIZRID_NO
+						,B.SEL_ORD, B.BIZRNM
+			  FROM  EPCN_DTSS_CUST_INFO A
+			  			,EPCN_BIZR_INFO B
+			WHERE  1=1
+				AND  A.CUST_BIZRID		= #{CUST_BIZRID}
+				AND	A.CUST_BIZRNO		= #{CUST_BIZRNO}
+				AND	A.CUST_BRCH_ID	= #{CUST_BRCH_ID}
+				AND	A.CUST_BRCH_NO	= #{CUST_BRCH_NO}
+				<if test="STAT_CD !='' and STAT_CD !=null ">
+				AND A.STAT_CD = 'Y'
+				</if>
+				AND A.MFC_BIZRID = B.BIZRID
+				AND A.MFC_BIZRNO = B.BIZRNO
+		)	
+		ORDER BY SEL_ORD, BIZRNM
+			
+	</select>
+	
+	<!-- 도매업자,공병상이랑 거래중인 생산자의 직매장 조회 -->
+	<select id="mfc_bizrnm_select3" parameterType="map"  resultType="hashmap">
+		SELECT 		
+						DISTINCT
+						MFC_BRCH_ID
+						,MFC_BRCH_NO
+						,MFC_BRCH_NM
+						,MFC_BRCH_ID||';'||MFC_BRCH_NO AS MFC_BRCH_ID_NO
+		FROM        
+						EPCN_DTSS_CUST_INFO
+		WHERE  1=1
+		AND		CUST_BIZRID		= #{CUST_BIZRID}
+		AND		CUST_BIZRNO		= #{CUST_BIZRNO}
+		AND		CUST_BRCH_ID	= #{CUST_BRCH_ID}
+		AND		CUST_BRCH_NO	= #{CUST_BRCH_NO}
+		AND		MFC_BIZRID		= #{MFC_BIZRID}
+		AND		MFC_BIZRNO		= #{MFC_BIZRNO}
+		<if test="STAT_CD !='' and STAT_CD !=null ">
+		AND 		 STAT_CD = 'Y'
+		</if>
+		
+		ORDER BY MFC_BRCH_NM
+	</select>    
+	
+	<!-- 생산자랑 거래중인 도매업자 조회 -->
+	<select id="mfc_bizrnm_select4"  parameterType="map"  resultType="hashmap">
+		SELECT 	DISTINCT
+					CUST_BIZRID
+					,CUST_BIZRNO
+					,CUST_BIZRNM
+					,CUST_BIZRID||';'||CUST_BIZRNO AS CUST_BIZRID_NO
+					,ECL_DECRYPT(CUST_BIZRNO)AS CUST_BIZRNO_DE
+					,CUST_BRCH_ID
+					,CUST_BRCH_NO
+					,BIZR_TP_CD
+		  FROM EPCN_DTSS_CUST_INFO A
+		WHERE  1=1  
+		<if test="MFC_BIZRID !='' and MFC_BIZRID !=null ">
+			AND	MFC_BIZRID		= #{MFC_BIZRID} 
+			AND	MFC_BIZRNO		= #{MFC_BIZRNO}
+		</if>
+		<if test="MFC_BRCH_ID !='' and MFC_BRCH_ID !=null ">
+			AND	MFC_BRCH_ID		= #{MFC_BRCH_ID}
+			AND	MFC_BRCH_NO	= #{MFC_BRCH_NO}
+		</if>
+		<if test="BIZR_TP_CD !='' and BIZR_TP_CD !=null ">
+			AND 	BIZR_TP_CD = #{BIZR_TP_CD}
+		</if>
+		<if test="BIZR_TP_CD == null ">
+			AND 	BIZR_TP_CD  IN('W1','W2')
+		</if>
+		<if test="STAT_CD !='' and STAT_CD !=null ">
+			AND 	STAT_CD = 'Y'
+		</if>   
+		
+		<if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+			 AND EXISTS (
+			 					   SELECT 'X'
+		                             FROM EPCN_BRCH_INFO S1
+		                           WHERE 1=1
+		                              AND A.MFC_BIZRID = S1.BIZRID
+		                              AND A.MFC_BIZRNO = S1.BIZRNO
+		                              AND A.MFC_BRCH_ID = S1.BRCH_ID
+		                              AND A.MFC_BRCH_NO = S1.BRCH_NO
+				                      AND EXISTS (    
+				                      					   SELECT 'X'
+								                             FROM EPCN_BRCH_INFO S2
+								                           WHERE 1=1
+								                              AND S1.BIZRID = S2.BIZRID
+								                              AND S1.BIZRNO = S2.BIZRNO
+								                              AND (
+									                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+									                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+								                                     ) 
+								                              AND S2.BRCH_ID = #{S_BRCH_ID}
+								                              AND S2.BRCH_NO = #{S_BRCH_NO}
+									          			)
+                         		)
+		 </if>	   
+
+		 <if test="T_USER_ID !=null and T_USER_ID !='' ">
+			AND EXISTS (
+			                   SELECT 'X'
+			                     FROM EPCN_BRCH_INFO S1
+				                          ,EPCN_ATH_GRP_USER S2
+				                          ,EPCN_ATH_GRP_BIZR S3
+			                   WHERE 1=1
+			                       AND A.CUST_BIZRID = S1.BIZRID
+			                       AND A.CUST_BIZRNO = S1.BIZRNO
+			                       AND A.CUST_BRCH_ID = S1.BRCH_ID
+			                       AND A.CUST_BRCH_NO = S1.BRCH_NO
+			                       AND S2.USER_ID = #{T_USER_ID}
+			                       AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+			                       AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+			                       AND S1.AREA_CD = S3.AREA_CD
+			                  )
+		 </if>
+		
+		ORDER by CUST_BIZRNM
+	</select>
+	
+	<!-- 생산자랑 거래중인 도매업의 직매장 조회 -->
+	<select id="mfc_bizrnm_select5" parameterType="map"  resultType="hashmap">
+		 SELECT CUST_BRCH_ID
+					,CUST_BRCH_NO
+					,CUST_BRCH_NM
+					,CUST_BRCH_ID||';'||CUST_BRCH_NO AS CUST_BRCHID_NO
+		   FROM EPCN_DTSS_CUST_INFO
+		 WHERE 1=1
+			 AND	MFC_BIZRID		= #{MFC_BIZRID}
+			 AND	MFC_BIZRNO		= #{MFC_BIZRNO}
+			 AND	MFC_BRCH_ID		= #{MFC_BRCH_ID}
+			 AND	MFC_BRCH_NO	= #{MFC_BRCH_NO}
+			 AND	CUST_BIZRID		= #{CUST_BIZRID}
+			 AND	CUST_BIZRNO		= #{CUST_BIZRNO}
+			<if test="STAT_CD !='' and STAT_CD !=null ">
+			 AND 	STAT_CD = 'Y'
+			</if>
+		ORDER BY CUST_BRCH_NM
+	</select>
+	
+	
+	<!-- 사업자유형코드 조회 -->
+    <select id="bizr_tp_cd_select"  parameterType="map"  resultType="String">
+			SELECT
+						BIZR_TP_CD
+			FROM
+						EPCN_BIZR_INFO
+			WHERE 1=1
+			AND BIZRID 	= #{BIZRID}
+			AND BIZRNO 	= #{BIZRNO}
+    </select>
+    
+    <!-- 사업자 유형에 따른 도매업자 업체명 조회	 -->
+	<select id="enp_nm_select" parameterType="map" resultType="hashmap">
+			SELECT 
+						BIZRID
+						,BIZRNO
+						,BIZRNM
+						,BIZRID||';'||BIZRNO AS BIZRID_NO
+			FROM 
+						EPCN_BRCH_INFO 
+			WHERE  1=1
+			AND      BRCH_NO='9999999999'
+			<if test="BIZR_TP_CD !=null">
+			AND 		BIZR_TP_CD = #{BIZR_TP_CD}
+			</if>
+			<if test="STAT_CD !=null and STAT_CD !='' ">
+			 AND	STAT_CD = #{STAT_CD}
+		 </if>
+		 ORDER BY BIZRNM
+	</select>
+	
+	
+	<!-- 도매업자 구분 조회	 -->
+	<select id="whsdl_se_select" parameterType="map" resultType="hashmap">
+			SELECT
+					 	 ETC_CD,ETC_CD_NM 
+			FROM 
+						EPCN_ETC_CD  A
+			JOIN 		(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+			ON   		A.LANG_SE_CD = E.LANG_SE_CD
+			WHERE 	1=1
+			AND		GRP_CD='B001'
+			<choose>
+		         <when test='ETC_CD == "T"'>
+				  AND		ETC_CD =#{BIZR_TP_CD}
+		         </when>
+		         <when test='ETC_CD == "RTL"'>
+				  AND		ETC_CD IN( 'R1','R2')
+		         </when>
+		         <otherwise>
+		           AND		ETC_CD IN( 'W1','W2')
+				</otherwise>
+		    </choose>
+		    ORDER BY TO_NUMBER(A.SEL_ORD)
+	</select>
+	
+	<!-- 도매업자 조회	 -->
+	<select id="whsdl_select" parameterType="map" resultType="hashmap">
+		  SELECT BIZRID	AS CUST_BIZRID
+					 ,BIZRNO AS CUST_BIZRNO
+					 ,BIZRNM AS CUST_BIZRNM
+					 ,BIZRID||';'||BIZRNO AS CUST_BIZRID_NO
+					 ,BIZRID
+					 ,BIZRNO
+					 ,BIZRNM
+					 ,BIZRID||';'||BIZRNO BIZRID_NO
+					 ,ECL_DECRYPT(BIZRNO) AS BIZRNO_DE
+			FROM EPCN_BIZR_INFO
+		  WHERE 1=1
+		<choose>
+	         <when test='BIZR_TP_CD !=""  and BIZR_TP_CD !=null  '>
+	           AND BIZR_TP_CD  = #{BIZR_TP_CD}
+	         </when>
+	         <otherwise>
+	        	 AND BIZR_TP_CD IN ('W1','W2')
+	         </otherwise>
+	     </choose>
+		 <if test="BIZRID !=null and BIZRID !='' ">
+			  AND BIZRID	=#{BIZRID}
+			  AND BIZRNO =#{BIZRNO}
+		 </if>
+		 ORDER BY BIZRNM
+	</select>
+	
+	<!--소매업자 조회 -->
+	<select id="rtl_select" parameterType="map" resultType="hashmap">
+		  SELECT 
+		  			 BIZRID
+					 ,BIZRNO
+					 ,BIZRNM
+					 ,BIZRID||';'||BIZRNO BIZRID_NO
+			FROM EPCN_BIZR_INFO
+		  WHERE 1=1
+		  <choose>
+	         <when test='BIZR_TP_CD !=""  and BIZR_TP_CD !=null  '>
+	           	AND BIZR_TP_CD  = #{BIZR_TP_CD}
+	         </when>
+	         <otherwise>
+	        	 AND BIZR_TP_CD IN ('R1','R2')
+	         </otherwise>
+	     </choose>
+		  <if test="BIZRID !=null and BIZRID !='' ">
+			  AND BIZRID	=#{BIZRID}
+			  AND BIZRNO =#{BIZRNO}
+		  </if>
+		  ORDER BY BIZRNM
+	</select>
+	
+	
+	<!--도매랑 거래중인 소매업자  (소매거래처정보 테이블에서 가져오기) -->
+	<select id="rtl_cust_select" parameterType="map" resultType="hashmap">
+		  SELECT 
+		  			 RTL_CUST_BIZRID
+					 ,RTL_CUST_BIZRNO
+					 ,RTL_CUST_NM
+					 ,RTL_CUST_BIZRID||';'||RTL_CUST_BIZRNO  AS RTL_CUST_BIZRID_NO
+			FROM EPCN_RTL_CUST_INFO
+		  WHERE 1=1
+		  <if test="WHSDL_BIZRID !=null and WHSDL_BIZRID !='' ">
+			  AND WHSDL_BIZRID	=#{WHSDL_BIZRID}
+			  AND WHSDL_BIZRNO =#{WHSDL_BIZRNO}
+		  </if>
+		  ORDER BY RTL_CUST_NM
+	</select>
+    
+	<!--사업자에 따른 직매장  조회  -->
+	<select id="brch_nm_select" parameterType="map" resultType="hashmap">
+		 SELECT 
+		 			 BRCH_ID
+					,BRCH_NO
+					,BRCH_NM
+					,BRCH_ID||';'||BRCH_NO AS BRCH_ID_NO
+		   FROM EPCN_BRCH_INFO  A
+		 WHERE 1=1
+			 AND	BIZRNO = #{BIZRNO}
+			 AND	BIZRID = #{BIZRID}
+		  <if test="BRCH_NO !=null and BRCH_NO !='' ">
+			 AND EXISTS (
+		                           SELECT 'X'
+		                             FROM EPCN_BRCH_INFO B
+		                           WHERE 1=1
+		                              AND A.BIZRID = B.BIZRID
+		                              AND A.BIZRNO = B.BIZRNO
+		                              AND (
+			                                    (A.BRCH_ID = B.BRCH_ID AND A.BRCH_NO = B.BRCH_NO)
+			                                 	OR A.GRP_BRCH_NO = DECODE(B.GRP_YN, 'Y', B.BRCH_NO, '')                            
+		                                     ) 
+		                              AND B.BRCH_ID = #{BRCH_ID}
+		                              AND B.BRCH_NO = #{BRCH_NO}
+                         		)
+		 </if>
+		 <if test="BIZR_TP_CD !=null and BIZR_TP_CD !='' ">
+			 AND	BIZR_TP_CD = #{BIZR_TP_CD}
+		 </if>
+		 <if test="STAT_CD !=null and STAT_CD !='' ">
+			 AND	STAT_CD = #{STAT_CD}
+		 </if>
+		 <if test="CUST_BIZRID !=null and CUST_BIZRID !='' ">
+			AND EXISTS (
+								SELECT 'X' 
+								  FROM EPCN_DTSS_CUST_INFO B
+								WHERE 1=1
+									AND B.MFC_BIZRID		= A.BIZRID	
+									AND B.MFC_BIZRNO		= A.BIZRNO
+									AND B.MFC_BRCH_ID	= A.BRCH_ID
+									AND B.MFC_BRCH_NO	= A.BRCH_NO
+									AND B.CUST_BIZRID 	= #{CUST_BIZRID} 
+				                   	AND B.CUST_BIZRNO 	= #{CUST_BIZRNO}
+				                <if test="CUST_BRCH_ID !=null and CUST_BRCH_ID !='' ">
+				                   	AND EXISTS (
+								                           SELECT 'X'
+								                             FROM EPCN_BRCH_INFO C
+								                           WHERE 1=1
+								                               AND B.CUST_BIZRID 	= C.BIZRID
+								                               AND B.CUST_BIZRNO 	= C.BIZRNO   
+						                                       AND B.CUST_BRCH_ID 	= C.BRCH_ID		
+								                               AND B.CUST_BRCH_NO = C.BRCH_NO 
+							                                   AND EXISTS (
+									                                              SELECT 'X'
+									                                                FROM EPCN_BRCH_INFO D
+									                                              WHERE 1=1
+									                                                  AND C.BIZRID = D.BIZRID   
+									                                                  AND C.BIZRNO = D.BIZRNO
+									                                                  AND (
+										                                                        (C.BRCH_ID = D.BRCH_ID AND C.BRCH_NO = D.BRCH_NO)
+										                                                      OR 
+										                                                         C.GRP_BRCH_NO = DECODE(D.GRP_YN, 'Y', D.BRCH_NO, '')                            
+									                                                         ) 
+									                                                  AND D.BRCH_ID = #{CUST_BRCH_ID} 
+									                                                  AND D.BRCH_NO = #{CUST_BRCH_NO}
+										                                          )                 
+						                         		)
+				                   	
+								</if>
+			  				 )
+			
+		 </if>
+		 
+		 <if test="T_USER_ID !=null and T_USER_ID !='' ">
+				AND EXISTS (
+				                   SELECT 'X'
+				                     FROM EPCN_ATH_GRP_USER S2
+					                          ,EPCN_ATH_GRP_BIZR S3
+				                   WHERE 1=1
+				                       AND S2.USER_ID = #{T_USER_ID}
+				                       AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+				                       AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+				                       AND A.AREA_CD = S3.AREA_CD
+				                  )
+		 </if>
+		 
+		 ORDER BY DECODE(BRCH_NO,'9999999999',0,1), BRCH_NM
+	</select>
+	
+	<!--사업자에 따른 부서 조회  -->
+	<select id="dept_nm_select" parameterType="map" resultType="hashmap">
+		 SELECT DEPT_CD, DEPT_NM, UP_DEPT_CD
+		        	,BIZRID, BIZRNO
+		   FROM EPCN_DEPT_INFO
+		 WHERE 1=1
+		     AND BIZRID = #{BIZRID}	
+		     AND BIZRNO = #{BIZRNO}
+		 ORDER BY DEPT_NM
+	</select>
+    
+    
+    <!-- 빈용기구분 조회 -->
+    <select id="ctnr_se_select" parameterType="map" resultType="hashmap">
+		SELECT 
+				 ETC_CD
+				,ETC_CD_NM  
+		FROM 
+				EPCN_ETC_CD
+		WHERE 1=1
+		AND GRP_CD ='E002'
+        <if test="BIZR_TP_CD != ''">
+            <choose>
+                <when test='BIZR_TP_CD == "W1"'>
+                AND     ETC_CD IN ('0','1')
+                </when>
+                <when test='BIZR_TP_CD == "W2"'>
+                AND     ETC_CD ='2'
+                </when>
+            </choose>
+        </if>
+        <if test="BIZR_TP_CD == ''">
+            AND     ETC_CD NOT IN ('0','1','2')
+        </if>
+		ORDER BY TO_NUMBER(SEL_ORD)
+    </select>
+    
+    <!-- 빈용기명 조회 -->
+    <select id="ctnr_nm_select" parameterType="map" resultType="hashmap">
+	    SELECT A.CTNR_CD, A.CTNR_NM
+	      FROM EPCN_STD_CTNR_CD A
+			       ,EPCN_ETC_CD B 
+			       ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+		WHERE  1=1
+			AND A.MFC_SE_CD = B.ETC_CD
+			AND A.LANG_SE_CD = B.LANG_SE_CD
+			AND A.LANG_SE_CD = E.LANG_SE_CD
+			AND B.GRP_CD = 'E003'
+		 <if test="BIZR_TP_CD != ''">
+		     <choose>
+		         <when test='BIZR_TP_CD == "M1"'>
+				   AND B.RSV_ITEM2 IN (#{BIZRNO}, '0000000000')
+		         </when>
+		         <when test='BIZR_TP_CD == "M2"'>
+		           AND B.RSV_ITEM2 = #{BIZRNO}
+		         </when>
+		     </choose>
+		 </if>
+		 <if test="PRPS_CD !=null and PRPS_CD !='' ">
+		 	AND A.PRPS_CD = #{PRPS_CD}
+		 </if>
+		 <if test="USE_YN !=null and USE_YN !='' ">
+		 	AND A.USE_YN = #{USE_YN}
+		 </if>
+		ORDER BY TO_NUMBER(A.SEL_ORD), A.CTNR_NM
+    </select>
+    
+    <!-- 빈용기명 조회 -->
+    <select id="ctnr_nm_std_dps_select" parameterType="map" resultType="hashmap">
+	    SELECT A.CTNR_CD||';'||NVL(C.STD_DPS,0) AS CTNR_CD, A.CTNR_NM
+	      FROM EPCN_STD_CTNR_CD A
+			       ,EPCN_ETC_CD B
+			       ,( SELECT * FROM EPCN_STD_DPS_MGNT	WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN APLC_ST_DT AND APLC_END_DT) C 
+			       ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+		WHERE  1=1
+			AND A.MFC_SE_CD  = B.ETC_CD
+			AND A.LANG_SE_CD = B.LANG_SE_CD
+			AND A.CTNR_CD	 = C.CTNR_CD(+)
+			AND A.LANG_SE_CD = E.LANG_SE_CD
+			AND B.GRP_CD = 'E003'
+		 <if test="BIZR_TP_CD != ''">
+		     <choose>
+		         <when test='BIZR_TP_CD == "M1"'>
+				   AND B.RSV_ITEM2 IN (#{BIZRNO}, '0000000000')
+		         </when>
+		         <when test='BIZR_TP_CD == "M2"'>
+		           AND B.RSV_ITEM2 = #{BIZRNO}
+		         </when>
+		     </choose>
+		 </if>
+		 <if test="PRPS_CD !=null and PRPS_CD !='' ">
+		 	AND A.PRPS_CD = #{PRPS_CD}
+		 </if>
+		 <if test="USE_YN !=null and USE_YN !='' ">
+		 	AND A.USE_YN = #{USE_YN}
+		 </if>
+		ORDER BY TO_NUMBER(A.SEL_ORD), A.CTNR_NM
+    </select>
+    
+    <!-- 빈용기명 조회  생산자랑 거래중인 애들 -->
+    <select id="ctnr_nm_select2" parameterType="map" resultType="hashmap">
+    
+    SELECT * 
+      FROM (
+				 SELECT A.CTNR_CD, A.CTNR_NM, A.PRPS_CD 
+				 			,( SELECT RSV_ITEM2 FROM EPCN_ETC_CD WHERE GRP_CD='E003' AND ETC_CD=A.MFC_SE_CD) AS MFC
+				   FROM EPCN_STD_CTNR_CD A
+					 		   JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+							   ON A.LANG_SE_CD = E.LANG_SE_CD
+			 	 WHERE 1=1
+					 AND MFC_SE_CD != '00'	
+					 
+					 <choose>
+					 	<when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+					 		AND SUBSTR(A.CTNR_CD,2,1) in ('1','2')
+					 	</when>
+					 	<when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+					 		AND SUBSTR(A.CTNR_CD,2,1) in ('3','4')
+					 	</when>
+					 </choose>
+					 
+					 <if test="PRPS_CD !=null and PRPS_CD !='' ">
+					 AND PRPS_CD = #{PRPS_CD}
+					 </if>
+					 AND EXISTS (
+										  SELECT 'X' 
+											FROM EPCN_DTSS_CUST_INFO B
+													 ,EPCN_ETC_CD C
+										WHERE 1=1
+											AND B.MFC_BIZRNO  	= C.RSV_ITEM2
+											AND C.GRP_CD 			= 'E003'
+											AND A.MFC_SE_CD 		= C.ETC_CD
+											<if test="MFC_BIZRNO !=null and MFC_BIZRNO !='' ">
+											AND MFC_BIZRID 		= #{MFC_BIZRID} 
+						                   	AND MFC_BIZRNO 		= #{MFC_BIZRNO}
+						                   	</if>
+						                   	<if test="CUST_BIZRNO !=null and CUST_BIZRNO !='' ">
+						                   	AND CUST_BIZRID 		= #{CUST_BIZRID} 
+						                   	AND CUST_BIZRNO 		= #{CUST_BIZRNO}
+											</if>
+											<if test="CUST_BRCH_NO !=null and CUST_BRCH_NO !='' ">
+						                   	AND CUST_BRCH_ID 		= #{CUST_BRCH_ID} 
+						                   	AND CUST_BRCH_NO 		= #{CUST_BRCH_NO}
+											</if>
+											
+											<if test="T_USER_ID !=null and T_USER_ID !='' ">
+											AND EXISTS (
+											                   SELECT 'X'
+											                     FROM EPCN_BRCH_INFO S1
+												                          ,EPCN_ATH_GRP_USER S2
+												                          ,EPCN_ATH_GRP_BIZR S3
+											                   WHERE 1=1
+											                       AND B.CUST_BIZRID = S1.BIZRID
+											                       AND B.CUST_BIZRNO = S1.BIZRNO
+											                       AND B.CUST_BRCH_ID = S1.BRCH_ID
+											                       AND B.CUST_BRCH_NO = S1.BRCH_NO
+											                       AND S2.USER_ID = #{T_USER_ID}
+											                       AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+											                       AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+											                       AND S1.AREA_CD = S3.AREA_CD
+											                  )
+											</if>
+											
+											AND ROWNUM = 1
+					  				 )
+			  				 
+			UNION ALL
+			
+			 SELECT A.CTNR_CD, A.CTNR_NM, A.PRPS_CD
+						,(SELECT RSV_ITEM2 FROM EPCN_ETC_CD WHERE GRP_CD='E003' AND ETC_CD=A.MFC_SE_CD) AS MFC
+			   FROM EPCN_STD_CTNR_CD A 
+						 JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+						 ON   A.LANG_SE_CD = E.LANG_SE_CD
+			 WHERE 1=1
+			     AND MFC_SE_CD = '00'		
+			     
+			     <choose>
+				 	<when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+				 		AND SUBSTR(A.CTNR_CD,2,1) in ('1','2')
+				 	</when>
+				 	<when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+				 		AND SUBSTR(A.CTNR_CD,2,1) in ('3','4')
+				 	</when>
+				 </choose>
+			     
+				<if test="PRPS_CD !=null and PRPS_CD !='' ">
+				 AND PRPS_CD = #{PRPS_CD}
+				</if>
+				 AND EXISTS (
+									<choose>
+										<when test="CUST_BIZRNO !=null and CUST_BIZRNO !='' ">
+											SELECT 'X' 
+					                           FROM EPCN_BIZR_INFO A
+						                                ,EPCN_DTSS_CUST_INFO B
+					                        WHERE 1=1
+					                            AND A.BIZRID = B.MFC_BIZRID
+					                            AND A.BIZRNO = B.MFC_BIZRNO
+					                           <if test="MFC_BIZRNO !=null and MFC_BIZRNO !='' ">
+												AND BIZRID = #{MFC_BIZRID} 
+							                   	AND BIZRNO = #{MFC_BIZRNO}
+							                   </if>
+					                            AND B.CUST_BIZRID = #{CUST_BIZRID}
+								                AND B.CUST_BIZRNO = #{CUST_BIZRNO}
+								               <if test="CUST_BRCH_NO !=null and CUST_BRCH_NO !='' ">
+							                   	AND CUST_BRCH_ID = #{CUST_BRCH_ID} 
+							                   	AND CUST_BRCH_NO = #{CUST_BRCH_NO}
+											   </if>
+								                AND A.BIZR_TP_CD != 'M2'
+								                AND ROWNUM = 1
+										</when>
+										<otherwise>
+											SELECT 'X' 
+											  FROM EPCN_BIZR_INFO B
+										    WHERE 1=1
+							                   <if test="MFC_BIZRNO !=null and MFC_BIZRNO !='' ">
+												AND BIZRID 		= #{MFC_BIZRID} 
+							                   	AND BIZRNO 		= #{MFC_BIZRNO}
+							                   	</if>
+							                    AND BIZR_TP_CD != 'M2'
+							                   
+							                   <if test="T_USER_ID !=null and T_USER_ID !='' ">
+												AND EXISTS (
+												                   SELECT 'X'
+												                     FROM EPCN_DTSS_CUST_INFO S0 
+												                     		  ,EPCN_BRCH_INFO S1
+													                          ,EPCN_ATH_GRP_USER S2
+													                          ,EPCN_ATH_GRP_BIZR S3
+												                  WHERE 1=1
+												                      AND B.BIZRID = S0.MFC_BIZRID
+											                          AND B.BIZRNO = S0.MFC_BIZRNO
+											                          AND S0.CUST_BIZRID = S1.BIZRID
+											                          AND S0.CUST_BIZRNO = S1.BIZRNO
+											                          AND S0.CUST_BRCH_ID = S1.BRCH_ID
+											                          AND S0.CUST_BRCH_NO = S1.BRCH_NO
+												                      AND S2.USER_ID = #{T_USER_ID}
+												                      AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+												                      AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+												                      AND S1.AREA_CD = S3.AREA_CD
+												                      AND ROWNUM = 1
+												                  )
+												</if>
+							                   
+							                   AND ROWNUM = 1
+										</otherwise>
+									</choose>
+				                 )
+	 	) 
+	 	
+		ORDER BY CTNR_NM		 
+	    
+    </select>   
+
+    <!-- 용기코드 제한여부 조회 -->
+    <select id="ctnr_cd_rtc_yn" parameterType="map" resultType="String">
+    	SELECT CTNR_CD_RTC_YN
+    	FROM   EPCN_BRCH_INFO
+    	WHERE  1=1
+    	AND    BIZRID 		= #{CUST_BIZRID}
+		AND    BIZRNO 		= #{CUST_BIZRNO}
+		<if test="CUST_BRCH_ID !=null and CUST_BRCH_ID !='' ">   
+		AND    BRCH_ID		= #{CUST_BRCH_ID}
+		AND    BRCH_NO      = #{CUST_BRCH_NO}
+		</if>
+    </select>
+             
+    <!-- 빈용기명 조회  보증금 ,취급수수료-->
+    <select id="ctnr_cd_select" parameterType="map" resultType="hashmap">
+	        SELECT  
+			             A.LANG_SE_CD
+			            ,A.CTNR_CD
+			            ,A.REG_SN
+		                ,A.WHSL_FEE
+		                ,A.RTL_FEE
+		                ,B.CTNR_NM
+		                ,B.CTNR_CD
+		                ,EPCN_ETC_NM(B.CPCT_CD , 'E001') AS CPCT_NM
+		                ,C.STD_DPS
+		                ,A.STD_FEE_YN
+		      FROM 
+		               EPCN_INDV_FEE_MGNT A
+		               ,EPCN_STD_CTNR_CD B
+		               ,EPCN_STD_DPS_MGNT C
+                       ,EPCN_BIZR_INFO D
+		               ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+		               ,(SELECT CTNR_CD, LANG_SE_CD, REG_SN, MIN(STD_FEE_YN) AS STD_FEE_YN 
+		                   FROM EPCN_INDV_FEE_MGNT 
+		                  WHERE 1=1
+		                  	AND MFC_BIZRID 			=	#{MFC_BIZRID}
+							AND MFC_BIZRNO 			=	#{MFC_BIZRNO}
+							AND MFC_BRCH_ID 		=	#{MFC_BRCH_ID}
+							AND MFC_BRCH_NO 		=	#{MFC_BRCH_NO}
+							AND CUST_BIZRID 		=	#{CUST_BIZRID}
+							AND CUST_BIZRNO 		=	#{CUST_BIZRNO}
+							<if test="CUST_BRCH_ID !=null and CUST_BRCH_ID !='' ">   
+							AND CUST_BRCH_ID		=	#{CUST_BRCH_ID}
+							AND CUST_BRCH_NO 		=	#{CUST_BRCH_NO}
+							</if>
+		                 GROUP BY CTNR_CD, LANG_SE_CD, REG_SN
+		                 ) F
+		     	WHERE 1=1
+				AND A.CTNR_CD           = B.CTNR_CD
+				AND A.LANG_SE_CD      	= B.LANG_SE_CD
+				AND A.CTNR_CD           = C.CTNR_CD
+				AND A.LANG_SE_CD        = C.LANG_SE_CD
+				AND A.LANG_SE_CD       	= E.LANG_SE_CD       
+				AND A.CTNR_CD        	= F.CTNR_CD
+		        AND A.LANG_SE_CD      	= F.LANG_SE_CD
+		        AND A.REG_SN          	= F.REG_SN
+		        AND A.STD_FEE_YN      	= F.STD_FEE_YN  
+                AND A.MFC_BIZRID        = D.BIZRID
+                AND A.MFC_BIZRNO        = D.BIZRNO        
+				AND A.MFC_BIZRID 		= #{MFC_BIZRID}
+				AND A.MFC_BIZRNO 		= #{MFC_BIZRNO}
+				AND A.MFC_BRCH_ID 		= #{MFC_BRCH_ID}
+				AND A.MFC_BRCH_NO 		= #{MFC_BRCH_NO}
+				AND A.CUST_BIZRID 		= #{CUST_BIZRID}
+				AND A.CUST_BIZRNO 		= #{CUST_BIZRNO}
+				<if test="CUST_BRCH_ID !=null and CUST_BRCH_ID !='' ">   
+				AND A.CUST_BRCH_ID		= #{CUST_BRCH_ID}
+				AND A.CUST_BRCH_NO      = #{CUST_BRCH_NO}
+				</if>
+				<if test="PRPS_CD !=null and PRPS_CD !='' ">   
+				AND B.PRPS_CD 			= #{PRPS_CD}   
+				</if>              
+				AND  REPLACE(#{RTN_DT}, '-') BETWEEN  C.APLC_ST_DT and  C.APLC_END_DT 
+				AND  REPLACE(#{RTN_DT}, '-') BETWEEN  A.APLC_ST_DT and  A.APLC_END_DT
+				<if test="CTNR_CD_ALL ==null ">
+			     	<if test="CTNR_SE != null and CTNR_SE.equalsIgnoreCase('1') ">	AND A.CTNR_CD NOT LIKE '_3%'</if>
+					<if test="CTNR_SE != null and CTNR_SE.equalsIgnoreCase('2') ">	AND A.CTNR_CD LIKE '_3%'</if>
+				</if>
+                <if test="SOJU_STD_EXT !=null and SOJU_STD_EXT !='' ">   
+                AND B.MFC_SE_CD NOT IN (CASE D.BIZR_TP_CD WHEN 'M2' THEN '00' ELSE 'XX' END) --주류회사 소주표준화병 제외
+                AND B.MFC_SE_CD NOT IN (CASE D.BIZRNO WHEN '3079ca586ec6f81ff02afd4022c0f05b' THEN '00' ELSE 'XX' END) --오비맥주 소주표준화병 제외  
+                </if>
+			ORDER BY TO_NUMBER(B.SEL_ORD)
+    </select>
+
+     <!-- 빈용기명 조회  보증금 ,취급수수료 전체조회 (타생산자 병 반환 시)-->
+    <select id="ctnr_cd_select_all" parameterType="map" resultType="hashmap">
+			SELECT  
+			             A.LANG_SE_CD
+			            ,A.CTNR_CD
+			            ,A.REG_SN
+		                ,NVL(F.WHSL_FEE, A.STD_WHSL_FEE) AS WHSL_FEE
+		                ,NVL(F.RTL_FEE, A.STD_RTL_FEE) AS RTL_FEE
+		                ,B.CTNR_NM
+		                ,B.CTNR_CD
+		                ,EPCN_ETC_NM(B.CPCT_CD , 'E001') AS CPCT_NM
+		                ,C.STD_DPS
+		                ,NVL(F.STD_FEE_YN, 'Y') AS STD_FEE_YN
+		      FROM 
+		               EPCN_STD_FEE_MGNT A
+		               ,EPCN_STD_CTNR_CD B
+		               ,EPCN_STD_DPS_MGNT C
+		               ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+		               ,(SELECT CTNR_CD, LANG_SE_CD, REG_SN, MIN(STD_FEE_YN) AS STD_FEE_YN, WHSL_FEE, RTL_FEE 
+		                   FROM EPCN_INDV_FEE_MGNT 
+		                  WHERE 1=1
+		                  	AND  REPLACE(#{RTN_DT}, '-') BETWEEN  APLC_ST_DT and  APLC_END_DT 
+		                  	AND MFC_BIZRID 			=	#{MFC_BIZRID}
+							AND MFC_BIZRNO 			=	#{MFC_BIZRNO}
+							AND MFC_BRCH_ID 		=	#{MFC_BRCH_ID}
+							AND MFC_BRCH_NO 		=	#{MFC_BRCH_NO}
+							AND CUST_BIZRID 		=	#{CUST_BIZRID}
+							AND CUST_BIZRNO 		=	#{CUST_BIZRNO}
+							<if test="CUST_BRCH_ID !=null and CUST_BRCH_ID !='' ">   
+							AND CUST_BRCH_ID		=	#{CUST_BRCH_ID}
+							AND CUST_BRCH_NO 		=	#{CUST_BRCH_NO}
+							</if>
+							AND STD_FEE_YN = 'N'  /* 개별취급수수료 */
+		                 GROUP BY CTNR_CD, LANG_SE_CD, REG_SN, WHSL_FEE, RTL_FEE
+		                 ) F
+		     	WHERE 1=1
+				AND A.CTNR_CD           = B.CTNR_CD
+				AND A.LANG_SE_CD      	= B.LANG_SE_CD
+				AND A.CTNR_CD           = C.CTNR_CD
+				AND A.LANG_SE_CD        = C.LANG_SE_CD
+				AND A.LANG_SE_CD       	= E.LANG_SE_CD     
+				AND A.CTNR_CD        	= F.CTNR_CD(+)
+        		AND A.LANG_SE_CD      	= F.LANG_SE_CD(+)
+        		AND A.REG_SN          	= F.REG_SN(+)				  		 
+				<if test="PRPS_CD !=null and PRPS_CD !='' ">   
+				AND B.PRPS_CD 			= #{PRPS_CD}   
+				</if>  		
+				<if test="CTNR_CD_ALL ==null ">
+			     	<if test="CTNR_SE != null and CTNR_SE.equalsIgnoreCase('1') ">	AND A.CTNR_CD NOT LIKE '_3%'</if>
+					<if test="CTNR_SE != null and CTNR_SE.equalsIgnoreCase('2') ">	AND A.CTNR_CD LIKE '_3%'</if>
+				</if>						               
+				AND  REPLACE(#{RTN_DT}, '-') BETWEEN  C.APLC_ST_DT and  C.APLC_END_DT 
+				AND  REPLACE(#{RTN_DT}, '-') BETWEEN  A.APLC_ST_DT and  A.APLC_END_DT
+			ORDER BY TO_NUMBER(B.SEL_ORD)
+    </select>
+
+    
+	<!-- 문서채번관리조회 (회수) -->
+	<select id="doc_psnb_select_rv" parameterType="map" resultType="string">
+		SELECT #{DOC_PSNB_CD}||'-'||TO_CHAR(SYSDATE,'YYYYMMDD')||'-'||LPAD(seq_doc_psnb_cd_rv.nextval, #{CNT}, '0') 
+		  FROM DUAL
+		
+	</select>
+	
+	<!-- 문서채번관리조회 -->
+	<select id="doc_psnb_select" parameterType="map" resultType="string">
+		SELECT #{DOC_PSNB_CD}||'-'||TO_CHAR(SYSDATE,'YYYYMMDD')||'-'||LPAD(NVL(MAX(TO_NUMBER(PSNB_SEQ)), 0)+1, #{CNT}, '0') 
+		  FROM EPCN_DOC_PSNB_MGNT 
+		WHERE DOC_PSNB_CD = #{DOC_PSNB_CD}
+		    AND PSNB_DT = TO_CHAR(SYSDATE,'YYYYMMDD')
+		
+	</select>
+	
+	<!-- 문서채번관리 저장 -->
+	<insert id="doc_psnb_insert" parameterType="map" >
+		INSERT
+				INTO EPCN_DOC_PSNB_MGNT
+				(
+					DOC_PSNB_CD
+					,PSNB_DT
+					,PSNB_SEQ
+					,REG_DTTM
+				)
+				VALUES
+				(
+				#{DOC_PSNB_CD}
+				,TO_CHAR(SYSDATE,'YYYYMMDD')
+				, #{PSNB_SEQ}
+				,SYSDATE
+				)
+	</insert>
+	
+	<!-- 채번관리조회 -->
+	<select id="psnb_select" parameterType="map" resultType="string">
+		SELECT LPAD(NVL(MAX(TO_NUMBER(PSNB_SEQ)), 0)+1, #{CNT}, '0')
+		  FROM EPCN_PSNB_MGNT 
+		WHERE PSNB_CD = #{PSNB_CD}
+	</select>
+	
+	<!-- 채번관리 저장 -->
+	<insert id="psnb_insert" parameterType="map" >
+		INSERT
+				INTO EPCN_PSNB_MGNT
+				(
+					PSNB_CD
+					,PSNB_NM
+					,PSNB_SEQ
+					,REG_DTTM
+				)
+				VALUES
+				(
+					#{PSNB_CD}
+					,#{PSNB_NM}
+					,#{PSNB_SEQ}
+					,SYSDATE
+				)
+	</insert>
+	
+	<!-- 언어목록 조회 -->
+    <select id="SELECT_TEXT_LIST" resultType="hashmap">
+       SELECT A.LANG_CD, 
+			      A.LANG_NM, 
+			      A.LANG_GRP_CD
+         FROM EPCN_LANG_INFO A
+         		  ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+       WHERE 1=1
+           AND A.LANG_SE_CD = C.LANG_SE_CD
+           AND A.USE_YN = 'Y'
+    </select>
+    
+    <!-- 타이틀명 조회 -->
+    <select id="SELECT_MENU_TITLE" resultType="string">
+       SELECT A.MENU_NM
+         FROM EPCN_MENU A
+         		  ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+       WHERE 1=1
+           AND A.LANG_SE_CD = C.LANG_SE_CD
+           AND A.MENU_CD = #{MENU_CD}
+    </select>
+    
+    <!-- 버튼 조회 -->
+    <select id="SELECT_BTN_LIST" resultType="hashmap">
+       SELECT A.BTN_SE_CD
+       			  ,A.BTN_LC_SE
+       			  ,A.BTN_CD
+       			  ,A.BTN_NM
+       			  ,A.EXEC_INFO
+         FROM EPCN_BTN A
+         		  ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+       WHERE 1=1
+           AND A.LANG_SE_CD = C.LANG_SE_CD
+           AND A.MENU_CD = #{MENU_CD}
+           AND NVL(DEL_YN, 'N') = 'N'
+           
+           AND EXISTS (
+		                        SELECT 'X'
+		                          FROM EPCN_ATH_GRP_BTN D
+		                                   ,EPCN_ATH_GRP_USER E
+		                        WHERE 1=1
+		                            AND D.ATH_GRP_CD = E.ATH_GRP_CD
+		                            AND D.BIZRID = E.BIZRID
+		                            AND D.BIZRNO = E.BIZRNO
+		                            AND E.USER_ID = #{USER_ID}
+		                            AND D.BTN_CD = A.BTN_CD
+		                            AND D.MENU_CD = A.MENU_CD
+		                            AND D.LANG_SE_CD = C.LANG_SE_CD
+		                      )
+           
+       ORDER BY A.BTN_LC_SE, TO_NUMBER(A.SEL_ORD)
+       
+    </select>
+    
+    <!-- 시스템 오류 이력 -->
+	<insert id="INSERT_EPCN_ERR_HIST" parameterType="hashmap">
+		INSERT INTO EPCN_ERR_HIST(
+			USER_ID			,REG_DTTM			,MENU_GRP_CD
+			,MENU_CD		,BTN_CD				,ERR_CD
+			,ERR_MSG		,ACPT_ERR			,PRAM
+			,ACSS_IP		,REG_DT				,REG_TM
+		)VALUES(
+			#{USER_ID} 			,TO_CHAR(SYSTIMESTAMP, 'YYYYMMDDHH24MISSFF6')	,#{MENU_GRP_CD}			
+			,#{MENU_CD}			,#{BTN_CD}										,#{ERR_CD}
+			,#{ERR_MSG}			,#{ACPT_ERR}									,#{PRAM}
+			,#{ACSS_IP}			,TO_CHAR(SYSDATE, 'YYYYMMDD')					,TO_CHAR(SYSDATE, 'HH24MISS')
+		)
+	</insert>
+	
+	<insert id="INSERT_EPCN_API_HIST" parameterType="map" >
+		 INSERT INTO EPCN_API_HIST
+		 (
+		    BIZR_ISSU_KEY, 
+		    REG_DTTM, 
+		    LK_API_CD, 
+		    CALL_URL, 
+		    ACSS_IP, 
+		    ERR_YN, 
+		    ERR_CD, 
+		    ERR_MSG, 
+		    ACPT_ERR, 
+		    REG_DT, 
+		    REG_TM,
+		    REG_SN
+		 )
+		 VALUES
+		 (
+		    #{BIZR_ISSU_KEY}, 
+		    TO_CHAR(SYSTIMESTAMP,'YYYYMMDDHH24MISSFF6'), 
+		    #{LK_API_CD}, 
+		    #{CALL_URL}, 
+		    #{ACSS_IP}, 
+		    DECODE(#{ERR_CD}, '0000', 'N', 'Y'), 
+		    #{ERR_CD}, 
+		    #{ERR_MSG}, 
+		    '', 
+		    TO_CHAR(SYSDATE, 'YYYYMMDD'), 
+		    TO_CHAR(SYSDATE, 'HH24MMSS'),
+		    #{REG_SN}
+		 )
+	</insert>
+	
+	<!-- 그리드 컬럼 저장 조회 -->
+	<select id="GRID_INFO_SELECT" parameterType="map" resultType="hashmap">
+		SELECT *
+		FROM EPCN_GRID_INFO 
+		WHERE 1=1
+		AND USER_ID 		= #{USER_ID}
+		AND MENU_CD 		= #{MENU_CD}
+		AND LANG_SE_CD 	= (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1')
+	</select>
+	
+	<!-- 그리드 컬럼 저장 조회 -->
+	<update id="GRID_INFO_INSERT" parameterType="map">
+		MERGE INTO EPCN_GRID_INFO 
+			USING DUAL
+			ON (
+			USER_ID 				= #{USER_ID} 
+			AND MENU_CD		= #{MENU_CD}
+			AND LANG_SE_CD 	=(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1')
+			AND GRID_ID 			=	#{GRID_ID} 
+					)
+			WHEN MATCHED THEN
+				UPDATE SET
+					PRAM    = #{PRAM}
+			WHEN NOT MATCHED THEN
+				INSERT
+					(
+					 USER_ID 
+					,MENU_CD
+					,LANG_SE_CD
+					,GRID_ID 
+					,PRAM
+					,REG_PRSN_ID
+					,REG_DTTM
+					)
+					VALUES
+					(
+					 #{USER_ID}
+					,#{MENU_CD}
+					,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1')
+					,#{GRID_ID}
+					,#{PRAM}
+					,#{USER_ID}
+					,SYSDATE
+					)
+	</update>
+	
+	<!-- 정산기준관리 조회 -->
+	<select id="std_mgnt_select" parameterType="map" resultType="hashmap">
+			 SELECT 
+						DISTINCT
+						A.EXCA_STD_CD
+						,A.REG_SN
+						,A.EXCA_ST_DT
+						,A.EXCA_END_DT
+						,A.CRCT_PSBL_ST_DT
+						,A.CRCT_PSBL_END_DT
+						,A.EXCA_STAT_CD
+						,A.EXCA_STD_NM
+						,A.EXCA_TRGT_SE
+						,A.EXCA_STD_CD||';'||A.EXCA_TRGT_SE AS EXCA_STD_CD_SE
+						,TO_CHAR(TO_DATE(A.EXCA_ST_DT, 'yyyymmdd'),'yyyy-mm-dd') AS EXCA_ST_DT_C
+						,TO_CHAR(TO_DATE(A.EXCA_END_DT, 'yyyymmdd'),'yyyy-mm-dd') AS EXCA_END_DT_C
+						,TO_CHAR(TO_DATE(A.CRCT_PSBL_ST_DT, 'yyyymmdd'),'yyyy-mm-dd') AS CRCT_PSBL_ST_DT_C
+						,TO_CHAR(TO_DATE(A.CRCT_PSBL_END_DT, 'yyyymmdd'),'yyyy-mm-dd') AS CRCT_PSBL_END_DT_C
+						,CASE WHEN TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN A.CRCT_PSBL_ST_DT AND A.CRCT_PSBL_END_DT AND A.EXCA_STAT_CD = 'S'
+							 THEN 'Y' ELSE 'N' END as EXCA_YN
+					    ,A.CET_FYER_EXCA_YN
+                        ,A.CRCT_CFM_END_DT
+			FROM 
+					 EXCA_STD_MGNT  A
+					 ,EXCA_TRGT_INFO B
+			WHERE 1=1
+			AND A.EXCA_STD_CD = B.EXCA_STD_CD(+)
+			<if test="BIZRID !=null and BIZRID !='' ">
+			 	AND (A.EXCA_TRGT_SE ='W' OR (B.MFC_BIZRID  = #{BIZRID} AND  B.MFC_BIZRNO = #{BIZRNO}) )
+			</if>
+			<if test="EXCA_STD_CD  !=null and EXCA_STD_CD !='' ">
+				AND A.EXCA_STD_CD = #{EXCA_STD_CD}
+			</if>
+			<choose>
+					<when test="EXCA_STAT_CD  !=null and EXCA_STAT_CD !='' ">
+							AND  A.EXCA_STAT_CD = #{EXCA_STAT_CD}
+					</when>
+					<otherwise>
+							AND  A.EXCA_STAT_CD IN ('S' ,'E') 
+					</otherwise>
+			</choose>
+			ORDER BY A.EXCA_STD_CD
+</select>
+	
+	<!-- 정산기준관리 생산자 조회 -->
+	<select id="std_mgnt_mfc_select" parameterType="map" resultType="hashmap">
+		SELECT
+					MFC_BIZRID||';'||MFC_BIZRNO AS BIZRID_NO
+					,B.BIZRNM AS BIZRNM
+		FROM 
+					EXCA_TRGT_INFO A
+					,EPCN_BIZR_INFO B
+		WHERE 1=1
+		AND A.MFC_BIZRID		=  B.BIZRID
+		AND A.MFC_BIZRNO	=  B.BIZRNO
+		AND A.EXCA_STD_CD = #{EXCA_STD_CD}
+		<if test="BIZRID !=null and BIZRID !='' ">
+			AND 	A.MFC_BIZRID  =#{BIZRID} 
+			AND	A.MFC_BIZRNO =#{BIZRNO}
+		</if>
+		ORDER BY B.BIZRNM
+	</select>
+
+
+	<!-- 회수용기코드 -->
+	<select id="rtrvl_ctnr_cd_select" parameterType="map" resultType="hashmap">
+			SELECT
+						A.RTRVL_CTNR_CD
+						,A.CTNR_NM
+						,CPCT_CD
+						,PRPS_CD
+			FROM 
+						EPCN_RTRVL_CTNR_CD A
+						JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+						ON   A.LANG_SE_CD = E.LANG_SE_CD
+			WHERE 1=1
+			AND PRPS_CD !='2'
+			<if test="RTRVL_CTNR_CD !=null and RTRVL_CTNR_CD !='' ">
+				AND    A.RTRVL_CTNR_CD = #{RTRVL_CTNR_CD}
+			</if>
+			ORDER BY CTNR_NM
+	</select>  
+
+    <!-- 회수용기코드 조건 추가 -->
+    <select id="rtrvl_ctnr_cd_select2" parameterType="map" resultType="hashmap">
+            SELECT
+                        A.RTRVL_CTNR_CD
+                        ,A.CTNR_NM
+                        ,CPCT_CD
+                        ,PRPS_CD
+            FROM 
+                        EPCN_RTRVL_CTNR_CD A
+                        JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+                        ON   A.LANG_SE_CD = E.LANG_SE_CD
+            WHERE 1=1
+            AND PRPS_CD !='2'
+            <if test="RTRVL_CTNR_CD !=null and RTRVL_CTNR_CD !='' ">
+                AND    A.RTRVL_CTNR_CD = #{RTRVL_CTNR_CD}
+            </if>
+            <if test="PRPS_CD !=null and PRPS_CD !='' ">
+                AND    A.PRPS_CD = #{PRPS_CD}
+            </if>
+            <if test="CTNR_SE !=null and CTNR_SE !='' ">
+                <choose>
+                    <when test='CTNR_SE == "1"'>
+                        AND SUBSTR(CPCT_CD,2,1) != '3' 
+                    </when>
+                    <otherwise>
+                        AND SUBSTR(CPCT_CD,2,1) = '3' 
+                    </otherwise>
+                </choose>
+            </if>
+            ORDER BY CTNR_NM
+    </select>  
+    
+	
+	<!-- 회수용기코드 보증금 ,취급수수료 -->
+	<select id="rtrvl_ctnr_dps_fee_select" parameterType="map" resultType="hashmap">
+			SELECT
+						A.RTRVL_CTNR_CD
+						,A.CTNR_NM
+						,A.CPCT_CD
+						,EPCN_ETC_NM(A.CPCT_CD,'E001') AS CPCT_NM
+						,A.PRPS_CD
+						,EPCN_ETC_NM(A.PRPS_CD,'E002') AS PRPS_NM
+						,C.RTRVL_DPS
+						,B.RTRVL_FEE   
+			FROM 
+						EPCN_RTRVL_CTNR_CD A
+						JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+						ON   A.LANG_SE_CD = E.LANG_SE_CD
+						,EPCN_RTRVL_FEE_MGNT B
+						,EPCN_RTRVL_DPS_MGNT C
+			WHERE 1=1
+			AND A.RTRVL_CTNR_CD  		=	B.RTRVL_CTNR_CD
+			AND A.LANG_SE_CD 			=  B.LANG_SE_CD
+			AND A.RTRVL_CTNR_CD  		=	C.RTRVL_CTNR_CD     
+			AND A.LANG_SE_CD 			=  C.LANG_SE_CD  
+			AND A.PRPS_CD !='2'  
+			<choose>
+					<when test="RTRVL_DT !=null and RTRVL_DT !='' ">
+						AND REPLACE(#{RTRVL_DT}, '-') BETWEEN  B.APLC_ST_DT AND  B.APLC_END_DT
+						AND REPLACE(#{RTRVL_DT}, '-') BETWEEN  C.APLC_ST_DT AND  C.APLC_END_DT 
+					</when>      
+					<otherwise>   
+						AND TO_CHAR(SYSDATE,'yyyymmdd') BETWEEN  B.APLC_ST_DT AND  B.APLC_END_DT
+						AND TO_CHAR(SYSDATE,'yyyymmdd') BETWEEN  C.APLC_ST_DT AND  C.APLC_END_DT 
+					</otherwise>        
+			</choose>         
+			<if test="BIZR_TP_CD !=null and BIZR_TP_CD !='' ">   
+				AND  A.PRPS_CD = DECODE(#{BIZR_TP_CD},'R2',0,1)
+			</if>  
+			ORDER BY instr(A.CTNR_NM,'[신병]') desc, A.CTNR_NM
+	</select>
+	
+	<!-- 등록일자제한설정 -->
+	<select id="rtc_dt_list_select" resultType="hashmap" parameterType="map">
+		SELECT	
+					WORK_SE
+					,RTC_ST_DT_SE
+					,RTC_END_DT_SE  
+					,RTC_ST_DT
+					,RTC_END_DT
+					,RTC_ST_SE
+					,RTC_END_SE
+		FROM	EPCN_RTC_DT_MGNT  
+		WHERE WORK_SE =  #{WORK_SE}
+	</select>
+	
+	<!-- 등록일자제한설정 입력일 체크 -->
+	<select id="rtc_dt_ck"  resultType="int" parameterType="map">
+		SELECT 
+					COUNT(1)
+		FROM
+			 	EPCN_RTC_DT_MGNT
+		WHERE 1=1
+		AND WORK_SE=#{WORK_SE}
+		<choose>
+			<when test="REG_DTTM_STD !=null and REG_DTTM_STD !=''">		
+			AND
+				REPLACE(#{SDT_DT}, '-') 	 BETWEEN
+						CASE WHEN RTC_ST_DT_SE ='Y'	THEN TO_CHAR(ADD_MONTHS(TO_DATE(#{REG_DTTM_STD}, 'YYYYMMDD'), -12), 'YYYYMMDD')
+                             WHEN RTC_ST_DT_SE ='Q' THEN TO_CHAR(TO_DATE(#{REG_DTTM_STD}, 'YYYYMMDD') -RTC_ST_DT,'YYYYMMDD')
+							 WHEN RTC_ST_DT_SE ='D'	THEN RTC_ST_DT
+						END
+				AND 
+						CASE WHEN RTC_END_DT_SE ='Y' THEN TO_CHAR(ADD_MONTHS(TO_DATE(#{REG_DTTM_STD}, 'YYYYMMDD'), 12), 'YYYYMMDD')
+                             WHEN RTC_END_DT_SE ='Q' THEN TO_CHAR(TO_DATE(#{REG_DTTM_STD}, 'YYYYMMDD') +RTC_END_DT,'YYYYMMDD')
+							 WHEN RTC_END_DT_SE ='D' THEN RTC_END_DT
+						END			  
+			</when>
+			<otherwise>
+			AND
+				REPLACE(#{SDT_DT}, '-')		 BETWEEN          
+							CASE WHEN RTC_ST_DT_SE ='Y'	THEN   TO_CHAR(ADD_MONTHS(SYSDATE, -12), 'YYYYMMDD')
+									WHEN RTC_ST_DT_SE ='Q'	THEN   TO_CHAR(SYSDATE - RTC_ST_DT, 'YYYYMMDD')
+									WHEN RTC_ST_DT_SE ='D'	THEN   RTC_ST_DT
+							END
+					AND   
+							CASE WHEN RTC_END_DT_SE ='Y'	THEN   TO_CHAR(ADD_MONTHS(SYSDATE, 12), 'YYYYMMDD')
+									WHEN RTC_END_DT_SE ='Q'	THEN   TO_CHAR(SYSDATE + RTC_END_DT, 'YYYYMMDD')
+									WHEN RTC_END_DT_SE ='D'	THEN   RTC_END_DT
+							END
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<insert id="ath_grp_insert">
+		INSERT INTO EPCN_ATH_GRP_USER
+		(    
+			ATH_GRP_CD, 
+			BIZRID, 
+			BIZRNO, 
+			USER_ID, 
+			REG_PRSN_ID, 
+			REG_DTTM
+		)
+		VALUES
+		(
+			#{ATH_GRP_CD}, 
+			(SELECT BIZRID FROM EPCN_BIZR_INFO WHERE BIZRNO = 'a25adbd5cec406ef9e68bfcaf77c4375' AND BIZR_TP_CD = 'T1' AND BIZR_STAT_CD = 'Y' AND ROWNUM = 1), 
+			#{BIZRNO}, 
+			#{USER_ID}, 
+			#{S_USER_ID}, 
+			SYSDATE
+		)
+	</insert>
+	
+	<select id="anc_std_cd_select" resultType="string">
+		SELECT #{ANC_SE}|| LPAD(NVL(MAX(SUBSTR(ANC_STD_CD, 3)), 0)+1, 6, '0') FROM EPCN_ANC_MGNT WHERE ANC_SE = #{ANC_SE}
+	</select>
+	
+	<update id="anc_mgnt_insert">
+		 INSERT INTO EPCN_ANC_MGNT
+		 (
+		    ANC_STD_CD
+		    ,ANC_SE
+		    ,TRGT_SE
+		    ,ANC_USE_YN
+		    ,ANC_SBJ
+		    ,LK_INFO
+		    ,REG_PRSN_ID
+		    ,REG_DTTM
+		 )
+		 VALUES
+		 (
+		    #{ANC_STD_CD}
+		    ,#{ANC_SE}
+		    ,#{TRGT_SE}
+		    ,'Y'
+		    ,#{ANC_SBJ}
+		    ,#{LK_INFO}
+		    ,#{USER_ID}
+		    ,SYSDATE
+		 )
+	</update>
+	
+	<update id="anc_info_insert">
+		 INSERT INTO EPCN_ANC_INFO
+		 (
+		   ANC_STD_CD
+		   ,USER_ID
+		   ,DTL_SN
+		   ,CFM_YN
+		   ,CFM_DT
+		   ,REG_DTTM
+		 )
+		 (
+		 SELECT #{ANC_STD_CD}
+			        ,USER_ID
+			        ,(SELECT NVL(MAX(DTL_SN), 0) + 1 FROM EPCN_ANC_INFO WHERE ANC_STD_CD = #{ANC_STD_CD} AND USER_ID = A.USER_ID)
+			        ,'N'
+			        ,''
+			        ,SYSDATE
+		   FROM EPCN_USER_INFO A
+		 WHERE 1=1
+		     AND USER_STAT_CD = 'Y'
+		     
+		     <choose>
+		     	<when test='TRGT_SE == "A" '>
+		     	</when>
+		     	<when test='TRGT_SE == "TM" '>
+		     		AND BIZR_TP_CD IN ('T1','M1','M2')
+		     	</when>
+		     	<when test='TRGT_SE == "TW" '>
+		     		AND BIZR_TP_CD IN ('T1','W1','W2')
+		     	</when>
+		     	<when test='TRGT_SE == "MW" '>
+		     		AND BIZR_TP_CD IN ('M1','M2','W1','W2')
+		     	</when>
+		     	<otherwise>
+		     		AND BIZR_TP_CD LIKE  #{TRGT_SE} || '%'
+		     	</otherwise>
+		     </choose>
+		)
+	</update>
+	
+	<update id="anc_insert">
+		 INSERT INTO EPCN_ANC_INFO
+		 (
+		    ANC_STD_CD
+		    ,USER_ID
+		    ,DTL_SN
+		    ,CFM_YN
+		    ,CFM_DT
+		    ,REG_DTTM
+		 )
+		 VALUES
+		 (
+		    #{ANC_STD_CD}
+            ,#{USER_ID}
+            ,(SELECT NVL(MAX(DTL_SN), 0) + 1 FROM EPCN_ANC_INFO WHERE ANC_STD_CD = #{ANC_STD_CD} AND USER_ID = #{USER_ID})
+            ,'N'
+            ,''
+            ,SYSDATE 
+		 )
+	</update>
+	
+	<update id="confirm_anc">
+		
+	   UPDATE EPCN_ANC_INFO B
+			 SET CFM_YN = 'Y'
+			 	   ,CFM_DT = TO_CHAR(SYSDATE, 'YYYYMMDD') 
+		WHERE 1=1
+			AND USER_ID = #{USER_ID}
+			
+			<choose>
+				<when test="ANC_STD_CD !=null and ANC_STD_CD !='' ">
+					AND ANC_STD_CD = #{ANC_STD_CD}
+					AND DTL_SN = #{DTL_SN}
+				</when>
+				<otherwise>
+						AND EXISTS (  SELECT 'X' 
+										        FROM ( SELECT ROW_NUMBER()OVER(ORDER BY REG_DTTM DESC, ANC_STD_CD, USER_ID, DTL_SN DESC) AS PNO
+													               		,A.* 
+													          FROM EPCN_ANC_INFO A 
+													        WHERE USER_ID = #{USER_ID}
+													            AND CFM_YN = 'N'
+													      ) A 
+										    WHERE A.PNO <![CDATA[<]]> 8
+										        AND A.ANC_STD_CD = B.ANC_STD_CD
+										        AND A.USER_ID = B.USER_ID
+										        AND A.DTL_SN = B.DTL_SN
+									      )
+				</otherwise>
+			</choose>
+			
+	</update>
+
+	<!-- 메인 알림조회 -->
+    <select id="SELECT_ANC_LIST" parameterType="string" resultType="hashmap">
+       
+	        SELECT A.ANC_STD_CD, B.USER_ID, B.DTL_SN
+		               ,A.ANC_STD_CD||';'||B.USER_ID||';'||B.DTL_SN AS ANC_KEY
+		               ,A.ANC_SBJ, A.ANC_MSG, A.ANC_SE
+		               ,D.MENU_SET_CD||D.MENU_GRP_CD AS MENU_ID
+		               ,CASE WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'T' THEN '/CE/EPCE'
+			                      WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'M' THEN '/MF/EPMF'
+					              WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'W' THEN '/WH/EPWH'
+					              WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'R' THEN '/RT/EPRT'
+					        END || A.LK_INFO AS MENU_URL
+			           ,D.MENU_NM AS PAGE_TITLE
+			          ,TO_CHAR(B.REG_DTTM, 'YYYY-MM-DD') AS REG_DTTM
+		     FROM EPCN_ANC_MGNT A
+			          ,EPCN_ANC_INFO B
+			          ,EPCN_USER_INFO C
+		              ,EPCN_MENU D
+		              ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+         WHERE 1=1
+	         AND A.ANC_STD_CD = B.ANC_STD_CD
+	         AND B.USER_ID = #{USERID}
+	         AND B.USER_ID = C.USER_ID
+	         AND B.CFM_YN = 'N'
+	         AND D.LANG_SE_CD = F.LANG_SE_CD
+	         AND D.MENU_CD = CASE WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'T' THEN 'EPCE'
+					                              WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'M' THEN 'EPMF'
+					                              WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'W' THEN 'EPWH'
+					                              WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'R' THEN 'EPRT'
+					                          END || SUBSTR(A.LK_INFO, 1, 7) 
+	   ORDER BY B.REG_DTTM DESC, A.ANC_STD_CD, B.USER_ID, B.DTL_SN
+       
+    </select>
+    
+    <!-- 메인 알림조회 모바일 -->
+    <select id="SELECT_ANC_LIST_M" parameterType="string" resultType="hashmap">
+       
+       SELECT /*mobile*/ A.ANC_STD_CD, B.USER_ID, B.DTL_SN
+       			  ,A.ANC_STD_CD||';'||B.USER_ID||';'||B.DTL_SN as ANC_KEY
+       			  ,A.ANC_SBJ, A.ANC_MSG, A.ANC_SE
+       			  ,CASE WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'T' THEN 'EPCE'
+			                WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'M' THEN 'EPMF'
+			                WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'W' THEN 'EPWH'
+			                WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'R' THEN 'EPRT'
+		            END || SUBSTR(A.LK_INFO, 1, 2) AS MENU_ID
+		           ,CASE WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'T' THEN '/CE/EPCE'
+			                WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'M' THEN '/MF/EPMF'
+			                WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'W' THEN '/WH/EPWH'
+			                WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'R' THEN '/RT/EPRT'
+		            END || A.LK_INFO AS MENU_URL
+		           ,(SELECT MENU_NM FROM EPCN_MENU WHERE MENU_CD = 
+		               CASE WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'T' THEN 'EPCE'
+			                    WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'M' THEN 'EPMF'
+			                    WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'W' THEN 'EPWH'
+			                    WHEN SUBSTR(C.BIZR_TP_CD, 1, 1) = 'R' THEN 'EPRT'
+		                END || SUBSTR(A.LK_INFO, 1, 7) 
+		             ) AS PAGE_TITLE
+		          ,TO_CHAR(B.REG_DTTM, 'YYYY-MM-DD') AS REG_DTTM
+		 FROM EPCN_ANC_MGNT A
+		          ,EPCN_ANC_INFO B
+		          ,EPCN_USER_INFO C
+	   WHERE 1=1
+		   AND A.ANC_STD_CD = B.ANC_STD_CD
+		   AND B.USER_ID = #{USERID}
+		   AND B.USER_ID = C.USER_ID
+		   AND NVL(B.CFM_YN , 'N') = 'N'
+		   AND NVL(B.PUSH_YN,'N') = 'Y'
+	   ORDER BY B.REG_DTTM DESC, A.ANC_STD_CD, B.USER_ID, B.DTL_SN
+       
+    </select>
+
+	<update id="updateMblUserInfo">
+		
+		MERGE INTO EPCN_MBL_USER_INFO A
+	    USING (
+	            SELECT 
+		            	   #{PUSH_TK, jdbcType=VARCHAR} AS PUSH_TK
+		                   ,#{USER_ID, jdbcType=VARCHAR} AS USER_ID
+		                   ,#{UUID, jdbcType=VARCHAR} AS UUID
+		                   ,#{PUSH_TP, jdbcType=VARCHAR} AS PUSH_TP 
+		                   ,#{OS_VER, jdbcType=VARCHAR} AS OS_VER
+		                   ,#{DEVICE_NM, jdbcType=VARCHAR} AS DEVICE_NM
+	              FROM DUAL
+	          ) B
+	    ON (A.PUSH_TK = B.PUSH_TK AND A.USER_ID = B.USER_ID)
+	    WHEN NOT MATCHED THEN
+	      INSERT
+	      (
+	        PUSH_TK
+	        ,USER_ID
+	        ,UUID
+	        ,PUSH_TP 
+	        ,OS_VER
+	        ,DEVICE_NM
+	        ,REG_PRSN_ID
+	        ,REG_DTTM
+	      )
+	      VALUES
+	      (
+	        B.PUSH_TK
+	        ,B.USER_ID
+	        ,B.UUID
+	        ,B.PUSH_TP 
+	        ,B.OS_VER
+	        ,B.DEVICE_NM
+	        ,#{USER_ID, jdbcType=VARCHAR}
+	        ,SYSDATE
+	      )
+	    WHEN MATCHED THEN
+	      UPDATE 
+	           SET UUID = B.UUID
+		             ,PUSH_TP = B.PUSH_TP
+		             ,OS_VER = B.OS_VER
+		             ,DEVICE_NM = B.DEVICE_NM
+		             ,UPD_PRSN_ID = #{USER_ID, jdbcType=VARCHAR}
+		             ,UPD_DTTM = SYSDATE
+	      WHERE A.PUSH_TK = B.PUSH_TK
+	        AND A.USER_ID = B.USER_ID
+		
+	</update>
+
+    <select id="SELECT_MAIN_DLIVY_CNT" parameterType="map" resultType="string">
+    
+    	  SELECT NVL(A.DLIVY_QTY,0) + NVL(E.DLIVY_QTY,0) AS EXCA_DLIVY_QTY
+		    FROM (
+			           SELECT NVL(SUM(B.DLIVY_QTY),0) AS DLIVY_QTY 
+			             FROM EPDM_DLIVY_MST A
+			                  	  ,EPDM_DLIVY_INFO B
+			            WHERE 1=1
+				            AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+				            AND A.DLIVY_REG_DT = TO_CHAR(SYSDATE-1,'yyyymmdd')
+			              	AND A.MFC_BIZRID = #{BIZRID}
+			              	AND A.MFC_BIZRNO = #{BIZRNO}
+			              <if test='S_BRCH_ID != null and S_BRCH_ID != "" '>
+			               AND EXISTS (
+					                           SELECT 'X'
+					                             FROM EPCN_BRCH_INFO C
+					                           WHERE 1=1
+					                               AND A.MFC_BIZRID = C.BIZRID
+					                               AND A.MFC_BIZRNO = C.BIZRNO
+			                                       AND A.MFC_BRCH_ID = C.BRCH_ID
+					                               AND A.MFC_BRCH_NO = C.BRCH_NO 
+				                                   AND EXISTS (
+						                                              SELECT 'X'
+						                                                FROM EPCN_BRCH_INFO D
+						                                              WHERE 1=1
+						                                                  AND C.BIZRID = D.BIZRID
+						                                                  AND C.BIZRNO = D.BIZRNO
+						                                                  AND (
+							                                                        (C.BRCH_ID = D.BRCH_ID AND C.BRCH_NO = D.BRCH_NO)
+							                                                      OR C.GRP_BRCH_NO = DECODE(D.GRP_YN, 'Y', D.BRCH_NO, '')                            
+						                                                         ) 
+						                                                  AND D.BRCH_ID = #{S_BRCH_ID} 
+						                                                  AND D.BRCH_NO = #{S_BRCH_NO}
+							                                          )                 
+			                         		)
+			              </if>
+			         ) A
+			         ,(
+	                      SELECT NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+	                        FROM EXCA_DLIVY_CRCT A
+	                      WHERE 1=1
+	                          AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I')
+	                          AND A.DLIVY_CRCT_REG_DT = TO_CHAR(SYSDATE-1,'yyyymmdd')
+	                          AND A.MFC_BIZRID = #{BIZRID}
+				  			  AND A.MFC_BIZRNO = #{BIZRNO}
+					
+				              <if test='S_BRCH_ID != null and S_BRCH_ID != "" '>
+				              AND EXISTS (
+							                           SELECT 'X'
+							                             FROM EPCN_BRCH_INFO C
+							                           WHERE 1=1
+							                               AND A.MFC_BIZRID = C.BIZRID
+							                               AND A.MFC_BIZRNO = C.BIZRNO
+					                                       AND A.MFC_BRCH_ID = C.BRCH_ID
+							                               AND A.MFC_BRCH_NO = C.BRCH_NO 
+						                                   AND EXISTS (
+								                                              SELECT 'X'
+								                                                FROM EPCN_BRCH_INFO D
+								                                              WHERE 1=1
+								                                                  AND C.BIZRID = D.BIZRID
+								                                                  AND C.BIZRNO = D.BIZRNO
+								                                                  AND (
+									                                                        (C.BRCH_ID = D.BRCH_ID AND C.BRCH_NO = D.BRCH_NO)
+									                                                      OR C.GRP_BRCH_NO = DECODE(D.GRP_YN, 'Y', D.BRCH_NO, '')                            
+								                                                         ) 
+								                                                  AND D.BRCH_ID = #{S_BRCH_ID} 
+								                                                  AND D.BRCH_NO = #{S_BRCH_NO}
+									                                          )                 
+					                         		)
+				              </if>
+	                          
+	                   ) E
+		   WHERE 1=1
+    </select>
+    
+    <select id="SELECT_MAIN_CFM_CNT" parameterType="map" resultType="string">
+
+			 SELECT NVL(SUM(NVL(D.CRCT_QTY, B.CFM_QTY)),0) AS CRCT_QTY_TOT
+			   FROM EPCM_CFM_MST A
+				     	,EPCM_CFM_INFO B
+				     	,(
+	                     	 SELECT WRHS_DOC_NO, CTNR_CD, SUM(CRCT_QTY) AS CRCT_QTY
+	                          FROM EXCA_WRHS_CRCT A
+	                        WHERE 1=1
+	                            AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+	                       GROUP BY WRHS_DOC_NO, CTNR_CD
+	                     ) D
+			WHERE 1=1
+				AND A.MFC_BIZRID = #{BIZRID}
+				AND A.MFC_BIZRNO = #{BIZRNO}
+				AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+				AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+				AND A.WRHS_CFM_DT = TO_CHAR(SYSDATE-1,'yyyymmdd')
+		
+				AND B.WRHS_DOC_NO = D.WRHS_DOC_NO(+)
+	          	AND B.CTNR_CD = D.CTNR_CD(+)
+
+				<if test='S_BRCH_ID != null and S_BRCH_ID != "" '>
+	             AND EXISTS (
+			                           SELECT 'X'
+			                             FROM EPCN_BRCH_INFO C
+			                           WHERE 1=1
+			                               AND A.MFC_BIZRID = C.BIZRID
+			                               AND A.MFC_BIZRNO = C.BIZRNO
+	                                       AND A.MFC_BRCH_ID = C.BRCH_ID
+			                               AND A.MFC_BRCH_NO = C.BRCH_NO 
+		                                   AND EXISTS (
+				                                              SELECT 'X'
+				                                                FROM EPCN_BRCH_INFO D
+				                                              WHERE 1=1
+				                                                  AND C.BIZRID = D.BIZRID
+				                                                  AND C.BIZRNO = D.BIZRNO
+				                                                  AND (
+					                                                        (C.BRCH_ID = D.BRCH_ID AND C.BRCH_NO = D.BRCH_NO)
+					                                                      OR C.GRP_BRCH_NO = DECODE(D.GRP_YN, 'Y', D.BRCH_NO, '')                            
+				                                                         ) 
+				                                                  AND D.BRCH_ID = #{S_BRCH_ID} 
+				                                                  AND D.BRCH_NO = #{S_BRCH_NO}
+					                                          )                 
+	                         		)
+	             </if>
+
+    </select>
+
+	<select id="SELECT_MAIN_DLIVY_CNT_T" parameterType="map" resultType="string">
+    
+    	  SELECT NVL(A.DLIVY_QTY,0) + NVL(E.DLIVY_QTY,0) AS EXCA_DLIVY_QTY
+		    FROM (
+			           SELECT NVL(SUM(B.DLIVY_QTY),0) AS DLIVY_QTY 
+			             FROM EPDM_DLIVY_INFO B
+			            WHERE 1=1
+				            AND B.DLIVY_DT BETWEEN TO_CHAR(SYSDATE - 1,'yyyymmdd') AND TO_CHAR(SYSDATE,'yyyymmdd') 
+			              
+			         ) A
+			         ,(
+	                      SELECT NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+	                        FROM EXCA_DLIVY_CRCT A
+	                      WHERE 1=1
+	                          AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I')
+	                          AND A.DLIVY_DT BETWEEN TO_CHAR(SYSDATE - 1,'yyyymmdd') AND TO_CHAR(SYSDATE,'yyyymmdd') 
+	                   ) E
+		   WHERE 1=1
+    </select>
+    
+    <select id="SELECT_MAIN_CFM_CNT_T" parameterType="map" resultType="string">
+
+			 SELECT NVL(SUM(NVL(D.CRCT_QTY, B.CFM_QTY)),0) AS CRCT_QTY_TOT
+			   FROM EPCM_CFM_MST A
+				     	,EPCM_CFM_INFO B
+				     	,(
+	                     	 SELECT WRHS_DOC_NO, CTNR_CD, SUM(CRCT_QTY) AS CRCT_QTY
+	                          FROM EXCA_WRHS_CRCT A
+	                        WHERE 1=1
+	                            AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+	                       GROUP BY WRHS_DOC_NO, CTNR_CD
+	                     ) D
+			WHERE 1=1
+				AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+				AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+				AND A.WRHS_CFM_DT BETWEEN TO_CHAR(SYSDATE - 1,'yyyymmdd') AND TO_CHAR(SYSDATE,'yyyymmdd') 
+		
+				AND B.WRHS_DOC_NO = D.WRHS_DOC_NO(+)
+	          	AND B.CTNR_CD = D.CTNR_CD(+)
+			
+	</select>
+
+	<!-- 메인 회수현황건수 조회 -->
+    <select id="SELECT_MAIN_RTRVL_CNT" parameterType="map" resultType="string">
+		SELECT SUM(A.FH_RTRVL_QTY_TOT+ A.FB_RTRVL_QTY_TOT) AS CNT 
+		  FROM EPCM_RTRVL_MST A
+		WHERE 1=1 
+	        AND A.RTRVL_REG_DT BETWEEN TO_CHAR(SYSDATE - 7,'yyyymmdd') AND TO_CHAR(SYSDATE,'yyyymmdd') 
+	        AND A.WHSDL_BIZRID = #{BIZRID} 
+	        AND A.WHSDL_BIZRNO = #{BIZRNO}
+	         
+	       <if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+				 AND EXISTS (
+				 					   SELECT 'X'
+			                             FROM EPCN_BRCH_INFO S1
+			                           WHERE 1=1
+			                              AND A.WHSDL_BIZRID = S1.BIZRID
+			                              AND A.WHSDL_BIZRNO = S1.BIZRNO
+			                              AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+			                              AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+					                      AND EXISTS (
+					                      					   SELECT 'X'
+									                             FROM EPCN_BRCH_INFO S2
+									                           WHERE 1=1
+									                              AND S1.BIZRID = S2.BIZRID
+									                              AND S1.BIZRNO = S2.BIZRNO
+									                              AND (
+										                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+										                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+									                                     ) 
+									                              AND S2.BRCH_ID = #{S_BRCH_ID}
+									                              AND S2.BRCH_NO = #{S_BRCH_NO}
+										          			)
+	                         		)
+		</if>  
+    </select>
+    
+	<!-- 메인 입고현황건수 조회 -->
+	<select id="SELECT_MAIN_RTN_CNT" parameterType="map" resultType="string">
+		SELECT SUM
+			       (
+			           CASE 
+			               WHEN A.RTN_STAT_CD != 'WJ' 
+			               THEN B.FH_CFM_QTY_TOT +B.FB_CFM_QTY_TOT +B.DRCT_CFM_QTY_TOT 
+			               ELSE NULL 
+			           END
+			       ) AS CFM_QTY_TOT 
+		  FROM EPCM_RTN_MST A , 
+			       EPCM_CFM_MST B ,
+			       EPCN_DTSS_CUST_INFO C
+		 WHERE 1=1 
+		       AND A.RTN_DOC_NO = B.RTN_DOC_NO(+) 
+		       AND A.WHSDL_BIZRID = C.CUST_BIZRID 
+		       AND A.WHSDL_BIZRNO = C.CUST_BIZRNO 
+		       AND A.WHSDL_BRCH_ID = C.CUST_BRCH_ID 
+		       AND A.WHSDL_BRCH_NO = C.CUST_BRCH_NO 
+		       AND A.MFC_BIZRID = C.MFC_BIZRID 
+		       AND A.MFC_BIZRNO = C.MFC_BIZRNO 
+		       AND A.MFC_BRCH_ID = C.MFC_BRCH_ID 
+		       AND A.MFC_BRCH_NO = C.MFC_BRCH_NO 
+		       AND A.WRHS_CFM_DT = TO_CHAR(SYSDATE-1, 'yyyymmdd') 
+		       AND C.BIZR_TP_CD = 'W1' 
+	           AND A.WHSDL_BIZRID = #{BIZRID} 
+	           AND A.WHSDL_BIZRNO = #{BIZRNO}
+	       <if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+			   AND EXISTS (
+	 					   SELECT 'X'
+                             FROM EPCN_BRCH_INFO S1
+                           WHERE 1=1
+                              AND A.WHSDL_BIZRID = S1.BIZRID
+                              AND A.WHSDL_BIZRNO = S1.BIZRNO
+                              AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+                              AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+		                      AND EXISTS (
+                      					   SELECT 'X'
+				                             FROM EPCN_BRCH_INFO S2
+				                           WHERE 1=1
+				                              AND S1.BIZRID = S2.BIZRID
+				                              AND S1.BIZRNO = S2.BIZRNO
+				                              AND (
+					                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+					                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+				                                     ) 
+				                              AND S2.BRCH_ID = #{S_BRCH_ID}
+				                              AND S2.BRCH_NO = #{S_BRCH_NO}
+					          			)
+                       		)
+		</if>  
+	
+	</select>
+    
+	<!-- 메인 지급금액 조회 -->
+    <select id="SELECT_MAIN_PAY_AMT" parameterType="map" resultType="string">
+			SELECT SUM(A.PAY_AMT) AS AMT 
+			  FROM EPGM_PAY_INFO_LST A
+			WHERE 1=1 
+		        AND A.REAL_PAY_DT = TO_CHAR(SYSDATE-1, 'yyyymmdd') 
+		        AND A.PAY_BIZRID = #{BIZRID}
+		        AND A.PAY_BIZRNO = #{BIZRNO}
+		        
+		       <if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+				 AND EXISTS (
+				 					   SELECT 'X'
+			                             FROM EPCN_BRCH_INFO S1
+			                           WHERE 1=1
+			                              AND A.PAY_BIZRID = S1.BIZRID
+			                              AND A.PAY_BIZRNO = S1.BIZRNO
+			                              AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+			                              AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+					                      AND EXISTS (
+					                      					   SELECT 'X'
+									                             FROM EPCN_BRCH_INFO S2
+									                           WHERE 1=1
+									                              AND S1.BIZRID = S2.BIZRID
+									                              AND S1.BIZRNO = S2.BIZRNO
+									                              AND (
+										                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+										                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+									                                     ) 
+									                              AND S2.BRCH_ID = #{S_BRCH_ID}
+									                              AND S2.BRCH_NO = #{S_BRCH_NO}
+										          			)
+	                         		)
+			 </if>
+		        
+    </select>
+
+	<select id="SELECT_MAIN_CFM_LIST" parameterType="map" resultType="hashmap">
+	
+		SELECT 
+		         EPCN_BIZR_NM(WHSDL_BIZRID, WHSDL_BIZRNO) AS BIZRNM
+		         ,RTN_REG_DT
+		         ,RTN_QTY_TOT
+         		 ,<![CDATA[chr(63)||'RTN_DOC_NO='||A.RTN_DOC_NO||chr(38)||'WRHS_DOC_NO='||(SELECT WRHS_DOC_NO FROM EPCM_CFM_MST B WHERE A.RTN_DOC_NO = B.RTN_DOC_NO) as PARAM]]>
+        FROM
+            (
+	          SELECT  A.RTN_DOC_NO              
+		                  ,TO_CHAR(TO_DATE(A.RTN_REG_DT, 'yyyy-mm-dd'), 'yyyy-mm-dd') as RTN_REG_DT
+		                  ,A.FH_RTN_QTY_TOT +A.FB_RTN_QTY_TOT +A.DRCT_RTN_QTY_TOT AS RTN_QTY_TOT
+		                  ,A.WHSDL_BIZRID
+		                  ,A.WHSDL_BIZRNO 
+		                  ,ROW_NUMBER()OVER(ORDER BY A.RTN_REG_DT DESC) AS PNO 
+	            FROM EPCM_RTN_MST A       
+	          WHERE 1=1
+		           AND A.MFC_BIZRID = #{BIZRID}
+		           AND A.MFC_BIZRNO = #{BIZRNO}
+                   AND A.RTN_DT BETWEEN TO_CHAR(SYSDATE-7,'yyyymmdd') AND TO_CHAR(SYSDATE,'yyyymmdd')
+		           
+		           <if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+							 AND EXISTS (
+							 					   SELECT 'X'
+						                             FROM EPCN_BRCH_INFO S1
+						                           WHERE 1=1
+						                              AND A.MFC_BIZRID = S1.BIZRID
+						                              AND A.MFC_BIZRNO = S1.BIZRNO
+						                              AND A.MFC_BRCH_ID = S1.BRCH_ID
+						                              AND A.MFC_BRCH_NO = S1.BRCH_NO
+								                      AND EXISTS (
+								                      					   SELECT 'X'
+												                             FROM EPCN_BRCH_INFO S2
+												                           WHERE 1=1
+												                              AND S1.BIZRID = S2.BIZRID
+												                              AND S1.BIZRNO = S2.BIZRNO
+												                              AND (
+													                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+													                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+												                                     ) 
+												                              AND S2.BRCH_ID = #{S_BRCH_ID}
+												                              AND S2.BRCH_NO = #{S_BRCH_NO}
+													          			)
+				                         		)
+					</if>
+		           
+          ) A
+      WHERE PNO <![CDATA[ < ]]> 4
+
+	</select>
+	
+	<select id="SELECT_MAIN_CFM_CRCT_LIST" parameterType="map" resultType="hashmap">
+	
+		SELECT 
+					MFC_BIZRNM
+					,EPCN_ETC_NM(WRHS_CRCT_STAT_CD , 'C002') AS WRHS_CRCT_STAT_CD_NM
+					,CRCT_QTY_TOT
+					<![CDATA[,chr(63)||'WRHS_DOC_NO='||WRHS_DOC_NO||chr(38)||'WRHS_CRCT_DOC_NO='||WRHS_CRCT_DOC_NO as PARAM]]>
+		  FROM
+		  		(
+					SELECT   
+								C.MFC_BIZRNM
+								,B.WRHS_CRCT_STAT_CD
+								,B.CRCT_QTY_TOT
+								,B.WRHS_DOC_NO
+								,B.WRHS_CRCT_DOC_NO
+						 FROM 	
+						 		 (SELECT 
+			 		      					 WRHS_CRCT_DOC_NO
+			 		      					,WRHS_CRCT_STAT_CD
+			 		      					,WRHS_DOC_NO
+			 		      					,WRHS_CRCT_REG_DT
+			 		      					,EXCA_STD_CD
+											,SUM(CRCT_QTY) AS CRCT_QTY_TOT
+						 		    FROM EXCA_WRHS_CRCT
+						 		  WHERE 1=1
+                                      AND WRHS_CRCT_REG_DT BETWEEN TO_CHAR(SYSDATE-30,'yyyymmdd') AND TO_CHAR(SYSDATE,'yyyymmdd')
+						 		      AND WRHS_CRCT_STAT_CD = 'R'
+						 		    GROUP BY WRHS_CRCT_DOC_NO, WRHS_DOC_NO, WRHS_CRCT_STAT_CD, WRHS_CRCT_REG_DT, EXCA_STD_CD
+					 		       )B
+					 		       ,EPCM_CFM_MST A
+						 		   ,EPCN_DTSS_CUST_INFO C
+						WHERE 1=1
+							AND B.WRHS_DOC_NO 	  	= A.WRHS_DOC_NO
+							AND A.WHSDL_BIZRID			= C.CUST_BIZRID
+							AND A.WHSDL_BIZRNO		= C.CUST_BIZRNO	
+							AND A.WHSDL_BRCH_ID		= C.CUST_BRCH_ID
+							AND A.WHSDL_BRCH_NO		= C.CUST_BRCH_NO	
+							AND A.MFC_BIZRID				= C.MFC_BIZRID
+							AND A.MFC_BIZRNO				= C.MFC_BIZRNO
+							AND A.MFC_BRCH_ID			= C.MFC_BRCH_ID
+							AND A.MFC_BRCH_NO			= C.MFC_BRCH_NO
+							AND A.WHSDL_BIZRID 		= #{BIZRID}
+							AND A.WHSDL_BIZRNO 		= #{BIZRNO}
+                            AND A.WRHS_CFM_DT       BETWEEN TO_CHAR(SYSDATE-30,'yyyymmdd') AND TO_CHAR(SYSDATE,'yyyymmdd')
+							
+							<if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+							 AND EXISTS (
+							 					   SELECT 'X'
+						                             FROM EPCN_BRCH_INFO S1
+						                           WHERE 1=1
+						                              AND A.WHSDL_BIZRID = S1.BIZRID
+						                              AND A.WHSDL_BIZRNO = S1.BIZRNO
+						                              AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+						                              AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+								                      AND EXISTS (
+								                      					   SELECT 'X'
+												                             FROM EPCN_BRCH_INFO S2
+												                           WHERE 1=1
+												                              AND S1.BIZRID = S2.BIZRID
+												                              AND S1.BIZRNO = S2.BIZRNO
+												                              AND (
+													                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+													                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+												                                     ) 
+												                              AND S2.BRCH_ID = #{S_BRCH_ID}
+												                              AND S2.BRCH_NO = #{S_BRCH_NO}
+													          			)
+				                         		)
+					</if>
+							
+				  ORDER BY  B.WRHS_CRCT_REG_DT DESC, A.WHSDL_BIZRID, A.MFC_BIZRID, A.MFC_BRCH_ID
+				)
+		WHERE ROWNUM <![CDATA[ < ]]> 4
+	
+	</select>
+	
+	<select id="SELECT_MAIN_EXCH_LIST" parameterType="map" resultType="hashmap">
+	
+		SELECT *
+		  FROM
+		  	(
+			 SELECT B.BIZRNM AS REQ_BIZRNM
+				         ,B.BRCH_NM AS REQ_BRCH_NM
+				         ,TO_CHAR(TO_DATE(A.EXCH_REG_DT, 'yyyy-mm-dd'), 'yyyy-mm-dd') as EXCH_REG_DT
+				         ,TO_CHAR(TO_DATE(A.EXCH_DT, 'yyyy-mm-dd'), 'yyyy-mm-dd') as EXCH_DT
+			 	         ,A.EXCH_QTY_TOT
+			 	         ,'?EXCH_REQ_DOC_NO='||A.EXCH_REQ_DOC_NO as PARAM
+			    FROM EPDM_EXCH_MST A
+				         ,EPCN_BRCH_INFO B
+				         ,EPCN_BRCH_INFO C
+			  WHERE 1=1
+			      AND A.REQ_MFC_BIZRID = B.BIZRID
+			      AND A.REQ_MFC_BIZRNO = B.BIZRNO
+			      AND A.REQ_MFC_BRCH_ID = B.BRCH_ID
+			      AND A.REQ_MFC_BRCH_NO = B.BRCH_NO
+			      AND A.CFM_MFC_BIZRID = C.BIZRID
+			      AND A.CFM_MFC_BIZRNO = C.BIZRNO
+			      AND A.CFM_MFC_BRCH_ID = C.BRCH_ID
+			      AND A.CFM_MFC_BRCH_NO = C.BRCH_NO	 
+			  
+			  	  AND A.CFM_MFC_BIZRID = #{BIZRID} 
+			  	  AND A.CFM_MFC_BIZRNO = #{BIZRNO}
+                  AND A.EXCH_DT BETWEEN TO_CHAR(SYSDATE-30,'yyyymmdd') AND TO_CHAR(SYSDATE,'yyyymmdd')
+
+			  <if test='S_BRCH_NO != null and S_BRCH_NO != "" '>
+				  AND A.CFM_MFC_BRCH_ID = #{S_BRCH_ID} 
+				  AND A.CFM_MFC_BRCH_NO = #{S_BRCH_NO}
+			  </if>
+			  
+			 ORDER BY A.EXCH_REG_DT DESC
+			)
+		WHERE ROWNUM <![CDATA[ < ]]> 4
+		
+	</select>
+
+	<!-- 메인 알림내역조회 -->
+    <select id="SELECT_MAIN_ANC_LIST" parameterType="string" resultType="hashmap">
+       
+		SELECT A.PNO, 
+		       A.ANC_SBJ, 
+		       CASE 
+		           WHEN SUBSTR(A.BIZR_TP_CD, 1, 1) = 'T' THEN '/CE/EPCE' 
+		           WHEN SUBSTR(A.BIZR_TP_CD, 1, 1) = 'M' THEN '/MF/EPMF' 
+		           WHEN SUBSTR(A.BIZR_TP_CD, 1, 1) = 'W' THEN '/WH/EPWH' 
+		           WHEN SUBSTR(A.BIZR_TP_CD, 1, 1) = 'R' THEN '/RT/EPRT' 
+		       END || A.LK_INFO AS MENU_URL ,
+		       CASE 
+		           WHEN SUBSTR(A.BIZR_TP_CD, 1, 1) = 'T' THEN 'EPCE' 
+		           WHEN SUBSTR(A.BIZR_TP_CD, 1, 1) = 'M' THEN 'EPMF' 
+		           WHEN SUBSTR(A.BIZR_TP_CD, 1, 1) = 'W' THEN 'EPWH' 
+		           WHEN SUBSTR(A.BIZR_TP_CD, 1, 1) = 'R' THEN 'EPRT' 
+		       END || SUBSTR(A.LK_INFO, 1, 2) AS MENU_ID,  
+		       (SELECT MENU_NM 
+		         FROM EPCN_MENU 
+		        WHERE MENU_CD = 
+		              CASE 
+		                  WHEN SUBSTR(A.BIZR_TP_CD, 1, 1) = 'T' THEN 'EPCE' 
+		                  WHEN SUBSTR(A.BIZR_TP_CD, 1, 1) = 'M' THEN 'EPMF' 
+		                  WHEN SUBSTR(A.BIZR_TP_CD, 1, 1) = 'W' THEN 'EPWH' 
+		                  WHEN SUBSTR(A.BIZR_TP_CD, 1, 1) = 'R' THEN 'EPRT' 
+		              END || SUBSTR(A.LK_INFO, 1, 7) 
+		       ) AS PAGE_TITLE ,
+		       TO_CHAR(A.REG_DTTM, 'YYYY-MM-DD') AS REG_DTTM 
+		  FROM 
+		       (SELECT ROW_NUMBER()OVER(ORDER BY A.REG_DTTM DESC) AS PNO ,
+		              B.REG_DTTM ,
+		              A.ANC_STD_CD ,
+		              B.USER_ID ,
+		              B.DTL_SN ,
+		              A.ANC_SBJ ,
+		              A.ANC_MSG ,
+		              A.ANC_SE ,
+		              C.BIZR_TP_CD ,
+		              A.LK_INFO 
+		         FROM EPCN_ANC_MGNT A , 
+		              EPCN_ANC_INFO B , 
+		              EPCN_USER_INFO C 
+		        WHERE 1=1 
+		              AND A.ANC_STD_CD = B.ANC_STD_CD 
+		              AND B.USER_ID = #{USERID} 
+		              AND B.USER_ID = C.USER_ID 
+		       ) A 
+		 WHERE PNO BETWEEN 1 AND 3         
+    </select>
+    
+	<!-- 메인 공지사항조회 -->
+    <select id="SELECT_MAIN_NOTI_LIST" parameterType="map" resultType="hashmap">
+		SELECT PNO, 
+		       SBJ, 
+		       '?NOTI_SEQ='||NOTI_SEQ AS PARAM, 
+		       SBJ AS PAGE_TITLE, 
+		       REG_DTTM 
+		  FROM 
+		       (SELECT ROW_NUMBER()OVER(ORDER BY REG_DTTM DESC) AS PNO, 
+		              NOTI_SEQ, 
+		              SBJ, 
+		              TO_CHAR(REG_DTTM, 'YYYY-MM-DD') AS REG_DTTM 
+		         FROM EPCN_NOTI 
+		       ) 
+		 WHERE 1=1
+		 
+		 	<choose>
+		 		<when test='BIZR_TP_CD == "M1" or BIZR_TP_CD == "M2"'>
+		 			AND PNO BETWEEN 1 AND 5 
+		 		</when>
+		 		<otherwise>
+		 			AND PNO BETWEEN 1 AND 3 
+		 		</otherwise>
+		 	</choose>
+		     
+		ORDER BY 1
+    </select>
+
+	<!-- 메인 문의답변조회 -->
+    <select id="SELECT_MAIN_ASK_LIST" parameterType="map" resultType="hashmap">
+		SELECT PNO, 
+		       SBJ, 
+		       '?ASK_SEQ='||ASK_SEQ AS PARAM, 
+		       SBJ AS PAGE_TITLE, 
+		       REG_DTTM 
+		  FROM 
+		       (SELECT ROW_NUMBER()OVER(ORDER BY REG_DTTM DESC) AS PNO, 
+		              ASK_SEQ, 
+                      CNTN_SE, 
+		              SBJ,
+		              TO_CHAR(REG_DTTM, 'YYYY-MM-DD') AS REG_DTTM 
+		         FROM EPCN_ASK_ANSR
+		        WHERE CNTN_SE = 'Q' 
+		       ) 
+		 WHERE 1=1
+			AND PNO BETWEEN 1 AND 3 
+		ORDER BY 1
+    </select>
+
+	<select id="SELECT_EXCA_STD_MGNT" parameterType="map" resultType="hashmap">
+       
+       SELECT EXCA_ST_DT, EXCA_END_DT, EXCA_STD_NM, EXCA_STAT_CD
+	     FROM EXCA_STD_MGNT 
+	   WHERE EXCA_STD_CD = #{EXCA_STD_CD}
+       
+    </select>
+    
+    <update id="send_anc" parameterType="string">
+		INSERT INTO EPCN_ANC_INFO
+	     (
+	       ANC_STD_CD
+	       ,USER_ID
+	       ,DTL_SN
+	       ,CFM_YN
+	       ,CFM_DT
+	       ,REG_DTTM
+	     )
+	     (
+	     	SELECT #{ANC_STD_CD}
+			           ,C.USER_ID
+			           ,(SELECT NVL(MAX(DTL_SN), 0) + 1 FROM EPCN_ANC_INFO WHERE ANC_STD_CD = #{ANC_STD_CD} AND USER_ID = C.USER_ID)
+			           ,'N'
+					   ,''
+				       ,SYSDATE
+		      FROM EPCN_ANC_MGNT A
+			           ,EPCN_ATH_GRP_INFO B
+			           ,EPCN_ATH_GRP_USER C
+	       WHERE 1=1
+		       AND A.ANC_STD_CD = #{ANC_STD_CD}
+		       AND A.ANC_USE_YN = 'Y' /* 알림 사용중 */
+		       AND A.TRGT_USER_SE = B.ATH_SE_CD /* 권한구분코드 */
+		       AND B.ATH_GRP_CD = C.ATH_GRP_CD
+		       AND B.BIZRID = C.BIZRID
+		       AND B.BIZRNO = C.BIZRNO
+			)
+	</update>
+
+    <!-- 개인정보취급방침 변경 동의-->
+    <update id="UPDATE_PRSN_INFO_CHG_AGR_YN" parameterType="hashmap">
+        UPDATE EPCN_USER_INFO 
+               SET PRSN_INFO_CHG_AGR_YN = #{PRSN_INFO_CHG_AGR_YN}  
+         WHERE USER_ID = #{USER_ID}
+    </update>
+    
+    <!-- 사업자유형코드 조회 -->
+    <select id="SELECT_BIZR_TP_CD"  parameterType="map"  resultType="String">
+       SELECT BIZR_TP_CD 
+         FROM EPCN_DTSS_CUST_INFO
+        WHERE 1=1
+          AND MFC_BRCH_ID = #{MFC_BRCH_ID}
+          AND MFC_BRCH_NO = #{MFC_BRCH_NO}
+          AND MFC_BIZRID = #{MFC_BIZRID}
+          AND MFC_BIZRNO = #{MFC_BIZRNO}
+          AND CUST_BRCH_ID = #{CUST_BRCH_ID}
+          AND CUST_BRCH_NO = #{CUST_BRCH_NO}
+          AND CUST_BIZRID = #{CUST_BIZRID}
+          AND CUST_BIZRNO = #{CUST_BIZRNO}
+    </select>
+
+    <!-- 20200317 보나뱅크 ERP 설문 -->
+    <select id="SELECT_SVY_MST_LIST2" parameterType="userVo" resultType="hashmap">
+        SELECT F.SBJ, 
+               F.DT, 
+               F.VOTE_YN, 
+               F.PNO,
+               F.POPUP_YN
+          FROM 
+               (SELECT A.SBJ, 
+                      TO_CHAR(TO_DATE(A.SVY_ST_DT,'YYYYMMDD'),'YYYY-MM-DD') || ' ~ ' || TO_CHAR(TO_DATE(A.SVY_END_DT,'YYYYMMDD'),'YYYY-MM-DD') AS DT, 
+                      ( 
+                          CASE 
+                              WHEN 
+                                  (SELECT COUNT(*) 
+                                    FROM EPCN_SVY_ITEM_ANSR 
+                                   WHERE USER_ID = #{USER_ID} 
+                                         AND SVY_NO = A.SVY_NO 
+                                  ) > 0 
+                              THEN 'Y' 
+                              ELSE 'N' 
+                          END 
+                      ) AS VOTE_YN, 
+                      ROW_NUMBER()OVER(ORDER BY A.SVY_ST_DT, A.SVY_END_DT) AS PNO,
+                      POPUP_YN 
+                 FROM EPCN_SVY_MST A 
+                WHERE A.USE_YN = 'Y' 
+                      AND APLC_YN = 'Y'
+                      AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN A.SVY_ST_DT AND A.SVY_END_DT 
+                      AND A.SVY_TRGT_CD LIKE 'E02'
+               ) F 
+         WHERE F.VOTE_YN = 'N' 
+               AND F.PNO = 1    
+    </select>
+    
+    <select id="SELECT_SVY_MST_LIST" parameterType="userVo" resultType="hashmap">
+        SELECT F.SBJ, 
+               F.DT, 
+               F.VOTE_YN, 
+               F.PNO,
+               F.POPUP_YN
+          FROM 
+               (SELECT A.SBJ, 
+                      TO_CHAR(TO_DATE(A.SVY_ST_DT,'YYYYMMDD'),'YYYY-MM-DD') || ' ~ ' || TO_CHAR(TO_DATE(A.SVY_END_DT,'YYYYMMDD'),'YYYY-MM-DD') AS DT, 
+                      ( 
+                          CASE 
+                              WHEN 
+                                  (SELECT COUNT(*) 
+                                    FROM EPCN_SVY_ITEM_ANSR 
+                                   WHERE USER_ID = #{USER_ID} 
+                                         AND SVY_NO = A.SVY_NO 
+                                  ) > 0 
+                              THEN 'Y' 
+                              ELSE 'N' 
+                          END 
+                      ) AS VOTE_YN, 
+                      ROW_NUMBER()OVER(ORDER BY A.SVY_ST_DT, A.SVY_END_DT) AS PNO,
+                      POPUP_YN 
+                 FROM EPCN_SVY_MST A 
+                WHERE A.USE_YN = 'Y' 
+                      AND APLC_YN = 'Y'
+                      AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN A.SVY_ST_DT AND A.SVY_END_DT 
+                      AND A.SVY_TRGT_CD LIKE '%'||#{BIZR_TP_CD}||'%' 
+               ) F 
+         WHERE F.VOTE_YN = 'N' 
+               AND F.PNO = 1    
+    </select>
+    
+        <!-- 사업자유형코드 조회 -->
+    <select id="loginErrCnt"  parameterType="map"  resultType="int">
+   SELECT LGN_ERR_TMS FROM EPCN_USER_INFO
+   WHERE USER_ID =#{USER_ID}
+    </select>
+    
+    <select id="loginPwdChg"  parameterType="map"  resultType="string">
+   SELECT nvl(PWD_ALT_REQ_YN,'N') FROM EPCN_USER_INFO
+   WHERE USER_ID =#{USER_ID}
+    </select>
+    
+    
+    <select id="privacycnt"  resultType="Long">
+   SELECT nvl(MAX(PRIVACYNO),0) as PRIVACYNO FROM EPCN_PRIVACYLOG
+    </select>
+    
+    <insert id="insertPrivacy"  parameterType="map" >	
+	INSERT
+			INTO   EPCN_PRIVACYLOG
+			       (
+			              PRIVACYNO,
+			              MENU_CD,
+			              EMAIL,
+			              MBIL_NO,
+			              TEL_NO,
+			              TARGET_ID,
+			              TARGET_NM,
+			              CRUD,
+			              STARTTIME,
+			              USER_ID,
+			              USER_NM,
+			              ACSS_IP,
+			              REG_PRSN_ID,
+			              REG_PRSN_NAME,
+			              REG_DTTM,
+			              PARAMSTR
+			       )
+				VALUES
+				(
+						#{PRIVACYNO},
+						#{MENU_CD},
+						#{EMAIL},
+						#{MBIL_NO},
+						#{TEL_NO},
+						#{TARGET_ID},
+						#{TARGET_NM},
+						'R',
+						sysdate,
+						#{USER_ID},
+						#{USER_NM},
+						#{ACSS_IP},
+						#{REG_PRSN_ID},
+						#{REG_PRSN_NAME},
+						sysdate,
+						#{PARAMSTR}
+				 )
+	</insert>
+	
+	<select id="pbox_select" parameterType="map" resultType="hashmap">
+				SELECT B.GRP_CD, B.GRP_NM, A.ETC_CD, A.ETC_CD_NM
+				           , A.RSV_ITEM1, A.RSV_ITEM2, A.RSV_ITEM3 
+			      FROM EPCN_ETC_CD A
+			          	  ,EPCN_ETC_CD_GRP B
+			          	  ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+			    WHERE A.GRP_CD = B.GRP_CD
+			        AND A.LANG_SE_CD = B.LANG_SE_CD
+			        AND A.USE_YN = 'Y'
+			        AND B.USE_YN = 'Y'
+			        AND A.GRP_CD =  'S200' /**P*/
+			        AND A.LANG_SE_CD = C.LANG_SE_CD
+			    ORDER BY TO_NUMBER(SEL_ORD)
+	</select>
+	
+    
+</mapper>

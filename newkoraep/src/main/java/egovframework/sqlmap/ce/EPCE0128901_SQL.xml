@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE0128901Mapper">
+  
+	<!--  조회  -->
+	<select id="epce0128901_select" parameterType="map" resultType="hashmap">
+
+		<if test='excelYn == null or excelYn == "" '>
+			SELECT 
+			 			* 
+			  FROM				
+					(
+		</if>
+
+				SELECT		ROW_NUMBER()OVER(ORDER BY  A.CTNR_NM) AS PNO
+								,A.RTRVL_CTNR_CD
+								,A.LANG_SE_CD
+								,A.CTNR_NM
+								,NVL(B.RTRVL_DPS,0) AS RTRVL_DPS
+								,CASE
+									WHEN B.APLC_ST_DT IS NOT NULL
+									AND B.APLC_END_DT IS NOT NULL
+									THEN TO_CHAR(TO_DATE(B.APLC_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(B.APLC_END_DT,'YYYYMMDD'),'YYYY-MM-DD') 
+									ELSE ''
+									END AS RTRVL_DPS_APLC_DT
+								,NVL(C.RTRVL_FEE,0) AS RTRVL_FEE	
+								,CASE
+									WHEN C.APLC_ST_DT IS NOT NULL
+									AND C.APLC_END_DT IS NOT NULL
+									THEN TO_CHAR(TO_DATE(C.APLC_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(C.APLC_END_DT,'YYYYMMDD'),'YYYY-MM-DD')
+									ELSE ''
+									END AS RTRVL_FEE_APLC_DT
+				FROM 	  EPCN_RTRVL_CTNR_CD A			
+				          	,( SELECT * FROM EPCN_RTRVL_DPS_MGNT WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN APLC_ST_DT AND APLC_END_DT ) B
+							,( SELECT * FROM EPCN_RTRVL_FEE_MGNT	WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN APLC_ST_DT AND APLC_END_DT) C
+							,( SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') D  
+				WHERE 1=1
+				AND 	A.RTRVL_CTNR_CD		=	B.RTRVL_CTNR_CD(+)
+				AND 	A.LANG_SE_CD			=	B.LANG_SE_CD(+)
+				AND	A.RTRVL_CTNR_CD		=	C.RTRVL_CTNR_CD(+)
+				AND	A.LANG_SE_CD			=	C.LANG_SE_CD(+)
+				AND  A.LANG_SE_CD			=  D.LANG_SE_CD
+			    AND	A.USE_YN		=	'Y'	
+			<if test='RTRVL_CTNR_CD != null and RTRVL_CTNR_CD != ""'>
+					AND A.RTRVL_CTNR_CD = #{RTRVL_CTNR_CD}
+			</if>
+				ORDER BY A.CTNR_NM
+
+		<if test='excelYn == null or excelYn == "" '>
+			)
+			WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+		</if>	   
+
+	</select>
+	
+	<select id="epce0128901_select_cnt" parameterType="map" resultType="int">
+
+			   SELECT	COUNT(1)
+				 FROM   EPCN_RTRVL_CTNR_CD A			
+				          	,( SELECT * FROM EPCN_RTRVL_DPS_MGNT WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN APLC_ST_DT AND APLC_END_DT ) B
+							,( SELECT * FROM EPCN_RTRVL_FEE_MGNT	WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN APLC_ST_DT AND APLC_END_DT) C
+							,( SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') D  
+				WHERE 1=1
+					AND 	A.RTRVL_CTNR_CD		=	B.RTRVL_CTNR_CD(+)
+					AND 	A.LANG_SE_CD			=	B.LANG_SE_CD(+)
+					AND	A.RTRVL_CTNR_CD		=	C.RTRVL_CTNR_CD(+)
+					AND	A.LANG_SE_CD			=	C.LANG_SE_CD(+)
+					AND  A.LANG_SE_CD			=  D.LANG_SE_CD
+				    AND	A.USE_YN		=	'Y'	
+			<if test='RTRVL_CTNR_CD != null and RTRVL_CTNR_CD != ""'>
+					AND A.RTRVL_CTNR_CD = #{RTRVL_CTNR_CD}
+			</if>
+
+
+	</select>
+
+</mapper>
+

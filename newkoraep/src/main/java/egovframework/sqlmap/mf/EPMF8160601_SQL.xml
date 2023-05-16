@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF8160601Mapper">
+
+    
+    <!-- 설문 마스터 조회 -->
+	<select id="epmf8160601_select1" parameterType="map" resultType="hashmap">
+	    SELECT 
+	    	A.SVY_NO
+			,A.SBJ
+			,A.SVY_SE_CD
+			,(SELECT ETC_CD_NM FROM EPCN_ETC_CD 
+				WHERE GRP_CD = 'S100' 
+					AND LANG_SE_CD = 'KOR' 
+					AND ETC_CD = A.SVY_SE_CD) AS SVY_SE_CD_NM
+			,A.SVY_TRGT_CD
+			,(SELECT ETC_CD_NM FROM EPCN_ETC_CD 
+				WHERE GRP_CD = 'S110' 
+					AND LANG_SE_CD = 'KOR'
+					AND ETC_CD = A.SVY_TRGT_CD) AS SVY_TRGT_CD_NM
+			,A.SVY_ST_DT
+			,A.SVY_END_DT
+			,(SELECT COUNT(1) FROM EPCN_SVY_ITEM 
+				WHERE SVY_NO = A.SVY_NO) AS SVY_ITEM_CNT 
+			,A.USE_YN
+			,A.REG_PRSN_ID
+			,A.REG_DTTM
+			,A.UPD_PRSN_ID
+			,A.UPD_DTTM
+		FROM EPCN_SVY_MST A
+		WHERE 1 = 1
+			<if test='USE_YN != null and USE_YN != ""'>
+			       AND A.USE_YN = #{USE_YN}
+			</if>
+			<if test='SVY_SE_CD != null and SVY_SE_CD != ""'>
+			       AND A.SVY_SE_CD = #{SVY_SE_CD}
+			</if>
+			<if test='SVY_TRGT_CD != null and SVY_TRGT_CD != ""'>
+			       AND A.SVY_TRGT_CD = #{SVY_TRGT_CD}
+			</if>
+			<if test='SBJ != null and SBJ != ""'>
+			       AND A.SBJ LIKE '%' || #{SBJ} || '%'
+			</if>
+			<if test='SVY_ST_DT != null and SVY_ST_DT != ""'>
+			       AND A.SVY_ST_DT >= #{SVY_ST_DT}
+			</if>
+			<if test='SVY_END_DT != null and SVY_END_DT != ""'>
+			       AND A.SVY_END_DT &lt;= #{SVY_END_DT}
+			</if>
+		ORDER BY A.REG_DTTM DESC
+	</select>
+	
+	
+	<!-- 설문 마스터 등록/수정 -->
+    <update id="epmf8160601_update" parameterType="map">
+    	MERGE INTO EPCN_SVY_MST 
+    	USING DUAL
+    		ON (SVY_NO = NVL(#{SVY_NO}, ''))
+    	WHEN MATCHED THEN
+    		UPDATE SET
+	    		SBJ	= #{SBJ}
+				,SVY_SE_CD   = #{SVY_SE_CD}
+				,SVY_TRGT_CD = #{SVY_TRGT_CD}
+				,SVY_ST_DT   = REPLACE(#{SVY_ST_DT}, '-', '')
+				,SVY_END_DT  = REPLACE(#{SVY_END_DT}, '-', '')
+				,USE_YN      = #{USE_YN}
+				,UPD_PRSN_ID = #{UPD_PRSN_ID}
+				,UPD_DTTM    = SYSDATE
+    	WHEN NOT MATCHED THEN
+    		INSERT(
+    			SVY_NO			
+    			,SBJ			,SVY_SE_CD
+				,SVY_TRGT_CD	,SVY_ST_DT						,SVY_END_DT
+				,USE_YN			,REG_PRSN_ID					,REG_DTTM
+			) VALUES(
+				TO_CHAR(SYSTIMESTAMP, 'YYYYMMDDHH24MISSFF6') 
+				,#{SBJ}			,#{SVY_SE_CD}
+				,#{SVY_TRGT_CD}	,REPLACE(#{SVY_ST_DT}, '-', '')	,REPLACE(#{SVY_END_DT}, '-', '')
+				,#{USE_YN}		,#{REG_PRSN_ID}					,SYSDATE
+			)
+    </update>
+</mapper>

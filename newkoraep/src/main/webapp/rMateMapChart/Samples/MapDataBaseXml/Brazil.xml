@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<State code="100" label="Roraima" symbol="Roraima"/>
+	<State code="200" label="Amapá" symbol="Amapá"/>
+	<State code="300" label="Amazonas" symbol="Amazonas"/>
+	<State code="400" label="Pará" symbol="Pará"/>
+	<State code="500" label="Tocantins" symbol="Tocantins"/>
+	<State code="600" label="Acre" symbol="Acre"/>
+	<State code="700" label="Rondônia" symbol="Rondônia"/>
+	<State code="800" label="Maranhão" symbol="Maranhão"/>
+	<State code="900" label="Piauí" symbol="Piauí"/>
+	<State code="1000" label="Ceará" symbol="Ceará"/>
+	<State code="1100" label="RioGrandedoNorte" symbol="RioGrandedoNorte"/>
+	<State code="1200" label="Paraíba" symbol="Paraíba"/>
+	<State code="1300" label="Pernambuco" symbol="Pernambuco"/>
+	<State code="1400" label="Alagoas" symbol="Alagoas"/>
+	<State code="1500" label="Sergipe" symbol="Sergipe"/>
+	<State code="1600" label="Bahia" symbol="Bahia"/>
+	<State code="1700" label="MatoGrosso" symbol="MatoGrosso"/>
+	<State code="1800" label="Goiás" symbol="Goiás"/>
+	<State code="1900" label="DistritoFederal" symbol="DistritoFederal"/>
+	<State code="2000" label="MatoGrossodoSul" symbol="MatoGrossodoSul"/>
+	<State code="2100" label="MinasGerais" symbol="MinasGerais"/>
+	<State code="2200" label="EspíritoSanto" symbol="EspíritoSanto"/>
+	<State code="2300" label="RiodeJaneiro" symbol="RiodeJaneiro"/>
+	<State code="2400" label="SãoPaulo" symbol="SãoPaulo"/>
+	<State code="2500" label="Paraná" symbol="Paraná"/>
+	<State code="2600" label="SantaCatarina" symbol="SantaCatarina"/>
+	<State code="2700" label="RioGrandedoSul" symbol="RioGrandedoSul"/>
+</Map>

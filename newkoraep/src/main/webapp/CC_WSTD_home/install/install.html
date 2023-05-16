@@ -1,0 +1,178 @@
+﻿<!-- VestCert V3 인증서관리 프로그램
+설치 후 이동할 페이지 경로 설정 : mainPageUrl
+-->
+<html>
+<head>
+<title>VestCert Install</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<style type="text/css">
+	body,td{
+	color:#333;
+	font: 12px/200% 돋움,Arial, Helvetica, sans-serif;
+	letter-spacing:0em; 
+	word-spacing:0px; 
+	margin: 15px;	
+	overflow-x:hidden;
+</style>
+<script type="text/javascript" src="../unisignweb/framework/json2.js" ></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="purple" alink="red">
+
+<div align="center">
+
+<div class="body_wrap"> 
+	<div style="width:1170px;margin:auto;text-align:center"> <center>
+	<div style="border:solid 1px #ccc;width:563px;;margin-top:10px">
+	<div style="width:543px;margin:10px">
+		<img src="./CCimages/cs.jpg" alt="VestCert 프로그램을 설치중입니다. - 한국전자인증-" />
+
+		<div align="center" style="width:507px;padding:20px 0;text-align:left">						
+			<img src="./CCimages/icon_square_blue.gif" align="abmiddle" alt=""/><strong> 프로그램의 설치여부를 묻는 <font color="#FF6633">"보안경고" </font><font color="#333333">창이 뜨면 반드시 </font><font color="#FF6633">"예"</font><font color="#333333">를 클릭하십시요.  </font><font color="#FF6633">"아니오"</font><font color="#333333">를 클릭하시면 프로그램이 설치되지 않습니다. </br>  </strong>
+			
+			<img src="./CCimages/icon_square_blue.gif" align="abmiddle" alt=""/><strong><font color='red'> 프로그램 설치가 끝나면 브라우저를 다시 실행시켜야 합니다.</font></br> </strong>
+			
+			<img src="./CCimages/icon_square_blue.gif" align="abmiddle" alt=""/><strong> 사용자가 최초 접속하는 경우 컴퓨터 및 네트웍의 상황에 따라 많은 시간이 소요되는 경우가 있습니다. 화면이 장시간 정지 시에는 프로그램을 수동설치하셔야 합니다. </br></br> </strong> 
+						
+			<!--img src="images/icon_square_blue.gif" align="abmiddle" alt=""/> 현재 페이지가 1분 이상 멈춰 있을 때에는 페이지를&nbsp;<a href="javascript:location.reload()">"새로고침(키보드의 F5키)"</a>&nbsp;해 주십시오.</br-->
+			<!--img src="images/icon_square_blue.gif" align="abmiddle" alt=""/> 자동으로 설치되지 않는 경우"수동프로그램설치 다운로드"를 클릭하셔서 실행시키십시오.</br-->
+			
+			<script> 
+				// *** TEST CODE ***
+			//	document.writeln('<img src="./CCimages/icon_square_blue.gif" align="abmiddle" alt=""/><b> Client OS : ' + Client_OS + '</br></b>');
+			//	document.writeln('<img src="./CCimages/icon_square_blue.gif" align="abmiddle" alt=""/><b> Client Browser : ' + Client_Browser + '</b>');
+				// *** TEST CODE ***
+			</script> 
+			<!-- <script> downloadPlugin(); </script> <img src="./CCimages/cs_download.gif" align="abmiddle" alt=""/></a></br>
+			-->
+		</div>
+		
+		<div style="text-align:center;padding:0 0 10px 0">
+			<script> document.write("<a href=./VestCertSetup.exe>"); </script>
+			Windows 32/64 BIT 수동 설치프로그램 다운로드
+			<script> document.write("</a>"); </script>
+		</div>
+	</div>
+	</div>
+	<div id="status_text" style="font-size: 11px; font-weight: bold; color: red;">인증서관리 프로그램 설치 확인</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var mainPageUrl = "../unisignweb_sample/TestMain.html";
+	var lastestVersion = "2.0.0.1453";
+	var chkCount = 0;
+	var connect = false;
+	var versionCheck = false;
+	var iframesrc = "https://127.0.0.1:14461";
+	var cntAdd = 0;
+	var sessionID = Math.random();
+	// IE 안됨
+	// get Token informations form HSM //
+	
+	function parseInt(s){
+		var ver = s.replace(/\./g, "");
+		return ver * 1;
+	}
+	
+	var text = {
+		"messageNumber": 0,
+		"sessionID": "" + sessionID,
+		"operation":"GetVersion"
+	};
+	
+	function send () {
+	// 1. test for windows.postMessage
+		var request = document.getElementById("hsmiframe").contentWindow;
+		request.postMessage(JSON.stringify(text), iframesrc);
+	};
+	
+	function statusMsg(txt, cnt){
+		//txt = '● ' + txt;
+		if(cnt) for(var i=0; i<cnt; i++) txt += ".";
+		document.getElementById("status_text").innerHTML = txt
+	}
+	
+	var receivedData = function (event){
+		if(event.origin == iframesrc){
+			var obj = JSON.parse(event.data);
+			var currentVersion = parseInt(obj.list[0].version);
+			if(obj.list == null || currentVersion < parseInt(lastestVersion)){
+				if( versionCheck == false ){
+					statusMsg("인증서 관리 프로그램이 최신버전이 아닙니다.<br>최신버전으로 설치해주시기바랍니다.<br><br>최신버전 : " + lastestVersion + "<br>설치버전 : " + obj.list[0].version);
+					//alert("인증서 관리 프로그램이 최신버전이 아닙니다.\n최신버전으로 설치해주시기바랍니다.\n\n최신버전 : " + lastestVersion + "\n설치버전 : " + obj.list[0].version);
+					document.getElementById("hsmiframe").src = 'VestCertSetup.exe';
+					versionCheck = true;
+				}	
+			}else{
+				connect = true;
+				statusMsg("인증서 관리 프로그램이 설치되었습니다");
+			}
+		}else{
+			connect = false;
+			return;
+		}
+	}
+	
+	function removeEvent(){
+		cntAdd--;
+		if (typeof window.addEventListener === 'function') {
+		    // Check for addEventListener first, since IE9/10 have both,
+		    // but you should use the standard over the deprecated IE-specific one
+		    window.removeEventListener('message', receivedData, false);
+		} else if (typeof window.attachEvent === 'function') {
+		    window.detachEvent('onmessage', receivedData);
+		} else {
+			window.detachEvent('onmessage', receivedData);
+		}
+	}
+	
+	function addEvent(){
+		if(cntAdd > 0) removeEvent();
+		if (typeof window.addEventListener === 'function') {
+		    // Check for addEventListener first, since IE9/10 have both,
+		    // but you should use the standard over the deprecated IE-specific one
+		    window.addEventListener('message', receivedData, false);
+		} else if (typeof window.attachEvent === 'function') {
+		    window.attachEvent('onmessage', receivedData);
+		} else {
+			window.attachEvent('onmessage', receivedData);
+		}
+		cntAdd++;
+	}
+
+	function UniSignWeb_LoadObject(){
+		document.writeln("<iframe src='"+iframesrc+"' name='hsmiframe' id='hsmiframe' style='visibility:hidden;position:absolute' onload='send();'></iframe>");
+	}
+	// 플러그인 설치
+	UniSignWeb_LoadObject();
+	
+	var checkObject = function() {
+		if(document.getElementById("hsmiframe") != null){
+			if(connect === true){
+				document.location.href = mainPageUrl;
+			}else{
+				if(versionCheck == false && chkCount == 3){
+					//document.getElementById("hsmiframe").src = "mangowire:///";
+				}else{
+					document.getElementById("hsmiframe").src = iframesrc;
+				}
+				if(versionCheck == false){
+					if(chkCount > 10){
+						statusMsg("인증서 관리 프로그램이 설치되어있지 않습니다!");
+					}else{
+						statusMsg("인증서 관리 프로그램 설치 확인 중", chkCount);
+					}
+				}
+				addEvent();
+				setTimeout(send, 200);
+				setTimeout(checkObject, 1500);
+			}
+			chkCount++;
+		}
+	}
+	checkObject();
+		
+</script>
+</body>
+</html>

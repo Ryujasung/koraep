@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE4707801Mapper">
+ 	
+ 	<!-- 혼비율조정  &lt;은  <랑 같은 뜻  -->
+	<select id="epce4707801_select" resultType="hashmap">
+        SELECT A.CTNR_CD , 
+               EPCN_CTNR_NM( A.CTNR_CD) AS CTNR_NM , 
+               A.MFC_BIZRID , 
+               A.MFC_BIZRNO , 
+               EPCN_BIZR_NM(A.MFC_BIZRID,A.MFC_BIZRNO) AS MFC_BIZRNM , 
+               A.FYER_QTY , 
+               EPCN_ETC_NM(#{ADJ_SE} , 'C005') AS ADJ_SE_NM , 
+               #{ADJ_SE} AS ADJ_SE , 
+               B.FYER_CRCT_DOC_NO , 
+               B.ADJ_PROC_STAT , 
+               EPCN_ETC_NM(B.ADJ_PROC_STAT , 'C021') AS ADJ_PROC_STAT_NM , 
+               B.RT_INDE_SE , 
+               CASE WHEN B.RT_INDE_SE ='D' THEN '-'||''||TO_CHAR(B.ADJ_RT,'FM90.0000') 
+                    WHEN B.RT_INDE_SE ='I' THEN '+'||''||TO_CHAR(B.ADJ_RT,'FM90.0000') 
+                    ELSE TO_CHAR(B.ADJ_RT,'FM90.0000') END AS ADJ_RT , 
+               B.ADJ_RT_QTY , 
+               B.QTY_INDE_SE , 
+               CASE WHEN B.QTY_INDE_SE ='D' THEN '-'||''||B.ADJ_QTY 
+                    WHEN B.QTY_INDE_SE ='I' THEN '+'||' '||B.ADJ_QTY 
+                    ELSE TO_CHAR(B.ADJ_QTY) END AS ADJ_QTY , 
+               B.ADJ_RST_QTY , 
+               CASE WHEN B.ADJ_RST_QTY > B.FYER_QTY THEN '+'||''||B.ADJ_GTN 
+                    WHEN B.ADJ_RST_QTY &lt; B.FYER_QTY THEN '-'||''||B.ADJ_GTN END AS ADJ_GTN ,
+               #{STD_YEAR} AS STD_YEAR 
+          FROM  
+               (SELECT A.MFC_BIZRNO , 
+                      A.MFC_BIZRID , 
+                      B.CTNR_CD , 
+                      SUM(NVL(B.CFM_QTY, 0)) AS FYER_QTY 
+                 FROM EPCM_CFM_MST A , 
+                      EPCM_CFM_INFO B 
+                WHERE 1=1 
+                      AND A.WRHS_DOC_NO=B.WRHS_DOC_NO 
+                      AND A.RTN_STAT_CD != 'WJ' 
+                      AND TO_CHAR(TO_DATE(WRHS_CFM_DT, 'YYYYMMDD'), 'YYYY') = #{STD_YEAR} 
+                      AND MFC_BIZRNO = #{MFC_BIZRNO} 
+                      AND MFC_BIZRID = #{MFC_BIZRID} 
+                GROUP BY A.MFC_BIZRNO , 
+                      A.MFC_BIZRID , 
+                      B.CTNR_CD 
+               )A , 
+               EXCA_FYER_CRCT B 
+         WHERE 1=1 
+               AND A.MFC_BIZRNO = B.BIZRNO(+) 
+               AND A.MFC_BIZRID = B.BIZRID(+) 
+               AND A.CTNR_CD = B.CTNR_CD(+) 
+               AND B.ADJ_SE(+) = #{ADJ_SE} 
+        ORDER BY CTNR_NM    
+	</select>
+	
+	<!--출고량 조정  -->
+	<select id="epce4707801_select2" resultType="hashmap">
+			SELECT 
+						 A.CTNR_CD
+						,EPCN_CTNR_NM( A.CTNR_CD) AS CTNR_NM
+						, A.MFC_BIZRID 
+						, A.MFC_BIZRNO
+						, EPCN_BIZR_NM(A.MFC_BIZRID,A.MFC_BIZRNO) AS MFC_BIZRNM
+						, A.FYER_QTY
+						, EPCN_ETC_NM('D' , 'C005') AS ADJ_SE_NM
+						, 'D' AS ADJ_SE
+						, B.FYER_CRCT_DOC_NO
+						, B.ADJ_PROC_STAT
+						, EPCN_ETC_NM(B.ADJ_PROC_STAT , 'C021') AS ADJ_PROC_STAT_NM
+						, B.RT_INDE_SE
+						, CASE
+							WHEN B.RT_INDE_SE ='D'
+							THEN '-'||''||TO_CHAR(B.ADJ_RT,'FM90.0000')
+							WHEN B.RT_INDE_SE ='I'
+							THEN '+'||''||TO_CHAR(B.ADJ_RT,'FM90.0000')
+							ELSE TO_CHAR(B.ADJ_RT,'FM90.0000')
+							END AS ADJ_RT
+						, B.ADJ_RT_QTY
+						,B.QTY_INDE_SE
+						,CASE
+							WHEN B.QTY_INDE_SE ='D'
+							THEN '-'||''||B.ADJ_QTY 
+							WHEN B.QTY_INDE_SE ='I'
+							THEN '+'||' '||B.ADJ_QTY 
+							ELSE TO_CHAR(B.ADJ_QTY)
+							END AS ADJ_QTY
+						, B.ADJ_RST_QTY
+						, CASE
+							WHEN B.ADJ_RST_QTY>B.FYER_QTY
+							THEN 	'+'||''||B.ADJ_GTN 
+							WHEN B.ADJ_RST_QTY   &lt; B.FYER_QTY
+							THEN 	'-'||''||B.ADJ_GTN 
+							END	AS ADJ_GTN
+						,#{STD_YEAR} AS STD_YEAR
+			FROM 
+						(
+			                SELECT 
+			                		A.MFC_BIZRNO
+			                		,A.MFC_BIZRID
+			                		,B.CTNR_CD
+			                		,SUM(NVL(B.DLIVY_QTY, 0)) AS FYER_QTY
+			                FROM EPDM_DLIVY_MST A
+                					,EPDM_DLIVY_INFO B
+			                WHERE 1=1
+							AND  A.DLIVY_DOC_NO=B.DLIVY_DOC_NO
+							AND TO_CHAR(TO_DATE(DLIVY_DT, 'YYYYMMDD'), 'YYYY') =  #{STD_YEAR}
+							AND MFC_BIZRNO 	= #{MFC_BIZRNO}
+							AND MFC_BIZRID 	= #{MFC_BIZRID}
+			                GROUP BY   A.MFC_BIZRNO  ,A.MFC_BIZRID ,B.CTNR_CD 
+			             )A
+			 			 ,EXCA_FYER_CRCT B
+	 	 WHERE 1=1
+	 	 AND 	A.MFC_BIZRNO 	= B.BIZRNO(+)
+	 	 AND		A.MFC_BIZRID		= B.BIZRID(+)
+	 	 AND 	A.CTNR_CD			= B.CTNR_CD(+)
+	 	 AND 	B.ADJ_SE(+)		='D'
+	 	 ORDER BY  CTNR_NM
+	</select>
+
+
+<!-- 	
+//*******************************************************************************************************
+//	조정수량관리
+//*******************************************************************************************************
+ -->	
+	<!-- 빈용기보증금 -->
+	<select id="epce4707888_select" resultType="hashmap" parameterType="map">
+			SELECT 
+					CTNR_CD
+					,STD_DPS
+			FROM
+					EPCN_STD_DPS_MGNT A
+					JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+					ON   A.LANG_SE_CD = E.LANG_SE_CD
+			WHERE 1=1
+			AND 		CTNR_CD=#{CTNR_CD}
+			AND  	#{STD_YEAR}||'1231' BETWEEN   APLC_ST_DT AND APLC_END_DT
+	</select>
+	
+	<!-- 조정수량관리 수정 데이터 -->
+	<select id="epce4707888_select3" resultType="hashmap" parameterType="map">
+			SELECT * FROM EXCA_FYER_CRCT
+			WHERE 1=1
+			AND 		FYER_CRCT_DOC_NO 	=#{FYER_CRCT_DOC_NO}
+			AND		ADJ_SE						=#{ADJ_SE}
+			AND		CTNR_CD					=#{CTNR_CD}
+	</select>
+	
+	
+	<!-- 조정수량관리 삭제전 값 체크 -->
+	<select id="epce4707888_select4" resultType="int" parameterType="map">
+		SELECT COUNT(1) FROM EXCA_FYER_CRCT
+		WHERE 1=1
+		AND 		FYER_CRCT_DOC_NO 	=#{FYER_CRCT_DOC_NO}
+		AND		ADJ_SE						=#{ADJ_SE}
+		AND		CTNR_CD					=#{CTNR_CD}
+	</select>
+
+	<!--저장  -->
+	<insert id="epce4707888_insert" parameterType="map">
+			INSERT 
+				INTO EXCA_FYER_CRCT
+						(
+						FYER_CRCT_DOC_NO
+						,ADJ_SE
+						,CTNR_CD
+						,BIZRID
+						,BIZRNO
+						,STD_YEAR
+						,ADJ_PROC_STAT
+						,FYER_QTY
+						,RT_INDE_SE
+						,ADJ_RT
+						,ADJ_RT_QTY
+						,QTY_INDE_SE
+						,ADJ_QTY
+						,ADJ_GTN
+						,ADJ_RST_QTY
+						,REG_PRSN_ID
+						,REG_DTTM
+						)
+						VALUES
+						(
+						 #{FYER_CRCT_DOC_NO}
+						,#{ADJ_SE}
+						,#{CTNR_CD}
+						,#{BIZRID}
+						,#{BIZRNO}
+						,#{STD_YEAR}
+						,#{ADJ_PROC_STAT}
+						,#{FYER_QTY}
+						,#{RT_INDE_SE}
+						,#{ADJ_RT}
+						,#{ADJ_RT_QTY}
+						,#{QTY_INDE_SE}
+						,#{ADJ_QTY}
+						,#{ADJ_GTN}
+						,#{ADJ_RST_QTY}
+						,#{REG_PRSN_ID}
+						,SYSDATE
+						)
+	</insert>
+	
+	<!--조정수량관리 수정  -->
+	<update id="epce4707888_update" parameterType="map">
+			UPDATE 
+					EXCA_FYER_CRCT SET
+			 FYER_QTY      	= #{FYER_QTY}   
+			,RT_INDE_SE    	= #{RT_INDE_SE} 
+			,ADJ_RT        		= #{ADJ_RT}     
+			,ADJ_RT_QTY    	= #{ADJ_RT_QTY} 
+			,QTY_INDE_SE   	= #{QTY_INDE_SE}
+			,ADJ_QTY       		= #{ADJ_QTY}   
+			,ADJ_GTN       	= #{ADJ_GTN}    
+			,ADJ_RST_QTY   	= #{ADJ_RST_QTY}
+			WHERE 1=1
+			AND	FYER_CRCT_DOC_NO 	=#{FYER_CRCT_DOC_NO}
+			AND	ADJ_SE						=#{ADJ_SE}
+			AND	CTNR_CD					=#{CTNR_CD}
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="epce4707888_delete" parameterType="map">
+		DELETE FROM EXCA_FYER_CRCT
+		WHERE 1=1
+		AND 		FYER_CRCT_DOC_NO 	=#{FYER_CRCT_DOC_NO}
+		AND		ADJ_SE						=#{ADJ_SE}
+		AND		CTNR_CD					=#{CTNR_CD}
+	</delete>
+	
+
+</mapper>

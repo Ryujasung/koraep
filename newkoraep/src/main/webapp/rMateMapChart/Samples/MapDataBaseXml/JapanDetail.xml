@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Province code="100" label="Hokkaido" symbol="Hokkaido"/>
+	<Province code="201" label="Aomori" symbol="Aomori"/>
+	<Province code="202" label="Akita" symbol="Akita"/>
+	<Province code="203" label="Iwate" symbol="Iwate"/>
+	<Province code="204" label="Yamagata" symbol="Yamagata"/>
+	<Province code="205" label="Miyagi" symbol="Miyagi"/>
+	<Province code="206" label="Fukushima" symbol="Fukushima"/>
+	<Province code="301" label="Tochigi" symbol="Tochigi"/>
+	<Province code="302" label="Gunma" symbol="Gunma"/>
+	<Province code="303" label="Ibaraki" symbol="Ibaraki"/>
+	<Province code="304" label="Saitama" symbol="Saitama"/>
+	<Province code="305" label="Tokyo" symbol="Tokyo"/>
+	<Province code="306" label="Kanagawa" symbol="Kanagawa"/>
+	<Province code="307" label="Chiba" symbol="Chiba"/>
+	<Province code="401" label="Nigata" symbol="Nigata"/>
+	<Province code="402" label="Ishikawa" symbol="Ishikawa"/>
+	<Province code="403" label="Toyama" symbol="Toyama"/>
+	<Province code="404" label="Nagano" symbol="Nagano"/>
+	<Province code="405" label="Yamanashi" symbol="Yamanashi"/>
+	<Province code="406" label="Fukui" symbol="Fukui"/>
+	<Province code="407" label="Gifu" symbol="Gifu"/>
+	<Province code="408" label="Aichi" symbol="Aichi"/>
+	<Province code="409" label="Shizuoka" symbol="Shizuoka"/>
+	<Province code="501" label="Hyogo" symbol="Hyogo"/>
+	<Province code="502" label="Kyoto" symbol="Kyoto"/>
+	<Province code="503" label="Shiga" symbol="Shiga"/>
+	<Province code="504" label="Osaka" symbol="Osaka"/>
+	<Province code="505" label="Nara" symbol="Nara"/>
+	<Province code="506" label="Mie" symbol="Mie"/>
+	<Province code="507" label="Wakayama" symbol="Wakayama"/>
+	<Province code="601" label="Tottori" symbol="Tottori"/>
+	<Province code="602" label="Shimane" symbol="Shimane"/>
+	<Province code="603" label="Okayama" symbol="Okayama"/>
+	<Province code="604" label="Hiroshima" symbol="Hiroshima"/>
+	<Province code="605" label="Yamaguchi" symbol="Yamaguchi"/>
+	<Province code="701" label="Kagawa" symbol="Kagawa"/>
+	<Province code="702" label="Tokushima" symbol="Tokushima"/>
+	<Province code="703" label="Ehime" symbol="Ehime"/>
+	<Province code="704" label="Kochi" symbol="Kochi"/>
+	<Province code="801" label="Fukuoka" symbol="Fukuoka"/>
+	<Province code="802" label="Saga" symbol="Saga"/>
+	<Province code="803" label="Oita" symbol="Oita"/>
+	<Province code="804" label="Nagasaki" symbol="Nagasaki"/>
+	<Province code="805" label="Kumamoto" symbol="Kumamoto"/>
+	<Province code="806" label="Miyazaki" symbol="Miyazaki"/>
+	<Province code="807" label="Kagoshima" symbol="Kagoshima"/>
+	<Province code="900" label="Okinawa" symbol="Okinawa"/>
+	<Province code="10" label=" " symbol="Line"/>
+</Map>

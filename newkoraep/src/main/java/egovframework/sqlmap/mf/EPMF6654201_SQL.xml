@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF6654201Mapper">
+    
+    <!-- 직접반환 조회 -->
+	<select id="epmf6654201_select"  resultType="hashmap">   
+	 <if test='excelYn == null or excelYn == "" '>   
+	   SELECT
+	   			    PNO
+	   			    ,RTL_RTN_DOC_NO
+	   			    ,RTL_RTN_REG_DT
+			        ,RTL_RTN_REG_DT_PAGE
+					,MFC_BIZRNM
+			        ,MFC_BRCH_NM
+			        ,RTL_RTN_QTY_TOT
+			        ,RTL_PAY_GTN_TOT
+			        ,RTL_RTN_STAT_CD
+			        ,RTL_RTN_STAT_NM
+			        ,MFC_BIZRID
+			        ,MFC_BIZRNO
+			        ,MFC_BRCH_ID
+			        ,MFC_BRCH_NO
+		 FROM
+			 	(
+	 </if>
+						 SELECT ROW_NUMBER()OVER(ORDER BY A.RTL_RTN_REG_DT DESC, B.SEL_ORD, B.BIZRNM, C.BRCH_NM) AS PNO 
+						 			,A.RTL_RTN_DOC_NO
+						 			,A.RTL_RTN_REG_DT
+							        ,<![CDATA[ '<a href="javascript:link();" target="_self" class="gridLink">'||TO_CHAR(TO_DATE(A.RTL_RTN_REG_DT,'YYYYMMDD'),'YYYY-MM-DD')||'</a>' AS RTL_RTN_REG_DT_PAGE ]]>
+									,B.BIZRNM as MFC_BIZRNM
+							        ,C.BRCH_NM as MFC_BRCH_NM
+							        ,A.RTL_RTN_QTY_TOT
+							        ,A.RTL_PAY_GTN_TOT
+							        ,A.RTL_RTN_STAT_CD
+							        ,EPCN_ETC_NM(A.RTL_RTN_STAT_CD, 'D017') AS RTL_RTN_STAT_NM
+							        ,A.MFC_BIZRID
+							        ,A.MFC_BIZRNO
+							        ,A.MFC_BRCH_ID
+							        ,A.MFC_BRCH_NO
+						   FROM EPDM_RTL_RTN_MST A
+							        ,EPCN_BIZR_INFO B
+							        ,EPCN_BRCH_INFO C
+						  WHERE 1=1
+						      AND A.MFC_BIZRID = B.BIZRID
+						      AND A.MFC_BIZRNO = B.BIZRNO
+						      AND A.MFC_BIZRID = C.BIZRID
+						      AND A.MFC_BIZRNO = C.BIZRNO
+						      AND A.MFC_BRCH_ID = C.BRCH_ID
+						      AND A.MFC_BRCH_NO = C.BRCH_NO
+							  AND A.RTL_RTN_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+					    
+						<if test="MFC_BIZRID !='' and MFC_BIZRID !=null">
+							AND A.MFC_BIZRID 		= #{MFC_BIZRID}
+							AND A.MFC_BIZRNO 	= #{MFC_BIZRNO}
+						</if>
+						<if test="BRCH_ID !='' and BRCH_ID !=null">
+							AND A.MFC_BRCH_ID = #{BRCH_ID}
+							AND A.MFC_BRCH_NO = #{BRCH_NO}
+						</if>
+						<if test="RTL_RTN_STAT_CD !='' and RTL_RTN_STAT_CD !=null">
+							AND A.RTL_RTN_STAT_CD = #{RTL_RTN_STAT_CD}
+						</if>
+						
+						<if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+							 AND EXISTS (
+							 					   SELECT 'X'
+						                             FROM EPCN_BRCH_INFO S1
+						                           WHERE 1=1
+						                              AND A.MFC_BIZRID = S1.BIZRID
+						                              AND A.MFC_BIZRNO = S1.BIZRNO
+						                              AND A.MFC_BRCH_ID = S1.BRCH_ID
+						                              AND A.MFC_BRCH_NO = S1.BRCH_NO
+								                      AND EXISTS (    
+								                      					   SELECT 'X'
+												                             FROM EPCN_BRCH_INFO S2
+												                           WHERE 1=1
+												                              AND S1.BIZRID = S2.BIZRID
+												                              AND S1.BIZRNO = S2.BIZRNO
+												                              AND (
+													                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+													                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+												                                     ) 
+												                              AND S2.BRCH_ID = #{S_BRCH_ID}
+												                              AND S2.BRCH_NO = #{S_BRCH_NO}
+													          			)
+				                         		)
+						 	</if>
+					    
+					ORDER BY A.RTL_RTN_REG_DT DESC, B.SEL_ORD, B.BIZRNM, C.BRCH_NM
+					
+		<if test='excelYn == null or excelYn == "" '>			 
+		           )
+	     WHERE 1=1
+	         AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE} 
+	    </if>
+	</select>
+	
+	
+	<!-- 직접반환 조회 -->
+	<select id="epmf6654201_select_cnt"  resultType="hashmap">
+
+	          SELECT COUNT(*) AS CNT
+				        ,SUM(RTL_RTN_QTY_TOT) AS RTL_RTN_QTY_TOT
+				        ,SUM(RTL_PAY_GTN_TOT) AS RTL_PAY_GTN_TOT
+			   FROM EPDM_RTL_RTN_MST A
+				        ,EPCN_BIZR_INFO B
+				        ,EPCN_BRCH_INFO C
+			  WHERE 1=1
+			      AND A.MFC_BIZRID = B.BIZRID
+			      AND A.MFC_BIZRNO = B.BIZRNO
+			      AND A.MFC_BIZRID = C.BIZRID
+			      AND A.MFC_BIZRNO = C.BIZRNO
+			      AND A.MFC_BRCH_ID = C.BRCH_ID
+			      AND A.MFC_BRCH_NO = C.BRCH_NO
+				  AND A.RTL_RTN_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+		    
+			<if test="MFC_BIZRID !='' and MFC_BIZRID !=null">
+				AND A.MFC_BIZRID 		= #{MFC_BIZRID}
+				AND A.MFC_BIZRNO 	= #{MFC_BIZRNO}
+			</if>
+			<if test="BRCH_ID !='' and BRCH_ID !=null">
+				AND A.MFC_BRCH_ID = #{BRCH_ID}
+				AND A.MFC_BRCH_NO = #{BRCH_NO}
+			</if>
+			<if test="RTL_RTN_STAT_CD !='' and RTL_RTN_STAT_CD !=null">
+				AND A.RTL_RTN_STAT_CD = #{RTL_RTN_STAT_CD}
+			</if>
+			
+			<if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+				 AND EXISTS (
+				 					   SELECT 'X'
+			                             FROM EPCN_BRCH_INFO S1
+			                           WHERE 1=1
+			                              AND A.MFC_BIZRID = S1.BIZRID
+			                              AND A.MFC_BIZRNO = S1.BIZRNO
+			                              AND A.MFC_BRCH_ID = S1.BRCH_ID
+			                              AND A.MFC_BRCH_NO = S1.BRCH_NO
+					                      AND EXISTS (    
+					                      					   SELECT 'X'
+									                             FROM EPCN_BRCH_INFO S2
+									                           WHERE 1=1
+									                              AND S1.BIZRID = S2.BIZRID
+									                              AND S1.BIZRNO = S2.BIZRNO
+									                              AND (
+										                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+										                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+									                                     ) 
+									                              AND S2.BRCH_ID = #{S_BRCH_ID}
+									                              AND S2.BRCH_NO = #{S_BRCH_NO}
+										          			)
+	                         		)
+			 	</if>
+		    
+	</select>
+
+	<!-- 직접반환 마스터 -->
+	<insert id="epmf6654231_insert"  parameterType="map">
+		INSERT
+			INTO EPDM_RTL_RTN_MST
+				(
+					RTL_RTN_DOC_NO
+					,MFC_BIZRID
+					,MFC_BIZRNO
+					,MFC_BRCH_ID
+					,MFC_BRCH_NO
+					,RTL_RTN_REG_DT
+					,SYS_SE
+					,RTL_RTN_STAT_CD
+					,RTL_RTN_QTY_TOT
+					,RTL_PAY_GTN_TOT
+					,RTL_PAY_FEE_TOT
+					,REG_PRSN_ID
+					,REG_DTTM
+			  )
+			  VALUES
+			  (
+			 	 #{RTL_RTN_DOC_NO}
+				,#{MFC_BIZRID}
+				,#{MFC_BIZRNO}
+				,#{MFC_BRCH_ID}
+				,#{MFC_BRCH_NO}
+				,TO_CHAR(SYSDATE,'YYYYMMDD')
+				,'W'
+				,'TG'
+				,''
+				,''
+				,''
+				,#{S_USER_ID}
+				,SYSDATE
+			  )
+	</insert>
+	
+	<!-- 직접반환 상세 -->
+	<insert id="epmf6654231_insert2"  parameterType="map">
+		INSERT
+			INTO EPDM_RTL_RTN_INFO
+				(
+				 	RTL_RTN_DOC_NO
+				 	,DTL_SN
+					,CTNR_CD
+					,RTL_RTN_DT
+					,RTL_RTN_SE
+					<if test='RTL_RTN_BIZRNO != null and RTL_RTN_BIZRNO != "" '>
+					,RTL_RTN_BIZRNO
+					</if>
+					,RTL_RTN_NM
+					,RTL_RTN_QTY
+					,DRCT_PAY_GTN
+					,DRCT_PAY_FEE
+					,DRCT_PAY_FEE_STAX
+					<if test='RMK != null and RMK != "" '>
+					,RMK
+					</if>
+					,REG_PRSN_ID
+					,REG_DTTM
+				)
+				VALUES
+				(
+					 #{RTL_RTN_DOC_NO}
+					,(SELECT NVL(MAX(DTL_SN), 0)+1 FROM EPDM_RTL_RTN_INFO WHERE RTL_RTN_DOC_NO = #{RTL_RTN_DOC_NO})
+					,#{CTNR_CD}
+					,REPLACE(#{RTL_RTN_DT},'-','')
+					,#{RTL_RTN_SE}
+					<if test='RTL_RTN_BIZRNO != null and RTL_RTN_BIZRNO != "" '>
+					,ECL_ENCRYPT(#{RTL_RTN_BIZRNO})
+					</if>
+					,#{RTL_RTN_NM}
+					,#{RTL_RTN_QTY}
+					,#{RTL_RTN_QTY} * #{STD_DPS}
+					,#{DRCT_PAY_FEE}
+					,#{DRCT_PAY_FEE}*0.1
+					<if test='RMK != null and RMK != "" '>
+					,#{RMK}
+					</if>
+					,#{S_USER_ID}
+					,SYSDATE
+				)
+	</insert>
+	
+	<!-- 직접반환 마스터 업데이트 -->
+	<update id="epmf6654231_update"  parameterType="string">
+		UPDATE  EPDM_RTL_RTN_MST  
+			 SET
+					(RTL_RTN_QTY_TOT, RTL_PAY_GTN_TOT, RTL_PAY_FEE_TOT
+					 ) = (
+							SELECT SUM(RTL_RTN_QTY), SUM(DRCT_PAY_GTN), SUM(DRCT_PAY_FEE)
+							  FROM EPDM_RTL_RTN_INFO A
+							WHERE 1=1
+								AND A.RTL_RTN_DOC_NO = #{RTL_RTN_DOC_NO}
+						  )
+		WHERE 1=1
+			AND RTL_RTN_DOC_NO = #{RTL_RTN_DOC_NO}
+	</update>
+	
+	<!-- 직접반환구분 조회 -->
+	<select id="epmf6654231_select"  resultType="string">
+		SELECT MIN(DRCT_RTN_SE) AS DRCT_RTN_SE
+	      FROM EPCN_DTSS_CUST_INFO
+	    WHERE 1=1
+	        AND MFC_BIZRID = #{MFC_BIZRID}
+	        AND MFC_BIZRNO = #{MFC_BIZRNO}
+	        AND MFC_BRCH_ID = #{MFC_BRCH_ID}
+	        AND MFC_BRCH_NO = #{MFC_BRCH_NO}
+	        AND CUST_BIZRNO = ECL_ENCRYPT(#{RTL_RTN_BIZRNO})
+	        AND CUST_BRCH_NO = '9999999999'
+	</select>
+	
+	<!-- 상태체크 -->
+	<select id="epmf6654201_select2" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		  FROM EPDM_RTL_RTN_MST 
+		WHERE 1=1
+			AND RTL_RTN_DOC_NO = #{RTL_RTN_DOC_NO}
+			AND RTL_RTN_STAT_CD != 'TG'
+	</select>
+
+	<!-- 정보 삭제 -->
+	<delete id="epmf6654201_delete" parameterType="map">
+		DECLARE
+		    BEGIN
+		    
+			    DELETE 
+			      FROM EPDM_RTL_RTN_INFO A
+			    WHERE 1=1
+			        AND RTL_RTN_DOC_NO = #{RTL_RTN_DOC_NO}
+			        AND EXISTS (SELECT 'X' FROM EPDM_RTL_RTN_MST B
+			                           WHERE 1=1
+			                               AND A.RTL_RTN_DOC_NO = B.RTL_RTN_DOC_NO
+			                               AND B.RTL_RTN_STAT_CD = 'TG'
+			                         )
+			        ;
+			    
+			    DELETE FROM EPDM_RTL_RTN_MST  WHERE RTL_RTN_DOC_NO = #{RTL_RTN_DOC_NO} AND RTL_RTN_STAT_CD = 'TG';
+			    
+	   		 END;
+	</delete>
+
+	<!-- 엑셀등록 체크 -->
+	<select id="epmf6654231_select2" parameterType="map" resultType="hashmap">
+		
+	   SELECT TO_CHAR(TO_DATE( #{RTL_RTN_DT}, 'YYYYMMDD'), 'YYYY-MM-DD') AS RTL_RTN_DT
+                  ,A.BRCH_NM AS MFC_BRCH_NM
+                  ,A.BRCH_ID as MFC_BRCH_ID
+                  ,A.BRCH_NO as MFC_BRCH_NO
+                  ,A.BIZRID as MFC_BIZRID
+                  ,A.BIZRNO as MFC_BIZRNO
+                  ,#{RTL_RTN_BIZRNO} as RTL_RTN_BIZRNO
+                  ,#{RTL_RTN_NM} as RTL_RTN_NM 
+                  ,B.CTNR_NM
+                  ,B.CTNR_CD
+                  ,B.CPCT_CD
+                  ,EPCN_ETC_NM(B.CPCT_CD, 'E001') AS CPCT_NM
+                  ,#{RTL_RTN_QTY} as RTL_RTN_QTY
+                  ,#{RTL_RTN_QTY} * C.STD_DPS as DRCT_PAY_GTN
+                  ,C.STD_DPS as STD_DPS
+                  ,#{DRCT_PAY_FEE} as DRCT_PAY_FEE
+                  ,#{RMK} as RMK
+                  ,G.ETC_CD AS RTL_RTN_SE
+                  ,G.ETC_CD_NM AS RTL_RTN_SE_NM
+                  ,(
+                  	SELECT MIN(DRCT_RTN_SE) AS DRCT_RTN_SE
+				      FROM EPCN_DTSS_CUST_INFO
+				    WHERE 1=1
+				        AND MFC_BIZRID = #{MFC_BIZRID}
+				        AND MFC_BIZRNO = #{MFC_BIZRNO}
+				        AND MFC_BRCH_ID = #{MFC_BRCH_ID}
+				        AND MFC_BRCH_NO = #{MFC_BRCH_NO}
+				        AND CUST_BIZRNO = ECL_ENCRYPT(#{RTL_RTN_BIZRNO})
+				        AND CUST_BRCH_NO = '9999999999'
+                  ) as DRCT_RTN_SE
+         FROM EPCN_BRCH_INFO A
+                 ,EPCN_STD_CTNR_CD B
+                 ,EPCN_STD_DPS_MGNT C
+                 ,(SELECT * FROM EPCN_ETC_CD WHERE GRP_CD = 'E003' AND USE_YN = 'Y') D
+                 ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+                 ,(
+                    SELECT A.ETC_CD, A.ETC_CD_NM
+                      FROM EPCN_ETC_CD A
+                             ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+                    WHERE A.GRP_CD = 'D018'
+                        AND A.USE_YN = 'Y'
+                        AND A.ETC_CD_NM = TRIM(#{RTL_RTN_SE})
+                        AND A.LANG_SE_CD = E.LANG_SE_CD
+                        AND ROWNUM = 1
+                 ) G
+       WHERE 1=1
+           AND A.BIZRID = #{MFC_BIZRID}
+           AND A.BIZRNO = #{MFC_BIZRNO}
+           AND A.BRCH_ID = #{MFC_BRCH_ID}
+           AND A.BRCH_NO = #{MFC_BRCH_NO}
+           AND B.CTNR_CD = #{CTNR_CD}
+           AND B.MFC_SE_CD = D.ETC_CD
+           AND ( D.RSV_ITEM2 = A.BIZRNO OR D.RSV_ITEM2 = (CASE WHEN A.BIZR_TP_CD = 'M1' THEN '0000000000' ELSE '' END) )
+           AND B.CTNR_CD = C.CTNR_CD
+           AND B.LANG_SE_CD = C.LANG_SE_CD
+           AND B.LANG_SE_CD = D.LANG_SE_CD
+           AND B.LANG_SE_CD = E.LANG_SE_CD
+           AND REPLACE( #{RTL_RTN_DT}, '-', '') BETWEEN C.APLC_ST_DT AND C.APLC_END_DT
+           AND A.STAT_CD = 'Y'
+           AND B.USE_YN = 'Y'
+           AND C.USE_YN = 'Y'
+           AND ROWNUM = 1
+
+	</select>
+	
+	<!-- 상세리스트 -->
+	<select id="epmf6654242_select" parameterType="map" resultType="hashmap">
+		  SELECT A.RTL_RTN_DT
+			         ,A.CTNR_CD, A.RTL_RTN_SE, A.RTL_RTN_NM
+			         ,ECL_DECRYPT(A.RTL_RTN_BIZRNO) as RTL_RTN_BIZRNO
+			         ,A.RTL_RTN_QTY, A.DRCT_PAY_GTN, A.DRCT_PAY_FEE, A.DRCT_PAY_FEE_STAX, A.RMK 
+			         ,A.DRCT_PAY_GTN / A.RTL_RTN_QTY as STD_DPS
+			         ,C.BRCH_NM as MFC_BRCH_NM
+			         ,D.CTNR_NM
+			         ,D.CTNR_CD
+			         ,D.CPCT_CD
+			         ,EPCN_ETC_NM(D.CPCT_CD, 'E001') AS CPCT_NM
+	        FROM EPDM_RTL_RTN_INFO A
+			         , EPDM_RTL_RTN_MST B
+			         , EPCN_BRCH_INFO C
+			         , EPCN_STD_CTNR_CD D
+			         , (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+			 WHERE 1=1
+			     AND A.RTL_RTN_DOC_NO = #{RTL_RTN_DOC_NO}
+			     AND A.RTL_RTN_DOC_NO = B.RTL_RTN_DOC_NO
+			     AND B.MFC_BIZRID = C.BIZRID
+			     AND B.MFC_BIZRNO = C.BIZRNO
+			     AND B.MFC_BRCH_ID = C.BRCH_ID
+			     AND B.MFC_BRCH_NO = C.BRCH_NO
+			     AND A.CTNR_CD = D.CTNR_CD
+			     AND D.LANG_SE_CD = E.LANG_SE_CD
+			   ORDER BY DTL_SN
+	</select>
+	
+	<select id="epmf6654242_select2" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		  FROM EPDM_RTL_RTN_MST 
+		WHERE 1=1
+			AND RTL_RTN_DOC_NO = #{RTL_RTN_DOC_NO}
+			AND RTL_RTN_STAT_CD != 'TG'
+	</select>
+
+	<!-- 정보 삭제 -->
+	<delete id="epmf6654242_delete" parameterType="map">
+		DELETE FROM EPDM_RTL_RTN_INFO
+	   	WHERE 1=1
+	     	AND RTL_RTN_DOC_NO = #{RTL_RTN_DOC_NO}
+	</delete>
+	
+	<select id="epmf6654264_select" parameterType="map" resultType="hashmap">
+		  SELECT A.RTL_RTN_DT
+			         ,A.CTNR_CD, A.RTL_RTN_SE, A.RTL_RTN_NM
+			         ,ECL_DECRYPT(A.RTL_RTN_BIZRNO) as RTL_RTN_BIZRNO
+			         ,A.RTL_RTN_QTY, A.DRCT_PAY_GTN, A.DRCT_PAY_FEE, A.DRCT_PAY_FEE_STAX, A.RMK 
+			         ,A.DRCT_PAY_GTN / A.RTL_RTN_QTY as STD_DPS
+			         ,C.BRCH_NM as MFC_BRCH_NM
+			         ,D.CTNR_NM
+			         ,D.CTNR_CD
+			         ,D.CPCT_CD
+			         ,EPCN_ETC_NM(D.CPCT_CD, 'E001') AS CPCT_NM
+			         ,F.BIZRNM AS MFC_BIZRNM
+			         ,F.RPST_NM AS MFC_RPST_NM
+			         ,ECL_DECRYPT(F.BIZRNO) as MFC_BIZRNO_DE
+	        FROM EPDM_RTL_RTN_INFO A
+			         , EPDM_RTL_RTN_MST B
+			         , EPCN_BRCH_INFO C
+			         , EPCN_STD_CTNR_CD D
+			         , (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+			         , EPCN_BIZR_INFO F
+			 WHERE 1=1
+			     AND A.RTL_RTN_DOC_NO = #{RTL_RTN_DOC_NO}
+			     AND A.RTL_RTN_DOC_NO = B.RTL_RTN_DOC_NO
+			     AND B.MFC_BIZRID = F.BIZRID
+			     AND B.MFC_BIZRNO = F.BIZRNO
+			     AND B.MFC_BIZRID = C.BIZRID
+			     AND B.MFC_BIZRNO = C.BIZRNO
+			     AND B.MFC_BRCH_ID = C.BRCH_ID
+			     AND B.MFC_BRCH_NO = C.BRCH_NO
+			     AND A.CTNR_CD = D.CTNR_CD
+			     AND D.LANG_SE_CD = E.LANG_SE_CD
+			   ORDER BY DTL_SN
+	</select>
+
+</mapper>

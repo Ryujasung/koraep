@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 오류이력조회 -->
+
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3961301Mapper">
+
+	<!--메뉴명조회 -->
+	<select id="epce3961301_select" parameterType="map" resultType="hashmap">
+		SELECT
+					CASE
+							WHEN A.MENU_SET_CD='EPCE'
+							THEN  '('||EPCN_LANG_NM('cet')||')'||A.MENU_NM
+							WHEN A.MENU_SET_CD='EPWH'
+							THEN  '('||EPCN_LANG_NM('whsdl')||')'||A.MENU_NM
+							WHEN A.MENU_SET_CD='EPMF'
+							THEN  '('||EPCN_LANG_NM('mfc_bizrnm')||')'||A.MENU_NM
+							END AS MENU_NM
+					,A.MENU_CD
+		FROM EPCN_MENU A
+		 JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+		 ON A.LANG_SE_CD = C.LANG_SE_CD
+		
+		WHERE 1=1
+		<if test="MENU_GRP_CD != ''">
+		AND	MENU_GRP_CD = #{MENU_GRP_CD}
+		AND  MENU_LVL  IN ('2', '3')
+		</if>
+		<if test="MENU_SET_CD != '' and MENU_SET_CD !=null">
+		AND	MENU_SET_CD = #{MENU_SET_CD}
+		</if>
+		ORDER BY MENU_SET_CD
+	</select>
+
+    <!--버튼명조회 -->
+   <select id="epce3961301_select2" parameterType="map" resultType="hashmap">
+	SELECT
+				  A.BTN_CD
+				, A.BTN_NM
+				, A.BTN_SE_CD
+				, A.BTN_LC_SE
+
+	FROM EPCN_BTN A
+	 JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') B
+	 ON A.LANG_SE_CD = B.LANG_SE_CD
+	 JOIN EPCN_MENU C       
+	 ON  A.MENU_CD = C.MENU_CD
+	   
+	WHERE 1=1
+	AND    C.MENU_GRP_CD = #{MENU_GRP_CD}
+   <if test="MENU_CD != ''">
+	AND  C.MENU_CD = #{MENU_CD} 
+   </if>
+   <if test="MENU_SET_CD != '' and MENU_SET_CD !=null">
+		AND	MENU_SET_CD = #{MENU_SET_CD}
+	</if>
+   
+   </select>
+
+  <!--오류이력조회  -->  
+  <select id="epce3961301_select3" parameterType="map" resultType="hashmap">
+  
+ 	<if test='excelYn == null or excelYn == "" '>
+		 SELECT 
+		 		*
+		  FROM (
+	</if>
+     <![CDATA[     
+		 SELECT ROW_NUMBER()OVER(ORDER BY A.REG_DT  DESC , REG_TM DESC) AS PNO 
+					, A.USER_ID
+					, A.ACSS_IP
+					, A.ERR_MSG	
+					, B.USER_NM
+					, EPCN_BIZR_NM(BIZRID ,BIZRNO) AS BIZRNM  
+					, EPCN_BRCH_NM(BRCH_ID,BRCH_NO,BIZRID ,BIZRNO) AS BRCH_NM
+					, EPCN_ETC_NM(A.MENU_GRP_CD ,'M002') AS ETC_CD_NM   
+				 	, DECODE (C.MENU_LVL ,'2', C.MENU_NM 
+				 				,(SELECT MENU_NM FROM EPCN_MENU WHERE MENU_CD= C.UP_MENU_CD)
+				 	 ) AS MENU_GRP_NM
+					, C.MENU_NM	
+					, D.BTN_NM	
+				    , TO_CHAR(TO_DATE(SUBSTR(A.REG_DT||''||A.REG_TM,1,14), 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS REG_TIME
+					, A.REG_DTTM
+					, '<a href="javascript:link();" class="gridLink">'||'확인'||'</a>' AS PARAM
+		  ]]>			
+		   FROM 
+			 	EPCN_ERR_HIST  A 
+			   ,EPCN_USER_INFO B    
+			   ,(SELECT T1.MENU_LVL,T1.MENU_CD, T1.MENU_NM ,T1.UP_MENU_CD
+					FROM EPCN_MENU T1 , EPCN_LANG_CD T2
+					WHERE T1.LANG_SE_CD 		= T2.LANG_SE_CD 
+					AND T2.USE_YN = 'Y' 
+		  			AND T2.STD_YN = 'Y') C
+			   ,(SELECT BTN_CD,MENU_CD,BTN_NM FROM EPCN_BTN T1 , EPCN_LANG_CD T2 
+				 	WHERE T1.LANG_SE_CD = T2.LANG_SE_CD 
+				  	AND T2.USE_YN = 'Y' 
+				  	AND T2.STD_YN = 'Y') D
+		   WHERE 1=1
+			 AND A.USER_ID  	= B.USER_ID
+			 AND A.MENU_CD 	= C.MENU_CD
+			 AND A.BTN_CD 		= D.BTN_CD(+)
+			 AND A.MENU_CD 	= D.MENU_CD(+)
+			 AND A.REG_DT||SUBSTR(A.REG_TM,1,2)     BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}     
+
+	    <if test="MENU_GRP_CD != ''  "    >
+		    AND  A.MENU_GRP_CD =  #{MENU_GRP_CD}   
+	    </if>
+	    <if test="BTN_CD != ''">		
+		    AND  A.BTN_CD           =  #{BTN_CD}  
+		</if>
+	    <if test="USER_ID != ''">
+		    AND  A.USER_ID LIKE '%' || #{USER_ID} || '%'
+		 </if>
+		<if test="MENU_CD != ''">
+		    AND  C.MENU_CD = #{MENU_CD} 
+		</if>
+	 ORDER BY A.REG_DT  DESC , REG_TM DESC
+	  <if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+         </if>	
+	  
+  </select>
+
+  <!--오류이력조회  -->  
+  <select id="epce3961301_select3_cnt" parameterType="map" resultType="int">
+  
+	  SELECT COUNT(1)
+		FROM 
+			 	EPCN_ERR_HIST  A 
+			   ,EPCN_USER_INFO B    
+			   ,(SELECT T1.MENU_LVL,T1.MENU_CD, T1.MENU_NM ,T1.UP_MENU_CD
+					FROM EPCN_MENU T1 , EPCN_LANG_CD T2
+					WHERE T1.LANG_SE_CD 		= T2.LANG_SE_CD 
+					AND T2.USE_YN = 'Y' 
+		  			AND T2.STD_YN = 'Y') C
+			   ,(SELECT BTN_CD,MENU_CD,BTN_NM FROM EPCN_BTN T1 , EPCN_LANG_CD T2 
+				 	WHERE T1.LANG_SE_CD = T2.LANG_SE_CD 
+				  	AND T2.USE_YN = 'Y' 
+				  	AND T2.STD_YN = 'Y') D
+		   WHERE 1=1
+			 AND A.USER_ID  	= B.USER_ID
+			 AND A.MENU_CD 	= C.MENU_CD
+			 AND A.BTN_CD 		= D.BTN_CD(+)
+			 AND A.MENU_CD 	= D.MENU_CD(+)
+			 AND A.REG_DT||SUBSTR(A.REG_TM,1,2)     BETWEEN #{START_DT}||#{STR_TM} AND #{END_DT}||#{ETR_TM}
+			 
+	    <if test="MENU_GRP_CD != ''  "    >
+		    AND  A.MENU_GRP_CD =  #{MENU_GRP_CD}   
+	    </if>
+	    <if test="BTN_CD != ''">		
+		    AND  A.BTN_CD           =  #{BTN_CD}  
+		</if>
+	    <if test="USER_ID != ''">
+		    AND  A.USER_ID LIKE '%' || #{USER_ID} || '%'
+		 </if>
+		<if test="MENU_CD != ''">
+		    AND  C.MENU_CD = #{MENU_CD} 
+		</if>
+
+  </select>
+	
+   <resultMap id="notiMap" type="hashmap">
+		<result property="ERR_CD" column="ERR_CD" />
+		<result property="ERR_MSG" column="ERR_MSG" />
+		<result property="ACPT_ERR" column="ACPT_ERR"  />
+		<result property="PRAM" column="PRAM"  javaType="java.lang.String" jdbcType="CLOB" />
+	</resultMap>
+
+  <!--오류이력조회 상세조회  -->  
+  <select id="epce3961301_select4" parameterType="map" resultMap="notiMap">
+	   SELECT
+					ERR_CD, 
+					ERR_MSG, 
+					ACPT_ERR, 
+					PRAM
+	    FROM  EPCN_ERR_HIST
+	  WHERE 1=1
+	      AND REG_DTTM =#{REG_DTTM}
+  </select>
+
+</mapper>
+   

@@ -1,0 +1,832 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.wh.ep.EPWH2925801Mapper">
+	
+	<!-- 회수정보관리 조회 -->
+	<select id="epwh2925801_select"   parameterType="map" resultType="hashmap">
+		<if test='excelYn == null or excelYn == "" '>
+			SELECT 
+				   PNO
+					,RTRVL_DOC_NO
+					,RTRVL_REG_DT
+					,RTRVL_REG_DT_ORI
+					,WHSDL_BIZRNM
+					,RTL_CUST_BIZRNM
+                    ,RTL_CUST_BIZRNO_DE
+					,AREA_CD
+					,AREA_NM
+					,RTRVL_STAT_CD
+					,RTRVL_STAT_NM
+					,WHSDL_BIZRID   
+					,WHSDL_BIZRNO
+					,WHSDL_BRCH_ID
+					,WHSDL_BRCH_NO
+					,RTL_CUST_BIZRNO
+					,RTL_CUST_BIZRID
+					,RTL_CUST_BRCH_ID
+					,RTL_CUST_BRCH_NO
+					,SYS_SE
+					,SYS_NM
+					,FH_RTRVL_QTY_TOT
+					,FB_RTRVL_QTY_TOT
+					,RTRVL_QTY_TOT
+					,RTRVL_GTN_TOT
+					,REG_RTRVL_FEE_TOT
+					,ATM_TOT
+			 FROM (   
+		</if> 
+							SELECT 
+							<![CDATA[	
+									 ROW_NUMBER()OVER(ORDER BY A.RTRVL_REG_DT DESC , A.WHSDL_BIZRNO, A.RTL_CUST_BIZRNO, A.RTRVL_DOC_NO ) AS PNO
+									,A.RTRVL_DOC_NO
+									,'<a href="javascript:link();" target="_self" class="gridLink">'||TO_CHAR(TO_DATE(A.RTRVL_REG_DT, 'yyyymmdd'),'yyyy-mm-dd')||'</a>' AS RTRVL_REG_DT
+									,A.RTRVL_REG_DT AS RTRVL_REG_DT_ORI 	
+									,EPCN_BIZR_NM(A.WHSDL_BIZRID ,A.WHSDL_BIZRNO ) AS WHSDL_BIZRNM
+									,EPCN_BIZR_NM(A.RTL_CUST_BIZRID ,A.RTL_CUST_BIZRNO ) AS RTL_CUST_BIZRNM
+									,B.AREA_CD
+									,EPCN_ETC_NM(B.AREA_CD,'B010') AS AREA_NM
+									,A.RTRVL_STAT_CD
+									,EPCN_ETC_NM(A.RTRVL_STAT_CD,'D020') AS RTRVL_STAT_NM
+									,A.WHSDL_BIZRID   
+									,A.WHSDL_BIZRNO
+									,A.WHSDL_BRCH_ID
+									,A.WHSDL_BRCH_NO
+									,A.RTL_CUST_BIZRNO
+									,PI_DECRYPT(A.RTL_CUST_BIZRNO)  as RTL_CUST_BIZRNO_DE
+									,A.RTL_CUST_BIZRID
+									,A.RTL_CUST_BRCH_ID
+									,A.RTL_CUST_BRCH_NO
+									,A.SYS_SE
+									,EPCN_ETC_NM(A.SYS_SE,'S004') AS SYS_NM
+									,A.FH_RTRVL_QTY_TOT
+									,A.FB_RTRVL_QTY_TOT
+									,A.FH_RTRVL_QTY_TOT+ A.FB_RTRVL_QTY_TOT AS RTRVL_QTY_TOT
+									,A.RTRVL_GTN_TOT
+									,A.REG_RTRVL_FEE_TOT		 
+									,A.RTRVL_GTN_TOT +  A.REG_RTRVL_FEE_TOT	  AS ATM_TOT
+						]]>	  
+							FROM
+								EPCM_RTRVL_MST A
+								,EPCN_BRCH_INFO B
+								<if test='BIZRNM !=null  and BIZRNM !="" ' >
+								,(SELECT * FROM EPCN_BRCH_INFO  WHERE 1=1 AND BIZRNM LIKE '%' || #{BIZRNM}   || '%'	) C
+				 				</if>
+							WHERE 1=1
+							AND  A.WHSDL_BIZRNO = B.BIZRNO 
+							AND  A.WHSDL_BIZRID = B.BIZRID
+							AND  A.WHSDL_BRCH_ID = B.BRCH_ID
+							AND  A.WHSDL_BRCH_NO = B.BRCH_NO 
+							<if test='BIZRNM !=null  and BIZRNM !="" ' >
+								AND  A.RTL_CUST_BIZRNO = C.BIZRNO 
+								AND  A.RTL_CUST_BIZRID = C.BIZRID
+								AND  A.RTL_CUST_BRCH_ID = C.BRCH_ID
+								AND  A.RTL_CUST_BRCH_NO = C.BRCH_NO 
+							</if> 
+							
+							<choose>
+								<when test='SEL_GBN !=null and SEL_GBN =="RTRVL_CFM_DT" '  >
+									AND  A.RTRVL_CFM_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+								</when>
+								<otherwise>
+									AND  A.RTRVL_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+								</otherwise>
+							</choose>
+							
+							<if test='BIZR_TP_CD !=null  and BIZR_TP_CD !="" '  >
+									AND 	B.BIZR_TP_CD =  #{BIZR_TP_CD}
+							</if>
+							<if test='WHSDL_BIZRNO !=null  and WHSDL_BIZRNO !="" '  >
+									AND  A.WHSDL_BIZRNO =  #{WHSDL_BIZRNO}
+									AND  A.WHSDL_BIZRID = 	#{WHSDL_BIZRID}
+							</if>
+							<if test='WHSDL_BRCH_ID !=null  and WHSDL_BRCH_ID !="" '  >
+									AND  A.WHSDL_BRCH_ID = #{WHSDL_BRCH_ID}
+									AND  A.WHSDL_BRCH_NO = #{WHSDL_BRCH_NO}
+							</if>
+							<if test='RTRVL_STAT_CD !=null  and RTRVL_STAT_CD !="" ' >
+									AND A.RTRVL_STAT_CD = #{RTRVL_STAT_CD}
+							</if>
+
+							<if test='PRPS_CD != null and PRPS_CD != "" ' >
+								<if test="PRPS_CD.equalsIgnoreCase('0') ">
+									AND A.FB_RTRVL_QTY_TOT != 0
+								</if>
+								<if test="PRPS_CD.equalsIgnoreCase('1') ">
+									AND A.FH_RTRVL_QTY_TOT != 0
+								</if>										
+							</if>							
+							
+							<if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+								 AND EXISTS (
+						 					   SELECT 'X'
+					                             FROM EPCN_BRCH_INFO S1
+					                           WHERE 1=1
+					                              AND A.WHSDL_BIZRID = S1.BIZRID
+					                              AND A.WHSDL_BIZRNO = S1.BIZRNO
+					                              AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+					                              AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+							                      AND EXISTS (
+					                      					   SELECT 'X'
+									                             FROM EPCN_BRCH_INFO S2
+									                           WHERE 1=1
+									                              AND S1.BIZRID = S2.BIZRID
+									                              AND S1.BIZRNO = S2.BIZRNO
+									                              AND (
+										                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+										                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')
+									                                     ) 
+									                              AND S2.BRCH_ID = #{S_BRCH_ID}
+									                              AND S2.BRCH_NO = #{S_BRCH_NO}
+												          	)
+			                         		)
+						</if>
+							
+               				ORDER BY A.RTRVL_REG_DT DESC , A.WHSDL_BIZRNO, A.RTL_CUST_BIZRNO, A.RTRVL_DOC_NO
+           <if test='excelYn == null or excelYn == "" '>
+			) A
+			WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+		</if>
+               	
+	</select>
+	
+	<!-- 회수정보관리 조회 카운트 -->
+	<select id="epwh2925801_select_cnt" parameterType="map" resultType="hashmap">
+				SELECT 
+					COUNT(*)                                     AS CNT
+					,SUM(A.FH_RTRVL_QTY_TOT)                     AS FH_RTRVL_QTY_TOT
+					,SUM(A.FB_RTRVL_QTY_TOT)                     AS FB_RTRVL_QTY_TOT
+					,SUM(A.FH_RTRVL_QTY_TOT+ A.FB_RTRVL_QTY_TOT) AS RTRVL_QTY_TOT
+					,SUM(A.RTRVL_GTN_TOT)                        AS RTRVL_GTN_TOT
+					,SUM(A.REG_RTRVL_FEE_TOT)		             AS REG_RTRVL_FEE_TOT
+					,SUM(A.RTRVL_GTN_TOT +  A.REG_RTRVL_FEE_TOT) AS ATM_TOT
+				FROM 
+					EPCM_RTRVL_MST A
+					,(SELECT * FROM EPCN_BRCH_INFO WHERE BIZR_TP_CD IN ('W1','W2')  )B
+					<if test='BIZRNM !=null  and BIZRNM !="" ' >
+					,(SELECT * FROM EPCN_BRCH_INFO  WHERE 1=1 AND BIZRNM LIKE '%' || #{BIZRNM}   || '%'	) C
+	 				</if> 
+				WHERE 1=1
+				AND  A.WHSDL_BIZRNO		 =	B.BIZRNO 
+				AND  A.WHSDL_BIZRID		 =	B.BIZRID
+				AND  A.WHSDL_BRCH_ID		 =	B.BRCH_ID
+				AND  A.WHSDL_BRCH_NO	 =	B.BRCH_NO 
+				<if test='BIZRNM !=null  and BIZRNM !="" ' >
+					AND  A.RTL_CUST_BIZRNO	 =	C.BIZRNO 
+					AND  A.RTL_CUST_BIZRID		 =	C.BIZRID
+					AND  A.RTL_CUST_BRCH_ID	 =	C.BRCH_ID
+					AND  A.RTL_CUST_BRCH_NO	 =	C.BRCH_NO 
+				</if> 
+				
+				<choose>
+					<when test='SEL_GBN !=null and SEL_GBN =="RTRVL_CFM_DT" '  >
+						AND  A.RTRVL_CFM_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+					</when>
+					<otherwise>
+						AND  A.RTRVL_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+					</otherwise>
+				</choose>
+			
+				<if test='BIZR_TP_CD !=null  and BIZR_TP_CD !="" '  >
+						AND B.BIZR_TP_CD = #{BIZR_TP_CD}
+				</if>
+				<if test='WHSDL_BIZRNO !=null  and WHSDL_BIZRNO !="" '  >
+						AND  A.WHSDL_BIZRNO = #{WHSDL_BIZRNO}
+						AND  A.WHSDL_BIZRID = #{WHSDL_BIZRID}
+				</if>
+				<if test='WHSDL_BRCH_ID !=null  and WHSDL_BRCH_ID !="" '  >
+						AND A.WHSDL_BRCH_ID = #{WHSDL_BRCH_ID}
+						AND A.WHSDL_BRCH_NO = #{WHSDL_BRCH_NO}
+				</if>
+				<if test='RTRVL_STAT_CD !=null  and RTRVL_STAT_CD !="" ' >
+						AND A.RTRVL_STAT_CD = #{RTRVL_STAT_CD}
+				</if>
+				
+				<if test='PRPS_CD != null and PRPS_CD != "" ' >
+					<if test="PRPS_CD.equalsIgnoreCase('0') ">
+						AND A.FB_RTRVL_QTY_TOT != 0
+					</if>
+					<if test="PRPS_CD.equalsIgnoreCase('1') ">
+						AND A.FH_RTRVL_QTY_TOT != 0
+					</if>								
+				</if>						
+				<if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+						 AND EXISTS (
+				 					   SELECT 'X'
+			                             FROM EPCN_BRCH_INFO S1
+			                           WHERE 1=1
+			                              AND A.WHSDL_BIZRID = S1.BIZRID
+			                              AND A.WHSDL_BIZRNO = S1.BIZRNO
+			                              AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+			                              AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+					                      AND EXISTS (
+					                      					   SELECT 'X'
+									                             FROM EPCN_BRCH_INFO S2
+									                           WHERE 1=1
+									                              AND S1.BIZRID = S2.BIZRID
+									                              AND S1.BIZRNO = S2.BIZRNO
+									                              AND (
+										                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+										                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')
+									                                     ) 
+									                              AND S2.BRCH_ID = #{S_BRCH_ID}
+									                              AND S2.BRCH_NO = #{S_BRCH_NO}
+										          			)
+	                         		)
+				</if>
+				
+	</select>
+	
+	<!-- 총 회수량 합계 조회 -->
+	<select id="epwh2925801_select2" parameterType="map" resultType="hashmap">
+		 	SELECT   
+						TO_CHAR(NVL(T1,0),'9,999,999,999,999') AS T1
+						,TO_CHAR(NVL(T2,0),'9,999,999,999,999') AS T2
+						,TO_CHAR(NVL(T3,0),'9,999,999,999,999') AS T3
+						,TO_CHAR(NVL(T1,0)-(NVL(T2,0)+NVL(T3,0)),'9,999,999,999,999') AS T4
+						,TO_CHAR(NVL(T5,0),'9,999,999,999,999') AS T5
+			FROM
+					(
+						SELECT
+						
+									<if test='PRPS_CD == null or PRPS_CD == "" ' >
+									SUM(A.FH_RTRVL_QTY_TOT)+ SUM(A.FB_RTRVL_QTY_TOT) AS T1
+									,SUM(CASE WHEN RTRVL_STAT_CD   IN ('VC','WC','RC') THEN FH_RTRVL_QTY_TOT + FB_RTRVL_QTY_TOT  END ) AS T2
+									,SUM(CASE WHEN RTRVL_STAT_CD  = 'PC' THEN FH_RTRVL_QTY_TOT + FB_RTRVL_QTY_TOT  END ) AS T3
+									,SUM(CASE WHEN RTRVL_STAT_CD   IN ('RG' ,'WG') THEN FH_RTRVL_QTY_TOT + FB_RTRVL_QTY_TOT  END ) AS T5
+									</if>		
+												
+									<if test='PRPS_CD != null and PRPS_CD != "" ' >
+										<if test="PRPS_CD.equalsIgnoreCase('0') ">
+									 SUM(A.FB_RTRVL_QTY_TOT) AS T1
+									,SUM(CASE WHEN RTRVL_STAT_CD   IN ('VC','WC','RC') THEN FB_RTRVL_QTY_TOT  END ) AS T2
+									,SUM(CASE WHEN RTRVL_STAT_CD  = 'PC' THEN FB_RTRVL_QTY_TOT  END ) AS T3
+									,SUM(CASE WHEN RTRVL_STAT_CD   IN ('RG' ,'WG') THEN FB_RTRVL_QTY_TOT  END ) AS T5
+										</if>
+										<if test="PRPS_CD.equalsIgnoreCase('1') ">
+ 									 SUM(A.FH_RTRVL_QTY_TOT) AS T1
+									,SUM(CASE WHEN RTRVL_STAT_CD   IN ('VC','WC','RC') THEN FH_RTRVL_QTY_TOT  END ) AS T2
+									,SUM(CASE WHEN RTRVL_STAT_CD  = 'PC' THEN FH_RTRVL_QTY_TOT  END ) AS T3
+									,SUM(CASE WHEN RTRVL_STAT_CD   IN ('RG' ,'WG') THEN FH_RTRVL_QTY_TOT END ) AS T5
+										</if>								
+									</if>						
+						FROM 
+							EPCM_RTRVL_MST A
+							,(SELECT * FROM EPCN_BRCH_INFO WHERE BIZR_TP_CD IN ('W1','W2')  )B
+							<if test='BIZRNM !=null  and BIZRNM !="" ' >
+							,(SELECT * FROM EPCN_BRCH_INFO  WHERE 1=1 AND BIZRNM LIKE '%' || #{BIZRNM}   || '%'	) C
+			 				</if> 
+						WHERE 1=1
+						AND  A.WHSDL_BIZRNO = B.BIZRNO 
+						AND  A.WHSDL_BIZRID = B.BIZRID
+						AND  A.WHSDL_BRCH_ID = B.BRCH_ID
+						AND  A.WHSDL_BRCH_NO = B.BRCH_NO 
+						
+						<if test='BIZRNM !=null  and BIZRNM !="" ' >
+							AND  A.RTL_CUST_BIZRNO = C.BIZRNO 
+							AND  A.RTL_CUST_BIZRID = C.BIZRID
+							AND  A.RTL_CUST_BRCH_ID = C.BRCH_ID
+							AND  A.RTL_CUST_BRCH_NO = C.BRCH_NO 
+						</if> 
+						
+						<choose>
+							<when test='SEL_GBN !=null and SEL_GBN =="RTRVL_CFM_DT" '  >
+								AND  A.RTRVL_CFM_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+							</when>
+							<otherwise>
+								AND  A.RTRVL_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+							</otherwise>
+						</choose>
+						
+						<if test='BIZR_TP_CD !=null  and BIZR_TP_CD !="" '  >
+								AND B.BIZR_TP_CD = #{BIZR_TP_CD}
+						</if>
+						<if test='WHSDL_BIZRNO !=null  and WHSDL_BIZRNO !="" '  >
+								AND  A.WHSDL_BIZRNO = #{WHSDL_BIZRNO}
+								AND  A.WHSDL_BIZRID = #{WHSDL_BIZRID}
+						</if>
+						<if test='WHSDL_BRCH_ID !=null  and WHSDL_BRCH_ID !="" '  >
+								AND  A.WHSDL_BRCH_ID = #{WHSDL_BRCH_ID}
+								AND  A.WHSDL_BRCH_NO = #{WHSDL_BRCH_NO}
+						</if>
+						<if test='RTRVL_STAT_CD !=null  and RTRVL_STAT_CD !="" ' >
+								AND A.RTRVL_STAT_CD = #{RTRVL_STAT_CD}
+						</if>
+						
+						<if test='PRPS_CD != null and PRPS_CD != "" ' >
+							<if test="PRPS_CD.equalsIgnoreCase('0') ">
+								AND A.FB_RTRVL_QTY_TOT != 0
+							</if>
+							<if test="PRPS_CD.equalsIgnoreCase('1') ">
+								AND A.FH_RTRVL_QTY_TOT != 0
+							</if>								
+						</if>								
+						
+						<if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+								 AND EXISTS (
+						 					   SELECT 'X'
+					                             FROM EPCN_BRCH_INFO S1
+					                           WHERE 1=1
+					                              AND A.WHSDL_BIZRID = S1.BIZRID
+					                              AND A.WHSDL_BIZRNO = S1.BIZRNO
+					                              AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+					                              AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+							                      AND EXISTS (
+							                      					   SELECT 'X'
+											                             FROM EPCN_BRCH_INFO S2
+											                           WHERE 1=1
+											                              AND S1.BIZRID = S2.BIZRID
+											                              AND S1.BIZRNO = S2.BIZRNO
+											                              AND (
+												                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+												                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+											                                     ) 
+											                              AND S2.BRCH_ID = #{S_BRCH_ID}
+											                              AND S2.BRCH_NO = #{S_BRCH_NO}
+												          			)
+			                         		)
+						</if>
+					)	
+	</select>
+	
+		<!-- 회수정보관리 삭제 ,등록일괄확인  상태값 체크 -->
+	<select id="epwh2925801_select3" parameterType="map" resultType="int">
+		  SELECT COUNT(*)
+			FROM EPCM_RTRVL_MST 
+		 WHERE 1=1
+			 AND RTRVL_DOC_NO = #{RTRVL_DOC_NO}
+			 AND RTRVL_STAT_CD	NOT IN('RG','WG','RJ','WJ','VC')
+	</select>
+	
+	<!-- 회수정보관리 회수등록구분 -->
+	<select id="epwh2925801_select4" parameterType="map" resultType="String">
+			SELECT     
+				CASE     
+					WHEN RTRVL_REG_SE = 'M' 
+			       	THEN 'VC'
+			      	WHEN RTRVL_REG_SE = 'P' 
+			       	THEN 'WG'
+			       	WHEN RTRVL_REG_SE = 'D' 
+			       	THEN 'RG'
+			    END AS STAT_CD_NM 	
+			FROM 
+				EPCN_RTL_CUST_INFO
+			WHERE 1=1
+			AND WHSDL_BRCH_ID		= #{WHSDL_BRCH_ID}
+			AND WHSDL_BRCH_NO   	= #{WHSDL_BRCH_NO}
+			AND WHSDL_BIZRID    	= #{WHSDL_BIZRID}
+			AND WHSDL_BIZRNO    	= #{WHSDL_BIZRNO}
+			AND RTL_CUST_BIZRNO 	= #{RTL_CUST_BIZRNO}
+	</select>
+	          
+	<!-- 회수등록일괄확인 -->
+	<update id="epwh2925801_update" parameterType="map" >	
+			UPDATE 
+				EPCM_RTRVL_MST 
+			SET 
+				RTRVL_STAT_CD = #{RTRVL_STAT_CD} 
+				,RTRVL_CFM_DT = TO_CHAR(SYSDATE,'YYYYMMDD')
+				,UPD_PRSN_ID = #{UPD_PRSN_ID}
+				,UPD_DTTM = SYSDATE
+			WHERE 1=1 
+			AND RTRVL_DOC_NO =#{RTRVL_DOC_NO}
+	</update>	
+	
+	<!-- 회수정보관리 삭제 -->
+	<delete id="epwh2925801_delete" parameterType="map">
+		DECLARE  
+		    BEGIN
+		    
+		    	/* API TMP 삭제 */
+			   DELETE
+			      FROM EPCM_RTRVL_LST_TMP C
+			    WHERE 1=1
+			        AND EXISTS (
+			                     SELECT 'X'
+			                       FROM EPCM_RTRVL_MST A
+			                            	,EPCM_RTRVL_INFO B
+			                    WHERE 1=1
+			                        AND A.RTRVL_DOC_NO= #{RTRVL_DOC_NO}
+			                        AND A.REG_PRSN_ID = 'API'
+			                        AND A.RTRVL_DOC_NO = B.RTRVL_DOC_NO
+			                        AND C.RTRVL_REG_DT = A.RTRVL_REG_DT
+			                        AND C.WHSLD_BIZRNO = A.WHSDL_BIZRNO
+			                        AND C.RTRVL_DT =  B.RTRVL_DT
+			                        AND C.RTRVL_CTNR_CD = B.RTRVL_CTNR_CD
+			                   	)
+			     ;
+			     
+			     DELETE
+			       FROM EPCM_RTRVL_DTL_TMP C
+			     WHERE 1=1
+			        AND EXISTS (
+			                     SELECT 'X'
+			                       FROM EPCM_RTRVL_MST A
+			                            	,EPCM_RTRVL_INFO B
+			                    WHERE 1=1
+			                        AND A.RTRVL_DOC_NO= #{RTRVL_DOC_NO}
+			                        AND A.REG_PRSN_ID = 'API'
+			                        AND A.RTRVL_DOC_NO = B.RTRVL_DOC_NO
+			                        AND C.RTRVL_REG_DT = A.RTRVL_REG_DT
+			                        AND C.WHSLD_BIZRNO = A.WHSDL_BIZRNO
+			                        AND C.RTL_BIZRNO = A.RTL_CUST_BIZRNO
+			                        AND C.RTRVL_DT =  B.RTRVL_DT
+			                        AND C.RTRVL_CTNR_CD = B.RTRVL_CTNR_CD
+			                   	)
+			    ;
+		    
+			    DELETE FROM EPCM_RTRVL_INFO WHERE RTRVL_DOC_NO = #{RTRVL_DOC_NO};
+			    DELETE FROM EPCM_RTRVL_MST  WHERE RTRVL_DOC_NO = #{RTRVL_DOC_NO};
+	   		 END;
+	</delete>
+	
+<!-- 
+/***********************************************************************************************************************************************
+*	회수정보 등록
+************************************************************************************************************************************************/
+ -->
+ 
+ 	<!-- 회수정보저장  소매거래처 조회  -->
+ 	<select id="epwh2925831_select" parameterType="map" resultType="hashmap">
+		SELECT	 
+			A.BIZRID
+			,ECL_DECRYPT(A.BIZRNO) AS BIZRNO
+		 	,NVL(B.BRCH_ID, 'N') as BRCH_ID
+			,B.BRCH_NO
+		FROM 	
+			EPCN_BIZR_INFO	 	A
+   			,EPCN_BRCH_INFO 	B
+	    WHERE 1=1
+	    AND A.BIZRNO = ECL_ENCRYPT(#{RTL_CUST_BIZRNO})
+	    AND A.BIZRID = B.BIZRID(+)
+	    AND A.BIZRNO = B.BIZRNO(+)
+	    AND B.BRCH_NO(+) = '9999999999'
+	    AND ROWNUM = 1
+	</select>
+ 	
+ 	<!--회수정보저장 중복체크  -->
+	<select id="epwh2925831_select2" parameterType="map" resultType="int">
+			SELECT COUNT(*)
+			FROM EPCM_RTRVL_MST  A
+				,EPCM_RTRVL_INFO B 
+			WHERE 1=1
+			AND A.RTRVL_DOC_NO = B.RTRVL_DOC_NO
+			AND	A.WHSDL_BIZRID = #{WHSDL_BIZRID}
+			AND	A.WHSDL_BIZRNO = #{WHSDL_BIZRNO}
+			AND	A.WHSDL_BRCH_ID = #{WHSDL_BRCH_ID}
+			AND	A.WHSDL_BRCH_NO = #{WHSDL_BRCH_NO}
+			AND	A.RTL_CUST_BIZRNO = ECL_ENCRYPT(#{RTL_CUST_BIZRNO})
+			AND	A.RTL_CUST_BIZRID = #{RTL_CUST_BIZRID}
+			AND	A.RTL_CUST_BRCH_ID = #{RTL_CUST_BRCH_ID}
+			AND	A.RTL_CUST_BRCH_NO = #{RTL_CUST_BRCH_NO}
+			AND	A.RTRVL_REG_DT = TO_CHAR(SYSDATE,'YYYYMMDD')
+			AND	B.RTRVL_DT = REPLACE(#{RTRVL_DT}, '-')
+			AND	B.RTRVL_CTNR_CD = #{RTRVL_CTNR_CD}
+			<if test='RTRVL_DOC_NO !=null  and RTRVL_DOC_NO !="" '  >
+			AND   A.RTRVL_DOC_NO   	!=#{RTRVL_DOC_NO}
+			</if>
+		
+	</select>
+	
+	<!--회수정보저장 도매업자지점아이디 조회 -->
+	<select id="epwh2925831_select3" parameterType="map" resultType="hashmap">
+			SELECT BRCH_ID ,BRCH_NM
+			FROM EPCN_BRCH_INFO 
+			WHERE 1=1
+			AND	BRCH_NO = #{WHSDL_BRCH_NO}
+			AND	BIZRID = #{WHSDL_BIZRID}
+			AND	BIZRNO = #{WHSDL_BIZRNO}
+	</select>
+
+	<!-- 회수정보저장 엑셀등록 조회 -->
+	<select id="epwh2925831_select4" parameterType="map" resultType="hashmap">
+				SELECT      
+					 TO_CHAR(TO_DATE(#{RTRVL_DT},'YYYYMMDD'),'YYYY-MM-DD') AS RTRVL_DT
+					, #{REG_CUST_NM}	AS REG_CUST_NM
+					, A.RTRVL_CTNR_CD
+					, A.CTNR_NM
+					, EPCN_ETC_NM(A.CPCT_CD,'E001') AS CPCT_NM
+					, EPCN_ETC_NM(A.PRPS_CD,'E002') AS PRPS_NM  
+					, #{RTRVL_QTY} AS RTRVL_QTY
+					, #{RTRVL_QTY} * B.RTRVL_DPS AS RTRVL_GTN 
+					, CASE WHEN A.PRPS_CD = '0' THEN '0' ELSE #{REG_RTRVL_FEE} END AS REG_RTRVL_FEE /* 유흥용은 0 */
+					, #{RTRVL_QTY} * C.RTRVL_FEE AS RTRVL_RTL_FEE 
+					, #{RTRVL_QTY} * B.RTRVL_DPS  +  (CASE WHEN A.PRPS_CD = '0' THEN '0' ELSE #{REG_RTRVL_FEE} END) AS AMT_TOT
+					, #{RMK} AS RMK
+					, #{WHSDL_BIZRID}  	AS WHSDL_BIZRID
+					, #{WHSDL_BIZRNO}  AS WHSDL_BIZRNO
+					, #{WHSDL_BRCH_ID}  AS WHSDL_BRCH_ID
+					, #{WHSDL_BRCH_NO} AS WHSDL_BRCH_NO
+					, #{WHSDL_BRCH_ID}||';'||#{WHSDL_BRCH_NO} AS  WHSDL_BRCH_NM_CD
+					, #{WHSDL_BRCH_NM} AS WHSDL_BRCH_NM	
+					, #{RTL_CUST_BIZRNO} AS RTL_CUST_BIZRNO
+					, 'W' AS SYS_SE
+				 FROM  
+					 EPCN_RTRVL_CTNR_CD A
+					 , (SELECT * FROM EPCN_RTRVL_DPS_MGNT  WHERE #{RTRVL_DT} BETWEEN  APLC_ST_DT AND  APLC_END_DT ) B
+					 , (SELECT * FROM EPCN_RTRVL_FEE_MGNT  WHERE #{RTRVL_DT}  BETWEEN  APLC_ST_DT AND  APLC_END_DT ) C
+					 , (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') D
+				WHERE 1=1  
+				AND	A.RTRVL_CTNR_CD  	= B.RTRVL_CTNR_CD
+				AND	A.LANG_SE_CD 		= B.LANG_SE_CD
+				AND	A.RTRVL_CTNR_CD  	= C.RTRVL_CTNR_CD
+				AND	A.LANG_SE_CD 		= C.LANG_SE_CD
+				AND	A.LANG_SE_CD 		= D.LANG_SE_CD
+				AND	A.RTRVL_CTNR_CD 	= #{RTRVL_CTNR_CD}
+	     
+	</select>  
+	
+	<!-- 소매업자 조회 -->
+	<select id="epwh2925831_select5" parameterType="map" resultType="hashmap">
+		   SELECT  
+					 --D.BIZRNM AS WHSDL_BIZRNM
+                     A.RTL_CUST_NM AS WHSDL_BIZRNM
+                    ,PI_DECRYPT(C.BIZRNO) AS CUST_BIZRNO_DE 	
+		   FROM EPCN_RTL_CUST_INFO A 
+			        ,EPCN_BRCH_INFO B 
+			        ,EPCN_BRCH_INFO C 
+			        ,EPCN_BIZR_INFO D 
+			        ,EPCN_BIZR_INFO E
+		  WHERE 1=1
+			   AND A.WHSDL_BRCH_ID = B.BRCH_ID
+			   AND A.WHSDL_BRCH_NO = B.BRCH_NO
+			   AND A.WHSDL_BIZRID = B.BIZRID
+			   AND A.WHSDL_BIZRNO = B.BIZRNO
+		       AND A.RTL_CUST_BRCH_ID = C.BRCH_ID
+		       AND A.RTL_CUST_BRCH_NO = C.BRCH_NO
+		       AND A.RTL_CUST_BIZRID = C.BIZRID
+		       AND A.RTL_CUST_BIZRNO = C.BIZRNO
+		       AND A.WHSDL_BIZRID = D.BIZRID
+		       AND A.WHSDL_BIZRNO = D.BIZRNO
+		       AND A.RTL_CUST_BIZRID = E.BIZRID
+           	   AND A.RTL_CUST_BIZRNO = E.BIZRNO
+		       AND A.WHSDL_BIZRID =  #{WHSDL_BIZRID}
+		       AND A.WHSDL_BIZRNO =  #{WHSDL_BIZRNO}
+		       AND A.STAT_CD = 'Y'
+		       AND B.STAT_CD = 'Y'
+		       AND C.STAT_CD = 'Y'
+		 ORDER BY D.SEL_ORD, A.WHSDL_BIZRID, E.SEL_ORD, A.RTL_CUST_BIZRID, DECODE(A.RTL_CUST_BRCH_NO,'9999999999','0','1'), C.BRCH_NM
+	     
+	</select> 
+        
+	<!--MST 등록  -->
+	<insert id="epwh2925831_insert"  parameterType="map" >	
+		INSERT INTO
+				EPCM_RTRVL_MST
+				(
+					RTRVL_DOC_NO
+					,WHSDL_BIZRID
+					,WHSDL_BIZRNO
+					,WHSDL_BRCH_ID
+					,WHSDL_BRCH_NO
+					,RTL_CUST_BIZRNO
+					,RTL_CUST_BIZRID
+					,RTL_CUST_BRCH_ID
+					,RTL_CUST_BRCH_NO
+					,REG_CUST_NM
+					,SYS_SE
+					,RTRVL_REG_DT
+					,RTRVL_STAT_CD
+					<if test="RTRVL_STAT_CD.equalsIgnoreCase('VC') ">
+						,RTRVL_CFM_DT
+					</if>
+					,REG_PRSN_ID
+					,REG_DTTM
+				)
+				VALUES
+				(
+				 	 #{RTRVL_DOC_NO}
+					,#{WHSDL_BIZRID}
+					,#{WHSDL_BIZRNO}
+					,#{WHSDL_BRCH_ID}
+					,#{WHSDL_BRCH_NO}
+					,ECL_ENCRYPT(#{RTL_CUST_BIZRNO})
+					,#{RTL_CUST_BIZRID}
+					,#{RTL_CUST_BRCH_ID}
+					,#{RTL_CUST_BRCH_NO}
+					,#{REG_CUST_NM}
+					,#{SYS_SE}
+					, TO_CHAR(SYSDATE,'YYYYMMDD')
+					,#{RTRVL_STAT_CD}
+					<if test="RTRVL_STAT_CD.equalsIgnoreCase('VC') ">
+						,TO_CHAR(SYSDATE,'YYYYMMDD')
+					</if>
+					,#{S_USER_ID}
+					,SYSDATE
+				 )
+	</insert>
+	       
+	 <!--INFO 등록  -->
+	 <insert id="epwh2925831_insert2"  parameterType="map" >
+	 		INSERT INTO
+		 			EPCM_RTRVL_INFO
+				 		(
+							RTRVL_DOC_NO
+							,RTRVL_DT
+							,RTRVL_CTNR_CD
+							,RTRVL_QTY
+							,RTRVL_GTN
+							,REG_RTRVL_FEE
+							,RTRVL_RTL_FEE
+							,RMK
+							,REG_PRSN_ID
+							,REG_DTTM
+				 		)
+				 		VALUES
+	 					(
+							#{RTRVL_DOC_NO}
+							,REPLACE(#{RTRVL_DT}, '-')
+							,#{RTRVL_CTNR_CD}
+							,#{RTRVL_QTY}
+							,#{RTRVL_GTN}
+							,#{REG_RTRVL_FEE}
+							,#{RTRVL_RTL_FEE}
+							,#{RMK}
+							,#{S_USER_ID}
+							,SYSDATE
+				 		)
+	 </insert>
+	 
+	 <!-- MST update -->  
+	 <update id="epwh2925831_update" parameterType="map" >
+			UPDATE    
+				 EPCM_RTRVL_MST  SET
+					(
+					 FB_RTRVL_QTY_TOT
+					, FH_RTRVL_QTY_TOT
+					, RTRVL_GTN_TOT
+					, REG_RTRVL_FEE_TOT
+					, RTRVL_RTL_FEE_TOT
+					 ) = (
+							SELECT
+								SUM(DECODE(B.PRPS_CD,'0',RTRVL_QTY,0))
+								,SUM(DECODE(B.PRPS_CD,'1',RTRVL_QTY,0))
+								,SUM(RTRVL_GTN)   
+								,SUM(REG_RTRVL_FEE)
+								,SUM(RTRVL_RTL_FEE)
+							FROM
+								EPCM_RTRVL_INFO A
+								,EPCN_RTRVL_CTNR_CD B
+								,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+							WHERE 1=1
+							AND A.RTRVL_CTNR_CD = B.RTRVL_CTNR_CD
+							AND B.LANG_SE_CD = E.LANG_SE_CD
+							AND RTRVL_DOC_NO = #{RTRVL_DOC_NO}
+						  )
+				WHERE 1=1
+				AND RTRVL_DOC_NO =#{RTRVL_DOC_NO}
+	</update>
+	
+	
+<!-- 	  
+/***********************************************************************************************************************************************
+ *	회수정보수정
+ ************************************************************************************************************************************************/
+  -->
+	<!--회수정보수정 그리드 초기값  -->
+	<select id="epwh2925842_select" parameterType="map" resultType="hashmap">
+				SELECT   
+					A.RTRVL_DOC_NO
+					,ECL_DECRYPT(A.WHSDL_BIZRNO) AS WHSDL_BIZRNO_DE   
+					,ECL_DECRYPT(A.RTL_CUST_BIZRNO) AS RTL_CUST_BIZRNO
+					,A.WHSDL_BIZRID   
+					,A.WHSDL_BIZRNO
+					,A.WHSDL_BRCH_ID   
+					,A.WHSDL_BRCH_NO   
+					,A.WHSDL_BRCH_ID||';'||A.WHSDL_BRCH_NO AS WHSDL_BRCH_NM_CD
+					,A.RTL_CUST_BIZRID
+					,A.RTL_CUST_BRCH_ID
+					,A.RTL_CUST_BRCH_NO
+					,EPCN_BIZR_NM(A.WHSDL_BIZRID,A.WHSDL_BIZRNO) AS WHSDL_BIZRNM
+					,EPCN_BRCH_NM(A.WHSDL_BRCH_ID,A.WHSDL_BRCH_NO,A.WHSDL_BIZRID,A.WHSDL_BIZRNO) AS WHSDL_BRCH_NM
+					,EPCN_BIZR_NM(A.RTL_CUST_BIZRID,A.RTL_CUST_BIZRNO) AS REG_CUST_NM
+					,TO_CHAR(TO_DATE(B.RTRVL_DT,'YYYYMMDD'),'YYYY-MM-DD')  AS RTRVL_DT
+					,B.RTRVL_CTNR_CD
+					,B.RTRVL_QTY
+					,B.RTRVL_GTN
+					,B.REG_RTRVL_FEE
+					,B.RTRVL_RTL_FEE
+					,B.RTRVL_GTN + B.REG_RTRVL_FEE   AS AMT_TOT
+					,B.RMK     
+					,EPCN_ETC_NM(C.CPCT_CD,'E001') AS CPCT_NM
+					,EPCN_ETC_NM(C.PRPS_CD,'E002') AS PRPS_NM
+					,A.SYS_SE
+					,A.RTRVL_STAT_CD
+					,TO_CHAR(A.REG_DTTM,'YYYYMMDD') AS REG_DTTM_STD
+					,C.CTNR_NM
+				FROM    
+			 		EPCM_RTRVL_MST A
+			 		,EPCM_RTRVL_INFO B
+			 		,EPCN_RTRVL_CTNR_CD C
+			 		,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+				WHERE 1=1
+				AND A.RTRVL_DOC_NO = B.RTRVL_DOC_NO
+				AND B.RTRVL_CTNR_CD = C.RTRVL_CTNR_CD
+				AND C.LANG_SE_CD = E.LANG_SE_CD
+				AND A.RTRVL_DOC_NO = #{RTRVL_DOC_NO}
+	</select>
+		      
+	<!-- info 삭제 -->
+  	<delete id="epwh2925842_delete" parameterType="map">
+  			DELETE FROM EPCM_RTRVL_INFO WHERE RTRVL_DOC_NO =#{RTRVL_DOC_NO}
+  	</delete>
+	
+	
+<!-- 	  
+/***********************************************************************************************************************************************
+  *	회수정보 조정
+ ************************************************************************************************************************************************/
+ --> 
+	<!--회수조정시 마스터 상태값 변경  -->
+	<update id="epwh29258422_update" parameterType="map">
+		UPDATE EPCM_RTRVL_MST SET 
+		RTRVL_STAT_CD = #{RTRVL_STAT_CD}
+		WHERE RTRVL_DOC_NO = #{RTRVL_DOC_NO}
+  	</update>
+	
+<!-- 
+/***********************************************************************************************************************************************
+ *회수증빙자료관리 조회
+ ************************************************************************************************************************************************/
+ -->   
+ 
+ 	<!--회수정보수정 그리드 초기값  -->
+	<select id="epwh2925897_select" parameterType="map" resultType="hashmap">
+			SELECT
+				<![CDATA[ 
+					EPCN_BIZR_NM(WHSDL_BIZRID,WHSDL_BIZRNO) AS WHSDL_BIZRNM
+					,RTRVL_DT
+					,TO_CHAR(REG_DTTM,'YYYY-MM-DD') AS REG_DTTM
+					,'<a href="javascript:link();" target="_self" class="gridLink">'||FILE_NM||'</a>' AS FILE_NM
+					,FILE_NM AS FILE_NM_ORI
+					,DTL_SN    
+					,SAVE_FILE_NM  
+					,FILE_PATH
+					,WHSDL_BIZRNO
+					,WHSDL_BIZRID
+				]]>
+			FROM
+				EPCM_RTRVL_PRF_FILE
+			WHERE 1=1
+			<if test="START_DT !=null and START_DT !='' ">
+				AND RTRVL_DT BETWEEN  REPLACE(#{START_DT}, '-')  AND REPLACE(#{END_DT}, '-') 
+			</if>
+			<if test="WHSDL_BIZRNO !=null and WHSDL_BIZRNO !='' ">
+				AND WHSDL_BIZRID	= #{WHSDL_BIZRID}
+				AND WHSDL_BIZRNO 	= #{WHSDL_BIZRNO}
+			</if>	
+			<if test="DTL_SN !=null and DTL_SN !='' ">
+				AND	RTRVL_DT =#{RTRVL_DT}
+				AND DTL_SN = #{DTL_SN}
+			</if>
+	</select>
+	
+	<!--증빙파일 삭제  -->
+	<delete id="epwh2925897_delete"  parameterType="map" >
+			DELETE FROM EPCM_RTRVL_PRF_FILE 
+			WHERE 1=1
+			AND WHSDL_BIZRID = #{WHSDL_BIZRID}
+			AND WHSDL_BIZRNO = #{WHSDL_BIZRNO}
+			AND RTRVL_DT = #{RTRVL_DT}
+			AND DTL_SN = #{DTL_SN}
+	</delete>
+	
+<!-- 
+/***********************************************************************************************************************************************
+ *회수증빙자료관리 저장
+ ************************************************************************************************************************************************/
+ -->
+
+	<!-- 증빙파일등록 등록 -->
+	<insert  id="epwh2925888_insert"  parameterType="map" >
+		INSERT
+			INTO EPCM_RTRVL_PRF_FILE
+				(
+					WHSDL_BIZRNO
+					,WHSDL_BIZRID
+					,RTRVL_DT
+					,DTL_SN
+					,FILE_NM
+					,SAVE_FILE_NM
+					,FILE_PATH
+					,REG_PRSN_ID
+					,REG_DTTM
+				)values(
+					#{WHSDL_BIZRNO}
+					,#{WHSDL_BIZRID}
+					,REPLACE(#{RTRVL_DT}, '-')
+					, (	SELECT NVL(MAX(DTL_SN), 0) + 1 AS DTL_SN 
+						FROM EPCM_RTRVL_PRF_FILE 
+						WHERE 	1=1
+						AND WHSDL_BIZRNO = #{WHSDL_BIZRNO}
+						AND WHSDL_BIZRID = #{WHSDL_BIZRID}
+						AND RTRVL_DT = REPLACE(#{RTRVL_DT}, '-') ) 
+					,#{FILE_NM}
+					,#{SAVE_FILE_NM}
+					,#{FILE_PATH}
+					,#{REG_PRSN_ID}
+					,SYSDATE
+				)
+	</insert>
+	
+</mapper>
+

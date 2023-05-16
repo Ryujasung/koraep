@@ -1,0 +1,326 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<%@include file="/jsp/include/common_page.jsp" %>
+
+	<script type="text/javaScript" language="javascript" defer="defer">
+			
+		var INQ_PARAMS;
+		var stdMgntList;
+		var excaSeList;
+		var excaProcStatList;
+		var bizrTpList;
+		
+		$(document).ready(function(){
+
+			INQ_PARAMS = jsonObject($('#INQ_PARAMS').val());
+			stdMgntList = jsonObject($('#stdMgntList').val());
+			excaSeList = jsonObject($('#excaSeList').val());
+			excaProcStatList = jsonObject($('#excaProcStatList').val());
+			bizrTpList = jsonObject($('#bizrTpList').val());
+			
+			//버튼 셋팅
+			fn_btnSetting();
+						
+			$('.tit').each(function(){
+				$(this).text(parent.fn_text($(this).attr('id').substring(0, $(this).attr('id').lastIndexOf('_txt'))) );
+			});
+			
+			kora.common.setEtcCmBx2(stdMgntList, "","", $("#EXCA_STD_CD_SEL"), "EXCA_STD_CD", "EXCA_STD_NM", "N" ,'S');
+			for(var k=0; k<stdMgntList.length; k++){ 
+		    	if(stdMgntList[k].EXCA_STAT_CD == 'S'){
+		    		$('#EXCA_STD_CD_SEL').val(stdMgntList[k].EXCA_STD_CD);
+		    		break;
+		    	}
+		    }
+			
+            //교환/수기정산기간 추가
+            $("#EXCA_STD_CD_SEL").append("<option value='C'>교환정산</option>");
+            $("#EXCA_STD_CD_SEL").append("<option value='M'>수기정산</option>");
+
+		    //kora.common.setEtcCmBx2(bizrTpList, "","", $("#BIZR_TP_CD_SEL"), "ETC_CD", "ETC_CD_NM", "N" ,'T');
+		    kora.common.setEtcCmBx2(excaSeList, "","", $("#EXCA_SE_CD_SEL"), "ETC_CD", "ETC_CD_NM", "N" ,'T');
+		    kora.common.setEtcCmBx2(excaProcStatList, "","", $("#EXCA_PROC_STAT_CD_SEL"), "ETC_CD", "ETC_CD_NM", "N" ,'T');
+			
+		  //파라미터 조회조건으로 셋팅
+			if(kora.common.null2void(INQ_PARAMS.SEL_PARAMS) != ""){
+				kora.common.jsonToTable("sel_params",INQ_PARAMS.SEL_PARAMS);
+			}
+		    
+			//그리드 셋팅
+			fn_set_grid();
+
+			//정산서발급취소
+			$("#btn_upd").click(function(){
+				fn_upd();
+			});
+			
+			//조회 버튼
+			$("#btn_sel").click(function(){
+				fn_sel();
+			});
+						
+		});
+		
+		//수납확인상세조회 팝업
+		function fn_pop(){
+			
+			var idx = dataGrid.getSelectedIndex();
+			
+			if(idx < 0){
+				alertMsg('선택된 행이 없습니다');
+				return;
+			}
+			
+			parent_item = gridRoot.getItemAt(idx);
+			var pagedata = window.frameElement.name;
+			window.parent.NrvPub.AjaxPopup('/MF/EPMF4707288.do', pagedata);
+		}
+		
+		function fn_upd(){
+			
+			var EXCA_STD_CD_SEL = $("#EXCA_STD_CD_SEL option:selected").val();
+			
+			if(EXCA_STD_CD_SEL == ""){
+				alertMsg("정산기간을 선택하세요.");
+				return;
+			}
+			
+			for(var i=0; i<stdMgntList.length; i++){
+				if(stdMgntList[i].EXCA_STD_CD == EXCA_STD_CD_SEL){
+					if(stdMgntList[i].EXCA_STAT_CD != "S"){
+						alertMsg("진행 상태의 정산기간에 대해서만 발급 취소 처리가 가능합니다.");
+						return;
+					}
+				}
+			}
+			
+			confirm("해당 정산기간에 발급된 전체 정산서가 발급 취소됩니다.\n계속 진행하시겠습니까?", 'fn_upd_exec');
+			
+		}
+		
+		function fn_upd_exec(){
+			
+			var url  = "/MF/EPMF4707201_21.do";
+			var input = {};
+			input["EXCA_STD_CD_SEL"] = $("#EXCA_STD_CD_SEL").val();
+			
+			document.body.style.cursor = "wait";
+			ajaxPost(url, input, function(rtnData){
+				if ("" != rtnData && null != rtnData) {
+					if(rtnData.RSLT_CD =="0000"){
+						alertMsg(rtnData.RSLT_MSG, 'fn_sel');
+					}else{
+						alertMsg(rtnData.RSLT_MSG);
+					}
+				} else {
+					alertMsg("error");
+				}
+				document.body.style.cursor = "default";
+			});
+			
+		}
+		
+		//상세화면 이동
+		function fn_page(){
+
+			var idx = dataGrid.getSelectedIndices();
+			var input = gridRoot.getItemAt(idx);
+	        var url = "/MF/EPMF4707264.do";
+
+	        if("C" == input.EXCA_ISSU_SE_CD) {
+	            url = "/MF/EPMF47929643.do";   
+	        }
+
+			INQ_PARAMS["PARAMS"] = input;
+			INQ_PARAMS["FN_CALLBACK" ] = "fn_sel";
+			INQ_PARAMS["URL_CALLBACK"] = "/MF/EPMF4707201.do"; 
+			kora.common.goPage(url, INQ_PARAMS);
+		}
+		
+		/**
+		 * 목록조회
+		 */
+		function fn_sel(){
+
+			if($('#EXCA_STD_CD_SEL').val() == '' ){
+				alertMsg('정산기간을 선택하세요.');
+				return;
+			}
+			
+			var input = {};
+			input["EXCA_STD_CD_SEL"] = $("#EXCA_STD_CD_SEL").val();
+			//input["BIZR_TP_CD_SEL"] = $("#BIZR_TP_CD_SEL").val();
+			//input["BIZRNM_SEL"] = $("#BIZRNM_SEL").val();
+			input["EXCA_SE_CD_SEL"] = $("#EXCA_SE_CD_SEL").val();
+			input["EXCA_PROC_STAT_CD_SEL"] = $("#EXCA_PROC_STAT_CD_SEL").val();
+
+			INQ_PARAMS["SEL_PARAMS"] = input;
+			
+			var url = "/MF/EPMF4707201_19.do";
+			
+			kora.common.showLoadingBar(dataGrid, gridRoot);// 그리드 loading bar on
+			ajaxPost(url, input, function(rtnData){
+				if(rtnData != null && rtnData != ""){
+					gridApp.setData(rtnData.searchList);
+				} 
+				else {
+					alertMsg("error");
+				}
+				kora.common.hideLoadingBar(dataGrid, gridRoot);// 그리드 loading bar off
+			});
+		}
+		
+		/**
+		 * 그리드 관련 변수 선언
+		 */
+	    var jsVars = "rMateOnLoadCallFunction=gridReadyHandler";
+		var gridApp, gridRoot, dataGrid, layoutStr, selectorColumn;
+		var layoutStr = new Array();
+		var rowIndex;
+		
+		/**
+		 * 메뉴관리 그리드 셋팅
+		 */
+		 function fn_set_grid() {
+			 
+			 rMateGridH5.create("grid", "gridHolder", jsVars, "100%", "100%");
+			 
+			 layoutStr.push('<rMateGrid>');
+			 layoutStr.push(' <NumberMaskFormatter id="dateFmt" formatString="####-##-##"/>');
+			 layoutStr.push('	<NumberFormatter id="numfmt" useThousandsSeparator="true"/>');
+			 layoutStr.push('<DataGrid headerColors="[#EFF6FC,#EFF6FC]" verticalAlign="middle" id="dg1" headerHeight="35" horizontalScrollPolicy="auto" horizontalGridLines="true"  textAlign="center" 	draggableColumns="true" sortableColumns="true" > ');
+			 layoutStr.push('<groupedColumns>');
+			 layoutStr.push('	<DataGridColumn dataField="index" headerText="'+parent.fn_text('sn')+'" itemRenderer="IndexNoItem" textAlign="center" width="50" />');
+			 layoutStr.push('	<DataGridColumn dataField="EXCA_REG_DT_PAGE"  headerText="'+parent.fn_text('issu_dt')+'" width="90" itemRenderer="HtmlItem" />');
+			 layoutStr.push('	<DataGridColumn dataField="BIZR_TP_NM"  headerText="'+parent.fn_text('bizr_se')+'" width="100" />');
+			 layoutStr.push('	<DataGridColumn dataField="BIZRNM"  headerText="'+parent.fn_text('bizr_nm')+'" width="200" />');
+			 layoutStr.push('	<DataGridColumn dataField="BANK_NM"  headerText="'+parent.fn_text('bank')+'" width="100" />');
+			 layoutStr.push('	<DataGridColumn dataField="ACCT_NO"  headerText="'+parent.fn_text('vacct_no')+'" width="140" />');
+			 layoutStr.push('	<DataGridColumn dataField="REAL_PAY_DT" headerText="'+parent.fn_text('real_pay_dt')+'" width="140" />');
+			 layoutStr.push('	<DataGridColumn dataField="ACP_DT" headerText="'+parent.fn_text('acp_dt2')+'" width="110" formatter="{dateFmt}" />');
+			 layoutStr.push('	<DataGridColumn dataField="EXCA_AMT" id="num1"  headerText="'+parent.fn_text('exca_amt')+'" width="120" formatter="{numfmt}" textAlign="right" />');
+			 layoutStr.push('	<DataGridColumn dataField="EXCA_ISSU_SE_NM"  headerText="'+parent.fn_text('exca_issu_se')+'" width="100" />');
+			 layoutStr.push('	<DataGridColumn dataField="EXCA_SE_NM"  headerText="'+parent.fn_text('exca_se')+'" width="100" />');
+			 layoutStr.push('	<DataGridColumn dataField="EXCA_PROC_STAT_NM"  headerText="'+parent.fn_text('stat')+'" width="100" itemRenderer="HtmlItem" />');
+             layoutStr.push('   <DataGridColumn dataField="STD_YEAR" id="tmp4" headerText="'+parent.fn_text('std_year')+'" width="80" />');
+             layoutStr.push('   <DataGridColumn dataField="YEAR_CHG_YN" id="tmp5" headerText="'+parent.fn_text('year_chg_exca_yn')+'" width="120" />');
+			 layoutStr.push('</groupedColumns>');
+			 layoutStr.push('<footers>');
+			 layoutStr.push('	<DataGridFooter backgroundColor="#6E7376" color="#FFFFFF">');
+			 layoutStr.push('		<DataGridFooterColumn label="'+parent.fn_text('sum')+'" textAlign="center"/>');
+			 layoutStr.push('		<DataGridFooterColumn/>');
+			 layoutStr.push('		<DataGridFooterColumn/>');
+			 layoutStr.push('		<DataGridFooterColumn/>');
+			 layoutStr.push('		<DataGridFooterColumn/>');
+			 layoutStr.push('		<DataGridFooterColumn/>');
+			 layoutStr.push('		<DataGridFooterColumn/>');
+			 layoutStr.push('		<DataGridFooterColumn/>');
+			 layoutStr.push('		<DataGridFooterColumn summaryOperation="SUM" dataColumn="{num1}" formatter="{numfmt}" textAlign="right"/>');	
+			 layoutStr.push('		<DataGridFooterColumn/>');
+			 layoutStr.push('		<DataGridFooterColumn/>');
+			 layoutStr.push('		<DataGridFooterColumn/>');
+             layoutStr.push('       <DataGridFooterColumn/>');
+             layoutStr.push('       <DataGridFooterColumn/>');
+			 layoutStr.push('	</DataGridFooter>');
+			 layoutStr.push('</footers>');
+			 layoutStr.push('</DataGrid>');
+			 layoutStr.push('</rMateGrid>');
+		}
+		
+		// 그리드 및 메뉴 리스트 세팅
+		 function gridReadyHandler(id) {
+		 	 gridApp = document.getElementById(id);  // 그리드를 포함하는 div 객체
+		     gridRoot = gridApp.getRoot();   // 데이터와 그리드를 포함하는 객체
+		     gridApp.setLayout(layoutStr.join("").toString());
+
+		     var layoutCompleteHandler = function(event) {
+		    	 dataGrid = gridRoot.getDataGrid();  // 그리드 객체
+		    	 
+		    	 if(kora.common.null2void(INQ_PARAMS.FN_CALLBACK) != ""){
+				 	eval(INQ_PARAMS.FN_CALLBACK+"()");
+				 }else{
+					 gridApp.setData();
+				 }
+		    }
+		    var dataCompleteHandler = function(event) {
+		    }
+		    
+		    gridRoot.addEventListener("dataComplete", dataCompleteHandler);
+		    gridRoot.addEventListener("layoutComplete", layoutCompleteHandler);
+
+		 }
+		
+
+	</script>
+
+	<style type="text/css">
+		.row .tit{width: 77px;}
+	</style>
+
+</head>
+<body>
+
+<input type="hidden" id="INQ_PARAMS" value="<c:out value='${INQ_PARAMS}' />"/>
+<input type="hidden" id="stdMgntList" value="<c:out value='${stdMgntList}' />"/>
+<input type="hidden" id="excaSeList" value="<c:out value='${excaSeList}' />"/>
+<input type="hidden" id="excaProcStatList" value="<c:out value='${excaProcStatList}' />"/>
+<input type="hidden" id="bizrTpList" value="<c:out value='${bizrTpList}' />"/>
+
+	<div class="iframe_inner">
+		<div class="h3group">
+			<h3 class="tit" id="title"></h3>
+			<div class="singleRow">
+				<div class="btn" id="UR"></div>
+			</div>
+		</div>
+
+		<section class="secwrap">
+			<div class="srcharea" id="sel_params">
+				<div class="row">
+					<div class="col">
+						<div class="tit" id="exca_term_txt"></div>
+						<div class="box">
+							<select id="EXCA_STD_CD_SEL" name="EXCA_STD_CD_SEL" style="width: 179px" ></select>
+						</div>
+					</div>
+					
+					<div class="col">
+						<div class="tit" id="exca_se_txt"></div>
+						<div class="box">
+							<select id="EXCA_SE_CD_SEL" name="EXCA_SE_CD_SEL" style="width: 179px" ></select>
+						</div>
+					</div>
+					<div class="col">
+						<div class="tit" id="stat_txt"></div>
+						<div class="box">
+							<select id="EXCA_PROC_STAT_CD_SEL" name="EXCA_PROC_STAT_CD_SEL" style="width: 179px" ></select>
+						</div>
+					</div>
+					
+					<div class="btn" id="CR"></div>
+					
+				</div>
+				
+			</div>
+		</section>
+		
+		<section class="secwrap mt10">
+			<div class="boxarea">
+				<div id="gridHolder" style="height:418px;"></div>
+			</div>
+		</section>
+		<section class="btnwrap mt20" >
+			<div class="btn" id="BL">
+			</div>
+			<div class="btn" style="float:right" id="BR">
+			</div>
+		</section>
+	</div>
+	
+</body>
+</html>

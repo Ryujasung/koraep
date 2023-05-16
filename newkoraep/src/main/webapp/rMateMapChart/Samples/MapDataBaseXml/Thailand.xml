@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Region code="100" label="Northern" symbol="Northern">
+		<Province code="101" label="เชียงใหม่" symbol="เชียงใหม่"/>
+		<Province code="102" label="เชียงราย" symbol="เชียงราย"/>
+		<Province code="103" label="ลำปาง" symbol="ลำปาง"/>
+		<Province code="104" label="ลำพูน" symbol="ลำพูน"/>
+		<Province code="105" label="แม่ฮ่องสอน" symbol="แม่ฮ่องสอน"/>
+		<Province code="106" label="น่าน" symbol="น่าน"/>
+		<Province code="107" label="พะเยา" symbol="พะเยา"/>
+		<Province code="108" label="แพร่" symbol="แพร่"/>
+		<Province code="109" label="อุตรดิตถ์" symbol="อุตรดิตถ์"/>
+	</Region>
+	<Region code="200" label="Western" symbol="Western">
+		<Province code="201" label="กาญจนบุรี" symbol="กาญจนบุรี"/>
+		<Province code="202" label="เพชรบุรี" symbol="เพชรบุรี"/>
+		<Province code="203" label="ประจวบคีรีขันธ์" symbol="ประจวบคีรีขันธ์"/>
+		<Province code="204" label="ราชบุรี" symbol="ราชบุรี"/>
+		<Province code="205" label="ตาก" symbol="ตาก"/>
+	</Region>
+	<Region code="300" label="Central" symbol="Central">
+		<Province code="301" label="อ่างทอง" symbol="อ่างทอง"/>
+		<Province code="302" label="พระนครศรีอยุธยา" symbol="พระนครศรีอยุธยา"/>
+		<Province code="303" label="กรุงเทพฯ" symbol="กรุงเทพฯ"/>
+		<Province code="304" label="ชัยนาท" symbol="ชัยนาท"/>
+		<Province code="305" label="กำแพงเพชร" symbol="กำแพงเพชร"/>
+		<Province code="306" label="ลพบุรี" symbol="ลพบุรี"/>
+		<Province code="307" label="นครนายก" symbol="นครนายก"/>
+		<Province code="308" label="นครปฐม" symbol="นครปฐม"/>
+		<Province code="309" label="นครสวรรค์" symbol="นครสวรรค์"/>
+		<Province code="310" label="นนทบุรี" symbol="นนทบุรี"/>
+		<Province code="311" label="ปทุมธานี" symbol="ปทุมธานี"/>
+		<Province code="312" label="เพชรบูรณ์" symbol="เพชรบูรณ์"/>
+		<Province code="313" label="พิจิตร" symbol="พิจิตร"/>
+		<Province code="314" label="พิษณุโลก" symbol="พิษณุโลก"/>
+		<Province code="315" label="สุโขทัย" symbol="สุโขทัย"/>
+		<Province code="316" label="สมุทรปราการ" symbol="สมุทรปราการ"/>
+		<Province code="317" label="สมุทรสาคร" symbol="สมุทรสาคร"/>
+		<Province code="318" label="สมุทรสงคราม" symbol="สมุทรสงคราม"/>
+		<Province code="319" label="สระบุรี" symbol="สระบุรี"/>
+		<Province code="320" label="สิงห์บุรี" symbol="สิงห์บุรี"/>
+		<Province code="321" label="สุพรรณบุรี" symbol="สุพรรณบุรี"/>
+		<Province code="322" label="อุทัยธานี" symbol="อุทัยธานี"/>
+	</Region>
+	<Region code="400" label="Southern" symbol="Southern">
+		<Province code="401" label="ชุมพร" symbol="ชุมพร"/>
+		<Province code="402" label="กระบี่" symbol="กระบี่"/>
+		<Province code="403" label="นครศรีธรรมราช" symbol="นครศรีธรรมราช"/>
+		<Province code="404" label="นราธิวาส" symbol="นราธิวาส"/>
+		<Province code="405" label="ปัตตานี" symbol="ปัตตานี"/>
+		<Province code="406" label="พังงา" symbol="พังงา"/>
+		<Province code="407" label="พัทลุง" symbol="พัทลุง"/>
+		<Province code="408" label="ภูเก็ต" symbol="ภูเก็ต"/>
+		<Province code="409" label="ระนอง" symbol="ระนอง"/>
+		<Province code="410" label="สตูล" symbol="สตูล"/>
+		<Province code="411" label="สงขลา" symbol="สงขลา"/>
+		<Province code="412" label="สุราษฎร์ธานี" symbol="สุราษฎร์ธานี"/>
+		<Province code="413" label="ตรัง" symbol="ตรัง"/>
+		<Province code="414" label="ยะลา" symbol="ยะลา"/>
+	</Region>
+	<Region code="500" label="Eastern" symbol="Eastern">
+		<Province code="501" label="ฉะเชิงเทรา" symbol="ฉะเชิงเทรา"/>
+		<Province code="502" label="จันทบุรี" symbol="จันทบุรี"/>
+		<Province code="503" label="ชลบุรี" symbol="ชลบุรี"/>
+		<Province code="504" label="ปราจีนบุรี" symbol="ปราจีนบุรี"/>
+		<Province code="505" label="ระยอง" symbol="ระยอง"/>
+		<Province code="506" label="สระแก้ว" symbol="สระแก้ว"/>
+		<Province code="507" label="ตราด" symbol="ตราด"/>
+	</Region>
+	<Region code="600" label="Northeast" symbol="Northeast">
+		<Province code="601" label="อำนาจเจริญ" symbol="อำนาจเจริญ"/>
+		<Province code="602" label="บุรีรัมย์" symbol="บุรีรัมย์"/>
+		<Province code="603" label="ชัยภูมิ" symbol="ชัยภูมิ"/>
+		<Province code="604" label="กาฬสินธุ์" symbol="กาฬสินธุ์"/>
+		<Province code="605" label="ขอนแก่น" symbol="ขอนแก่น"/>
+		<Province code="606" label="เลย" symbol="เลย"/>
+		<Province code="607" label="มหาสารคาม" symbol="มหาสารคาม"/>
+		<Province code="608" label="มุกดาหาร" symbol="มุกดาหาร"/>
+		<Province code="609" label="นครพนม" symbol="นครพนม"/>
+		<Province code="610" label="นครราชสีมา" symbol="นครราชสีมา"/>
+		<Province code="611" label="หนองบัวลำภู" symbol="หนองบัวลำภู"/>
+		<Province code="612" label="หนองคาย" symbol="หนองคาย"/>
+		<Province code="613" label="ร้อยเอ็ด" symbol="ร้อยเอ็ด"/>
+		<Province code="614" label="สกลนคร" symbol="สกลนคร"/>
+		<Province code="615" label="ศรีสะเกษ" symbol="ศรีสะเกษ"/>
+		<Province code="616" label="สุรินทร์" symbol="สุรินทร์"/>
+		<Province code="617" label="อุบลราชธานี" symbol="อุบลราชธานี"/>
+		<Province code="618" label="อุดรธานี" symbol="อุดรธานี"/>
+		<Province code="619" label="ยโสธร" symbol="ยโสธร"/>
+		<Province code="620" label="บึงกาฬ" symbol="บึงกาฬ"/>
+	</Region>
+</Map>

@@ -1,0 +1,809 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF0140101Mapper">
+
+	<!-- 회원관리 리스트 -->
+	<select id="epmf0140101_select" resultType="hashmap">
+	
+		<if test='excelYn == null or excelYn == "" '>
+		 SELECT 
+		 			PNO 
+		 			,USER_ID
+		 			,USER_ID_PAGE
+		 			,USER_NM
+		 			,BIZRID
+		 			,BIZRNO
+		 			,BIZRNO_DE
+			        ,BIZRNM
+			        ,BRCH_NM
+			        ,USER_SE_CD
+			        ,USER_SE_NM
+			        ,BIZR_TP_CD
+			        ,BIZR_TP_NM
+			        ,AREA_CD
+			        ,AREA_NM
+			        ,EMAIL
+			        ,MBIL_NO
+			        ,USER_STAT_CD
+			        ,USER_STAT_NM
+			        ,PWD_ALT_REQ_YN
+			        ,PWD_ALT_REQ_NM
+			        ,PWD_ALT_REQ_DTTM
+			        ,ADDR
+			        ,ATH_GRP_NM
+		  FROM (
+		</if>
+	
+		 SELECT ROW_NUMBER()OVER(ORDER BY A.REG_DTTM DESC) AS PNO 
+		 			,A.USER_ID
+		 			,<![CDATA['<a href="javascript:fn_page()" class="gridLink">' || A.USER_ID || '</a>' as USER_ID_PAGE]]>
+		 			,A.USER_NM, A.BIZRID, A.BIZRNO
+		 			,PI_DECRYPT(A.BIZRNO) as BIZRNO_DE
+			        ,B.BIZRNM, C.BRCH_NM
+			        ,A.USER_SE_CD
+			        ,EPCN_ETC_NM(A.USER_SE_CD, 'B006') AS USER_SE_NM
+			        ,B.BIZR_TP_CD
+			        ,EPCN_ETC_NM(B.BIZR_TP_CD, 'B001') AS BIZR_TP_NM
+			        ,C.AREA_CD
+			        ,EPCN_ETC_NM(C.AREA_CD, 'B010') AS AREA_NM
+			        ,PI_DECRYPT(A.EMAIL) AS EMAIL
+			        ,A.MBIL_NO1||'-'||A.MBIL_NO2||'-'||PI_DECRYPT(A.MBIL_NO3) AS MBIL_NO
+			        ,A.USER_STAT_CD
+			        ,EPCN_ETC_NM(A.USER_STAT_CD, 'B007') AS USER_STAT_NM
+			        ,A.PWD_ALT_REQ_YN
+			        ,DECODE(A.PWD_ALT_REQ_YN, 'Y', (SELECT LANG_NM FROM EPCN_LANG_INFO A, EPCN_LANG_CD B WHERE A.LANG_CD = 'req' AND A.LANG_SE_CD = B.LANG_SE_CD AND B.STD_YN = 'Y' AND B.USE_YN = 'Y'), '') AS PWD_ALT_REQ_NM
+			        ,A.PWD_ALT_REQ_DTTM
+			        ,B.ADDR1 ||' '|| B.ADDR2 AS ADDR
+			        ,(SELECT ATH_GRP_NM FROM EPCN_ATH_GRP_INFO WHERE ATH_GRP_CD = D.ATH_GRP_CD AND BIZRID = D.BIZRID AND BIZRNO = D.BIZRNO) AS ATH_GRP_NM
+		   FROM EPCN_USER_INFO A
+			        ,EPCN_BIZR_INFO B
+			        ,EPCN_BRCH_INFO C
+			        ,EPCN_ATH_GRP_USER D
+		WHERE 1=1
+		    AND A.BIZRID = B.BIZRID
+		    AND A.BIZRNO = B.BIZRNO
+		    AND A.BRCH_ID = C.BRCH_ID(+)
+		    AND A.BRCH_NO = C.BRCH_NO(+)
+		    AND A.BIZRID = C.BIZRID(+)
+		    AND A.BIZRNO = C.BIZRNO(+)
+		    AND A.USER_ID = D.USER_ID(+)
+		    
+		  <if test='USER_NM_SEL != null and USER_NM_SEL != "" '>
+	   	  	AND A.USER_NM like '%' || #{USER_NM_SEL} || '%'
+	   	  </if> 
+	   	  <if test='USER_ID_SEL != null and USER_ID_SEL != "" '>
+	   	  	AND A.USER_ID like '%' || #{USER_ID_SEL} || '%'
+	   	  </if>
+	   	  <if test='USER_STAT_CD_SEL != null and USER_STAT_CD_SEL != "" '>
+	   	  	AND A.USER_STAT_CD = #{USER_STAT_CD_SEL}
+	   	  </if>
+	   	  <if test='PWD_ALT_REQ_YN_SEL != null and PWD_ALT_REQ_YN_SEL != "" '>
+	   	  	AND A.PWD_ALT_REQ_YN = #{PWD_ALT_REQ_YN_SEL}
+	   	  </if>
+	   	  <if test='BIZR_TP_CD_SEL != null and BIZR_TP_CD_SEL != "" '>
+	   	  	AND B.BIZR_TP_CD = #{BIZR_TP_CD_SEL}
+	   	  </if>
+	   	  <if test='BIZRNM_SEL != null and BIZRNM_SEL != "" '>
+	   	  	AND B.BIZRNM like '%' || #{BIZRNM_SEL} || '%'
+	   	  </if>
+	   	  <if test='BIZRNO_SEL != null and BIZRNO_SEL != "" '>
+	   	  	AND B.BIZRNO = ECL_ENCRYPT(#{BIZRNO_SEL}) 
+	   	  </if>
+	   	  <if test='AREA_CD_SEL != null and AREA_CD_SEL != "" '>
+	   	  	AND C.AREA_CD = #{AREA_CD_SEL}
+	   	  </if>
+	   	  <if test='USER_SE_CD_SEL != null and USER_SE_CD_SEL != "" '>
+	   	  	AND A.USER_SE_CD = #{USER_SE_CD_SEL}
+	   	  </if>
+	   	  
+	   	  <if test='BIZRID != null and BIZRID != "" '>
+	   	  	AND B.BIZRID = #{BIZRID}
+	   	  </if>
+	   	  <if test='BIZRNO != null and BIZRNO != "" '>
+	   	  	AND B.BIZRNO = #{BIZRNO}
+	   	  </if>
+	   	  
+	   	  <if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+				 AND EXISTS (
+				 					   SELECT 'X'
+			                             FROM EPCN_BRCH_INFO S1
+			                           WHERE 1=1
+			                              AND A.BIZRID = S1.BIZRID
+			                              AND A.BIZRNO = S1.BIZRNO
+			                              AND A.BRCH_ID = S1.BRCH_ID
+			                              AND A.BRCH_NO = S1.BRCH_NO
+					                      AND EXISTS (    
+					                      					   SELECT 'X'
+									                             FROM EPCN_BRCH_INFO S2
+									                           WHERE 1=1
+									                              AND S1.BIZRID = S2.BIZRID
+									                              AND S1.BIZRNO = S2.BIZRNO
+									                              AND (
+										                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+										                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+									                                     ) 
+									                              AND S2.BRCH_ID = #{S_BRCH_ID}
+									                              AND S2.BRCH_NO = #{S_BRCH_NO}
+										          			)
+	                         		)
+			 </if>
+	   	  
+	   	  ORDER BY A.REG_DTTM DESC
+	   	  
+	   	<if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+        </if>	
+
+	</select>
+	
+		<!-- 회원관리 리스트 -->
+	<select id="epmf0140101_select_cnt" resultType="int">
+	
+		 SELECT COUNT(1)
+		   FROM EPCN_USER_INFO A
+			        ,EPCN_BIZR_INFO B
+			        ,EPCN_BRCH_INFO C
+			        ,EPCN_ATH_GRP_USER D
+		WHERE 1=1
+		    AND A.BIZRID = B.BIZRID
+		    AND A.BIZRNO = B.BIZRNO
+		    AND A.BRCH_ID = C.BRCH_ID(+)
+		    AND A.BRCH_NO = C.BRCH_NO(+)
+		    AND A.BIZRID = C.BIZRID(+)
+		    AND A.BIZRNO = C.BIZRNO(+)
+		    AND A.USER_ID = D.USER_ID(+)
+		    
+		  <if test='USER_NM_SEL != null and USER_NM_SEL != "" '>
+	   	  	AND A.USER_NM like '%' || #{USER_NM_SEL} || '%'
+	   	  </if> 
+	   	  <if test='USER_ID_SEL != null and USER_ID_SEL != "" '>
+	   	  	AND A.USER_ID like '%' || #{USER_ID_SEL} || '%'
+	   	  </if>
+	   	  <if test='USER_STAT_CD_SEL != null and USER_STAT_CD_SEL != "" '>
+	   	  	AND A.USER_STAT_CD = #{USER_STAT_CD_SEL}
+	   	  </if>
+	   	  <if test='PWD_ALT_REQ_YN_SEL != null and PWD_ALT_REQ_YN_SEL != "" '>
+	   	  	AND A.PWD_ALT_REQ_YN = #{PWD_ALT_REQ_YN_SEL}
+	   	  </if>
+	   	  <if test='BIZR_TP_CD_SEL != null and BIZR_TP_CD_SEL != "" '>
+	   	  	AND B.BIZR_TP_CD = #{BIZR_TP_CD_SEL}
+	   	  </if>
+	   	  <if test='BIZRNM_SEL != null and BIZRNM_SEL != "" '>
+	   	  	AND B.BIZRNM like '%' || #{BIZRNM_SEL} || '%'
+	   	  </if>
+	   	  <if test='BIZRNO_SEL != null and BIZRNO_SEL != "" '>
+	   	  	AND B.BIZRNO = ECL_ENCRYPT(#{BIZRNO_SEL}) 
+	   	  </if>
+	   	  <if test='AREA_CD_SEL != null and AREA_CD_SEL != "" '>
+	   	  	AND C.AREA_CD = #{AREA_CD_SEL}
+	   	  </if>
+	   	  <if test='USER_SE_CD_SEL != null and USER_SE_CD_SEL != "" '>
+	   	  	AND A.USER_SE_CD = #{USER_SE_CD_SEL}
+	   	  </if>
+
+		  <if test='BIZRID != null and BIZRID != "" '>
+	   	  	AND B.BIZRID = #{BIZRID}
+	   	  </if>
+	   	  <if test='BIZRNO != null and BIZRNO != "" '>
+	   	  	AND B.BIZRNO = #{BIZRNO}
+	   	  </if>
+
+			<if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+				 AND EXISTS (
+				 					   SELECT 'X'
+			                             FROM EPCN_BRCH_INFO S1
+			                           WHERE 1=1
+			                              AND A.BIZRID = S1.BIZRID
+			                              AND A.BIZRNO = S1.BIZRNO
+			                              AND A.BRCH_ID = S1.BRCH_ID
+			                              AND A.BRCH_NO = S1.BRCH_NO
+					                      AND EXISTS (    
+					                      					   SELECT 'X'
+									                             FROM EPCN_BRCH_INFO S2
+									                           WHERE 1=1
+									                              AND S1.BIZRID = S2.BIZRID
+									                              AND S1.BIZRNO = S2.BIZRNO
+									                              AND (
+										                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+										                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+									                                     ) 
+									                              AND S2.BRCH_ID = #{S_BRCH_ID}
+									                              AND S2.BRCH_NO = #{S_BRCH_NO}
+										          			)
+	                         		)
+			 </if>
+
+	</select>
+	
+	<!-- 회원상태변경 --> 
+	<update id="epmf0140101_update" parameterType="hashmap">
+		UPDATE EPCN_USER_INFO
+		 	  SET USER_STAT_CD	= #{USER_STAT_CD}
+			      	,UPD_PRSN_ID	= #{S_USER_ID}
+			      	,UPD_DTTM		= SYSDATE
+		 WHERE USER_ID = #{USER_ID} 
+	</update>
+	
+	<!-- 사용자 정보변경(등록) 이력 -->
+	<update id="epmf0140101_insert" parameterType="hashmap" >
+		 INSERT INTO EPCN_USER_ALT_HIST(
+			      USER_ID, 
+			      ALT_DTTM, 
+			      USER_NM, 
+			      USER_SE_CD, 
+			      USER_PWD, 
+			      BIZRID, 
+			      BIZRNO, 
+			      BIZR_TP_CD, 
+			      BRCH_ID, 
+			      BRCH_NO, 
+			      CET_BRCH_CD, 
+			      DEPT_CD, 
+			      EMAIL, 
+			      MBIL_NO1, 
+			      MBIL_NO2, 
+			      MBIL_NO3, 
+			      TEL_NO1, 
+			      TEL_NO2, 
+			      TEL_NO3, 
+			      ALT_REQ_PWD, 
+			      PWD_ALT_REQ_YN, 
+			      PWD_ALT_REQ_DTTM, 
+			      PWD_ALT_DT, 
+			      USER_STAT_CD, 
+			      LST_LGN_DTTM, 
+			      SYS_AGR_YN, 
+			      PRSN_INFO_AGR_YN, 
+			      PRSN_INFO_CMM_AGR_YN, 
+			      LGN_ERR_TMS, 
+			      REG_PRSN_ID, 
+			      REG_DTTM
+	    )
+	    SELECT 
+			      USER_ID, 
+			      TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS'),
+			      USER_NM, 
+			      USER_SE_CD, 
+			      USER_PWD, 
+			      BIZRID, 
+			      BIZRNO, 
+			      BIZR_TP_CD, 
+			      BRCH_ID, 
+			      BRCH_NO, 
+			      CET_BRCH_CD, 
+			      DEPT_CD, 
+			      EMAIL, 
+			      MBIL_NO1, 
+			      MBIL_NO2, 
+			      MBIL_NO3, 
+			      TEL_NO1, 
+			      TEL_NO2, 
+			      TEL_NO3, 
+			      ALT_REQ_PWD, 
+			      PWD_ALT_REQ_YN, 
+			      PWD_ALT_REQ_DTTM, 
+			      PWD_ALT_DT, 
+			      USER_STAT_CD, 
+			      LST_LGN_DTTM, 
+			      SYS_AGR_YN, 
+			      PRSN_INFO_AGR_YN, 
+			      PRSN_INFO_CMM_AGR_YN, 
+			      LGN_ERR_TMS, 
+			      #{S_USER_ID}, 
+			      SYSDATE
+		FROM EPCN_USER_INFO
+	  WHERE USER_ID = #{USER_ID}
+	</update>
+	
+	<!-- 사업자 정보변경(등록) 이력 -->
+	<update id="epmf0140101_insert2" parameterType="hashmap" >
+			INSERT INTO EPCN_BIZR_ALT_HIST
+		    (
+			      BIZRID, 
+			      ALT_DTTM, 
+			      BIZRNO, 
+			      BIZRNM, 
+			      BIZR_TP_CD, 
+			      BIZR_STAT_CD, 
+			      BIZR_SE_CD, 
+			      BIZR_ISSU_KEY, 
+			      TOB_NM, 
+			      BCS_NM, 
+			      RPST_NM, 
+			      RPST_TEL_NO1, 
+			      RPST_TEL_NO2, 
+			      RPST_TEL_NO3, 
+			      FAX_NO1, 
+			      FAX_NO2, 
+			      FAX_NO3, 
+			      PNO, 
+			      ADDR1, 
+			      ADDR2, 
+			      ASTN_EMAIL, 
+			      ACP_BANK_CD, 
+			      ACP_ACCT_NO, 
+			      ACP_ACCT_DPSTR_NM, 
+			      MFC_VACCT_BANK_CD, 
+			      MFC_DPS_VACCT_NO, 
+			      MFC_FEE_VACCT_NO, 
+			      ADMIN_ID, 
+			      ELTR_SIGN_LENG, 
+			      ELTR_SIGN, 
+			      ERP_BIZR_CD, 
+			      ERP_LK_SND_YN, 
+			      BIZR_ABBR_NM, 
+			      CNTR_DT, 
+			      ALT_REQ_STAT_CD, 
+			      SEL_ORD, 
+			      REG_PRSN_ID, 
+			      REG_DTTM
+		    )
+		    SELECT
+					    BIZRID, 
+					    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS'),
+					    BIZRNO, 
+					    BIZRNM, 
+					    BIZR_TP_CD, 
+					    BIZR_STAT_CD, 
+					    BIZR_SE_CD, 
+					    BIZR_ISSU_KEY, 
+					    TOB_NM, 
+					    BCS_NM, 
+					    RPST_NM, 
+					    RPST_TEL_NO1, 
+					    RPST_TEL_NO2, 
+					    RPST_TEL_NO3, 
+					    FAX_NO1, 
+					    FAX_NO2, 
+					    FAX_NO3, 
+					    PNO, 
+					    ADDR1, 
+					    ADDR2, 
+					    ASTN_EMAIL, 
+					    ACP_BANK_CD, 
+					    ACP_ACCT_NO, 
+					    ACP_ACCT_DPSTR_NM, 
+					    MFC_VACCT_BANK_CD, 
+					    MFC_DPS_VACCT_NO, 
+					    MFC_FEE_VACCT_NO, 
+					    ADMIN_ID, 
+					    ELTR_SIGN_LENG, 
+					    ELTR_SIGN, 
+					    ERP_BIZR_CD, 
+					    ERP_LK_SND_YN, 
+					    BIZR_ABBR_NM, 
+					    CNTR_DT, 
+					    ALT_REQ_STAT_CD, 
+					    SEL_ORD,
+					    #{S_USER_ID}, 
+					    SYSDATE
+		     FROM EPCN_BIZR_INFO
+		   WHERE BIZRNO = #{BIZRNO}
+	</update>
+	
+	<!-- 사용자구분코드 변경 -->
+	<update id="epmf0140101_update2">
+	
+		DECLARE
+		    BEGIN
+	
+            /* 기존 관리자 권한을 업무담당자 권한으로 변경 */
+            UPDATE EPCN_ATH_GRP_USER C
+                  SET ATH_GRP_CD = (
+                                                 SELECT CASE WHEN BIZR_TP_CD = 'M1' THEN 'ATM002'
+                                                                    WHEN BIZR_TP_CD = 'M2' THEN 'ATM004'
+                                                                    WHEN BIZR_TP_CD = 'W1' THEN 'ATW002'
+                                                                    WHEN BIZR_TP_CD = 'W2' THEN 'ATW004'
+                                                            END
+                                                   FROM EPCN_USER_INFO D
+                                                 WHERE 1=1
+                                                     AND C.USER_ID = D.USER_ID
+                                                )
+                        ,UPD_PRSN_ID = #{S_USER_ID}
+                        ,UPD_DTTM = SYSDATE 
+             WHERE 1=1
+                 AND EXISTS (
+                                     SELECT 'X'
+                                       FROM EPCN_USER_INFO A
+                                     WHERE 1=1
+                                         AND C.USER_ID = A.USER_ID
+                                         AND A.USER_SE_CD = 'D'
+                                         AND EXISTS (
+                                                            SELECT 'X'
+                                                              FROM EPCN_USER_INFO B
+                                                            WHERE 1=1
+                                                                AND B.USER_ID = #{USER_ID}
+                                                                AND A.BIZRID = B.BIZRID
+                                                                AND A.BIZRNO = B.BIZRNO
+                                                            )
+                                         
+                                    )
+            ;
+    
+    
+			UPDATE EPCN_USER_INFO A
+			    SET USER_SE_CD = 'S' 
+			    	   ,UPD_PRSN_ID = #{S_USER_ID}
+					   ,UPD_DTTM = SYSDATE 
+			  WHERE 1=1
+			    AND EXISTS (
+			               	SELECT 'X'
+			                  FROM EPCN_USER_INFO B
+			                 WHERE 1=1
+			                   AND B.USER_ID = #{USER_ID}
+			                   AND A.BIZRID = B.BIZRID
+			                   AND A.BIZRNO = B.BIZRNO
+			                ) 
+			    AND USER_SE_CD = 'D';
+	
+			UPDATE EPCN_USER_INFO 
+			       SET USER_SE_CD = #{USER_SE_CD}
+					     ,UPD_PRSN_ID = #{S_USER_ID}
+					     ,UPD_DTTM = SYSDATE 
+			 WHERE USER_ID = #{USER_ID};
+		 
+            /* 관리자 권한 부여 */
+            UPDATE EPCN_ATH_GRP_USER C
+                  SET ATH_GRP_CD = (
+                                                 SELECT CASE WHEN BIZR_TP_CD = 'M1' THEN 'ATH002'
+                                                                    WHEN BIZR_TP_CD = 'M2' THEN 'ATH003'
+                                                                    WHEN BIZR_TP_CD = 'W1' THEN 'ATH004'
+                                                                    WHEN BIZR_TP_CD = 'W2' THEN 'ATW003'
+                                                            END
+                                                   FROM EPCN_USER_INFO D
+                                                 WHERE 1=1
+                                                     AND C.USER_ID = D.USER_ID
+                                                )
+                        ,UPD_PRSN_ID = #{S_USER_ID}
+                        ,UPD_DTTM = SYSDATE
+             WHERE USER_ID = #{USER_ID};
+         
+		 END;
+	</update>			
+	
+	<!-- 사업자정보 관리자변경  -->
+	<update id="epmf0140101_update3">
+		UPDATE EPCN_BIZR_INFO
+		       SET ADMIN_ID = #{USER_ID}
+				     ,UPD_PRSN_ID = #{S_USER_ID}
+				     ,UPD_DTTM = SYSDATE 
+		 WHERE BIZRNO = #{BIZRNO}
+ 	</update>	
+
+ 	<!-- 회원관리 비밀번호 변경승인 -->
+	<update id="epmf0140101_update4" parameterType="hashmap">
+		UPDATE EPCN_USER_INFO
+		   SET USER_PWD       				= ALT_REQ_PWD
+			      ,ALT_REQ_PWD    			= ''
+			      ,PWD_ALT_REQ_YN 		= 'N'
+			      ,PWD_ALT_REQ_DTTM 	= ''
+			      ,PWD_ALT_DT     			= TO_CHAR(SYSDATE, 'YYYYMMDD')
+			      ,LGN_ERR_TMS    			= 0
+			      ,UPD_PRSN_ID    			= #{S_USER_ID}
+			      ,UPD_DTTM      				= SYSDATE
+	   WHERE 1=1
+	       AND USER_ID = #{USER_ID}
+	       AND BIZRNO = #{S_BIZRNO}
+	</update>
+
+ 	<!-- 회원관리 리스트 -->
+	<select id="epmf01401882_select" resultType="hashmap">
+		 SELECT SUBSTR(ALT_DTTM, 1,8) as ALT_DTTM
+		 			,B.BIZRNM, C.BRCH_NM, D.DEPT_NM, A.USER_NM, USER_ID
+			        ,DECODE(A.PWD_ALT_REQ_YN, 'Y', (SELECT LANG_NM FROM EPCN_LANG_INFO A, EPCN_LANG_CD B WHERE A.LANG_CD = 'req' AND A.LANG_SE_CD = B.LANG_SE_CD AND B.STD_YN = 'Y' AND B.USE_YN = 'Y'), '') AS PWD_ALT_REQ_NM
+				  	,ECL_DECRYPT(A.EMAIL) AS EMAIL
+	        		,A.MBIL_NO1||'-'||A.MBIL_NO2||'-'||PI_DECRYPT(A.MBIL_NO3) AS MBIL_NO
+	        		,A.TEL_NO1||'-'||A.TEL_NO2||'-'||A.TEL_NO3 AS TEL_NO
+		   FROM EPCN_USER_ALT_HIST A
+			        ,EPCN_BIZR_INFO B
+			        ,EPCN_BRCH_INFO C
+			        ,EPCN_DEPT_INFO D
+	    WHERE 1=1
+		    AND A.USER_ID = #{USER_ID}
+		    AND A.BIZRID = B.BIZRID
+		    AND A.BIZRNO = B.BIZRNO
+		    AND A.BIZRID = C.BIZRID(+)
+		    AND A.BIZRNO = C.BIZRNO(+)
+		    AND A.BRCH_ID = C.BRCH_ID(+)
+		    AND A.BRCH_NO = C.BRCH_NO(+)
+		    AND A.BIZRID = D.BIZRID(+)
+		    AND A.BIZRNO = D.BIZRNO(+)
+		    AND A.DEPT_CD = D.DEPT_CD(+)
+		ORDER BY ALT_DTTM DESC
+	</select>
+	
+	<!-- 회원 상세조회 -->
+	<select id="epmf0140164_select" resultType="hashmap">
+		SELECT 
+	            A.USER_ID, 
+	            A.USER_NM, 
+	            A.BIZRID, 
+	            A.BIZRNO,
+	            ECL_DECRYPT(A.BIZRNO) AS BIZRNO_DE, 
+	            A.BIZR_TP_CD,
+	            EPCN_ETC_NM(B.BIZR_TP_CD, 'B001') AS BIZR_TP_NM,
+	            A.BRCH_ID,
+	            A.BRCH_NO,
+	            A.CET_BRCH_CD,
+                EPCN_ETC_NM(A.CET_BRCH_CD, 'B009') AS CET_BRCH_NM,
+	            B.BIZRNM,
+	            D.BRCH_NM,
+	            A.DEPT_CD,
+	            C.DEPT_NM,
+	            ECL_DECRYPT(A.EMAIL) AS EMAIL,
+	            A.MBIL_NO1,
+	            A.MBIL_NO2,
+	            PI_DECRYPT(A.MBIL_NO3) as MBIL_NO3,
+	            A.MBIL_NO1||'-'||A.MBIL_NO2||'-' AS MBIL_NO,
+	            A.TEL_NO1,
+	            A.TEL_NO2,
+	            A.TEL_NO3,
+	            A.TEL_NO1||'-'||A.TEL_NO2||'-'||A.TEL_NO3 AS TEL_NO,
+	            A.USER_STAT_CD,
+	            EPCN_ETC_NM(A.USER_STAT_CD, 'B007') AS USER_STAT_NM,
+	            (
+	               SELECT ATH_GRP_NM
+	                 FROM EPCN_ATH_GRP_USER G
+	                      ,EPCN_ATH_GRP_INFO I
+	                WHERE 1=1
+	                  /*
+	                  AND G.BIZRID = A.BIZRID
+	                  AND G.BIZRNO = A.BIZRNO
+	                  */
+	                  AND G.USER_ID = A.USER_ID
+	                  AND G.ATH_GRP_CD = I.ATH_GRP_CD
+	                  AND G.BIZRID = I.BIZRID
+	                  AND G.BIZRNO = I.BIZRNO
+	                  AND ROWNUM = 1
+	              ) AS ATH_GRP_NM,
+                  A.USER_SE_CD
+	       FROM EPCN_USER_INFO A
+	            ,EPCN_BIZR_INFO B
+	            ,EPCN_DEPT_INFO C
+	            ,EPCN_BRCH_INFO D
+	      WHERE 1=1
+	        AND A.USER_ID = #{USER_ID}
+	        AND A.BIZRNO = #{S_BIZRNO}
+	        AND A.BIZRID = B.BIZRID
+	        AND A.BIZRNO = B.BIZRNO
+	        AND A.BIZRID = C.BIZRID(+)
+	        AND A.BIZRNO = C.BIZRNO(+)
+	        AND A.DEPT_CD = C.DEPT_CD(+)
+	        AND A.BIZRID = D.BIZRID(+)
+	        AND A.BIZRNO = D.BIZRNO(+)
+	        AND A.BRCH_ID = D.BRCH_ID(+)
+	        AND A.BRCH_NO = D.BRCH_NO(+)
+	</select>
+	
+	<!-- 회원정보변경 저장 -->
+	<update id="epmf0140142_update">
+		 UPDATE EPCN_USER_INFO
+			   SET USER_NM = #{USER_NM}
+			   		
+			   		<if test='GBN == null or GBN == "" '>
+				   		,BRCH_ID = #{BRCH_ID}
+				        ,BRCH_NO = #{BRCH_NO}
+				        ,CET_BRCH_CD = #{CET_BRCH_CD}
+			        </if>
+			   
+			   		,DEPT_CD = #{DEPT_CD}
+			   
+			       <if test='ALT_PWD != null and ALT_PWD != "" '>
+			        ,USER_PWD = #{ALT_PWD}
+                    ,PWD_ALT_DT = TO_CHAR(SYSDATE,'YYYYMMDD')
+			       </if>
+			        ,EMAIL = ECL_ENCRYPT(#{EMAIL})
+			       <if test='TEL_NO1 != null and TEL_NO1 != "" '>
+			        ,TEL_NO1 = #{TEL_NO1}
+			       </if>
+			       <if test='TEL_NO2 != null and TEL_NO2 != "" '>
+			        ,TEL_NO2 = #{TEL_NO2}
+			       </if>
+			       <if test='TEL_NO3 != null and TEL_NO3 != "" '>
+			        ,TEL_NO3 = #{TEL_NO3}
+			       </if>
+			        ,MBIL_NO1 = #{MBIL_NO1}
+			        ,MBIL_NO2 = #{MBIL_NO2}
+			        ,MBIL_NO3 = ECL_ENCRYPT(#{MBIL_NO3})
+			        ,UPD_PRSN_ID = #{S_USER_ID}
+					,UPD_DTTM = SYSDATE 
+	     WHERE USER_ID = #{USER_ID}
+	</update>	
+	
+	<!-- 가입승인 처리  -->
+	<update id="epmf0140164_update" parameterType="hashmap">
+		UPDATE EPCN_USER_INFO
+			  SET USER_STAT_CD = 'Y'
+				      ,UPD_PRSN_ID = #{S_USER_ID}
+				      ,UPD_DTTM = SYSDATE
+		 WHERE USER_ID = #{USER_ID}
+		     AND USER_STAT_CD = 'W'
+	</update>
+	
+		<!-- 회원탈퇴전 임시테이블에 저장 -->
+		<update  id="epmf0140164_insert2" parameterType="hashmap">	
+	
+		INSERT INTO EPCN_USER_INFO_TEMP
+				( USER_ID
+				,USER_NM
+				,USER_SE_CD
+				,USER_PWD
+				,BIZRID
+				,BIZRNO
+				,BIZR_TP_CD
+				,BRCH_ID
+				,BRCH_NO
+				,CET_BRCH_CD
+				,DEPT_CD
+				,EMAIL
+				,MBIL_NO1
+				,MBIL_NO2
+				,MBIL_NO3
+				,TEL_NO1
+				,TEL_NO2
+				,TEL_NO3
+				,ALT_REQ_PWD
+				,PWD_ALT_REQ_YN
+				,PWD_ALT_REQ_DTTM
+				,PWD_ALT_DT
+				,USER_STAT_CD
+				,LST_LGN_DTTM
+				,SYS_AGR_YN
+				,PRSN_INFO_AGR_YN
+				,PRSN_INFO_CMM_AGR_YN
+				,LGN_ERR_TMS
+				,REG_PRSN_ID
+				,REG_DTTM
+				,UPD_PRSN_ID
+				,UPD_DTTM
+				,TOKEN
+				,PRSN_INFO_CHG_AGR_YN
+				,USER_DEL_DT )
+		SELECT  USER_ID
+				,USER_NM
+				,USER_SE_CD
+				,USER_PWD
+				,BIZRID
+				,BIZRNO
+				,BIZR_TP_CD
+				,BRCH_ID
+				,BRCH_NO
+				,CET_BRCH_CD
+				,DEPT_CD
+				,EMAIL
+				,MBIL_NO1
+				,MBIL_NO2
+				,MBIL_NO3
+				,TEL_NO1
+				,TEL_NO2
+				,TEL_NO3
+				,ALT_REQ_PWD
+				,PWD_ALT_REQ_YN
+				,PWD_ALT_REQ_DTTM
+				,PWD_ALT_DT
+				,USER_STAT_CD
+				,LST_LGN_DTTM
+				,SYS_AGR_YN
+				,PRSN_INFO_AGR_YN
+				,PRSN_INFO_CMM_AGR_YN
+				,LGN_ERR_TMS
+				,REG_PRSN_ID
+				,REG_DTTM
+				,UPD_PRSN_ID
+				,UPD_DTTM
+				,TOKEN
+				,PRSN_INFO_CHG_AGR_YN
+				,SYSDATE
+		FROM EPCN_USER_INFO				
+      WHERE USER_ID = #{USER_ID} 
+	</update>
+	
+	
+	<!-- 회원탈퇴 -->
+	<update id="epmf0140164_update2">
+	     UPDATE EPCN_USER_INFO 
+		       SET USER_STAT_CD = 'N', 
+		       		  USER_NM = ' ',
+				       USER_PWD = ' ', 
+				       EMAIL = ' ', 
+				       MBIL_NO1 = ' ', 
+				       MBIL_NO2 = ' ', 
+				       MBIL_NO3 = ' ', 
+				       TEL_NO1 = '', 
+				       TEL_NO2 = '', 
+				       TEL_NO3 = '', 
+				       UPD_PRSN_ID = #{S_USER_ID}, 
+				       UPD_DTTM = SYSDATE 
+		 WHERE USER_ID = #{USER_ID} 
+	</update>	
+ 	
+ 	<!-- 회원탈퇴 사용자변경이력 업데이트 처리  -->
+	<update id="epmf0140164_update3" parameterType="hashmap">
+		UPDATE EPCN_USER_ALT_HIST 
+		       SET USER_STAT_CD = 'N',
+		               USER_NM = ' ',
+				       USER_PWD = '', 
+				       EMAIL = '', 
+				       MBIL_NO1 = '', 
+				       MBIL_NO2 = '', 
+				       MBIL_NO3 = '', 
+				       TEL_NO1 = '', 
+				       TEL_NO2 = '', 
+				       TEL_NO3 = ''
+		 WHERE USER_ID = #{USER_ID}
+	</update>
+	
+	<!-- 권한그룹 리스트 -->
+	<select id="epmf0140188_select" resultType="hashmap">
+		
+		SELECT ATH_GRP_CD, BIZRID, BIZRNO, ATH_GRP_NM, MENU_SET_CD, ATH_SE_CD
+		   FROM EPCN_ATH_GRP_INFO
+		 WHERE 1=1
+		     AND USE_YN = 'Y'
+		     AND STD_YN = 'Y'
+		     AND BIZR_TP_CD = #{BIZR_TP_CD}
+			
+			UNION ALL
+		
+	     SELECT ATH_GRP_CD, BIZRID, BIZRNO, ATH_GRP_NM, MENU_SET_CD, ATH_SE_CD
+		   FROM EPCN_ATH_GRP_INFO
+		 WHERE 1=1
+		     AND BIZRID = #{BIZRID}
+		     AND BIZRNO = #{BIZRNO}
+		     AND USE_YN = 'Y'
+		     AND STD_YN = 'N'
+		     
+		 ORDER BY ATH_GRP_NM
+	</select>
+	
+	<!-- 메뉴 리스트 -->
+	<select id="epmf0140188_select2" resultType="hashmap">
+		 SELECT A.ATH_GRP_CD, A.BIZRID, A.BIZRNO, A.MENU_CD, A.LANG_SE_CD
+		        	,B.MENU_NM, B.MENU_GRP_CD, B.MENU_GRP_NM
+		   FROM EPCN_ATH_GRP_MENU A
+		        	,EPCN_MENU B
+		 WHERE 1=1
+		     AND A.MENU_CD = B.MENU_CD
+		     AND A.LANG_SE_CD = B.LANG_SE_CD
+		     AND A.ATH_GRP_CD = #{ATH_GRP_CD}
+		     AND A.BIZRID = #{BIZRID}
+		     AND A.BIZRNO = #{BIZRNO}
+		 ORDER BY B.MENU_GRP_CD, B.MENU_ORD
+	</select>
+	
+	<!-- 권한그룹 사용자 저장  -->
+	<update id="epmf0140188_update" parameterType="hashmap">
+		  MERGE INTO EPCN_ATH_GRP_USER 
+      			USING DUAL ON (USER_ID = #{USER_ID})
+	      WHEN MATCHED THEN
+	          UPDATE SET ATH_GRP_CD = #{ATH_GRP_CD}
+			                     ,BIZRID = #{BIZRID}
+			                     ,BIZRNO = #{BIZRNO}
+			                     ,UPD_PRSN_ID = #{S_USER_ID}
+			                     ,UPD_DTTM = SYSDATE
+		  WHEN NOT MATCHED THEN
+		      INSERT(
+				        ATH_GRP_CD,
+				        BIZRID, 
+				        BIZRNO, 
+				        USER_ID, 
+				        REG_PRSN_ID, 
+				        REG_DTTM
+				)
+				VALUES(
+					    #{ATH_GRP_CD}, 
+				        #{BIZRID}, 
+				        #{BIZRNO}, 
+				        #{USER_ID}, 
+				        #{S_USER_ID}, 
+				        SYSDATE
+				)
+	</update>
+	
+	<select id="epmf0140142_select" resultType="string" >
+		SELECT USER_PWD FROM EPCN_USER_INFO WHERE USER_ID = #{USER_ID}
+	</select>
+	
+</mapper>

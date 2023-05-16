@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Province code="100" label="강원도" symbol="Gangwon" verticalCenterGap="8"/>
+	<Province code="200" label="경기도" symbol="Gyeonggi" horizontalCenterGap="5" verticalCenterGap="23"/>
+	<Province code="300" label="경상남도" symbol="Gyeongnam" horizontalCenterGap="-8" verticalCenterGap="-5"/>
+	<Province code="400" label="경상북도" symbol="Gyeongbuk" horizontalCenterGap="" verticalCenterGap="4"/>
+	<Province code="500" label="광주" symbol="Gwangju"/>
+	<Province code="600" label="대구" symbol="Daegu"/>
+	<Province code="700" label="대전" symbol="Daejeon"/>
+	<Province code="800" label="부산" symbol="Busan"/>
+	<Province code="900" label="서울" symbol="Seoul"/>
+	<Province code="1000" label="울산" symbol="Ulsan" verticalCenterGap="-3"/>
+	<Province code="1100" label="인천" symbol="Incheon" horizontalCenterGap="5" verticalCenterGap="8"/>
+	<Province code="1200" label="전라남도" symbol="Jeonnam" horizontalCenterGap="7"/>
+	<Province code="1300" label="전라북도" symbol="Jeonbuk" horizontalCenterGap="4"/>
+	<Province code="1400" label="제주도" symbol="Jeju"/>
+	<Province code="1500" label="충청남도" symbol="Chungnam" verticalCenterGap="3" horizontalCenterGap="-11"/>
+	<Province code="1600" label="충청북도" symbol="Chungbuk" horizontalCenterGap="-10" verticalCenterGap="-23"/>
+	<Province code="1700" label="세종" symbol="Sejong" horizontalCenterGap="1"/>
+</Map>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Floor code="f100" label="1 Floor" symbol="b1">
+		<Room code="100" label="1 Floor" symbol="100"/>
+		<Room code="101" label="101" symbol="101"/>
+		<Room code="102" label="102" symbol="102"/>
+		<Room code="103" label="103" symbol="103"/>
+		<Room code="104" label="104" symbol="104"/>
+		<Room code="105" label="105" symbol="105"/>
+		<Room code="106" label="106" symbol="106"/>
+		<Room code="107" label="107" symbol="107"/>
+		<Room code="108" label="108" symbol="108"/>
+		<Room code="109" label="109" symbol="109"/>
+		<Room code="110" label="110" symbol="110"/>
+		<Room code="111" label="111" symbol="111"/>
+		<Room code="112" label="112" symbol="112"/>
+		<Room code="113" label="113" symbol="113"/>
+		<Room code="114" label="114" symbol="114"/>
+		<Room code="115" label="115" symbol="115"/>
+		<Room code="116" label="116" symbol="116"/>
+		<Room code="117" label="117" symbol="117"/>
+		<Room code="118" label="118" symbol="118"/>
+		<Room code="119" label="119" symbol="119"/>
+	</Floor>
+	<Floor code="f200" label="2 Floor" symbol="b2">
+		<Room code="200" label="2 Floor" symbol="200" horizontalCenterGap="0" verticalCenterGap="5"/>
+		<Room code="201" label="201" symbol="201"/>
+		<Room code="202" label="202" symbol="202"/>
+		<Room code="203" label="203" symbol="203"/>
+		<Room code="204" label="204" symbol="204"/>
+		<Room code="205" label="205" symbol="205"/>
+		<Room code="206" label="206" symbol="206"/>
+		<Room code="207" label="207" symbol="207"/>
+		<Room code="208" label="208" symbol="208"/>
+		<Room code="209" label="209" symbol="209"/>
+		<Room code="210" label="210" symbol="210"/>
+		<Room code="211" label="211" symbol="211"/>
+		<Room code="212" label="212" symbol="212"/>
+		<Room code="213" label="213" symbol="213"/>
+		<Room code="214" label="214" symbol="214"/>
+		<Room code="215" label="215" symbol="215"/>
+		<Room code="216" label="216" symbol="216"/>
+		<Room code="217" label="217" symbol="217"/>
+		<Room code="218" label="218" symbol="218"/>
+		<Room code="219" label="219" symbol="219"/>
+	</Floor>
+	<Floor code="f300" label="3 Floor" symbol="b3">
+		<Room code="300" label="3 Floor" symbol="300" horizontalCenterGap="0" verticalCenterGap="-7"/>
+		<Room code="301" label="301" symbol="301" horizontalCenterGap="0" verticalCenterGap="-7"/>
+		<Room code="302" label="302" symbol="302"/>
+		<Room code="303" label="303" symbol="303"/>
+		<Room code="304" label="304" symbol="304"/>
+		<Room code="305" label="305" symbol="305"/>
+		<Room code="306" label="306" symbol="306"/>
+		<Room code="307" label="307" symbol="307"/>
+		<Room code="308" label="308" symbol="308" horizontalCenterGap="0" verticalCenterGap="7"/>
+		<Room code="309" label="309" symbol="309"/>
+		<Room code="310" label="310" symbol="310"/>
+		<Room code="311" label="311" symbol="311"/>
+		<Room code="312" label="312" symbol="312" horizontalCenterGap="0" verticalCenterGap="9"/>
+		<Room code="313" label="313" symbol="313"/>
+		<Room code="314" label="314" symbol="314"/>
+	</Floor>
+	<Floor code="f400" label="4 Floor" symbol="b4">
+		<Room code="400" label="4 Floor" symbol="400" horizontalCenterGap="0" verticalCenterGap="-7"/>
+		<Room code="401" label="401" symbol="401"/>
+		<Room code="402" label="402" symbol="402"/>
+		<Room code="403" label="403" symbol="403"/>
+		<Room code="404" label="404" symbol="404"/>
+		<Room code="405" label="405" symbol="405"/>
+		<Room code="406" label="406" symbol="406"/>
+		<Room code="407" label="407" symbol="407"/>
+		<Room code="408" label="408" symbol="408"/>
+		<Room code="409" label="409" symbol="409"/>
+		<Room code="410" label="410" symbol="410"/>
+		<Room code="411" label="411" symbol="411"/>
+		<Room code="412" label="412" symbol="412"/>
+	</Floor>
+	<Floor code="f500" label="5 Floor" symbol="b5">
+		<Room code="500" label="5 Floor" symbol="500"/>
+	</Floor>
+</Map>

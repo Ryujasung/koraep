@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Country code="101" label="미국" symbol="Unitedstates" horizontalCenterGap="28" verticalCenterGap="23"/>
+	<Country code="102" label="캐나다" symbol="Canada" horizontalCenterGap="-25" verticalCenterGap="16"/>
+
+	<Country code="201" label="브라질" symbol="Brazil" horizontalCenterGap="8" verticalCenterGap="-4"/>
+	<Country code="202" label="아르헨티나" symbol="Argentina" horizontalCenterGap="-2" verticalCenterGap="-10"/>
+	<Country code="203" label="콜롬비아" symbol="Colombia"/>
+	<Country code="204" label="베네수엘라" symbol="Venezuela" horizontalCenterGap="2" verticalCenterGap="-2"/>
+	<Country code="205" label="가이아나" symbol="Guyana" verticalCenterGap="-2"/>
+	<Country code="206" label="수리남" symbol="Suriname"/>
+	<Country code="207" label="기아나" symbol="Guyana" verticalCenterGap="2"/>
+	<Country code="208" label="에콰도르" symbol="Ecuador"/>
+	<Country code="209" label="페루" symbol="Peru" horizontalCenterGap="-2"/>
+	<Country code="210" label="칠레" symbol="Chile" horizontalCenterGap="-2"/>
+	<Country code="211" label="우루과이" symbol="Uruguay"/>
+	<Country code="212" label="파라과이" symbol="Paraguay"/>
+	<Country code="213" label="볼리비아" symbol="Bolivia"/>
+
+	<Country code="301" label="멕시코" symbol="Mexico"/>
+	<Country code="302" label="과테말라" symbol="Guatemala"/>
+	<Country code="303" label="엘살바도르" symbol="Elsalvador"/>
+	<Country code="304" label="벨리즈" symbol="Belize"/>
+	<Country code="305" label="온두라스" symbol="Honduras" verticalCenterGap="-1"/>
+	<Country code="306" label="니카라과" symbol="Nicaragua" verticalCenterGap="1"/>
+	<Country code="307" label="코스타리카" symbol="Costarica"/>
+	<Country code="308" label="파나마" symbol="Panama"/>
+	<Country code="309" label="쿠바" symbol="Cuba"/>
+	<Country code="310" label="자메이카" symbol="Jamaica"/>
+	<Country code="311" label="아이티" symbol="Haiti" verticalCenterGap="-1"/>
+	<Country code="312" label="도미니카공화국" symbol="Dominicanrepublic" horizontalCenterGap="2"/>
+	<Country code="313" label="푸에르토리코" symbol="Puertorico"/>
+
+	<Country code="401" label="영국" symbol="Unitedkingdom"/>
+	<Country code="402" label="아일랜드" symbol="Ireland" verticalCenterGap="1"/>
+	<Country code="403" label="프랑스" symbol="France"/>
+	<Country code="404" label="독일" symbol="Germany"/>
+	<Country code="405" label="이탈리아" symbol="Italy" horizontalCenterGap="2"/>
+	<Country code="406" label="스페인" symbol="Spain"/>
+	<Country code="407" label="포르투갈" symbol="Portugal" verticalCenterGap="1"/>
+	<Country code="408" label="스위스" symbol="Switzerland"/>
+	<Country code="409" label="오스트리아" symbol="Austria" verticalCenterGap="1"/>
+	<Country code="410" label="체코" symbol="Czechrepublic"/>
+	<Country code="411" label="슬로바키아" symbol="Slovakia" horizontalCenterGap="1"/>
+	<Country code="412" label="헝가리" symbol="Hungary"/>
+	<Country code="413" label="크로아티아" symbol="Croatia" verticalCenterGap="-2"/>
+	<Country code="414" label="슬로베니아" symbol="Slovenia"/>
+	<Country code="415" label="보스니아헤르체고비나" symbol="Bosniaandherzegovina"/>
+	<Country code="416" label="그리스" symbol="Greece" verticalCenterGap="-2"/>
+	<Country code="417" label="알바니아" symbol="Albania"/>
+	<Country code="418" label="불가리아" symbol="Bulgaria"/>
+	<Country code="419" label="루마니아" symbol="Romania"/>
+	<Country code="420" label="몰도바" symbol="Moldova" horizontalCenterGap="1"/>
+	<Country code="421" label="세르비아" symbol="Serbia" verticalCenterGap="-1"/>
+	<Country code="422" label="우크라이나" symbol="Ukraine" verticalCenterGap="-2"/>
+	<Country code="423" label="폴란드" symbol="Poland"/>
+	<Country code="424" label="벨라루스" symbol="Belarus"/>
+	<Country code="425" label="리투아니아" symbol="Lithuania"/>
+	<Country code="426" label="라트비아" symbol="Latvia"/>
+	<Country code="427" label="에스토니아" symbol="Estonia"/>
+	<Country code="428" label="네덜란드" symbol="Netherlands"/>
+	<Country code="429" label="벨기에" symbol="Belgium"/>
+	<Country code="430" label="핀란드" symbol="Finland" horizontalCenterGap="2"/>
+	<Country code="431" label="스웨덴" symbol="Sweden" horizontalCenterGap="-3"/>
+	<Country code="432" label="노르웨이" symbol="Norway" horizontalCenterGap="-14" verticalCenterGap="12"/>
+	<Country code="433" label="아이슬란드" symbol="Iceland"/>
+	<Country code="434" label="덴마크" symbol="Denmark"/>
+	<Country code="435" label="안도라" symbol="Andorra"/>
+	<Country code="436" label="룩셈부르크" symbol="Luxembourg"/>
+	<Country code="437" label="마케도니아" symbol="Macedonia"/>
+	<Country code="438" label="몬테네그로" symbol="Montenegro"/>
+
+	<Country code="501" label="이집트" symbol="Egypt"/>
+	<Country code="502" label="리비아" symbol="Libya"/>
+	<Country code="503" label="수단" symbol="Sudan"/>
+	<Country code="504" label="알제리" symbol="Algeria"/>
+	<Country code="505" label="튀니지" symbol="Tunisia"/>
+	<Country code="506" label="모로코" symbol="Morocco"/>
+	<Country code="507" label="서사하라" symbol="Westernsahara" horizontalCenterGap="-2"/>
+	<Country code="508" label="모리타니" symbol="Mauritania" horizontalCenterGap="2" verticalCenterGap="2"/>
+	<Country code="509" label="말리" symbol="Mali" horizontalCenterGap="2"/>
+	<Country code="510" label="세네갈" symbol="Senegal" verticalCenterGap="-2"/>
+	<Country code="511" label="니제르" symbol="Niger"/>
+	<Country code="512" label="차드" symbol="Chad"/>
+	<Country code="513" label="에티오피아" symbol="Ethiopia"/>
+	<Country code="514" label="소말리아" symbol="Somalia" horizontalCenterGap="1"/>
+	<Country code="515" label="에리트레아" symbol="Eritrea"/>
+	<Country code="516" label="지부티" symbol="Djibouti"/>
+	<Country code="517" label="케냐" symbol="Kenya"/>
+	<Country code="518" label="탄자니아" symbol="Tanzania"/>
+	<Country code="519" label="부룬디" symbol="Burundi"/>
+	<Country code="520" label="르완다" symbol="Rwanda"/>
+	<Country code="521" label="중앙아프리카공화국" symbol="Centralafricanrepublic"/>
+	<Country code="522" label="카메룬" symbol="Cameroon" verticalCenterGap="5"/>
+	<Country code="523" label="나이지리아" symbol="Nigeria"/>
+	<Country code="524" label="코트디부아르" symbol="Ivorycoast"/>
+	<Country code="525" label="가나" symbol="Ghana" verticalCenterGap="1"/>
+	<Country code="526" label="마다가스카르" symbol="Madagascar"/>
+	<Country code="527" label="모잠비크" symbol="Mozambique"/>
+	<Country code="528" label="스와질란드" symbol="Swaziland"/>
+	<Country code="529" label="남아프리카공화국" symbol="Southafrica" verticalCenterGap="4"/>
+	<Country code="530" label="레소토" symbol="Lesotho"/>
+	<Country code="531" label="나미비아" symbol="Namibia" horizontalCenterGap="-3"/>
+	<Country code="532" label="보츠와나" symbol="Botswana"/>
+	<Country code="533" label="짐바브웨" symbol="Zimbabwe"/>
+	<Country code="534" label="잠비아" symbol="Zambia" verticalCenterGap="3"/>
+	<Country code="535" label="앙골라" symbol="Angola" verticalCenterGap="2"/>
+	<Country code="536" label="콩고" symbol="Congo" horizontalCenterGap="3"/>
+	<Country code="537" label="가봉" symbol="Gabon"/>
+	<Country code="538" label="적도기니" symbol="Equatorialguinea"/>
+	<Country code="539" label="베냉" symbol="Benin" horizontalCenterGap="1" verticalCenterGap="-1"/>
+	<Country code="540" label="토고" symbol="Togo"/>
+	<Country code="541" label="부루키나파소" symbol="Burkinafaso"/>
+	<Country code="542" label="라이베리아" symbol="Liberia"/>
+	<Country code="543" label="시에라리온" symbol="Sierraleone"/>
+	<Country code="544" label="기니" symbol="Guinea"/>
+	<Country code="545" label="기니비사우" symbol="Guineabissau"/>
+	<Country code="546" label="감비아" symbol="Gambia"/>
+	<Country code="547" label="말라위" symbol="Malawi"/>
+	<Country code="548" label="콩고민주공화국" symbol="Democraticrepublicofthecongo" horizontalCenterGap="3" verticalCenterGap="-2"/>
+	<Country code="549" label="이스라엘" symbol="Israel"/>
+	<Country code="550" label="우간다" symbol="Uganda"/>
+	<Country code="551" label="남수단" symbol="Southsudan" horizontalCenterGap="2"/>
+
+	<Country code="601" label="중국" symbol="China" verticalCenterGap="8"/>
+	<Country code="602" label="일본" symbol="Japan"/>
+	<Country code="603" label="대한민국" symbol="Southkorea"/>
+	<Country code="604" label="인도" symbol="India" horizontalCenterGap="-8"/>
+	<Country code="605" label="타이" symbol="Thailand" verticalCenterGap="-4"/>
+	<Country code="606" label="베트남" symbol="Vietnam" horizontalCenterGap="3"/>
+	<Country code="607" label="라오스" symbol="Laos" horizontalCenterGap="-1" verticalCenterGap="-1"/>
+	<Country code="608" label="캄보디아" symbol="Cambodia"/>
+	<Country code="609" label="미얀마" symbol="Myanmar" horizontalCenterGap="-2" verticalCenterGap="-2"/>
+	<Country code="610" label="말레이시아" symbol="Malaysia"/>
+	<Country code="611" label="필리핀" symbol="Philippines"/>
+	<Country code="612" label="인도네시아" symbol="Indonesia"/>
+	<Country code="613" label="브루나이" symbol="Brunei"/>
+	<Country code="614" label="타이완" symbol="Taiwan"/>
+	<Country code="615" label="방글라데시" symbol="Bangladesh"/>
+	<Country code="616" label="스리랑카" symbol="Srilanka"/>
+	<Country code="617" label="부탄" symbol="Bhutan"/>
+	<Country code="618" label="네팔" symbol="Nepal"/>
+	<Country code="619" label="파키스탄" symbol="Pakistan"/>
+	<Country code="620" label="아프가니스탄" symbol="Afghanistan" horizontalCenterGap="-2"/>
+	<Country code="621" label="이란" symbol="Iran"/>
+	<Country code="622" label="이라크" symbol="Iraq"/>
+	<Country code="623" label="시리아" symbol="Syria"/>
+	<Country code="624" label="사우디아라비아" symbol="Saudiarabia" horizontalCenterGap="-1" verticalCenterGap="2"/>
+	<Country code="625" label="쿠웨이트" symbol="Kuwait"/>
+	<Country code="626" label="오만" symbol="Oman"/>
+	<Country code="627" label="예멘" symbol="Yemen" verticalCenterGap="1"/>
+	<Country code="628" label="아랍에미리트" symbol="Unitedarabemirates"/>
+	<Country code="629" label="카타르" symbol="Qatar"/>
+	<Country code="630" label="요르단" symbol="Jordan"/>
+	<Country code="631" label="레바논" symbol="Lebanon"/>
+	<Country code="632" label="터키" symbol="Turkey"/>
+	<Country code="633" label="조지아" symbol="Georgia"/>
+	<Country code="634" label="아르메니아" symbol="Armenia"/>
+	<Country code="635" label="아제르바이잔" symbol="Azerbaijan" horizontalCenterGap="3" verticalCenterGap="-3"/>
+	<Country code="636" label="투르크메니스탄" symbol="Turkmenistan" verticalCenterGap="-1"/>
+	<Country code="637" label="우즈베키스탄" symbol="Uzbekistan" verticalCenterGap="1"/>
+	<Country code="638" label="타지키스탄" symbol="Tajikistan" verticalCenterGap="1"/>
+	<Country code="639" label="키르기스스탄" symbol="Kyrgyzstan"/>
+	<Country code="640" label="카자흐스탄" symbol="Kazakhstan"/>
+	<Country code="641" label="몽골" symbol="Mongolia"/>
+	<Country code="642" label="키프로스" symbol="Cyprus"/>
+	<Country code="643" label="러시아" symbol="Russia" horizontalCenterGap="-20" verticalCenterGap="5"/>
+	<Country code="644" label="북한" symbol="Northkorea" horizontalCenterGap="-1" verticalCenterGap="1"/>
+	<Country code="645" label="싱가포르" symbol="Singapore" />
+	<Country code="646" label="홍콩" symbol="Hongkong" />
+
+	<Country code="701" label="오스트레일리아" symbol="Australia" horizontalCenterGap="5" verticalCenterGap="-5"/>
+	<Country code="702" label="뉴질랜드" symbol="Newzealand"/>
+	<Country code="703" label="파푸아뉴기니" symbol="Papuanewguinea"/>
+	<Country code="704" label="피지" symbol="Fiji"/>
+	<Country code="705" label="뉴칼레도니아" symbol="Newcaledonia"/>
+	<Country code="706" label="바누아투" symbol="Vanuatu"/>
+
+</Map>

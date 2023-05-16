@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.wh.ep.EPWH8126695Mapper">
+    
+	<resultMap id="askMap" type="hashmap">
+		<result property="ASK_SEQ" column="ASK_SEQ" />
+		<result property="CNTN_SE" column="CNTN_SE" />
+		<result property="SBJ" column="SBJ" />
+		<result property="CNTN_TP" column="CNTN_TP"  />
+		<result property="CNTN" column="CNTN"  javaType="java.lang.String" jdbcType="CLOB" />
+	</resultMap>
+    
+	<!-- 문의/답변 상세조회 -->
+	<select id="epwh8126695_select1" parameterType="map" resultMap="askMap">
+	    SELECT A.ASK_SEQ,
+	    	   A.CNTN_SE,
+	    	   A.SBJ,
+	    	   A.CNTN_TP,
+	    	   A.CNTN,
+	    	   A.REG_PRSN_ID,
+	    	   TO_CHAR(A.REG_DTTM, 'YYYY-MM-DD') AS REG_DTTM,
+	    	   B.USER_NM
+	      FROM EPCN_ASK_ANSR A
+	      	   LEFT JOIN EPCN_USER_INFO B
+	      	   ON A.REG_PRSN_ID = B.USER_ID
+	     WHERE 1=1
+	       AND A.ASK_SEQ = #{ASK_SEQ}
+	       AND A.CNTN_SE = #{CNTN_SE}
+    </select>
+    
+	<!-- 문의/답변 답변글 조회 -->
+	<select id="epwh8126695_select2" parameterType="map" resultMap="askMap">
+	    SELECT ASK_SEQ,
+		    	   CNTN_SE,
+		    	   SBJ,
+		    	   CNTN_TP,
+		    	   CNTN
+	      FROM EPCN_ASK_ANSR
+	     WHERE 1=1
+	       AND ASK_SEQ = #{ASK_SEQ}
+	       AND CNTN_SE = #{CNTN_SE_R}
+    </select>
+	
+	<!-- 문의/답변 삭제 -->
+	<delete id="epwh8126695_delete" parameterType="map">
+	    DELETE
+	      FROM EPCN_ASK_ANSR
+	     WHERE 1=1
+	       AND ASK_SEQ = #{ASK_SEQ}
+	     <if test='CNTN_SE == "A"'>
+	       AND CNTN_SE = #{CNTN_SE}
+	     </if>
+	</delete>
+    
+</mapper>

@@ -1,0 +1,32 @@
+@charset "utf-8";
+
+/*
+	A4 size
+		x = 210mm / 793.69px
+		y = 297mm / 1122.52px
+
+	conversion
+		1 px = 0.2645869294056874 mm
+		1 mm = 3.77947619047619 px
+
+	Contents size
+		x = 740px
+		y = 1020px
+
+	design
+		width : 800px
+		height : 1120px
+		padding : 50px 30px
+*/
+
+body {background: #dddddd; -webkit-print-color-adjust:exact;}
+
+.paper_wrap {box-sizing: border-box; width: 210mm; min-height: 297mm; margin: 10mm auto; padding: 13.56066600309945mm 7.102836119895678mm; border-radius: 5px; background: #ffffff; box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);}
+.paper_cont {box-sizing: border-box; height: 269.8786679938011mm; background: #ffffff;}
+
+@page {size: A4; margin: 0;}
+
+@media print {
+    html, body {width: 210mm; height: 297mm; background: #ffffff;}
+    .paper_wrap {margin: 0; border: initial; border-radius: initial; width: initial; min-height: initial; box-shadow: initial; background: initial; page-break-after: always;}
+}

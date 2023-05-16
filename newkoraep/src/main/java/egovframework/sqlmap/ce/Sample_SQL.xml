@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.SampleMapper">
+    
+    <!-- 공지사항 총 게시글 수 조회 -->
+    <select id="totalCntList" parameterType="map" resultType="hashmap">
+        SELECT COUNT(*) AS CNT
+          FROM EPCN_NOTI_BAK
+         WHERE 1=1
+    </select>
+    
+    <!-- 공지사항 조회(Paging) -->
+	<select id="searchList" parameterType="map" resultType="hashmap">
+	    SELECT SEQ,
+		       SBJ,
+		       RGST_DTTM,
+		       IDX,
+		       RNUM,
+		       STD_CTNR_CD,
+		       DTSS_NO,
+		       '' JOB
+		  FROM (SELECT SEQ,
+		               SBJ,
+		               RGST_DTTM,
+		               IDX,
+		               ROWNUM AS RNUM,
+		               STD_CTNR_CD,
+		               DTSS_NO
+		          FROM (SELECT SEQ,
+		                       SBJ,
+		                       RGST_DTTM,
+		                       IDX,
+		                       STD_CTNR_CD,
+		                       DTSS_NO
+		                  FROM (SELECT SEQ,
+		                               SBJ,
+		                               RGST_DTTM,
+		                               ROWNUM AS IDX,
+		                               STD_CTNR_CD,
+		                               DTSS_NO
+		                          FROM (SELECT SEQ,
+		                                       SBJ,
+		                                       TO_CHAR(RGST_DTTM, 'YYYYMMDD') AS RGST_DTTM,
+		                                       STD_CTNR_CD,
+		                                       DTSS_NO
+		                  				  FROM EPCN_NOTI_BAK
+		                                 WHERE 1=1
+										 ORDER BY SEQ ASC)
+						                         WHERE 1=1
+						                         ORDER BY SEQ ASC)
+						                 ORDER BY SEQ DESC))
+ 			WHERE 1=1
+	     <if test="PAGE != ''">
+		   AND RNUM BETWEEN #{STARTROW} AND #{ENDROW}
+	     </if>
+	</select>
+	
+	<!-- 공지사항 첨부파일 조회 -->
+	<select id="chkFile" parameterType="map" resultType="hashmap">
+	    SELECT SEQ
+		  FROM EPCN_NOTI_ATCH_FILE_BAK
+		 GROUP BY SEQ
+		 ORDER BY SEQ
+	</select>
+	
+	<!-- 빈용기명 조회 -->
+    <select id="SELECT_EPCN_STD_CTNR_CD_LIST" parameterType="map" resultType="hashmap">
+        SELECT   A.CTNR_CD,
+           A.CTNR_NM,
+           A.CPCT_CD,
+           A.PRPS_CD,
+           A.MFC_SE_CD,
+           A.AKND_CD,
+           A.GTN_UTPC,
+           A.DLIVY_USE_YN,
+           A.USE_YN,
+           A.SEL_ORD,
+           B.ETC_CD_NM AS CPCT_NM,
+           C.ETC_CD_NM AS PRPS_NM
+    FROM            EPCN_STD_CTNR_CD A
+                 LEFT JOIN
+                    EPCN_ETC_CD B
+                 ON A.CPCT_CD = B.ETC_CD
+              LEFT JOIN
+                 EPCN_ETC_CD C
+              ON A.PRPS_CD = C.ETC_CD
+           LEFT JOIN
+              EPCN_ETC_CD D
+           ON A.MFC_SE_CD = D.ETC_CD AND D.GRP_CD = 'C021'
+   WHERE   'C008' = B.GRP_CD AND 'C009' = C.GRP_CD 
+ AND D.PPR_ITEM = '5038190975'
+ORDER BY   A.SEL_ORD, A.CTNR_CD, A.CTNR_NM
+
+    </select>
+    
+</mapper>

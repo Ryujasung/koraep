@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF81606641Mapper">
+    
+    
+	<!-- 선택설문 문항조회 -->
+	<select id="epmf81606641_select1" parameterType="map" resultType="hashmap">
+		SELECT 
+		    SVY_NO
+			,SVY_ITEM_NO
+			,ASK_CNTN
+			,ANSR_SE_CD
+			,'Y' AS SAVE_YN
+		FROM EPCN_SVY_ITEM
+		WHERE 1=1
+			AND SVY_NO = #{SVY_NO}
+    </select>
+    
+    <!-- 조사문항저장 -->
+    <update id="epmf81606641_update1" parameterType="map">
+    	MERGE INTO EPCN_SVY_ITEM 
+    	USING DUAL 
+    	ON (SVY_NO = #{SVY_NO} AND SVY_ITEM_NO = #{SVY_ITEM_NO})
+    	WHEN MATCHED THEN
+    		UPDATE SET
+    			ASK_CNTN = #{ASK_CNTN}
+				,ANSR_SE_CD = #{ANSR_SE_CD}
+				,UPD_PRSN_ID = #{UPD_PRSN_ID}
+				,UPD_DTTM = SYSDATE
+		WHEN NOT MATCHED THEN
+			INSERT(
+				SVY_NO				,SVY_ITEM_NO				,ASK_CNTN
+				,ANSR_SE_CD			,REG_PRSN_ID				,REG_DTTM
+			)VALUES(
+				#{SVY_NO}			,#{SVY_ITEM_NO}				,#{ASK_CNTN}
+				,#{ANSR_SE_CD}		,#{REG_PRSN_ID}				,SYSDATE
+			)
+    </update>
+    
+    <!-- 조사문항 삭제 -->
+    <delete id="epmf81606641_delete1" parameterType="map">
+    	DELETE FROM EPCN_SVY_ITEM
+    	WHERE SVY_NO = #{SVY_NO} 
+    		AND SVY_ITEM_NO = #{SVY_ITEM_NO}
+    </delete>
+    
+    
+    
+    
+    
+    
+    
+    <!-- 선택문항 옵션조회 -->
+	<select id="epmf81606641_select2" parameterType="map" resultType="hashmap">
+		SELECT 
+		    SVY_NO
+			,SVY_ITEM_NO
+			,OPT_NO
+			,OPT_CNTN
+			,REFN_IMG
+			,SUBSTR(REFN_IMG, INSTR(REFN_IMG, '/', -1) + 1) AS REFN_IMG_NM
+			,'/images/util/attach_ico.png' AS ICON
+			,'Y' AS SAVE_YN
+		FROM EPCN_SVY_ITEM_OPT
+		WHERE 1=1
+			AND SVY_NO = #{SVY_NO}
+			AND SVY_ITEM_NO = #{SVY_ITEM_NO}
+    </select>
+    
+    
+    <!-- 선택문항 옵션저장 -->
+    <update id="epmf81606641_update2" parameterType="map">
+    	MERGE INTO EPCN_SVY_ITEM_OPT 
+    	USING DUAL 
+    	ON (SVY_NO = #{SVY_NO} AND SVY_ITEM_NO = #{SVY_ITEM_NO} AND OPT_NO = #{OPT_NO})
+    	WHEN MATCHED THEN
+    		UPDATE SET
+    			OPT_CNTN = #{OPT_CNTN}
+				,REFN_IMG = #{REFN_IMG}
+				,UPD_PRSN_ID = #{UPD_PRSN_ID}
+				,UPD_DTTM = SYSDATE
+		WHEN NOT MATCHED THEN
+			INSERT(
+				SVY_NO				,SVY_ITEM_NO			,OPT_NO
+				,OPT_CNTN			,REFN_IMG				,REG_PRSN_ID				
+				,REG_DTTM
+			)VALUES(
+				#{SVY_NO}			,#{SVY_ITEM_NO}				,#{OPT_NO}
+				,#{OPT_CNTN}		,#{REFN_IMG}				,#{REG_PRSN_ID}
+				,SYSDATE
+			)
+    </update>
+    
+    <!-- 선택문항의 옵션삭제 -->
+    <delete id="epmf81606641_delete2" parameterType="map">
+    	DELETE FROM EPCN_SVY_ITEM_OPT
+    	WHERE SVY_NO = #{SVY_NO} 
+    		AND SVY_ITEM_NO = #{SVY_ITEM_NO}
+    		AND OPT_NO = #{OPT_NO}
+    </delete>
+    
+    
+    
+</mapper>

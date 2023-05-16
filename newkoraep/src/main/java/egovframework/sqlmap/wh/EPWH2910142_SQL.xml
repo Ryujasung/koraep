@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.wh.ep.EPWH2910142Mapper">
+
+
+	<!-- 반환내역서변경 그리드 초기값 셋팅 -->
+	<select id="epwh2910142_select2" parameterType="map" resultType="hashmap">
+		SELECT 
+							B.RTN_DT
+							,F.MFC_BIZRNM
+							,F.MFC_BRCH_NM
+							,F.BIZR_TP_CD
+							,EPCN_ETC_NM(C.PRPS_CD , 'E002') AS PRPS_NM
+							,C.PRPS_CD
+							,C.CTNR_NM
+							,A.CTNR_CD
+							,CASE WHEN SUBSTR(A.CTNR_CD,4,2) = 00 THEN '표준용기' ELSE '비표준용기' END AS STANDARD_NM
+							,DECODE( SUBSTR(A.CTNR_CD,2,1),'3' ,'2' ,'1') AS CTNR_SE
+							,EPCN_ETC_NM(C.CPCT_CD , 'E001') AS CPCT_NM
+							,NVL(A.BOX_QTY,'0') AS BOX_QTY
+							,A.RTN_QTY
+						    ,A.RTN_GTN_UTPC
+							,A.RTN_GTN
+							,A.RTN_WHSL_FEE_UTPC
+							,A.RTN_WHSL_FEE
+							,A.RTN_WHSL_FEE_STAX
+							,A.RTN_RTL_FEE_UTPC
+							,A.RTN_RTL_FEE
+							,A.RTN_GTN +A.RTN_WHSL_FEE+A.RTN_WHSL_FEE_STAX +A.RTN_RTL_FEE  AS AMT_TOT
+							,B.CAR_NO			
+							,F.MFC_BRCH_ID
+							,F.MFC_BRCH_NO  
+							,F.MFC_BIZRID
+							,F.MFC_BIZRNO
+							,F.CUST_BRCH_ID
+							,F.CUST_BRCH_NO
+							,F.CUST_BIZRID  
+							,F.CUST_BIZRNO
+							,A.RTN_DOC_NO
+							,A.REG_PRSN_ID
+							,TO_CHAR(A.REG_DTTM,'YYYY-MM-DD HH24:MI:SS') AS REG_DTTM   
+							,A.RMK     
+							,SUBSTR(A.RMK ,3) AS RMK_C
+                            ,#{GBN} as GBN          
+                FROM    
+                <if test="GBN.equalsIgnoreCase('ORI') ">
+                             EPCM_RTN_INFO A   
+                            ,EPCM_RTN_MST B   
+                </if>
+                <if test="GBN.equalsIgnoreCase('TMP') ">
+
+                             EPCM_RTN_INFO_TMP A   
+                            ,EPCM_RTN_MST_TMP B   
+                </if>
+							,EPCN_STD_CTNR_CD C
+							,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+							,EPCN_DTSS_CUST_INFO F
+						  
+				WHERE  1=1
+				AND 		A.RTN_DOC_NO 		= B.RTN_DOC_NO
+				AND		A.CTNR_CD 			= C.CTNR_CD
+				AND		B.MFC_BRCH_ID		= F.MFC_BRCH_ID
+				AND		B.MFC_BRCH_NO		= F.MFC_BRCH_NO
+				AND		B.MFC_BIZRID			= F.MFC_BIZRID
+				AND		B.MFC_BIZRNO		= F.MFC_BIZRNO
+				AND		B.WHSDL_BRCH_ID	= F.CUST_BRCH_ID
+				AND		B.WHSDL_BRCH_NO= F.CUST_BRCH_NO
+				AND		B.WHSDL_BIZRID		= F.CUST_BIZRID
+				AND		B.WHSDL_BIZRNO	= F.CUST_BIZRNO
+				AND 		C.LANG_SE_CD 		= E.LANG_SE_CD
+				AND	    A.RTN_DOC_NO		= #{RTN_DOC_NO}
+	</select>
+
+	<!-- 반환내역서변경 등록시 중복데이터 있는지 조회 -->
+	<select id="epwh2910142_select3" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+        FROM 
+        <if test="GBN.equalsIgnoreCase('ORI') ">
+              EPCM_RTN_MST A ,   
+              EPCM_RTN_INFO B   
+        </if>
+        <if test="GBN.equalsIgnoreCase('TMP') ">
+              EPCM_RTN_MST_TMP A ,   
+              EPCM_RTN_INFO_TMP B   
+        </if>
+		WHERE 1=1
+		AND A.RTN_DOC_NO			= B.RTN_DOC_NO
+		AND A.RTN_DOC_NO			!= #{RTN_DOC_NO}
+		AND	A.WHSDL_BIZRID			= #{CUST_BIZRID}
+		AND	A.WHSDL_BIZRNO		= #{CUST_BIZRNO}
+		AND	A.WHSDL_BRCH_ID		= #{CUST_BRCH_ID}
+		AND	A.WHSDL_BRCH_NO	= #{CUST_BRCH_NO}
+		AND	A.MFC_BIZRID				= #{MFC_BIZRID}
+		AND	A.MFC_BIZRNO			= #{MFC_BIZRNO}
+		AND	A.MFC_BRCH_ID			= #{MFC_BRCH_ID}
+		AND	A.MFC_BRCH_NO			= #{MFC_BRCH_NO}
+		AND	A.RTN_REG_DT			= TO_CHAR(SYSDATE,'YYYYMMDD')
+		AND	A.RTN_DT					= REPLACE(#{RTN_DT}, '-')
+		AND	B.CTNR_CD					= #{CTNR_CD}
+	</select>
+	
+		<!-- 반환내역서변경 등록시 반환등록상태인지 조회 -->
+	<select id="epwh2910142_select4" parameterType="map" resultType="int">
+        SELECT COUNT(*) AS CNT 
+         FROM 
+              <if test="GBN.equalsIgnoreCase('ORI') ">
+              EPCM_RTN_MST
+              </if>
+              <if test="GBN.equalsIgnoreCase('TMP') ">
+              EPCM_RTN_MST_TMP
+              </if>
+        WHERE 1=1 
+              AND RTN_DOC_NO =#{RTN_DOC_NO} 
+              <if test="GBN.equalsIgnoreCase('ORI') ">
+              AND RTN_STAT_CD != 'RG' 
+              </if>
+              <if test="GBN.equalsIgnoreCase('TMP') ">
+              AND RTN_STAT_CD != 'RA' 
+              </if>
+
+	</select>
+
+	<!-- 반환내역서 변경-->
+	<!-- <update id="epwh2910142_update"  parameterType="hashmap">
+		MERGE INTO EPCM_RTN_INFO 
+		USING DUAL
+		ON (RTN_DOC_NO = #{RTN_DOC_NO} AND CTNR_CD = #{CTNR_CD})
+		WHEN MATCHED THEN
+			UPDATE SET
+			 BOX_QTY            		= #{BOX_QTY}
+			,RTN_QTY            		= #{RTN_QTY}
+			,RTN_GTN            		= #{RTN_GTN}
+			,RTN_WHSL_FEE       	= #{RTN_WHSL_FEE}
+			,RTN_WHSL_FEE_STAX  = #{RTN_WHSL_FEE_STAX}
+			,RTN_RTL_FEE        		= #{RTN_RTL_FEE}
+			,UPD_PRSN_ID 			= #{REG_PRSN_ID}
+			,UPD_DTTM 				= SYSDATE
+		WHEN NOT MATCHED THEN
+			INSERT
+				(
+				 RTN_DOC_NO
+				,CTNR_CD
+				,BOX_QTY
+				,RTN_QTY
+				,RTN_GTN
+				,RTN_WHSL_FEE
+				,RTN_WHSL_FEE_STAX
+				,RTN_RTL_FEE
+				,REG_PRSN_ID
+				,REG_DTTM
+				)
+				VALUES
+				(
+				 #{RTN_DOC_NO}
+				,#{CTNR_CD}
+				,#{BOX_QTY}
+				,#{RTN_QTY}
+				,#{RTN_GTN}
+				,#{RTN_WHSL_FEE}
+				,#{RTN_WHSL_FEE_STAX}
+				,#{RTN_RTL_FEE}
+				,#{REG_PRSN_ID}
+				,SYSDATE
+				)
+	</update> -->
+	
+		<!-- 반환내역서변경 등록-->
+	 <insert id="epwh2910142_insert"  parameterType="hashmap">
+	 	INSERT INTO 
+                <if test="GBN.equalsIgnoreCase('ORI') ">
+                EPCM_RTN_INFO
+                </if>
+                <if test="GBN.equalsIgnoreCase('TMP') ">
+                EPCM_RTN_INFO_TMP
+                </if>
+					(
+					 RTN_DOC_NO
+					,CTNR_CD
+					,BOX_QTY
+					,RTN_QTY
+					,RTN_GTN
+					,RTN_WHSL_FEE
+					,RTN_WHSL_FEE_STAX
+					,RTN_RTL_FEE
+					,REG_PRSN_ID
+					,REG_DTTM
+					,UPD_PRSN_ID
+					,UPD_DTTM
+					,RTN_GTN_UTPC
+					,RTN_WHSL_FEE_UTPC
+					,RTN_RTL_FEE_UTPC
+					<if test="RMK !=null and RMK !='' ">
+					,RMK
+					</if>
+					)
+					VALUES
+					(
+					  #{RTN_DOC_NO}
+					, #{CTNR_CD}
+					, #{BOX_QTY}
+					, #{RTN_QTY}
+					, #{RTN_GTN}
+					, #{RTN_WHSL_FEE}
+					, #{RTN_WHSL_FEE_STAX}
+					, #{RTN_RTL_FEE}
+					, #{REG_PRSN_ID}
+					, TO_DATE(#{REG_DTTM},'YYYY-MM-DD HH24:MI:SS')
+					, #{UPD_PRSN_ID}
+					, SYSDATE
+					, #{RTN_GTN_UTPC}
+					, #{RTN_WHSL_FEE_UTPC}
+					, #{RTN_RTL_FEE_UTPC}
+					<if test="RMK !=null and RMK !='' ">
+					,#{RMK}      
+					</if>    
+					)
+	</insert>
+	
+	<update id="epwh2910142_update" parameterType="map" >
+		UPDATE  
+                <if test="GBN.equalsIgnoreCase('ORI') ">
+             EPCM_RTN_MST
+                </if>
+                <if test="GBN.equalsIgnoreCase('TMP') ">
+             EPCM_RTN_MST_TMP
+                </if>
+             SET (
+				 FB_RTN_QTY_TOT
+				, FH_RTN_QTY_TOT
+				, DRCT_RTN_QTY_TOT
+				, RTN_GTN_TOT
+				, RTN_WHSL_FEE_TOT
+				, RTN_WHSL_FEE_STAX_TOT
+				, RTN_RTL_FEE_TOT
+				 ) = (
+						SELECT 
+									SUM(DECODE(B.PRPS_CD,'0',RTN_QTY,0))
+									,SUM(DECODE(B.PRPS_CD,'1',RTN_QTY,0))
+									,SUM(DECODE(B.PRPS_CD,'2',RTN_QTY,0))
+									,SUM(RTN_GTN)
+									,SUM(RTN_WHSL_FEE)
+									,SUM(RTN_WHSL_FEE_STAX)
+									,SUM(RTN_RTL_FEE)
+						FROM
+                                        <if test="GBN.equalsIgnoreCase('ORI') ">
+                                    EPCM_RTN_INFO A
+                                        </if>
+                                        <if test="GBN.equalsIgnoreCase('TMP') ">
+                                    EPCM_RTN_INFO_TMP A
+                                        </if>
+									,EPCN_STD_CTNR_CD B
+									,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+									
+						WHERE 1=1
+						AND A.CTNR_CD 		= B.CTNR_CD
+						AND B.LANG_SE_CD  	= E.LANG_SE_CD
+						AND RTN_DOC_NO 	= #{RTN_DOC_NO}
+					  )
+			WHERE 1=1
+			AND RTN_DOC_NO =#{RTN_DOC_NO}
+            <if test="GBN.equalsIgnoreCase('ORI') ">
+            AND RTN_STAT_CD = 'RG' /* 반환등록상태 */
+            </if>
+            <if test="GBN.equalsIgnoreCase('TMP') ">
+            AND RTN_STAT_CD = 'RA' /* 반환등록요청상태 */
+            </if>
+	</update>
+	
+	<!--반환내역서 재 등록시 상세정보 삭제  -->
+	<delete id="epwh2910142_delete" parameterType="map" >
+        DELETE FROM 
+                <if test="GBN.equalsIgnoreCase('ORI') ">
+             EPCM_RTN_INFO
+                </if>
+                <if test="GBN.equalsIgnoreCase('TMP') ">
+             EPCM_RTN_INFO_TMP
+                </if>
+        WHERE 1=1
+        AND RTN_DOC_NO  = #{RTN_DOC_NO}
+	</delete>
+</mapper>

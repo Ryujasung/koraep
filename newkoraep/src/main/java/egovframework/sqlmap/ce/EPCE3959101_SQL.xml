@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3959101Mapper">
+
+	<!-- 권한그룹 리스트 -->
+	<select id="epce3959101_select" resultType="hashmap">
+		SELECT ATH_GRP_CD, BIZRID, BIZRNO, ATH_GRP_NM
+					,MENU_SET_CD
+					,BIZR_TP_CD
+					,EPCN_ETC_NM(BIZR_TP_CD, 'B001') AS BIZR_TP_NM
+			        ,EPCN_ETC_NM(MENU_SET_CD, 'M001') AS MENU_SET_NM
+		   FROM EPCN_ATH_GRP_INFO
+		 WHERE 1=1
+		     AND MENU_SET_CD = 'EPCE'
+		     AND USE_YN = 'Y'
+		 ORDER BY ATH_GRP_NM
+	</select>
+	
+	<!-- 권한 리스트 -->
+	<select id="epce3959101_select2" resultType="hashmap">
+		 SELECT B.ETC_CD_NM AS AREA_NM
+			        ,C.ETC_CD_NM AS AFF_OGN_NM
+			        ,D.BIZRNM
+			        ,ECL_DECRYPT(D.BIZRNO) AS BIZRNO
+			        ,D.BIZR_TP_CD
+			        ,EPCN_ETC_NM(D.BIZR_TP_CD, 'B001') AS BIZR_TP_NM
+			        ,D.BRCH_NM
+			        ,D.BRCH_NO
+		   FROM EPCN_ATH_GRP_BIZR A
+			        ,(
+		                SELECT A.ETC_CD, A.ETC_CD_NM, A.SEL_ORD
+		                  FROM EPCN_ETC_CD A
+		                       		,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') B
+		               WHERE A.LANG_SE_CD = B.LANG_SE_CD
+		                   AND A.GRP_CD = 'B010'
+		              ) B
+					 ,(
+		                SELECT A.ETC_CD, A.ETC_CD_NM, A.SEL_ORD
+		                  FROM EPCN_ETC_CD A
+		                       		,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') B
+		               WHERE A.LANG_SE_CD = B.LANG_SE_CD
+		                   AND A.GRP_CD = 'B004'
+		              ) C
+			        ,EPCN_BRCH_INFO D
+		WHERE 1=1
+		    AND A.AREA_CD = B.ETC_CD(+)
+		    AND A.AFF_OGN_CD = C.ETC_CD(+)
+		    AND A.ATH_BRCH_ID = D.BRCH_ID(+)
+		    AND A.ATH_BRCH_NO = D.BRCH_NO(+)
+		    AND A.ATH_BIZRID = D.BIZRID(+)
+		    AND A.ATH_BIZRNO = D.BIZRNO(+)
+		    AND A.ATH_GRP_CD = #{ATH_GRP_CD}
+		    AND A.BIZRID = #{BIZRID}
+		    AND A.BIZRNO = #{BIZRNO}
+		 ORDER BY B.SEL_ORD, C.SEL_ORD, D.BRCH_NM
+	</select>
+	
+	<!-- 지역 리스트 -->
+	<select id="epce3959131_select" resultType="hashmap">
+		SELECT A.ETC_CD AS AREA_CD
+				   ,A.ETC_CD_NM AS AREA_NM
+				   ,DECODE(B.ATH_GRP_CD, '', 'N', 'Y') AS SELECTED
+				   ,#{ATH_GRP_CD} as ATH_GRP_CD
+				   ,#{BIZRID} as BIZRID
+				   ,#{BIZRNO} as BIZRNO
+		  FROM EPCN_ETC_CD A
+			        ,EPCN_ATH_GRP_BIZR B
+			        ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+		WHERE 1=1
+		    AND A.GRP_CD = 'B010'
+		    AND A.USE_YN = 'Y'
+		    AND A.LANG_SE_CD = F.LANG_SE_CD
+		    AND A.ETC_CD = B.AREA_CD(+)
+		    AND B.ATH_GRP_CD(+) = #{ATH_GRP_CD}
+		    AND B.BIZRID(+) = #{BIZRID}
+		    AND B.BIZRNO(+) = #{BIZRNO}
+		 ORDER BY A.SEL_ORD
+	</select>
+	
+	<!-- 소속단체 리스트 -->
+	<select id="epce39591312_select" resultType="hashmap">
+		SELECT A.ETC_CD AS AFF_OGN_CD
+				   ,A.ETC_CD_NM AS AFF_OGN_NM
+				   ,DECODE(B.ATH_GRP_CD, '', 'N', 'Y') AS SELECTED
+				   ,#{ATH_GRP_CD} as ATH_GRP_CD
+				   ,#{BIZRID} as BIZRID
+				   ,#{BIZRNO} as BIZRNO
+		  FROM EPCN_ETC_CD A
+			        ,EPCN_ATH_GRP_BIZR B
+			        ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+		WHERE 1=1
+		    AND A.GRP_CD = 'B004'
+		    AND A.USE_YN = 'Y'
+		    AND A.LANG_SE_CD = F.LANG_SE_CD
+		    AND A.ETC_CD = B.AFF_OGN_CD(+)
+		    AND B.ATH_GRP_CD(+) = #{ATH_GRP_CD}
+		    AND B.BIZRID(+) = #{BIZRID}
+		    AND B.BIZRNO(+) = #{BIZRNO}
+		 ORDER BY A.SEL_ORD
+	</select>
+	
+	<!-- 지점 리스트 -->
+	<select id="epce39591313_select" resultType="hashmap">
+	
+		<if test='excelYn == null or excelYn == "" '>
+		 SELECT 
+		 			PNO 
+		 			,BIZRNM
+			        ,ATH_BIZRNO
+			        ,ATH_BIZRID
+			        ,ECL_DECRYPT(ATH_BIZRNO) AS BIZRNO_DE
+			        ,AFF_OGN_CD
+			        ,BIZR_TP_CD
+			        ,BRCH_NM
+			        ,ATH_BRCH_NO
+			        ,ATH_BRCH_ID
+			        ,EPCN_ETC_NM(AREA_CD, 'B010') AS AREA_NM
+			        ,EPCN_ETC_NM(AFF_OGN_CD, 'B004') AS AFF_OGN_NM
+			        ,EPCN_ETC_NM(BIZR_TP_CD, 'B001') AS BIZR_TP_NM
+			        ,ATH_GRP_CD
+				    ,BIZRID
+				    ,BIZRNO
+		  FROM (
+		</if>
+	
+		 SELECT ROW_NUMBER()OVER(ORDER BY B.SEL_ORD, A.BRCH_NM) AS PNO 
+		 			,A.BIZRNM
+			        ,A.BIZRNO as ATH_BIZRNO
+			        ,A.BIZRID as ATH_BIZRID
+			        ,A.AFF_OGN_CD
+			        ,A.BIZR_TP_CD
+			        ,A.BRCH_NM
+			        ,A.BRCH_NO as ATH_BRCH_NO
+			        ,A.BRCH_ID as ATH_BRCH_ID
+			        ,A.AREA_CD
+			        ,#{ATH_GRP_CD} as ATH_GRP_CD
+				    ,#{ATH_BIZRID} as BIZRID
+				    ,#{ATH_BIZRNO} as BIZRNO
+		   FROM EPCN_BRCH_INFO A
+		   			,EPCN_BIZR_INFO B
+		 WHERE 1=1
+		 	 AND A.BIZRID = B.BIZRID(+)
+		     AND A.BIZRNO = B.BIZRNO(+)
+		     AND NOT EXISTS (
+		                   	 SELECT 'X'
+		                       FROM EPCN_ATH_GRP_BIZR 
+		                    WHERE 1=1
+		                        AND ATH_GRP_CD = #{ATH_GRP_CD}
+		                        AND BIZRID = #{ATH_BIZRID}
+		                        AND BIZRNO = #{ATH_BIZRNO}
+		                        AND ATH_BRCH_ID = A.BRCH_ID
+		                        AND ATH_BRCH_NO = A.BRCH_NO
+		                        AND ATH_BIZRID = A.BIZRID
+		                        AND ATH_BIZRNO = A.BIZRNO
+		                    )
+		                    
+		     <if test='BIZR_TP_CD != null and BIZR_TP_CD != "" '>
+		     	AND A.BIZR_TP_CD = #{BIZR_TP_CD}
+		     </if>
+		     <if test='AREA_CD != null and AREA_CD != "" '>
+		     	AND A.AREA_CD = #{AREA_CD}
+		     </if>
+		     <if test='AFF_OGN_CD != null and AFF_OGN_CD != "" '>
+		     	AND A.AFF_OGN_CD = #{AFF_OGN_CD}
+		     </if>
+		     <if test='BIZRNM != null and BIZRNM != "" '>
+		     	AND A.BIZRNM LIKE '%' || #{BIZRNM} || '%'
+		     </if>
+		     <if test='BIZRNO != null and BIZRNO != "" '>
+		     	AND A.BIZRNO = ECL_ENCRYPT(#{BIZRNO})
+		     </if>
+		     
+		 ORDER BY B.SEL_ORD, A.BRCH_NM
+		 
+		 <if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+        </if>	
+
+	</select>
+	
+	<!-- 권한 삭제  -->
+	<update id="epce3959131_delete" parameterType="hashmap">
+		 DELETE FROM EPCN_ATH_GRP_BIZR
+		  WHERE 1=1
+		    AND ATH_GRP_CD = #{ATH_GRP_CD}
+		    AND BIZRID = #{BIZRID}
+		    AND BIZRNO = #{BIZRNO}
+		    AND BIZR_ATH_SE = #{BIZR_ATH_SE}
+	</update>
+	
+	<!-- 지역권한 저장  -->
+	<update id="epce3959131_insert" parameterType="hashmap">
+		 INSERT INTO EPCN_ATH_GRP_BIZR
+		 (
+		    ATH_GRP_CD, 
+		    BIZRID, 
+		    BIZRNO, 
+		    REG_SN, 
+		    BIZR_ATH_SE, 
+		    AREA_CD, 
+		    AFF_OGN_CD, 
+		    ATH_BRCH_ID, 
+		    ATH_BRCH_NO, 
+		    ATH_BIZRID, 
+		    ATH_BIZRNO, 
+		    REG_PRSN_ID, 
+		    REG_DTTM
+		 )
+		 VALUES
+		 (
+		    TRIM(#{ATH_GRP_CD}), 
+		    #{BIZRID}, 
+		    #{BIZRNO}, 
+		    (SELECT NVL(MAX(REG_SN),0)+1 FROM EPCN_ATH_GRP_BIZR WHERE ATH_GRP_CD = #{ATH_GRP_CD} AND BIZRID = #{BIZRID} AND BIZRNO = #{BIZRNO}), 
+		    #{BIZR_ATH_SE}, 
+		    <choose><when test='AREA_CD != null and AREA_CD != "" '>#{AREA_CD}</when><otherwise>''</otherwise></choose>,
+		    <choose><when test='AFF_OGN_CD != null and AFF_OGN_CD != "" '>#{AFF_OGN_CD}</when><otherwise>''</otherwise></choose>,
+		    <choose><when test='ATH_BRCH_ID != null and ATH_BRCH_ID != "" '>#{ATH_BRCH_ID}</when><otherwise>''</otherwise></choose>,
+		    <choose><when test='ATH_BRCH_NO != null and ATH_BRCH_NO != "" '>#{ATH_BRCH_NO}</when><otherwise>''</otherwise></choose>,
+		    <choose><when test='ATH_BIZRID != null and ATH_BIZRID != "" '>#{ATH_BIZRID}</when><otherwise>''</otherwise></choose>,
+		    <choose><when test='ATH_BIZRNO != null and ATH_BIZRNO != "" '>#{ATH_BIZRNO}</when><otherwise>''</otherwise></choose>,
+		    #{S_USER_ID}, 
+		    SYSDATE
+		 )
+	</update>
+	
+</mapper>

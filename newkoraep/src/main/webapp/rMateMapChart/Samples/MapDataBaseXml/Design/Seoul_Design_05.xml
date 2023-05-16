@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Country code="901" label="강남구" symbol="Gangnam" horizontalCenterGap="-10"/>
+	<Country code="902" label="강동구" symbol="Gangdong"/>
+	<Country code="903" label="강북구" symbol="Gangbuk" horizontalCenterGap="-6" verticalCenterGap="6"/>
+	<Country code="904" label="강서구" symbol="Gangseo"/>
+	<Country code="905" label="관악구" symbol="Gwanak"/>
+	<Country code="906" label="광진구" symbol="Gwangjin"/>
+	<Country code="907" label="구로구" symbol="Guro" horizontalCenterGap="-14" verticalCenterGap="4"/>
+	<Country code="908" label="금천구" symbol="Geumcheon"/>
+	<Country code="909" label="노원구" symbol="Nowon"/>
+	<Country code="910" label="도봉구" symbol="Dobong"/>
+	<Country code="911" label="동대문구" symbol="Dongdaemun" verticalCenterGap="2"/>
+	<Country code="912" label="동작구" symbol="Dongjak" horizontalCenterGap="2" verticalCenterGap="-4"/>
+	<Country code="913" label="마포구" symbol="Mapo" horizontalCenterGap="-1" verticalCenterGap="2"/>
+	<Country code="914" label="서대문구" symbol="Seodaemun" verticalCenterGap="4"/>
+	<Country code="915" label="서초구" symbol="Seocho" horizontalCenterGap="-18" verticalCenterGap="-4"/>
+	<Country code="916" label="성동구" symbol="Seongdong"/>
+	<Country code="917" label="성북구" symbol="Seongbuk" horizontalCenterGap="-5" verticalCenterGap="6"/>
+	<Country code="918" label="송파구" symbol="Songpa"/>
+	<Country code="919" label="양천구" symbol="Yangcheon" verticalCenterGap="5"/>
+	<Country code="920" label="영등포구" symbol="Yeongdeungpo" horizontalCenterGap="-4"/>
+	<Country code="921" label="용산구" symbol="Yongsan"/>
+	<Country code="922" label="은평구" symbol="Eunpyeong"/>
+	<Country code="923" label="종로구" symbol="Jongno" horizontalCenterGap="-6" verticalCenterGap="25"/>
+	<Country code="924" label="중구" symbol="Jung"/>
+	<Country code="925" label="중랑구" symbol="Jungnang"/>
+</Map>

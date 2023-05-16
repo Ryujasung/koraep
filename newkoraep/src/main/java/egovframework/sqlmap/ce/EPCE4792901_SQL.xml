@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE4792901Mapper">
+
+	<select id="epce4792901_select" resultType="hashmap">
+		 SELECT EXCH_EXCA_DOC_NO
+		 			,EXCH_EXCA_REG_DT
+		 			,EXCH_EXCA_REG_BIZRID
+		 			,EXCH_EXCA_REG_BIZRNO
+		 			,<![CDATA['<a href="javascript:fn_page()" class="gridLink">' || TO_CHAR(TO_DATE(EXCH_EXCA_REG_DT,'YYYYMMDD'),'YYYY-MM-DD') || '</a>' as EXCH_EXCA_REG_DT_PAGE]]>
+			        ,EPCN_BIZR_NM(EXCH_EXCA_REG_BIZRID, EXCH_EXCA_REG_BIZRNO) AS MFC_BIZRNM
+			        ,SUM(EXCH_DLIVY_QTY) AS EXCH_DLIVY_QTY
+			        ,SUM(EXCH_DLIVY_GTN) AS EXCH_DLIVY_GTN
+			        ,SUM(EXCH_WRHS_QTY) AS EXCH_WRHS_QTY
+			        ,SUM(EXCH_WRHS_GTN) AS EXCH_WRHS_GTN
+			        ,SUM(EXCH_DLIVY_GTN - EXCH_WRHS_GTN) AS SF_AMT
+			        ,EXCH_EXCA_STAT_CD
+			        ,CASE WHEN EXCH_EXCA_STAT_CD = 'I' THEN <![CDATA['<a href="javascript:fn_page3()" class="gridLink">' || EPCN_ETC_NM(EXCH_EXCA_STAT_CD, 'C004') || '</a>' ]]>
+			          ELSE EPCN_ETC_NM(EXCH_EXCA_STAT_CD, 'C004') END AS EXCH_EXCA_STAT_NM_PAGE
+			        ,STD_YEAR
+			        ,STAC_DOC_NO
+			        ,CASE WHEN SUBSTR(STAC_DOC_NO,1,2) = 'BL' THEN 'G' ELSE 'C' END AS EXCA_ISSU_SE_CD /* 과거데이터는 보증금 고지서로 조회 */
+			        ,EPCN_ETC_NM((SELECT EXCA_PROC_STAT_CD FROM EPGM_EXCA_LST WHERE STAC_DOC_NO = A.STAC_DOC_NO AND EXCA_ISSU_SE_CD = 'C'), 'C024') AS EXCA_PROC_STAT_NM
+                    ,CASE WHEN (SELECT COUNT(*) AS CNT FROM EPDM_EXCH_MST B WHERE B.REQ_MFC_BIZRNO = A.EXCH_EXCA_REG_BIZRNO AND B.EXCH_REQ_CRCT_DOC_NO = A.EXCH_EXCA_DOC_NO AND B.EXCH_CFM_CRCT_DOC_NO IS NULL) > 0 THEN 'N' ELSE 'Y' END AS EXCA_ISSU_PSBL_YN
+		   FROM EXCA_EXCH A
+		 WHERE 1=1
+		 	 <if test='EXCA_YEAR_SEL != null and EXCA_YEAR_SEL != "" '>
+		     	AND STD_YEAR = #{EXCA_YEAR_SEL}
+		     </if>
+		 	 <if test='BIZRID != null and BIZRID != "" '>
+		     	AND EXCH_EXCA_REG_BIZRID = #{BIZRID}
+		     </if>
+		     <if test='BIZRNO != null and BIZRNO != "" '>
+		     	AND EXCH_EXCA_REG_BIZRNO = #{BIZRNO}
+		     </if>
+		     <if test='STAT_CD_SEL != null and STAT_CD_SEL != "" '>
+		     	AND EXCH_EXCA_STAT_CD = #{STAT_CD_SEL}
+		     </if>
+		GROUP BY EXCH_EXCA_DOC_NO, EXCH_EXCA_REG_DT, EXCH_EXCA_REG_BIZRID, EXCH_EXCA_REG_BIZRNO, EXCH_EXCA_STAT_CD, STD_YEAR, STAC_DOC_NO
+		ORDER BY STD_YEAR DESC, EXCH_EXCA_REG_DT DESC, EPCN_BIZR_SEL_ORD(EXCH_EXCA_REG_BIZRID, EXCH_EXCA_REG_BIZRNO)
+	</select>
+	
+	<select id="epce4792964_select" resultType="hashmap">
+		 SELECT EXCH_EXCA_DOC_NO
+		 			,EXCH_EXCA_TRGT_BIZRID
+		 			,EXCH_EXCA_TRGT_BIZRNO
+		 			,EPCN_BIZR_NM(EXCH_EXCA_REG_BIZRID, EXCH_EXCA_REG_BIZRNO) AS REQ_BIZRNM
+		 			,EPCN_BIZR_NM(EXCH_EXCA_TRGT_BIZRID, EXCH_EXCA_TRGT_BIZRNO) AS TRGT_BIZRNM
+			        ,<![CDATA['<a href="javascript:fn_page2()" class="gridLink">' || EPCN_BIZR_NM(EXCH_EXCA_TRGT_BIZRID, EXCH_EXCA_TRGT_BIZRNO) || '</a>' as TRGT_BIZRNM_PAGE]]>
+			        ,EXCH_DLIVY_QTY
+			        ,EXCH_DLIVY_GTN
+			        ,EXCH_WRHS_QTY
+			        ,EXCH_WRHS_GTN
+			        ,EXCH_DLIVY_GTN - EXCH_WRHS_GTN AS SF_AMT
+			        ,EXCH_EXCA_ST_DT
+					,EXCH_EXCA_END_DT
+		   FROM EXCA_EXCH
+		 WHERE 1=1
+		     AND EXCH_EXCA_DOC_NO = #{EXCH_EXCA_DOC_NO}
+		 ORDER BY EPCN_BIZR_SEL_ORD(EXCH_EXCA_TRGT_BIZRID, EXCH_EXCA_TRGT_BIZRNO)
+	</select>
+	
+	<select id="epce4792964_select2" resultType="hashmap">
+		 SELECT A.EXCH_REG_DT
+			        ,A.EXCH_DT
+			        ,B.BIZRNM AS REQ_BIZRNM
+			        ,B.BRCH_NM AS REQ_BRCH_NM
+			        ,C.BIZRNM AS CFM_BIZRNM
+			        ,C.BRCH_NM AS CFM_BRCH_NM
+			        ,CASE WHEN A.EXCH_REQ_CRCT_DOC_NO = #{EXCH_EXCA_DOC_NO} THEN A.EXCH_QTY_TOT END AS EXCH_DLIVY_QTY
+			        ,CASE WHEN A.EXCH_REQ_CRCT_DOC_NO = #{EXCH_EXCA_DOC_NO} THEN A.EXCH_GTN_TOT END AS EXCH_DLIVY_GTN
+			        ,CASE WHEN A.EXCH_CFM_CRCT_DOC_NO = #{EXCH_EXCA_DOC_NO} THEN A.EXCH_QTY_TOT END AS EXCH_WRHS_QTY
+			        ,CASE WHEN A.EXCH_CFM_CRCT_DOC_NO = #{EXCH_EXCA_DOC_NO} THEN A.EXCH_GTN_TOT END AS EXCH_WRHS_GTN
+		   FROM EPDM_EXCH_MST A
+		        	,EPCN_BRCH_INFO B
+					,EPCN_BRCH_INFO C
+		  WHERE 1=1
+		    AND (A.EXCH_REQ_CRCT_DOC_NO = #{EXCH_EXCA_DOC_NO} OR A.EXCH_CFM_CRCT_DOC_NO = #{EXCH_EXCA_DOC_NO})
+		    AND (
+		    				A.REQ_MFC_BIZRID = #{EXCH_EXCA_TRGT_BIZRID} OR A.REQ_MFC_BIZRNO = #{EXCH_EXCA_TRGT_BIZRNO}
+		    			OR A.CFM_MFC_BIZRID = #{EXCH_EXCA_TRGT_BIZRID} OR A.CFM_MFC_BIZRNO = #{EXCH_EXCA_TRGT_BIZRNO}
+		    		)
+		    AND A.REQ_MFC_BIZRID = B.BIZRID
+		    AND A.REQ_MFC_BIZRNO = B.BIZRNO
+		    AND A.REQ_MFC_BRCH_ID = B.BRCH_ID
+		    AND A.REQ_MFC_BRCH_NO = B.BRCH_NO
+		    AND A.CFM_MFC_BIZRID = C.BIZRID
+		    AND A.CFM_MFC_BIZRNO = C.BIZRNO
+		    AND A.CFM_MFC_BRCH_ID = C.BRCH_ID
+		    AND A.CFM_MFC_BRCH_NO = C.BRCH_NO
+		 ORDER BY A.EXCH_REG_DT, A.EXCH_DT, EPCN_BIZR_SEL_ORD(B.BIZRID, B.BIZRNO), B.BRCH_NM, EPCN_BIZR_SEL_ORD(C.BIZRID, C.BIZRNO), C.BRCH_NM
+	</select>
+	
+	<select id="epce4792964_select3" resultType="hashmap">
+		 SELECT A.EXCH_REG_DT
+			        ,A.EXCH_DT
+			        ,B.BIZRNM AS REQ_BIZRNM
+			        ,B.BRCH_NM AS REQ_BRCH_NM
+			        ,C.BIZRNM AS CFM_BIZRNM
+			        ,C.BRCH_NM AS CFM_BRCH_NM
+			        ,EXCH_DLIVY_QTY
+			        ,EXCH_DLIVY_GTN
+			        ,EXCH_WRHS_QTY
+			        ,EXCH_WRHS_GTN
+		   FROM
+					(
+				          SELECT EXCH_REG_DT, EXCH_DT
+				          			 ,REQ_MFC_BIZRID AS REQ_BIZRID
+					                 ,REQ_MFC_BIZRNO AS REQ_BIZRNO
+					                 ,REQ_MFC_BRCH_ID AS REQ_BRCH_ID
+					                 ,REQ_MFC_BRCH_NO AS REQ_BRCH_NO
+					                 ,CFM_MFC_BIZRID AS TRGT_BIZRID
+					                 ,CFM_MFC_BIZRNO AS TRGT_BIZRNO
+					                 ,CFM_MFC_BRCH_ID AS TRGT_BRCH_ID
+					                 ,CFM_MFC_BRCH_NO AS TRGT_BRCH_NO
+					                 ,EXCH_QTY_TOT AS EXCH_DLIVY_QTY
+					                 ,EXCH_GTN_TOT AS EXCH_DLIVY_GTN
+					                 ,0 as EXCH_WRHS_QTY
+					                 ,0 as EXCH_WRHS_GTN
+					                 ,SUBSTR(EXCH_CFM_DT, 1, 4) AS STD_YEAR
+				            FROM EPDM_EXCH_MST
+				          WHERE 1=1
+				             AND EXCH_STAT_CD =  'CC' /*교환확인*/
+				             AND EXCH_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+				             AND REQ_MFC_BIZRID = #{EXCH_EXCA_REG_BIZRID}
+				             AND REQ_MFC_BIZRNO = #{EXCH_EXCA_REG_BIZRNO}
+				             AND CFM_MFC_BIZRID = #{EXCH_EXCA_TRGT_BIZRID}
+	                   		 AND CFM_MFC_BIZRNO =  #{EXCH_EXCA_TRGT_BIZRNO}
+				             AND EXCH_REQ_CRCT_STAT_CD IS NULL /* 상태변경전 */
+				             AND SUBSTR(EXCH_CFM_DT, 1, 4) = #{STD_YEAR}
+	
+				         UNION ALL
+				        
+				          SELECT EXCH_REG_DT, EXCH_DT
+				            		 ,CFM_MFC_BIZRID AS REQ_BIZRID
+					                 ,CFM_MFC_BIZRNO AS REQ_BIZRNO
+					                 ,CFM_MFC_BRCH_ID AS REQ_BRCH_ID
+					                 ,CFM_MFC_BRCH_NO AS REQ_BRCH_NO
+					                 ,REQ_MFC_BIZRID AS TRGT_BIZRID
+					                 ,REQ_MFC_BIZRNO AS TRGT_BIZRNO
+					                 ,REQ_MFC_BRCH_ID AS TRGT_BRCH_ID
+					                 ,REQ_MFC_BRCH_NO AS TRGT_BRCH_NO
+					                 ,0
+					                 ,0
+					                 ,EXCH_QTY_TOT AS EXCH_WRHS_QTY
+					                 ,EXCH_GTN_TOT AS EXCH_WRHS_GTN
+					                 ,SUBSTR(EXCH_CFM_DT, 1, 4) AS STD_YEAR
+				            FROM EPDM_EXCH_MST A
+				          WHERE 1=1
+				             AND EXCH_STAT_CD =  'CC' /*교환확인*/
+				             AND EXCH_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+				             AND CFM_MFC_BIZRID = #{EXCH_EXCA_REG_BIZRID}
+				             AND CFM_MFC_BIZRNO = #{EXCH_EXCA_REG_BIZRNO}
+				             AND REQ_MFC_BIZRID = #{EXCH_EXCA_TRGT_BIZRID}
+				             AND REQ_MFC_BIZRNO = #{EXCH_EXCA_TRGT_BIZRNO}
+				             AND EXCH_CFM_CRCT_STAT_CD IS NULL /* 상태변경전 */
+				             AND SUBSTR(EXCH_CFM_DT, 1, 4) = #{STD_YEAR}
+		        	) A
+				    ,EPCN_BRCH_INFO B
+				    ,EPCN_BRCH_INFO C
+		WHERE 1=1
+		    AND A.REQ_BIZRID = B.BIZRID
+		    AND A.REQ_BIZRNO = B.BIZRNO
+		    AND A.REQ_BRCH_ID = B.BRCH_ID
+		    AND A.REQ_BRCH_NO = B.BRCH_NO
+		    AND A.TRGT_BIZRID = C.BIZRID
+		    AND A.TRGT_BIZRNO = C.BIZRNO
+		    AND A.TRGT_BRCH_ID = C.BRCH_ID
+		    AND A.TRGT_BRCH_NO = C.BRCH_NO
+		 
+		ORDER BY A.EXCH_REG_DT, A.EXCH_DT, EPCN_BIZR_SEL_ORD(B.BIZRID, B.BIZRNO), B.BRCH_NM, EPCN_BIZR_SEL_ORD(C.BIZRID, C.BIZRNO), C.BRCH_NM  
+	</select>
+	
+	<select id="epce4792931_select" resultType="hashmap">
+		 SELECT A.EXCH_EXCA_REG_BIZRID
+		 			,A.EXCH_EXCA_REG_BIZRNO
+		 			,A.EXCH_EXCA_TRGT_BIZRID
+		 			,A.EXCH_EXCA_TRGT_BIZRNO
+		 			,#{START_DT} as START_DT
+		 			,#{END_DT} as END_DT
+		 			,EPCN_BIZR_NM(A.EXCH_EXCA_REG_BIZRID, A.EXCH_EXCA_REG_BIZRNO) AS REQ_BIZRNM
+			        ,EPCN_BIZR_NM(A.EXCH_EXCA_TRGT_BIZRID, A.EXCH_EXCA_TRGT_BIZRNO) AS TRGT_BIZRNM
+			        ,<![CDATA['<a href="javascript:fn_page()" class="gridLink">' || EPCN_BIZR_NM(A.EXCH_EXCA_TRGT_BIZRID, A.EXCH_EXCA_TRGT_BIZRNO) || '</a>' as TRGT_BIZRNM_PAGE]]>
+			        ,NVL(EXCH_DLIVY_QTY,0) AS EXCH_DLIVY_QTY
+			        ,NVL(EXCH_DLIVY_GTN,0) AS EXCH_DLIVY_GTN
+			        ,NVL(EXCH_WRHS_QTY,0) AS EXCH_WRHS_QTY
+			        ,NVL(EXCH_WRHS_GTN,0) AS EXCH_WRHS_GTN
+			        ,NVL(EXCH_DLIVY_GTN,0) - NVL(EXCH_WRHS_GTN,0) AS SF_AMT
+			        ,A.STD_YEAR
+		   FROM 
+			         (
+			          SELECT REQ_MFC_BIZRID AS EXCH_EXCA_REG_BIZRID
+				                 ,REQ_MFC_BIZRNO AS EXCH_EXCA_REG_BIZRNO
+				                 ,CFM_MFC_BIZRID AS EXCH_EXCA_TRGT_BIZRID
+				                 ,CFM_MFC_BIZRNO AS EXCH_EXCA_TRGT_BIZRNO
+				                 ,SUM(EXCH_QTY_TOT) AS EXCH_DLIVY_QTY
+				                 ,SUM(EXCH_GTN_TOT) AS EXCH_DLIVY_GTN
+                                 ,0 AS EXCH_WRHS_QTY
+                                 ,0 AS EXCH_WRHS_GTN
+				                 ,SUBSTR(EXCH_CFM_DT, 1, 4) AS STD_YEAR
+			            FROM EPDM_EXCH_MST 
+			          WHERE 1=1
+			             AND EXCH_STAT_CD =  'CC' /*교환확인*/
+			             AND EXCH_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+			             AND REQ_MFC_BIZRID = #{BIZRID}
+			             AND REQ_MFC_BIZRNO = #{BIZRNO}
+			             AND EXCH_REQ_CRCT_STAT_CD IS NULL /* 상태변경전 */
+			          GROUP BY REQ_MFC_BIZRID, REQ_MFC_BIZRNO, CFM_MFC_BIZRID, CFM_MFC_BIZRNO, SUBSTR(EXCH_CFM_DT, 1, 4)
+                      
+                      UNION ALL
+
+			          SELECT CFM_MFC_BIZRID AS EXCH_EXCA_REG_BIZRID
+				                 ,CFM_MFC_BIZRNO AS EXCH_EXCA_REG_BIZRNO
+				                 ,REQ_MFC_BIZRID AS EXCH_EXCA_TRGT_BIZRID
+				                 ,REQ_MFC_BIZRNO AS EXCH_EXCA_TRGT_BIZRNO
+                                 ,0 AS EXCH_DLIVY_QTY
+                                 ,0 AS EXCH_DLIVY_GTN
+				                 ,SUM(EXCH_QTY_TOT) AS EXCH_WRHS_QTY
+				                 ,SUM(EXCH_GTN_TOT) AS EXCH_WRHS_GTN
+				                 ,SUBSTR(EXCH_CFM_DT, 1, 4) AS STD_YEAR
+			            FROM EPDM_EXCH_MST 
+			          WHERE 1=1
+			             AND EXCH_STAT_CD =  'CC' /*교환확인*/
+			             AND EXCH_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+			             AND CFM_MFC_BIZRID = #{BIZRID}
+			             AND CFM_MFC_BIZRNO = #{BIZRNO}
+			             AND EXCH_CFM_CRCT_STAT_CD IS NULL /* 상태변경전 */
+			          GROUP BY CFM_MFC_BIZRID, CFM_MFC_BIZRNO, REQ_MFC_BIZRID, REQ_MFC_BIZRNO, SUBSTR(EXCH_CFM_DT, 1, 4)
+			        ) A
+		WHERE 1=1
+	ORDER BY A.STD_YEAR, EPCN_BIZR_SEL_ORD(A.EXCH_EXCA_TRGT_BIZRID, A.EXCH_EXCA_TRGT_BIZRNO)
+	</select>
+	
+	<update id="epce4792931_insert">
+		INSERT INTO EXCA_EXCH
+			 (
+			   EXCH_EXCA_DOC_NO
+			   ,EXCH_EXCA_REG_DT
+			   ,EXCH_EXCA_REG_BIZRID
+			   ,EXCH_EXCA_REG_BIZRNO
+			   ,EXCH_EXCA_TRGT_BIZRID
+			   ,EXCH_EXCA_TRGT_BIZRNO
+			   ,EXCH_EXCA_STAT_CD
+			   ,EXCH_DLIVY_QTY
+			   ,EXCH_DLIVY_GTN
+			   ,EXCH_WRHS_QTY
+			   ,EXCH_WRHS_GTN
+			   ,EXCH_EXCA_ST_DT
+			   ,EXCH_EXCA_END_DT
+			   ,REG_PRSN_ID
+			   ,REG_DTTM
+			   ,STD_YEAR
+			 )
+			 
+			 SELECT #{EXCH_EXCA_DOC_NO}
+			 			,TO_CHAR(SYSDATE, 'YYYYMMDD')
+			 			,A.EXCH_EXCA_REG_BIZRID
+			 			,A.EXCH_EXCA_REG_BIZRNO
+			 			,A.EXCH_EXCA_TRGT_BIZRID
+			 			,A.EXCH_EXCA_TRGT_BIZRNO
+			 			,'R' /* 정산요청 */
+				        ,NVL(SUM(EXCH_DLIVY_QTY),0) AS EXCH_DLIVY_QTY
+				        ,NVL(SUM(EXCH_DLIVY_GTN),0) AS EXCH_DLIVY_GTN
+				        ,NVL(SUM(EXCH_WRHS_QTY),0) AS EXCH_WRHS_QTY
+				        ,NVL(SUM(EXCH_WRHS_GTN),0) AS EXCH_WRHS_GTN
+				        ,#{START_DT}
+				        ,#{END_DT}
+				        ,#{S_USER_ID}
+				        ,SYSDATE
+				        ,#{STD_YEAR}
+			   FROM 
+				         (
+				          SELECT REQ_MFC_BIZRID AS EXCH_EXCA_REG_BIZRID
+					                 ,REQ_MFC_BIZRNO AS EXCH_EXCA_REG_BIZRNO
+					                 ,CFM_MFC_BIZRID AS EXCH_EXCA_TRGT_BIZRID
+					                 ,CFM_MFC_BIZRNO AS EXCH_EXCA_TRGT_BIZRNO
+					                 ,EXCH_QTY_TOT AS EXCH_DLIVY_QTY
+					                 ,EXCH_GTN_TOT AS EXCH_DLIVY_GTN
+                                     ,0 AS EXCH_WRHS_QTY
+                                     ,0 AS EXCH_WRHS_GTN
+                                     
+				            FROM EPDM_EXCH_MST 
+				          WHERE 1=1
+				              AND EXCH_STAT_CD =  'CC' /*교환확인*/
+				              AND EXCH_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+				              AND REQ_MFC_BIZRID = #{BIZRID}
+				              AND REQ_MFC_BIZRNO = #{BIZRNO}
+				              AND EXCH_REQ_CRCT_STAT_CD IS NULL /* 상태변경전 */
+				              AND SUBSTR(EXCH_CFM_DT, 1, 4)  = #{STD_YEAR}
+
+                          UNION ALL
+
+				          SELECT CFM_MFC_BIZRID AS EXCH_EXCA_REG_BIZRID
+					                 ,CFM_MFC_BIZRNO AS EXCH_EXCA_REG_BIZRNO
+					                 ,REQ_MFC_BIZRID AS EXCH_EXCA_TRGT_BIZRID
+					                 ,REQ_MFC_BIZRNO AS EXCH_EXCA_TRGT_BIZRNO
+                                     ,0 AS EXCH_DLIVY_QTY
+                                     ,0 AS EXCH_DLIVY_GTN
+					                 ,EXCH_QTY_TOT AS EXCH_WRHS_QTY
+					                 ,EXCH_GTN_TOT AS EXCH_WRHS_GTN
+				            FROM EPDM_EXCH_MST
+				          WHERE 1=1
+				              AND EXCH_STAT_CD =  'CC' /*교환확인*/
+				              AND EXCH_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+				              AND CFM_MFC_BIZRID = #{BIZRID}
+				              AND CFM_MFC_BIZRNO = #{BIZRNO}
+				              AND EXCH_CFM_CRCT_STAT_CD IS NULL /* 상태변경전 */
+				              AND SUBSTR(EXCH_CFM_DT, 1, 4)  = #{STD_YEAR}
+				        ) A
+			WHERE 1=1
+            GROUP BY A.EXCH_EXCA_REG_BIZRID, A.EXCH_EXCA_REG_BIZRNO, A.EXCH_EXCA_TRGT_BIZRID, A.EXCH_EXCA_TRGT_BIZRNO
+	</update>
+	
+	<update id="epce4792931_update">
+		  UPDATE EPDM_EXCH_MST 
+			    SET EXCH_REQ_CRCT_DOC_NO = #{EXCH_EXCA_DOC_NO}
+			          ,EXCH_REQ_CRCT_STAT_CD = 'R' /* 정산요청 */
+			          ,UPD_PRSN_ID = #{S_USER_ID}
+			          ,UPD_DTTM = SYSDATE
+		   WHERE 1=1
+			   AND EXCH_STAT_CD = 'CC' /*교환확인*/
+			   AND EXCH_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+			   AND REQ_MFC_BIZRID = #{BIZRID}
+			   AND REQ_MFC_BIZRNO = #{BIZRNO}
+			   AND EXCH_REQ_CRCT_STAT_CD IS NULL /* 상태변경전 */
+			   AND SUBSTR(EXCH_CFM_DT, 1, 4)  = #{STD_YEAR}
+	</update>
+	
+	<update id="epce4792931_update2">
+		  UPDATE EPDM_EXCH_MST 
+			    SET EXCH_CFM_CRCT_DOC_NO = #{EXCH_EXCA_DOC_NO}
+			          ,EXCH_CFM_CRCT_STAT_CD = 'R' /* 정산요청 */
+			          ,UPD_PRSN_ID = #{S_USER_ID}
+			          ,UPD_DTTM = SYSDATE
+		   WHERE 1=1
+			   AND EXCH_STAT_CD = 'CC' /*교환확인*/
+			   AND EXCH_CFM_DT BETWEEN #{START_DT} AND #{END_DT}
+			   AND CFM_MFC_BIZRID = #{BIZRID}
+			   AND CFM_MFC_BIZRNO = #{BIZRNO}
+			   AND EXCH_CFM_CRCT_STAT_CD IS NULL /* 상태변경전 */
+			   AND SUBSTR(EXCH_CFM_DT, 1, 4)  = #{STD_YEAR}
+	</update>
+	
+	<update id="epce4792901_update">
+	
+		DECLARE
+		    BEGIN
+	
+		  UPDATE EXCA_EXCH
+			    SET EXCH_EXCA_STAT_CD = #{EXCH_EXCA_STAT_CD}
+			          ,UPD_PRSN_ID = #{S_USER_ID}
+			          ,UPD_DTTM = SYSDATE
+		    WHERE 1=1
+			    AND EXCH_EXCA_DOC_NO = #{EXCH_EXCA_DOC_NO}
+			    
+			    <choose>
+			     	<when test='EXCH_EXCA_STAT_CD == "C" '>
+			     		AND EXCH_EXCA_STAT_CD = 'R'
+			     	</when>
+			     	<when test='EXCH_EXCA_STAT_CD == "R" '>
+			     		AND EXCH_EXCA_STAT_CD = 'C'
+			     	</when>
+			     </choose>
+			;
+			
+			  UPDATE EPDM_EXCH_MST 
+				    SET EXCH_REQ_CRCT_STAT_CD = #{EXCH_EXCA_STAT_CD}
+				          ,UPD_PRSN_ID = #{S_USER_ID}
+				          ,UPD_DTTM = SYSDATE
+			   WHERE 1=1
+				   AND EXCH_REQ_CRCT_DOC_NO = #{EXCH_EXCA_DOC_NO}
+			;
+			
+			  UPDATE EPDM_EXCH_MST 
+				    SET EXCH_CFM_CRCT_STAT_CD = #{EXCH_EXCA_STAT_CD}
+				          ,UPD_PRSN_ID = #{S_USER_ID}
+				          ,UPD_DTTM = SYSDATE
+			   WHERE 1=1
+				   AND EXCH_CFM_CRCT_DOC_NO = #{EXCH_EXCA_DOC_NO}
+			;
+			 
+		END;	     
+		
+	</update>
+	
+	<delete id="epce4792901_delete">
+		 DELETE 
+		    FROM EXCA_EXCH 
+		  WHERE 1=1
+		      AND EXCH_EXCA_DOC_NO = #{EXCH_EXCA_DOC_NO}
+		      AND EXCH_EXCA_STAT_CD = 'R'
+	</delete>
+	
+	<update id="epce4792901_update2">
+		  UPDATE EPDM_EXCH_MST 
+			    SET EXCH_REQ_CRCT_DOC_NO = ''
+			          ,EXCH_REQ_CRCT_STAT_CD = ''
+			          ,UPD_PRSN_ID = #{S_USER_ID}
+			          ,UPD_DTTM = SYSDATE
+		   WHERE 1=1
+			   AND EXCH_REQ_CRCT_DOC_NO = #{EXCH_EXCA_DOC_NO}
+	</update>
+	
+	<update id="epce4792901_update3">
+		  UPDATE EPDM_EXCH_MST 
+			    SET EXCH_CFM_CRCT_DOC_NO = ''
+			          ,EXCH_CFM_CRCT_STAT_CD = ''
+			          ,UPD_PRSN_ID = #{S_USER_ID}
+			          ,UPD_DTTM = SYSDATE
+		   WHERE 1=1
+			   AND EXCH_CFM_CRCT_DOC_NO = #{EXCH_EXCA_DOC_NO}
+	</update>
+	
+	<select id="epce47929312_select"  resultType="hashmap"> 
+		 SELECT A.BIZRID, A.BIZRNO
+			        ,A.BIZRNM, A.RPST_NM, ECL_DECRYPT(A.BIZRNO) AS BIZRNO_DE
+			        ,A.RPST_TEL_NO1||'-'||A.RPST_TEL_NO2||'-'||A.RPST_TEL_NO3 AS RPST_TEL_NO
+			        ,'('||A.PNO||') '||A.ADDR1||' '||A.ADDR2 AS ADDR
+			        ,EPCN_ETC_NM(#{EXCA_ISSU_SE_CD}, 'C025') as EXCA_ISSU_SE_NM
+			        ,EPCN_ETC_NM(#{EXCA_SE_CD}, 'C023') as EXCA_SE_NM
+			        ,#{EXCA_AMT} as EXCA_AMT
+			        
+			        <choose>
+			        	<when test='EXCA_SE_CD == "A"'>
+			        	  ,(SELECT A.RSV_ITEM1
+			        		   FROM EPCN_ETC_CD A
+			        		   			,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+			        		 WHERE A.GRP_CD = 'D035' 
+			        		     AND A.ETC_CD = '31'
+			        		     AND A.LANG_SE_CD = C.LANG_SE_CD ) as ACP_ACCT_NO
+			        	</when>
+			        	<when test='EXCA_SE_CD == "C"'>
+			        	  ,(SELECT PI_DECRYPT(ACP_ACCT_NO) as ACP_ACCT_NO
+			        		   FROM EPCN_BIZR_INFO
+			        		 WHERE BIZRID = #{BIZRID}
+			        		     AND BIZRNO = #{BIZRNO} ) as ACP_ACCT_NO
+			        	</when>
+			        </choose>
+			        
+		   FROM EPCN_BIZR_INFO A
+		 WHERE 1=1
+		    AND BIZRID = #{BIZRID}
+		    AND BIZRNO = #{BIZRNO}
+	</select>
+	
+	<select id="epce47929312_select2" parameterType="map" resultType="hashmap">
+	
+		SELECT EXCH_EXCA_DOC_NO
+		 			,EXCH_EXCA_TRGT_BIZRID
+		 			,EXCH_EXCA_TRGT_BIZRNO
+		 			,EPCN_BIZR_NM(EXCH_EXCA_REG_BIZRID, EXCH_EXCA_REG_BIZRNO) AS REQ_BIZRNM
+		 			,EPCN_BIZR_NM(EXCH_EXCA_TRGT_BIZRID, EXCH_EXCA_TRGT_BIZRNO) AS TRGT_BIZRNM
+			        ,EXCH_DLIVY_QTY
+			        ,EXCH_DLIVY_GTN
+			        ,EXCH_WRHS_QTY
+			        ,EXCH_WRHS_GTN
+			        ,EXCH_DLIVY_GTN - EXCH_WRHS_GTN AS SF_AMT
+			        ,EXCH_EXCA_ST_DT
+					,EXCH_EXCA_END_DT
+		   FROM EXCA_EXCH
+		 WHERE 1=1
+		     AND EXCH_EXCA_STAT_CD = 'C' /* 교환정산 확인 */
+		    <if test="list !=null and list.size >0" >
+					AND	EXCH_EXCA_DOC_NO IN
+		        <foreach collection="list"  item="type"  open="(" close=")" separator=",">
+		            #{type.EXCH_EXCA_DOC_NO}
+		        </foreach>
+			</if>
+		 ORDER BY EPCN_BIZR_SEL_ORD(EXCH_EXCA_TRGT_BIZRID, EXCH_EXCA_TRGT_BIZRNO)
+
+	</select>
+	
+	<update id="epce47929312_insert" parameterType="map">
+		   INSERT INTO EPGM_EXCA_LST
+		   (
+		      STAC_DOC_NO
+		      ,EXCA_STD_CD
+		      ,BIZRID
+		      ,BIZRNO
+		      ,EXCA_ISSU_SE_CD
+		      ,BIZR_TP_CD
+		      ,EXCA_SE_CD
+		      ,EXCA_PROC_STAT_CD
+		      ,STD_YEAR
+		      ,EXCA_REG_DT
+		      ,EXCA_AMT
+		      ,GTN
+
+		      <choose>
+		        <when test='EXCA_SE_CD == "A"'>
+		          ,ACP_BANK_CD
+		          ,ACP_ACCT_NO
+		        </when>
+		        <when test='EXCA_SE_CD == "C"'>
+		          ,PAY_BANK_CD
+		          ,PAY_ACCT_NO
+		          ,PAY_ACCT_DPSTR_NM
+		        </when>
+		      </choose>
+		      
+		      ,AGTN_BAL_PAY_AMT
+		      ,DRVL_BAL_PAY_AMT
+		      ,GTN_BAL_INDE_AMT
+		      ,EXCA_PLAN_GTN_BAL
+		      ,EXCA_GTN_BAL
+		      ,AGTN_INDE_AMT
+		      ,REG_PRSN_ID
+		      ,REG_DTTM
+		      ,TX_EXEC_CD
+		   )
+		   
+		   SELECT 
+			          #{STAC_DOC_NO}
+			          ,''
+			          ,BIZRID
+			          ,BIZRNO
+			          ,#{EXCA_ISSU_SE_CD}
+			          ,BIZR_TP_CD
+			          ,#{EXCA_SE_CD}
+			          ,#{EXCA_PROC_STAT_CD}
+			          ,#{STD_YEAR}
+			          ,TO_CHAR(SYSDATE, 'YYYYMMDD')
+			          ,#{EXCA_AMT}
+			          ,#{GTN}
+			          
+			          <choose>
+			            <when test='EXCA_SE_CD == "A"'>
+			              ,'088' AS ACP_BANK_CD
+			              ,(SELECT PI_ENCRYPT(A.RSV_ITEM1)
+			                 FROM EPCN_ETC_CD A
+			                      ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+			               WHERE A.GRP_CD = 'D035' 
+			                   AND A.ETC_CD = '31'
+			                   AND A.LANG_SE_CD = C.LANG_SE_CD ) AS ACP_ACCT_NO
+			            </when>
+			            <when test='EXCA_SE_CD == "C"'>
+			              ,ACP_BANK_CD
+			              ,ACP_ACCT_NO
+			              ,ACP_ACCT_DPSTR_NM
+			            </when>
+			          </choose>
+
+			          ,#{AGTN_BAL_PAY_AMT}
+			          ,#{DRVL_BAL_PAY_AMT}
+			          ,#{GTN_BAL_INDE_AMT}
+			          ,#{EXCA_PLAN_GTN_BAL}
+			          ,#{EXCA_GTN_BAL}
+			          ,#{AGTN_INDE_AMT}
+			          ,#{S_USER_ID}
+			          ,SYSDATE
+			          ,'TV'	/* 조회필요 */
+		     FROM EPCN_BIZR_INFO
+		   WHERE 1=1
+		       AND BIZRID = #{BIZRID}
+		       AND BIZRNO = #{BIZRNO}
+		      
+	</update>
+	
+	<update id="epce47929312_insert2" parameterType="map">
+	
+		 INSERT INTO EPGM_EXCA_DTL
+		  (
+		      STAC_DOC_NO
+		      ,EXCA_ISSU_SE_CD
+		      ,EXCA_DTL_CD
+		      ,MAPP_DOC_NO
+		      ,REG_PRSN_ID
+		      ,REG_DTTM
+		  )
+		  
+		  SELECT #{STAC_DOC_NO}
+		  			 ,'C' /* 교환정산 */
+			         ,GBN
+			         ,MAPP_DOC_NO
+			         ,#{S_USER_ID}
+			         ,SYSDATE
+		    FROM  
+			         ( 
+			         
+			             SELECT 'D' AS GBN
+			             			,EXCH_EXCA_DOC_NO AS MAPP_DOC_NO
+						   FROM EXCA_EXCH
+						 WHERE 1=1
+						 	 AND EXCH_EXCA_STAT_CD = 'C' /* 교환정산 확인 */
+						 	 <if test="list !=null and list.size >0" >
+									AND	EXCH_EXCA_DOC_NO IN
+						        <foreach collection="list"  item="type"  open="(" close=")" separator=",">
+						            #{type.EXCH_EXCA_DOC_NO}
+						        </foreach>
+							</if>
+			            GROUP BY EXCH_EXCA_DOC_NO
+			         
+			      )
+			      
+	</update>
+	
+	<update id="epce47929312_update" parameterType="map">
+		 
+		 DECLARE
+		    BEGIN
+		    
+	    	  UPDATE EXCA_EXCH A
+		            SET EXCH_EXCA_STAT_CD = 'I' /* 정산서발급 */
+		            		,EXCA_DT = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			                ,STAC_DOC_NO = #{STAC_DOC_NO}
+			                ,UPD_PRSN_ID = #{S_USER_ID}
+			                ,UPD_DTTM = SYSDATE
+		        WHERE 1=1
+		            AND A.EXCH_EXCA_STAT_CD = 'C' /* 교환정산 확인 */
+		            <if test="list !=null and list.size >0" >
+							AND	EXCH_EXCA_DOC_NO IN
+				        <foreach collection="list"  item="type"  open="(" close=")" separator=",">
+				            #{type.EXCH_EXCA_DOC_NO}
+				        </foreach>
+					</if>   
+				;	
+					
+				UPDATE EPDM_EXCH_MST 
+				    SET EXCH_REQ_CRCT_STAT_CD = 'I' /* 정산서발급 */
+				          ,UPD_PRSN_ID = #{S_USER_ID}
+				          ,UPD_DTTM = SYSDATE
+			    WHERE 1=1
+				    AND EXCH_REQ_CRCT_DOC_NO IN
+				    <foreach collection="list"  item="type"  open="(" close=")" separator=",">
+			            #{type.EXCH_EXCA_DOC_NO}
+			        </foreach>
+			  ;
+			
+			  UPDATE EPDM_EXCH_MST 
+				    SET EXCH_CFM_CRCT_STAT_CD = 'I' /* 정산서발급 */
+				          ,UPD_PRSN_ID = #{S_USER_ID}
+				          ,UPD_DTTM = SYSDATE
+			    WHERE 1=1
+				    AND EXCH_CFM_CRCT_DOC_NO IN
+				    <foreach collection="list"  item="type"  open="(" close=")" separator=",">
+			            #{type.EXCH_EXCA_DOC_NO}
+			        </foreach>
+			  ;
+					
+			END;		
+ 
+	</update>
+	
+	<insert id="epce47929312_insert3" parameterType="map">
+		INSERT INTO EPGM_MFC_GTN_BAL
+	       (
+	          MFC_BIZRID
+	          ,MFC_BIZRNO
+	          ,STD_DT
+	          ,STD_YEAR
+	          ,BAL_SN
+	          ,MAPP_DOC_NO
+	          ,PLAN_GTN_BAL
+	          ,ADIT_GTN_BAL
+	          ,GTN_INDE
+	          ,PRCS_ID
+	          ,PRCS_DTTM
+	          ,DEL_YN
+			)
+	       VALUES
+	       (
+	          #{BIZRID}
+	          ,#{BIZRNO}
+	          ,TO_CHAR(SYSDATE,'YYYYMMDD')
+	          ,#{EXCA_SE_YEAR}
+	          ,TEMP_SEQ.NEXTVAL
+	          ,#{STAC_DOC_NO}
+	          ,#{GTN_BAL_INDE_AMT}
+	          ,#{AGTN_INDE_AMT}
+	          ,#{GTN_INDE}
+	          ,#{S_USER_ID}
+	          ,SYSDATE
+	          ,'N'
+	       )
+	</insert>
+	
+	<select id="epce47929643_select" parameterType="map" resultType="hashmap">
+	
+		SELECT EXCH_EXCA_DOC_NO
+		 			,EXCH_EXCA_TRGT_BIZRID
+		 			,EXCH_EXCA_TRGT_BIZRNO
+		 			,EPCN_BIZR_NM(EXCH_EXCA_REG_BIZRID, EXCH_EXCA_REG_BIZRNO) AS REQ_BIZRNM
+		 			,EPCN_BIZR_NM(EXCH_EXCA_TRGT_BIZRID, EXCH_EXCA_TRGT_BIZRNO) AS TRGT_BIZRNM
+			        ,EXCH_DLIVY_QTY
+			        ,EXCH_DLIVY_GTN
+			        ,EXCH_WRHS_QTY
+			        ,EXCH_WRHS_GTN
+			        ,EXCH_DLIVY_GTN - EXCH_WRHS_GTN AS SF_AMT
+			        ,EXCH_EXCA_ST_DT
+					,EXCH_EXCA_END_DT
+		   FROM EXCA_EXCH
+		 WHERE 1=1
+		     AND STAC_DOC_NO = #{STAC_DOC_NO}
+		 ORDER BY EPCN_BIZR_SEL_ORD(EXCH_EXCA_TRGT_BIZRID, EXCH_EXCA_TRGT_BIZRNO)
+
+	</select>
+	
+	<!-- 정산서발급 취소 가능 여부 체크 조회 -->
+	<select id="epce47929643_select2" parameterType="map" resultType="int">
+		SELECT COUNT(1) AS NCNT 
+		  FROM EPGM_EXCA_LST 
+        WHERE 1=1
+            AND EXCA_PROC_STAT_CD != 'I' /* 발급 */
+            AND STAC_DOC_NO = #{STAC_DOC_NO}
+            AND EXCA_ISSU_SE_CD = 'C'
+	</select>
+	
+	<update id="epce47929643_update" parameterType="map" >
+	   
+		 DECLARE
+		        BEGIN
+		        
+					  UPDATE EPDM_EXCH_MST A
+						    SET EXCH_REQ_CRCT_STAT_CD = 'C' /* 정산 */
+						          ,UPD_PRSN_ID = #{S_USER_ID}
+						          ,UPD_DTTM = SYSDATE
+					    WHERE 1=1
+						    AND EXISTS (
+						    					SELECT 'X' 
+						    					  FROM EXCA_EXCH B
+						    					WHERE 1=1
+						    					    AND B.EXCH_EXCA_DOC_NO = A.EXCH_REQ_CRCT_DOC_NO
+						    					    AND B.STAC_DOC_NO = #{STAC_DOC_NO}
+						    				)
+						    
+					  ;
+					
+					  UPDATE EPDM_EXCH_MST A
+						    SET EXCH_CFM_CRCT_STAT_CD = 'C' /* 정산 */
+						          ,UPD_PRSN_ID = #{S_USER_ID}
+						          ,UPD_DTTM = SYSDATE
+					    WHERE 1=1
+					    	AND EXISTS (
+						    					SELECT 'X' 
+						    					  FROM EXCA_EXCH B
+						    					WHERE 1=1
+						    					    AND B.EXCH_EXCA_DOC_NO = A.EXCH_CFM_CRCT_DOC_NO
+						    					    AND B.STAC_DOC_NO = #{STAC_DOC_NO}
+						    				)
+					  ;
+		        
+		        	UPDATE EXCA_EXCH A
+				            SET EXCH_EXCA_STAT_CD = 'C' /* 정산 */
+				            	   ,EXCA_DT = ''
+					               ,STAC_DOC_NO = ''
+					               ,UPD_PRSN_ID = #{S_USER_ID}
+					               ,UPD_DTTM = SYSDATE
+				        WHERE 1=1
+				            AND A.EXCH_EXCA_STAT_CD = 'I' /* 정산서발급 */
+				            AND A.STAC_DOC_NO = #{STAC_DOC_NO}
+						;	
+		            
+		            UPDATE EPGM_MFC_GTN_BAL A
+					      SET DEL_YN = 'Y'
+					        	,UPD_PRSN_ID = #{S_USER_ID}
+		                        ,UPD_DTTM = SYSDATE
+					 WHERE 1=1
+					     AND EXISTS (
+			                             	  SELECT 'X'
+			                                    FROM EPGM_EXCA_LST B
+			                                  WHERE 1=1
+			                                      AND B.STAC_DOC_NO = #{STAC_DOC_NO}
+			                                      AND B.EXCA_PROC_STAT_CD = 'I' /* 정산서발급 */
+			                                      AND A.MAPP_DOC_NO = B.STAC_DOC_NO
+			                             	)
+		           ;
+		           
+		      END;
+	
+	</update>
+	
+	<delete id="epce47929643_delete" parameterType="map" >
+	
+		DECLARE
+	        BEGIN
+	        
+	        		DELETE 
+	        		  FROM EPGM_EXCA_DTL A
+	        		WHERE 1=1
+	        		    AND EXISTS (
+	        		    					SELECT 'X'
+	        		    					  FROM EPGM_EXCA_LST B
+	        		    					WHERE 1=1
+	        		    					    AND B.STAC_DOC_NO = #{STAC_DOC_NO}
+			                                    AND B.EXCA_PROC_STAT_CD = 'I' /* 발급 */
+			                                    AND A.STAC_DOC_NO = B.STAC_DOC_NO
+	        		    				)
+	        		;
+	        		
+	        		DELETE 
+	        		   FROM EPGM_EXCA_LST 
+	        		WHERE 1=1
+	        		    AND STAC_DOC_NO = #{STAC_DOC_NO}
+	        		    AND EXCA_PROC_STAT_CD = 'I' /* 발급 */
+	        		;
+	        
+		      END;
+		      
+	</delete>
+
+    <select id="epce4792901_regPsblYn"  resultType="hashmap">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 'Y' ELSE 'N' END AS REG_PSBL_YN 
+          FROM EXCA_STD_MGNT 
+         WHERE TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN EXCA_ST_DT AND EXCA_END_DT 
+               AND EXCA_STAT_CD = 'S'     
+    </select>
+	
+</mapper>

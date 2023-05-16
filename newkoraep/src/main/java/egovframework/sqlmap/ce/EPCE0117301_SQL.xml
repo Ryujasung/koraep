@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE0117301Mapper">
+	
+	<select id="epce0117342_select" resultType="string">
+		SELECT ECL_DECRYPT(BIZRNO) as BIZRNO
+		  FROM EPCN_BIZR_INFO 
+		WHERE 1=1
+		    AND BIZRID = #{BIZRID}
+		    AND BIZRNO = #{BIZRNO}
+	</select>
+	
+	<select id="epce0117342_select2" resultType="hashmap">
+	   SELECT A.RTL_CUST_BIZRID, A.RTL_CUST_BIZRNO
+		          ,B.BRCH_NM as WHSDL_BRCH_NM
+		          ,EPCN_ETC_NM(C.BIZR_TP_CD, 'B001') AS BIZR_TP_NM
+		          ,C.BIZRNM
+		          ,ECL_DECRYPT(C.BIZRNO) AS BIZRNO_DE
+		          ,A.RTRVL_REG_SE
+		          ,A.DRCT_PAY_SE
+		          ,EPCN_ETC_NM(A.RTRVL_REG_SE, 'D051') AS RTRVL_REG_NM
+		          ,EPCN_ETC_NM(A.DRCT_PAY_SE, 'D052') AS DRCT_PAY_NM
+		 FROM EPCN_RTL_CUST_INFO A
+		          ,EPCN_BRCH_INFO B
+		          ,EPCN_BIZR_INFO C
+	   WHERE 1=1
+	        AND A.WHSDL_BIZRID = B.BIZRID
+	        AND A.WHSDL_BIZRNO = B.BIZRNO
+	        AND A.WHSDL_BRCH_ID = B.BRCH_ID
+	        AND A.WHSDL_BRCH_NO = B.BRCH_NO
+	        AND A.RTL_CUST_BIZRID = C.BIZRID
+	        AND A.RTL_CUST_BIZRNO = C.BIZRNO
+	        AND A.WHSDL_BIZRID = #{WHSDL_BIZRID}
+	        AND A.WHSDL_BIZRNO = #{WHSDL_BIZRNO}
+	        AND A.FRC_YN = 'Y'
+	        
+	        <if test="WHSDL_BRCH_ID !=''  and WHSDL_BRCH_ID !=null">
+		     AND A.WHSDL_BRCH_ID = #{WHSDL_BRCH_ID}
+		     AND A.WHSDL_BRCH_NO = #{WHSDL_BRCH_NO}
+		    </if>
+		    <if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+		     AND C.BIZR_TP_CD = #{BIZR_TP_CD}
+		    </if>
+	        
+	   ORDER BY B.BRCH_NM, C.SEL_ORD, C.BIZRNM    
+	  
+	</select>
+	
+	<update id="epce0117342_update">
+		UPDATE EPCN_RTL_CUST_INFO
+		      SET RTRVL_REG_SE = <choose><when test="RTRVL_REG_SE !='' and RTRVL_REG_SE !=null">#{RTRVL_REG_SE}</when><otherwise>RTRVL_REG_SE</otherwise></choose>
+		            ,DRCT_PAY_SE = <choose><when test="DRCT_PAY_SE !='' and DRCT_PAY_SE !=null">#{DRCT_PAY_SE}</when><otherwise>DRCT_PAY_SE</otherwise></choose>
+		 			,UPD_PRSN_ID = #{S_USER_ID}
+		 			,UPD_DTTM = SYSDATE
+		 WHERE 1=1
+		     AND WHSDL_BIZRID = #{WHSDL_BIZRID}
+		     AND WHSDL_BIZRNO = #{WHSDL_BIZRNO}
+		    
+		    <if test="RTL_CUST_BIZRID !=''  and RTL_CUST_BIZRID !=null">
+		     AND RTL_CUST_BIZRID = #{RTL_CUST_BIZRID}
+		     AND RTL_CUST_BIZRNO = #{RTL_CUST_BIZRNO}
+		    </if>
+		    
+		    AND FRC_YN = 'Y'
+		    
+	</update>
+	
+</mapper>

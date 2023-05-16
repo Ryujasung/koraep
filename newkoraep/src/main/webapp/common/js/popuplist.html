@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=1100, user-scalable=no">
+	<meta name="description" content="사이트설명">
+	<meta name="keywords" content="사이트검색키워드">
+	<meta name="author" content="Newriver">
+	<meta property="og:title" content="공유제목">
+	<meta property="og:description" content="공유설명">
+	<meta property="og:image" content="공유이미지 800x400">
+	<title>Project</title>
+	<!-- <link rel="shortcut icon" type="image/x-icon" href=""> -->
+	<link rel="stylesheet" href="../../common/css/slick.css">
+	<link rel="stylesheet" href="../../common/css/common.css">
+	<script src="../../common/js/jquery-1.11.1.min.js"></script>
+	<script src="../../common/js/mobile-detect.min.js"></script>
+	<script src="../../common/js/slick.js"></script>
+	<script src="../../common/js/pub.plugin.js"></script>
+	<script src="../../common/js/pub.common.js"></script>
+</head>
+<body>
+	<div id="popup_test">
+		<ul>
+			<li><a href="javascript:NrvPub.AjaxPopup('../@popup/popup1.html');">예제팝업</a></li>
+			<li><a href="javascript:NrvPub.AjaxPopup('../@popup/id_register.html');">관리자 아이디 등록</a></li>
+		</ul>
+		<script>
+			$(window).on('load', function(){
+				NrvPub.AjaxPopup('../@popup/popup1.html');
+			});
+		</script>
+	</div>
+<style type="text/css">
+#popup_test {min-width: 200px; padding: 20px; top: 50px; left: 50px; background: rgba(0, 0, 0, 0.6); font-size: 14px;}
+#popup_test ul {}
+#popup_test ul li {}
+#popup_test ul li a {display: block; color: #fff; line-height: 2.5;}
+#popup_test ul li a:hover {text-decoration: underline;}
+</style>
+</body>
+</html>

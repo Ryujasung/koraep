@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3989701Mapper">
+
+	<select id="epce3989701_select" resultType="hashmap">
+	  SELECT ANC_STD_CD
+		        ,EPCN_ETC_NM(A.ANC_SE, 'S020') AS ANC_SE_NM
+		        ,A.TRGT_USER_SE
+		        ,B.ATH_GRP_NM
+		        ,ANC_USE_YN
+	   FROM EPCN_ANC_MGNT A
+		        ,EPCN_ATH_GRP_INFO B
+	 WHERE 1=1
+	  	 AND B.BIZRID = 'T1S0001325'
+	  	 AND B.BIZRNO = 'a25adbd5cec406ef9e68bfcaf77c4375'
+	  	 AND A.TRGT_USER_SE = B.ATH_GRP_CD
+	  	 AND A.ANC_SE IN ('A1','B1','B2','B3','B4')
+	 ORDER BY ANC_STD_CD
+	</select>
+	
+	<update id="epce3989701_update">
+		
+		UPDATE EPCN_ANC_MGNT 
+			  SET ANC_USE_YN = #{ANC_USE_YN} 
+			  		,UPD_PRSN_ID = #{S_USER_ID}
+ 					,UPD_DTTM = SYSDATE
+		 WHERE ANC_STD_CD = #{ANC_STD_CD}
+		
+	</update>
+	
+	<select id="epce3989701_select2" resultType="string">
+		SELECT 'Z1'|| LPAD(NVL(MAX(SUBSTR(ANC_STD_CD, 3)), 0)+1, 6, '0') FROM EPCN_ANC_MGNT WHERE ANC_SE = 'Z1'
+	</select>
+	
+	<insert id="epce3989701_insert">
+		
+		 INSERT INTO EPCN_ANC_MGNT
+		 (
+		    ANC_STD_CD
+		    ,ANC_SE
+		    ,TRGT_SE
+		    ,LK_INFO
+		    ,ANC_USE_YN
+		    ,ANC_SBJ
+		    ,ANC_MSG
+		    ,REG_PRSN_ID
+		    ,REG_DTTM
+		 )
+		 VALUES
+		 (
+		    #{ANC_STD_CD}
+		    ,'Z1'
+		    ,#{TRGT_SE}
+		    ,#{LK_INFO}
+		    ,'Y'
+		    ,#{ANC_SBJ}
+		    ,#{ANC_MSG}
+		    ,#{S_USER_ID}
+		    ,SYSDATE
+		 )
+		
+	</insert>
+	
+	<update id="epce3989701_insert2">
+	
+		 INSERT INTO EPCN_ANC_INFO
+		 (
+		   ANC_STD_CD
+		   ,USER_ID
+		   ,DTL_SN
+		   ,CFM_YN
+		   ,CFM_DT
+		   ,REG_DTTM
+		 )
+		 (
+		 SELECT #{ANC_STD_CD}
+			        ,USER_ID
+			        ,(SELECT NVL(MAX(DTL_SN), 0) + 1 FROM EPCN_ANC_INFO WHERE ANC_STD_CD = #{ANC_STD_CD} AND USER_ID = A.USER_ID)
+			        ,'N'
+			        ,''
+			        ,SYSDATE
+		   FROM EPCN_USER_INFO A
+		 WHERE 1=1
+		     AND USER_STAT_CD = 'Y'
+		     
+		     <choose>
+		     	<when test='TRGT_SE == "A" '>
+		     	</when>
+		     	<when test='TRGT_SE == "TM" '>
+		     		AND BIZR_TP_CD IN ('T1','M1','M2')
+		     	</when>
+		     	<when test='TRGT_SE == "TW" '>
+		     		AND BIZR_TP_CD IN ('T1','W1','W2')
+		     	</when>
+		     	<when test='TRGT_SE == "MW" '>
+		     		AND BIZR_TP_CD IN ('M1','M2','W1','W2')
+		     	</when>
+		     	<otherwise>
+		     		AND BIZR_TP_CD LIKE  #{TRGT_SE} || '%'
+		     	</otherwise>
+		     </choose>
+		)
+	</update>
+	
+	<select id="epce3989775_select" resultType="hashmap">
+		  SELECT A.ANC_STD_CD
+		  			,DECODE(A.ANC_STD_CD, #{ANC_STD_CD}, 'Y', 'N') as SEL_YN
+		  			,EPCN_ETC_NM(A.TRGT_SE, 'S019') AS TRGT_SE_NM
+			        ,A.ANC_SBJ
+			        ,A.ANC_MSG
+	            	,TO_CHAR(B.REG_DTTM, 'YYYY-MM-DD') AS REG_DTTM
+		   FROM EPCN_ANC_MGNT A
+	          		,EPCN_ANC_INFO B
+		 WHERE 1=1
+	         AND A.ANC_STD_CD = B.ANC_STD_CD
+	         AND B.USER_ID = #{USER_ID}
+	         AND A.ANC_SE = 'Z1'
+		 ORDER BY B.REG_DTTM DESC, A.ANC_STD_CD
+	</select>
+	
+	<select id="epce3989776_select" parameterType="map" resultType="hashmap">
+		<if test='excelYn == null or excelYn == "" '>
+			 SELECT 
+			 			PNO 
+			 			, ANC_STD_CD
+						, SEL_YN 
+			            , TRGT_SE_NM
+						, ANC_SBJ	
+			            , ANC_MSG 
+					    , REG_DTTM
+					    , ANC_SE_NM
+			  FROM (
+			</if>
+	  
+	     <![CDATA[ 
+			  SELECT ROW_NUMBER()OVER(ORDER BY A.REG_DTTM DESC, A.ANC_STD_CD  ) AS PNO 
+					,A.ANC_STD_CD
+		  			,DECODE(A.ANC_STD_CD, #{ANC_STD_CD}, 'Y', 'N') as SEL_YN
+		  			,EPCN_ETC_NM(A.TRGT_SE, 'S019') AS TRGT_SE_NM
+			        ,A.ANC_SBJ
+			        ,A.ANC_MSG
+	            	,TO_CHAR(A.REG_DTTM, 'YYYY-MM-DD') AS REG_DTTM
+	            	,EPCN_ETC_NM(A.ANC_SE, 'S020') AS ANC_SE_NM
+			  ]]>
+			FROM 
+				 	EPCN_ANC_MGNT A
+		 	WHERE 1=1
+		         AND A.ANC_SE = 'C1'
+		         AND TO_CHAR(A.REG_DTTM,'YYYYMMDD') BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+		         <if test='ANC_SE !=null  and ANC_SE !="" '  >
+					AND A.ANC_SE = #{ANC_SE}
+				</if>
+				<if test='ANC_SBJ !=null  and ANC_SBJ !="" '  >
+					AND A.ANC_SBJ LIKE '%' || #{ANC_SBJ} || '%'
+				</if>
+		
+		 	ORDER BY A.REG_DTTM DESC, A.ANC_STD_CD
+	  
+	  	<if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+         </if>	
+	</select>
+	
+	<select id="epce3989776_select_cnt" parameterType="map" resultType="int">
+
+		  SELECT COUNT(1)
+			FROM EPCN_ANC_MGNT A
+		 WHERE 1=1
+		         AND A.ANC_SE = 'C1'
+		         AND TO_CHAR(A.REG_DTTM,'YYYYMMDD') BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+		         <if test='ANC_SE !=null  and ANC_SE !="" '  >
+					AND A.ANC_SE = #{ANC_SE}
+				</if>
+				<if test='ANC_SBJ !=null  and ANC_SBJ !="" '  >
+					AND A.ANC_SBJ LIKE '%' || #{ANC_SBJ} || '%'
+				</if>
+	</select>
+	
+</mapper>

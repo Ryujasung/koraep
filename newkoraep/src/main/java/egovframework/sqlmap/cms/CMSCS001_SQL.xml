@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.cms.CMSCS001Mapper">
+
+	<!-- 사용자 상세 정보 -->
+	<select id="cmscs001_select" resultType="hashmap" parameterType="hashmap">
+		/* cmscs001.cmscs001_select */
+		SELECT
+		    ROWNUM AS IDX
+		    ,A.REG_IDX
+   			,<![CDATA['<a href="javascript:fn_page2()" class="gridLink">' || TO_CHAR(A.REG_DTTM,'YYYY-MM-DD HH24:MI:SS') || '</a>' as REG_DTTM]]>
+		    ,A.REG_CNT
+		    ,D.AM_CNT
+		    ,D.AC_CNT
+		    ,D.AE_CNT
+		    ,D.AV_CNT
+		    ,D.CE_CNT
+		FROM
+		    AH_RLT_LST A
+		    ,(
+		        SELECT reg_idx,
+		            COUNT(DECODE(D.AH_RLT_CD,'AM',1)) as AM_CNT
+		            ,COUNT(DECODE(D.AH_RLT_CD,'AC',1)) AS AC_CNT
+		            ,COUNT(DECODE(D.AH_RLT_CD,'AE',1)) AS AE_CNT
+		            ,COUNT(DECODE(D.AH_RLT_CD,'AV',1)) AS AV_CNT
+		            ,COUNT(DECODE(D.AH_RLT_CD,'CE',1)) AS CE_CNT
+		        FROM
+		            AH_RLT_LST_DET D
+		        GROUP BY D.REG_IDX 
+		    )D
+		WHERE 1=1
+		AND A.REG_DTTM BETWEEN TO_DATE(#{START_DT_SEL},'YYYY-MM-DD') AND TO_DATE(#{END_DT_SEL},'YYYY-MM-DD' ) + 1
+		AND A.reg_idx = D.reg_idx
+		<if test='MENU_CD != null and MENU_CD != "" '>
+		  AND A.MENU_CD = #{MENU_CD}
+		</if>
+		ORDER BY A.REG_DTTM DESC
+	</select>
+    
+</mapper>

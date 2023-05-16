@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Region code="100" label="Johor" symbol="Johor" horizontalCenterGap="0" verticalCenterGap="0"/>
+	<Region code="200" label="Melaka" symbol="Melaka" horizontalCenterGap="0" verticalCenterGap="0"/>
+	<Region code="300" label="Negeri Sembilan" symbol="Negeri_Sembilan" horizontalCenterGap="0" verticalCenterGap="0"/>
+	<Region code="400" label="Selangor" symbol="Selangor" horizontalCenterGap="0" verticalCenterGap="0"/>
+	<Region code="500" label="Perak" symbol="Perak" horizontalCenterGap="0" verticalCenterGap="0"/>
+	<Region code="600" label="Pinang" symbol="Pinang" horizontalCenterGap="0" verticalCenterGap="0"/>
+	<Region code="700" label="Kedah" symbol="Kedah" horizontalCenterGap="0" verticalCenterGap="0"/>
+	<Region code="800" label="Perlis" symbol="Perlis" horizontalCenterGap="0" verticalCenterGap="0"/>
+	<Region code="900" label="Kelantan" symbol="Kelantan" horizontalCenterGap="0" verticalCenterGap="0"/>
+	<Region code="1000" label="Pahang" symbol="Pahang" horizontalCenterGap="0" verticalCenterGap="0"/>
+	<Region code="1100" label="Terengganu" symbol="Terengganu" horizontalCenterGap="0" verticalCenterGap="0"/>
+	<Region code="1200" label="Sarawak" symbol="Sarawak" horizontalCenterGap="20" verticalCenterGap="10"/>
+	<Region code="1300" label="Sabah" symbol="Sabah" horizontalCenterGap="-10" verticalCenterGap="15"/>
+</Map>

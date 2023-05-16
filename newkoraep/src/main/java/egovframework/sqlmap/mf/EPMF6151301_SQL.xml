@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF6151301Mapper">
+
+	<select id="epmf6151301_select" parameterType="map" resultType="hashmap">
+			
+		<if test='excelYn == null or excelYn == "" '>
+		 SELECT PNO 
+					,DRCT_RTRVL_DT
+			        ,MFC_BIZRNM
+			        ,MFC_BRCH_NM
+			        ,CUST_BIZRNM
+			        ,BIZRNO
+			        ,CUST_BIZRNO
+			        ,CTNR_NM
+			        ,STANDARD_NM
+			        ,PRPS_CD
+			        ,PRPS_NM
+			        ,CPCT_CD
+			        ,CPCT_NM
+			        ,DRCT_RTRVL_QTY
+			        ,DRCT_PAY_GTN
+			        ,DRCT_PAY_FEE
+			        ,DRCT_RTRVL_STAT_NM
+			        ,DRCT_RTRVL_REG_DT
+		  FROM (
+		</if>
+					   SELECT ROW_NUMBER()OVER(ORDER BY A.DRCT_RTRVL_DT DESC, C.SEL_ORD, D.BRCH_NM, E.SEL_ORD) AS PNO 
+					   			  ,A.DRCT_RTRVL_DT
+						          ,C.BIZRNM AS MFC_BIZRNM
+						          ,D.BRCH_NM AS MFC_BRCH_NM
+						          ,E.BIZRNM AS CUST_BIZRNM
+						          ,E.BIZRNO
+						          ,PI_DECRYPT(E.BIZRNO) AS CUST_BIZRNO
+						          ,F.CTNR_NM
+						          ,CASE WHEN SUBSTR(F.CTNR_CD,4,2) = 00 THEN '표준용기' ELSE '비표준용기' END AS STANDARD_NM
+						          ,F.PRPS_CD
+						          ,EPCN_ETC_NM(F.PRPS_CD , 'E002') AS PRPS_NM
+						          ,F.CPCT_CD
+						          ,EPCN_ETC_NM(F.CPCT_CD , 'E001') AS CPCT_NM
+								  ,A.DRCT_RTRVL_QTY
+						          ,A.DRCT_PAY_GTN
+						          ,A.DRCT_PAY_FEE
+						          ,DECODE(A.GBN, 'A', EPCN_ETC_NM(A.DRCT_RTRVL_STAT_CD, 'D012'), 'B', EPCN_ETC_NM(A.DRCT_RTRVL_STAT_CD, 'C003')) AS DRCT_RTRVL_STAT_NM
+						          ,A.DRCT_RTRVL_REG_DT						          
+					     FROM (
+								SELECT 'A' AS GBN, A.MFC_BIZRID, A.MFC_BIZRNO, A.MFC_BRCH_ID, A.MFC_BRCH_NO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CTNR_CD
+			     		  			   ,B.DRCT_RTRVL_QTY
+			     		  			   ,B.DRCT_PAY_GTN
+			     		  			   ,B.DRCT_PAY_FEE
+	                                   ,A.DRCT_RTRVL_STAT_CD
+	                                   ,A.DRCT_RTRVL_DT
+	                                   ,A.DRCT_RTRVL_REG_DT
+				     		  	  FROM EPDM_DRCT_RTRVL_MST A
+						              ,EPDM_DRCT_RTRVL_INFO B
+						         WHERE 1=1
+						            AND A.DRCT_RTRVL_DOC_NO = B.DRCT_RTRVL_DOC_NO
+						            AND A.DRCT_RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+
+	                             UNION ALL
+
+    	                         SELECT 'B' AS GBN, MFC_BIZRID, MFC_BIZRNO, MFC_BRCH_ID, MFC_BRCH_NO, CUST_BIZRID, CUST_BIZRNO, CTNR_CD
+								 		,DRCT_RTRVL_QTY
+								 		,DRCT_PAY_GTN
+								 		,DRCT_PAY_FEE
+	                                    ,DRCT_RTRVL_CRCT_STAT_CD AS DRCT_RTRVL_STAT_CD
+		                                ,DRCT_RTRVL_DT
+		                                ,DRCT_RTRVL_CRCT_REG_DT AS DRCT_RTRVL_REG_DT
+								   FROM EXCA_DRCT_RTRVL_CRCT
+								  WHERE 1=1
+								    AND DRCT_RTRVL_CRCT_STAT_CD IN ('C', 'I')
+								    AND DRCT_RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+             					) A
+						          ,EPCN_BIZR_INFO C
+						          ,EPCN_BRCH_INFO D
+						          ,EPCN_BIZR_INFO E
+						          ,EPCN_STD_CTNR_CD F
+								  ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') G
+					  WHERE 1=1
+					      AND A.MFC_BIZRID = C.BIZRID
+					      AND A.MFC_BIZRNO = C.BIZRNO
+					      AND A.MFC_BIZRID = D.BIZRID
+					      AND A.MFC_BIZRNO = D.BIZRNO
+					      AND A.MFC_BRCH_ID = D.BRCH_ID
+					      AND A.MFC_BRCH_NO = D.BRCH_NO
+					      AND A.CUST_BIZRID = E.BIZRID
+					      AND A.CUST_BIZRNO = E.BIZRNO
+					      AND A.CTNR_CD = F.CTNR_CD
+					      AND F.LANG_SE_CD = G.LANG_SE_CD
+					      
+					      <if test='BIZRID != null and BIZRID != "" '>
+			              	AND A.MFC_BIZRID = #{BIZRID}
+			              </if>
+			              <if test='BIZRNO != null and BIZRNO != "" '>
+			              	AND A.MFC_BIZRNO = #{BIZRNO}
+			              </if>
+			              <if test='BRCH_ID != null and BRCH_ID != "" '>
+			              	AND A.MFC_BRCH_ID = #{BRCH_ID}
+			              </if>
+			              <if test='BRCH_NO != null and BRCH_NO != "" '>
+			              	AND A.MFC_BRCH_NO = #{BRCH_NO}
+			              </if>
+			              <if test='DRCT_RTRVL_STAT_CD != null and DRCT_RTRVL_STAT_CD != "" '>
+			              	AND A.DRCT_RTRVL_STAT_CD = #{DRCT_RTRVL_STAT_CD}
+			              </if>
+			              <if test='CTNR_CD != null and CTNR_CD != "" '>
+					       	 AND F.CTNR_CD = #{CTNR_CD}
+					      </if>
+					      <if test='CUST_BIZRNM != null and CUST_BIZRNM != "" '>
+					       	 AND E.BIZRNM LIKE '%' || #{CUST_BIZRNM} || '%'
+					      </if>
+					      
+					      <if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+							 AND EXISTS (
+							 					   SELECT 'X'
+						                             FROM EPCN_BRCH_INFO S1
+						                           WHERE 1=1
+						                              AND A.MFC_BIZRID = S1.BIZRID
+						                              AND A.MFC_BIZRNO = S1.BIZRNO
+						                              AND A.MFC_BRCH_ID = S1.BRCH_ID
+						                              AND A.MFC_BRCH_NO = S1.BRCH_NO
+								                      AND EXISTS (    
+								                      					   SELECT 'X'
+												                             FROM EPCN_BRCH_INFO S2
+												                           WHERE 1=1
+												                              AND S1.BIZRID = S2.BIZRID
+												                              AND S1.BIZRNO = S2.BIZRNO
+												                              AND (
+													                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+													                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+												                                     ) 
+												                              AND S2.BRCH_ID = #{S_BRCH_ID}
+												                              AND S2.BRCH_NO = #{S_BRCH_NO}
+													          			)
+				                         		)
+						 	</if>
+					      
+				ORDER BY A.DRCT_RTRVL_DT DESC, C.SEL_ORD, D.BRCH_NM, E.SEL_ORD
+				 
+		<if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+        </if>		 
+				 
+	</select>
+	
+	<select id="epmf6151301_select_cnt" parameterType="map" resultType="hashmap">
+		  SELECT COUNT(1) AS CNT
+		  			 ,SUM(A.DRCT_RTRVL_QTY) as DRCT_RTRVL_QTY
+		          	 ,SUM(A.DRCT_PAY_GTN) as DRCT_PAY_GTN
+		          	 ,SUM(A.DRCT_PAY_FEE) as DRCT_PAY_FEE
+		     FROM (
+								SELECT 'A' AS GBN, A.MFC_BIZRID, A.MFC_BIZRNO, A.MFC_BRCH_ID, A.MFC_BRCH_NO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CTNR_CD
+			     		  			   ,B.DRCT_RTRVL_QTY
+			     		  			   ,B.DRCT_PAY_GTN
+			     		  			   ,B.DRCT_PAY_FEE
+	                                   ,A.DRCT_RTRVL_STAT_CD
+	                                   ,A.DRCT_RTRVL_DT
+	                                   ,A.DRCT_RTRVL_REG_DT
+				     		  	  FROM EPDM_DRCT_RTRVL_MST A
+						              ,EPDM_DRCT_RTRVL_INFO B
+						         WHERE 1=1
+						            AND A.DRCT_RTRVL_DOC_NO = B.DRCT_RTRVL_DOC_NO
+						            AND A.DRCT_RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+
+	                             UNION ALL
+
+    	                         SELECT 'B' AS GBN, MFC_BIZRID, MFC_BIZRNO, MFC_BRCH_ID, MFC_BRCH_NO, CUST_BIZRID, CUST_BIZRNO, CTNR_CD
+								 		,DRCT_RTRVL_QTY
+								 		,DRCT_PAY_GTN
+								 		,DRCT_PAY_FEE
+	                                    ,DRCT_RTRVL_CRCT_STAT_CD AS DRCT_RTRVL_STAT_CD
+		                                ,DRCT_RTRVL_DT
+		                                ,DRCT_RTRVL_CRCT_REG_DT AS DRCT_RTRVL_REG_DT
+								   FROM EXCA_DRCT_RTRVL_CRCT
+								  WHERE 1=1
+								    AND DRCT_RTRVL_CRCT_STAT_CD IN ('C', 'I')
+								    AND DRCT_RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+             					) A
+			          ,EPCN_BIZR_INFO C
+			          ,EPCN_BRCH_INFO D
+			          ,EPCN_BIZR_INFO E
+			          ,EPCN_STD_CTNR_CD F
+					  ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') G
+		  WHERE 1=1
+		      AND A.MFC_BIZRID = C.BIZRID
+		      AND A.MFC_BIZRNO = C.BIZRNO
+		      AND A.MFC_BIZRID = D.BIZRID
+		      AND A.MFC_BIZRNO = D.BIZRNO
+		      AND A.MFC_BRCH_ID = D.BRCH_ID
+		      AND A.MFC_BRCH_NO = D.BRCH_NO
+		      AND A.CUST_BIZRID = E.BIZRID
+		      AND A.CUST_BIZRNO = E.BIZRNO
+		      AND A.CTNR_CD = F.CTNR_CD
+		      AND F.LANG_SE_CD = G.LANG_SE_CD
+		       
+		      <if test='BIZRID != null and BIZRID != "" '>
+              	AND A.MFC_BIZRID = #{BIZRID}
+              </if>
+              <if test='BIZRNO != null and BIZRNO != "" '>
+              	AND A.MFC_BIZRNO = #{BIZRNO}
+              </if>
+              <if test='BRCH_ID != null and BRCH_ID != "" '>
+              	AND A.MFC_BRCH_ID = #{BRCH_ID}
+              </if>
+              <if test='BRCH_NO != null and BRCH_NO != "" '>
+              	AND A.MFC_BRCH_NO = #{BRCH_NO}
+              </if>
+              <if test='DRCT_RTRVL_STAT_CD != null and DRCT_RTRVL_STAT_CD != "" '>
+              	AND A.DRCT_RTRVL_STAT_CD = #{DRCT_RTRVL_STAT_CD}
+              </if>
+              <if test='CTNR_CD != null and CTNR_CD != "" '>
+		       	 AND F.CTNR_CD = #{CTNR_CD}
+		      </if>
+		      <if test='CUST_BIZRNM != null and CUST_BIZRNM != "" '>
+		       	 AND E.BIZRNM LIKE '%' || #{CUST_BIZRNM} || '%'
+		      </if> 
+		       
+		       <if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+					 AND EXISTS (
+					 					   SELECT 'X'
+				                             FROM EPCN_BRCH_INFO S1
+				                           WHERE 1=1
+				                              AND A.MFC_BIZRID = S1.BIZRID
+				                              AND A.MFC_BIZRNO = S1.BIZRNO
+				                              AND A.MFC_BRCH_ID = S1.BRCH_ID
+				                              AND A.MFC_BRCH_NO = S1.BRCH_NO
+						                      AND EXISTS (    
+						                      					   SELECT 'X'
+										                             FROM EPCN_BRCH_INFO S2
+										                           WHERE 1=1
+										                              AND S1.BIZRID = S2.BIZRID
+										                              AND S1.BIZRNO = S2.BIZRNO
+										                              AND (
+											                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+											                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+										                                     ) 
+										                              AND S2.BRCH_ID = #{S_BRCH_ID}
+										                              AND S2.BRCH_NO = #{S_BRCH_NO}
+											          			)
+		                         		)
+				</if>
+		       
+	</select>
+	
+	<select id="epmf6151301_select2" parameterType="map" resultType="hashmap">
+		   SELECT EPCN_BIZR_ABBR_NM(A.MFC_BIZRID ,A.MFC_BIZRNO) AS BIZRNM  
+		              ,NVL(SUM(A.DRCT_PAY_GTN), 0) AS DRCT_PAY_GTN
+		              ,NVL(SUM(A.DRCT_PAY_FEE), 0) AS DRCT_PAY_FEE
+		     FROM (
+								SELECT 'A' AS GBN, A.MFC_BIZRID, A.MFC_BIZRNO, A.MFC_BRCH_ID, A.MFC_BRCH_NO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CTNR_CD
+			     		  			   ,B.DRCT_RTRVL_QTY
+			     		  			   ,B.DRCT_PAY_GTN
+			     		  			   ,B.DRCT_PAY_FEE
+	                                   ,A.DRCT_RTRVL_STAT_CD
+	                                   ,A.DRCT_RTRVL_DT
+	                                   ,A.DRCT_RTRVL_REG_DT
+				     		  	  FROM EPDM_DRCT_RTRVL_MST A
+						              ,EPDM_DRCT_RTRVL_INFO B
+						         WHERE 1=1
+						            AND A.DRCT_RTRVL_DOC_NO = B.DRCT_RTRVL_DOC_NO
+						            AND A.DRCT_RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+
+	                             UNION ALL
+
+    	                         SELECT 'B' AS GBN, MFC_BIZRID, MFC_BIZRNO, MFC_BRCH_ID, MFC_BRCH_NO, CUST_BIZRID, CUST_BIZRNO, CTNR_CD
+								 		,DRCT_RTRVL_QTY
+								 		,DRCT_PAY_GTN
+								 		,DRCT_PAY_FEE
+	                                    ,DRCT_RTRVL_CRCT_STAT_CD AS DRCT_RTRVL_STAT_CD
+		                                ,DRCT_RTRVL_DT
+		                                ,DRCT_RTRVL_CRCT_REG_DT AS DRCT_RTRVL_REG_DT
+								   FROM EXCA_DRCT_RTRVL_CRCT
+								  WHERE 1=1
+								    AND DRCT_RTRVL_CRCT_STAT_CD IN ('C', 'I')
+								    AND DRCT_RTRVL_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+             					) A
+			          ,EPCN_BIZR_INFO C
+			          ,EPCN_BRCH_INFO D
+			          ,EPCN_BIZR_INFO E
+			          ,EPCN_STD_CTNR_CD F
+					  ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') G
+		  WHERE 1=1
+		      AND A.MFC_BIZRID = C.BIZRID
+		      AND A.MFC_BIZRNO = C.BIZRNO
+		      AND A.MFC_BIZRID = D.BIZRID
+		      AND A.MFC_BIZRNO = D.BIZRNO
+		      AND A.MFC_BRCH_ID = D.BRCH_ID
+		      AND A.MFC_BRCH_NO = D.BRCH_NO
+		      AND A.CUST_BIZRID = E.BIZRID
+		      AND A.CUST_BIZRNO = E.BIZRNO
+		      AND A.CTNR_CD = F.CTNR_CD
+		      AND F.LANG_SE_CD = G.LANG_SE_CD
+		       
+		      <if test='BIZRID != null and BIZRID != "" '>
+              	AND A.MFC_BIZRID = #{BIZRID}
+              </if>
+              <if test='BIZRNO != null and BIZRNO != "" '>
+              	AND A.MFC_BIZRNO = #{BIZRNO}
+              </if>
+              <if test='BRCH_ID != null and BRCH_ID != "" '>
+              	AND A.MFC_BRCH_ID = #{BRCH_ID}
+              </if>
+              <if test='BRCH_NO != null and BRCH_NO != "" '>
+              	AND A.MFC_BRCH_NO = #{BRCH_NO}
+              </if>
+              <if test='DRCT_RTRVL_STAT_CD != null and DRCT_RTRVL_STAT_CD != "" '>
+              	AND A.DRCT_RTRVL_STAT_CD = #{DRCT_RTRVL_STAT_CD}
+              </if>
+              <if test='CTNR_CD != null and CTNR_CD != "" '>
+		       	 AND F.CTNR_CD = #{CTNR_CD}
+		      </if>
+		      <if test='CUST_BIZRNM != null and CUST_BIZRNM != "" '>
+		       	 AND E.BIZRNM LIKE '%' || #{CUST_BIZRNM} || '%'
+		      </if> 
+		       
+		       <if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+					 AND EXISTS (
+					 					   SELECT 'X'
+				                             FROM EPCN_BRCH_INFO S1
+				                           WHERE 1=1
+				                              AND A.MFC_BIZRID = S1.BIZRID
+				                              AND A.MFC_BIZRNO = S1.BIZRNO
+				                              AND A.MFC_BRCH_ID = S1.BRCH_ID
+				                              AND A.MFC_BRCH_NO = S1.BRCH_NO
+						                      AND EXISTS (    
+						                      					   SELECT 'X'
+										                             FROM EPCN_BRCH_INFO S2
+										                           WHERE 1=1
+										                              AND S1.BIZRID = S2.BIZRID
+										                              AND S1.BIZRNO = S2.BIZRNO
+										                              AND (
+											                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+											                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+										                                     ) 
+										                              AND S2.BRCH_ID = #{S_BRCH_ID}
+										                              AND S2.BRCH_NO = #{S_BRCH_NO}
+											          			)
+		                         		)
+				</if>
+		       
+		 GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, C.SEL_ORD, C.BIZRNM
+		 ORDER BY C.SEL_ORD, C.BIZRNM
+	</select>
+
+</mapper>
+

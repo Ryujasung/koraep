@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<State code="1000" label="Alabama" abbreviationLabel="AL" symbol="Alabama" verticalCenterGap="0"/>
+	<State code="2000" label="Alaska" abbreviationLabel="AK" symbol="Alaska" horizontalCenterGap="25" verticalCenterGap="-8"/>
+	<State code="3000" label="Arizona" abbreviationLabel="AZ" symbol="Arizona" verticalCenterGap="0"/>
+	<State code="4000" label="Arkansas" abbreviationLabel="AR" symbol="Arkansas" horizontalCenterGap="-5"/>
+	<State code="5000" label="California" abbreviationLabel="CA" symbol="California" horizontalCenterGap="-10"/>
+	<State code="6000" label="Colorado" abbreviationLabel="CO" symbol="Colorado"/>
+	<State code="7000" label="Connecticut" abbreviationLabel="CT" symbol="Connecticut" horizontalCenterGap="0"/>
+	<State code="8000" label="Delaware" abbreviationLabel="DE" symbol="Delaware"/>
+	<State code="9000" label="Florida" abbreviationLabel="FL" symbol="Florida" horizontalCenterGap="20"/>
+	<State code="10000" label="Georgia" abbreviationLabel="GA" symbol="Georgia" verticalCenterGap="5"/>
+	<State code="11000" label="Hawaii" abbreviationLabel="HI" symbol="Hawaii" horizontalCenterGap="33" verticalCenterGap="17"/>
+	<State code="12000" label="Idaho" abbreviationLabel="ID" symbol="Idaho" horizontalCenterGap="-5" verticalCenterGap="20"/>
+	<State code="13000" label="Illinois" abbreviationLabel="IL" symbol="Illinois" verticalCenterGap="-5"/>
+	<State code="14000" label="Indiana" abbreviationLabel="IN" symbol="Indiana" verticalCenterGap="5"/>
+	<State code="15000" label="Iowa" abbreviationLabel="IA" symbol="Iowa"/>
+	<State code="16000" label="Kansas" abbreviationLabel="KS" symbol="Kansas"/>
+	<State code="17000" label="Kentucky" abbreviationLabel="KY" symbol="Kentucky" verticalCenterGap="5" horizontalCenterGap="10"/>
+	<State code="18000" label="Louisiana" abbreviationLabel="LA" symbol="Louisiana" verticalCenterGap="0" horizontalCenterGap="-10"/>
+	<State code="19000" label="Maine" abbreviationLabel="ME" symbol="Maine"/>
+	<State code="20000" label="Maryland" abbreviationLabel="MD" symbol="Maryland" verticalCenterGap="0"/>
+	<State code="21000" label="Massachusetts" abbreviationLabel="MA" symbol="Massachusetts" verticalCenterGap="-5"/>
+	<State code="22000" label="Michigan" abbreviationLabel="MI" symbol="Michigan" horizontalCenterGap="15" verticalCenterGap="20"/>
+	<State code="23000" label="Minnesota" abbreviationLabel="MN" symbol="Minnesota" horizontalCenterGap="-10" verticalCenterGap="10"/>
+	<State code="24000" label="Mississippi" abbreviationLabel="MS" symbol="Mississippi" horizontalCenterGap="2"/>
+	<State code="25000" label="Missouri" abbreviationLabel="MO" symbol="Missouri"/>
+	<State code="26000" label="Montana" abbreviationLabel="MT" symbol="Montana" verticalCenterGap="-5"/>
+	<State code="27000" label="Nebraska" abbreviationLabel="NE" symbol="Nebraska"/>
+	<State code="28000" label="Nevada" abbreviationLabel="NV" symbol="Nevada"/>
+	<State code="29000" label="New Hampshire" abbreviationLabel="NH" symbol="Newhampshire" verticalCenterGap="8"/>
+	<State code="30000" label="New Jersey" abbreviationLabel="NJ" symbol="Newjersey"/>
+	<State code="31000" label="New Mexico" abbreviationLabel="NM" symbol="Newmexico" verticalCenterGap="0"/>
+	<State code="32000" label="New York" abbreviationLabel="NY" symbol="Newyork"/>
+	<State code="33000" label="North Carolina" abbreviationLabel="NC" symbol="Northcarolina" horizontalCenterGap="15"/>
+	<State code="34000" label="North Dakota" abbreviationLabel="ND" symbol="Northdakota"/>
+	<State code="35000" label="Ohio" abbreviationLabel="OH" symbol="Ohio"/>
+	<State code="36000" label="Oklahoma" abbreviationLabel="OK" symbol="Oklahoma" verticalCenterGap="0" horizontalCenterGap="10"/>
+	<State code="37000" label="Oregon" abbreviationLabel="OR" symbol="Oregon"/>
+	<State code="38000" label="Pennsylvania" abbreviationLabel="PA" symbol="Pennsylvania"/>
+	<State code="39000" label="Rhode Island" abbreviationLabel="RI" symbol="Rhodeisland"/>
+	<State code="40000" label="South Carolina" abbreviationLabel="SC" symbol="Southcarolina" horizontalCenterGap="5"/>
+	<State code="41000" label="South Dakota" abbreviationLabel="SD" symbol="Southdakota"/>
+	<State code="42000" label="Tennessee" abbreviationLabel="TN" symbol="Tennessee"/>
+	<State code="43000" label="Texas" abbreviationLabel="TX" symbol="Texas" horizontalCenterGap="10"/>
+	<State code="44000" label="Utah" abbreviationLabel="UT" symbol="Utah"/>
+	<State code="45000" label="Vermont" abbreviationLabel="VT" symbol="Vermont" verticalCenterGap="-8"/>
+	<State code="46000" label="Virginia" abbreviationLabel="VA" symbol="Virginia" verticalCenterGap="10" horizontalCenterGap="10"/>
+	<State code="47000" label="Washington" abbreviationLabel="WA" symbol="Washington"/>
+	<State code="48000" label="West Virginia" abbreviationLabel="WV" symbol="Westvirginia" verticalCenterGap="0" horizontalCenterGap="-2"/>
+	<State code="49000" label="Wisconsin" abbreviationLabel="WI" symbol="Wisconsin"/>
+	<State code="50000" label="Wyoming" abbreviationLabel="WY" symbol="Wyoming"/>
+	<State code="51000" label="Washington DC" abbreviationLabel="DC" symbol="WashingtonDC"/>
+</Map>

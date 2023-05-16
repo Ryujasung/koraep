@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+	<bean name="propertiesService" class="egovframework.rte.fdl.property.impl.EgovPropertyServiceImpl" destroy-method="destroy">
+		<property name="properties">
+	        <map>
+	        	<entry key="pageUnit" value="10"/>
+	        	<entry key="pageSize" value="10"/>
+	        </map>
+		</property>
+	</bean>
+	
+	<bean id="filePathService" class="egovframework.common.CommonProperties" >
+    	<property name="FILE_UPLOAD_PATH" value="C:/egov/workspace/newkoraep/src/main/webapp/data_file/file_up" />
+    	<property name="NOTI_FILE_PATH" value="C:/egov/workspace/newkoraep/src/main/webapp/data_file/file_noti" />
+    	<property name="SAMPLE_FILE_DOWN_PATH" value="C:/egov/workspace/newkoraep/src/main/webapp/data_file/file_dn" />
+    	<property name="BIZ_FORM_PATH" value="C:/egov/workspace/newkoraep/src/main/webapp/data_file/file_bizlic" />
+    	<property name="APP_INFO_PATH" value="C:/egov/workspace/newkoraep/src/main/webapp/WEB_INF/config" />
+    	<property name="EXCEL_PATH" value="C:/egov/workspace/newkoraep/src/main/webapp/data_file/file_excel" />
+    	<property name="TOUCHEN_NXKEY_PATH" value="C:/egov/workspace/newkoraep/src/main/webapp/WEB-INF/TouchEnKeyCert/Private2048.key.der" />
+    	<property name="CENTER_BIZNO" value="1078217851" />
+    </bean>
+        
+</beans>	

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3969301Mapper">
+
+	<select id="epce3969301_select" resultType="hashmap">
+		
+		SELECT OBJECT_NAME
+		 	FROM USER_PROCEDURES
+		 WHERE OBJECT_TYPE='PROCEDURE'
+		   AND OBJECT_NAME NOT IN('PROC_REG_JOB', 'PROC_CHG_JOB')	 /*작업생성 및 변경 프로시저는 제외*/
+	
+	</select>
+	
+	<select id="epce3969301_select2" resultType="hashmap">
+		
+		SELECT BTCH_CD
+		          ,BTCH_NM		
+		          ,REPT_YN	
+		          ,EPCN_ETC_NM(REPT_YN, 'S010') AS REPT_YN_NM
+		          ,USE_YN
+		          ,EPCN_ETC_NM(USE_YN, 'S008') AS USE_YN_NM
+		          ,TO_CHAR(TO_DATE(ST_DTTM, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD') AS ST_DTTM
+		          ,TO_CHAR(TO_DATE(END_DTTM, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD') AS END_DTTM		
+		          ,EXEC_TM
+		          ,EXEC_TERM
+		          ,PROC_NM
+		          ,REG_PRSN_ID
+		          ,REG_DTTM
+		          ,UPD_PRSN_ID
+		          ,UPD_DTTM 	
+		 FROM EPCN_BTCH_MGNT
+		ORDER BY BTCH_CD DESC
+
+	</select>
+	
+	<!-- 배치목록 등록 및 수정 -->
+	<update id="epce3969301_update" parameterType="hashmap">
+		MERGE INTO EPCN_BTCH_MGNT USING DUAL ON (BTCH_CD = #{BTCH_CD})
+		WHEN MATCHED THEN
+			UPDATE SET BTCH_NM	= #{BTCH_NM}
+								,USE_YN = #{USE_YN}
+								,REPT_YN = #{REPT_YN}
+								,ST_DTTM = TO_CHAR(TO_DATE(#{ST_DTTM}, 'YYYY-MM-DD'), 'YYYYMMDDHH24MISS')
+								,END_DTTM = TO_CHAR(TO_DATE(#{END_DTTM}, 'YYYY-MM-DD'), 'YYYYMMDDHH24MISS')
+								,EXEC_TM = #{EXEC_TM}
+								,EXEC_TERM = #{EXEC_TERM}
+								,PROC_NM = #{PROC_NM}
+								,UPD_PRSN_ID = #{S_USER_ID}
+								,UPD_DTTM = SYSDATE
+		WHEN NOT MATCHED THEN
+			INSERT(
+							BTCH_CD		,BTCH_NM			,USE_YN			,REPT_YN
+							,ST_DTTM		,END_DTTM			,EXEC_TM		,EXEC_TERM
+							,PROC_NM		,REG_PRSN_ID	,REG_DTTM
+			)VALUES(
+							TRIM(#{BTCH_CD})		,#{BTCH_NM}			,#{USE_YN}		,#{REPT_YN}
+							,TO_CHAR(TO_DATE(#{ST_DTTM}, 'YYYY-MM-DD'), 'YYYYMMDDHH24MISS')		
+							,TO_CHAR(TO_DATE(#{END_DTTM}, 'YYYY-MM-DD'), 'YYYYMMDDHH24MISS')
+							,#{EXEC_TM}
+							,#{EXEC_TERM}
+							,#{PROC_NM}		,#{S_USER_ID}		,SYSDATE
+			)
+	</update>
+	
+	<!-- 스케줄러 생성 -->
+	<update id="epce3969301_update2" statementType="CALLABLE" parameterType="hashmap">
+		<![CDATA[	
+			{CALL PROC_REG_JOB(
+				#{BTCH_CD, mode=IN, jdbcType=VARCHAR}
+				,#{PROC_NM, mode=IN, jdbcType=VARCHAR}
+				,#{ST_DTTM, mode=IN, jdbcType=VARCHAR}
+				,#{END_DTTM, mode=IN, jdbcType=VARCHAR}
+				,#{EXEC_TM, mode=IN, jdbcType=VARCHAR}
+				,#{EXEC_TERM, mode=IN, jdbcType=VARCHAR}
+				,#{USE_YN,mode=IN,jdbcType=VARCHAR}
+			)}	
+		]]>
+	</update>
+	
+	<!-- 스케줄러 수정 -->
+	<update id="epce3969301_update3" statementType="CALLABLE" parameterType="hashmap">
+		<![CDATA[	
+			{CALL PROC_CHG_JOB(
+				#{SCH_NM,mode=IN,jdbcType=VARCHAR}
+				,#{JOB_NM,mode=IN,jdbcType=VARCHAR}
+				,#{ST_DTTM,mode=IN,jdbcType=VARCHAR}
+				,#{END_DTTM,mode=IN,jdbcType=VARCHAR}
+				,#{EXEC_TM,mode=IN,jdbcType=VARCHAR}
+				,#{EXEC_TERM,mode=IN,jdbcType=VARCHAR}
+				,#{USE_YN,mode=IN,jdbcType=VARCHAR}
+			)}	
+		]]>
+	</update>
+
+</mapper>

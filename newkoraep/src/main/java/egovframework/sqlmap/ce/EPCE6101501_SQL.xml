@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE6101501Mapper">
+   
+	<select id="epce6101501_select" parameterType="map" resultType="hashmap">
+			
+		<if test='excelYn == null or excelYn == "" '>
+		 SELECT 
+		 			PNO 
+					,BIZRNM
+			        ,CUST_NM
+			        ,CUST_BIZRNO
+			        ,CTNR_NM
+			        ,STANDARD_NM
+			        ,PRPS_CD
+			        ,PRPS_NM
+			        ,CPCT_CD
+			        ,CPCT_NM
+                    ,ALKND_CD
+                    ,ALKND_NM
+			        ,DLIVY_QTY
+			        ,CRCT_DLIVY_QTY
+			        ,EXCA_DLIVY_QTY
+              		,AREA_NM
+              		,BIZR_TP_NM		        
+		  FROM (
+		</if>
+					SELECT  ROW_NUMBER()OVER(ORDER BY D.SEL_ORD, D.BIZRNM, F.BIZRNM, B.SEL_ORD) AS PNO 
+								,D.BIZRNM
+                                 ,F.BIZRNM AS CUST_NM
+						         ,PI_DECRYPT(A.CUST_BIZRNO) as CUST_BIZRNO
+						         ,B.CTNR_NM
+						         ,CASE WHEN SUBSTR(B.CTNR_CD,4,2) = 00 THEN '표준용기' ELSE '비표준용기' END AS STANDARD_NM
+						         ,B.PRPS_CD
+						         ,EPCN_ETC_NM(B.PRPS_CD , 'E002') AS PRPS_NM
+						         ,B.CPCT_CD
+						         ,EPCN_ETC_NM(B.CPCT_CD , 'E001') AS CPCT_NM
+                                 ,B.ALKND_CD
+                                 ,EPCN_ETC_NM(B.ALKND_CD , 'E004') AS ALKND_NM
+						         ,A.DLIVY_QTY
+						         ,A.CRCT_DLIVY_QTY
+						         ,A.EXCA_DLIVY_QTY
+							     ,EPCN_ETC_NM((SELECT AREA_CD FROM EPCN_BRCH_INFO WHERE BIZRID = A.CUST_BIZRID AND BIZRNO = A.CUST_BIZRNO AND BIZR_TP_CD IN ('W1','W2') AND ROWNUM = 1), 'B010') AS AREA_NM
+							     ,EPCN_ETC_NM(F.BIZR_TP_CD, 'B001') AS BIZR_TP_NM  						         
+				    FROM 
+				    
+				    		 (    
+				                 SELECT NVL(A.MFC_BIZRID, E.MFC_BIZRID) AS MFC_BIZRID
+					                        ,NVL(A.MFC_BIZRNO, E.MFC_BIZRNO) AS MFC_BIZRNO
+					                        ,NVL(A.CUST_BIZRID, E.CUST_BIZRID) AS CUST_BIZRID
+					                        ,NVL(A.CUST_BIZRNO, E.CUST_BIZRNO) AS CUST_BIZRNO
+					                        ,NVL(A.CTNR_CD, E.CTNR_CD) AS CTNR_CD
+					                        ,NVL(A.DLIVY_QTY,0) AS DLIVY_QTY
+					                        ,NVL(E.DLIVY_QTY,0) AS CRCT_DLIVY_QTY
+					                        ,NVL(A.DLIVY_QTY,0) + NVL(E.DLIVY_QTY,0) AS EXCA_DLIVY_QTY
+				                  FROM
+					                     (
+					                       SELECT A.MFC_BIZRID, A.MFC_BIZRNO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CTNR_CD
+					                                  ,NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+					                         FROM EPDM_DLIVY_MST A
+					                                  ,EPDM_DLIVY_INFO B
+					                      WHERE 1=1
+					                          AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+					                          AND B.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+						                      <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+															AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+												        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+												            #{type.MFC_BIZRID_NO}
+												        </foreach>
+											 </if>    
+											 <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+															AND	B.CUST_BIZRID||';'||B.CUST_BIZRNO  IN
+												        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+												            #{type.WHSDL_BIZRID_NO}
+												        </foreach>
+											 </if>
+					                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CTNR_CD
+					                     ) A
+					                     FULL OUTER JOIN
+					                     (
+					                        SELECT A.MFC_BIZRID, A.MFC_BIZRNO, A.CUST_BIZRID, A.CUST_BIZRNO, A.CTNR_CD
+					                                   ,NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+					                          FROM EXCA_DLIVY_CRCT A
+					                        WHERE 1=1
+					                            AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I')
+					                            AND A.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+					                             <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+															AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+												        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+												            #{type.MFC_BIZRID_NO}
+												        </foreach>
+												 </if>    
+												 <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+															AND	A.CUST_BIZRID||';'||A.CUST_BIZRNO  IN
+												        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+												            #{type.WHSDL_BIZRID_NO}
+												        </foreach>
+												 </if>
+					                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, A.CUST_BIZRID, A.CUST_BIZRNO, A.CTNR_CD
+					                     ) E
+					                     ON A.MFC_BIZRID = E.MFC_BIZRID AND A.MFC_BIZRNO = E.MFC_BIZRNO AND A.CUST_BIZRID = E.CUST_BIZRID AND A.CUST_BIZRNO = E.CUST_BIZRNO AND A.CTNR_CD = E.CTNR_CD
+				                ) A
+
+					         ,EPCN_STD_CTNR_CD B
+					         ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+                             ,EPCN_BIZR_INFO D
+                             ,EPCN_BIZR_INFO F
+				   WHERE 1=1
+				       AND A.CTNR_CD = B.CTNR_CD
+				       AND B.LANG_SE_CD = C.LANG_SE_CD 
+				       AND A.MFC_BIZRID = D.BIZRID
+				       AND A.MFC_BIZRNO = D.BIZRNO
+				       AND A.CUST_BIZRID = F.BIZRID(+)
+                       AND A.CUST_BIZRNO = F.BIZRNO(+)
+                       <choose>
+                          <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+                              AND SUBSTR(B.CTNR_CD,2,1) in ('1','2')
+                          </when>
+                          <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+                              AND SUBSTR(B.CTNR_CD,2,1) in ('3','4')
+                          </when>
+                       </choose>
+                       <choose>
+		                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "Y" '>
+		                      AND SUBSTR(B.CTNR_CD,4,2) = 00
+		                  </when>
+		                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "N" '>
+		                     AND SUBSTR(B.CTNR_CD,4,2) != 00
+		                  </when>
+		               </choose>
+                       <if test='PRPS_CD != null and PRPS_CD != "" '>
+                         AND B.PRPS_CD = #{PRPS_CD}
+                       </if>
+				       <if test='ALKND_CD != null and ALKND_CD != "" '>
+				       	 AND B.ALKND_CD = #{ALKND_CD}
+				       </if>
+				       <if test="CTNR_LIST !=null and CTNR_LIST.size >0" >
+						 AND	B.CTNR_CD IN
+					       <foreach collection="CTNR_LIST"  item="type"  open="(" close=")" separator=",">
+							   #{type.CTNR_CD}
+						   </foreach>
+					   </if>
+				 ORDER BY D.SEL_ORD, D.BIZRNM, F.BIZRNM, B.SEL_ORD
+				 
+		<if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+        </if>		 
+				 
+	</select>
+	
+	<select id="epce6101501_select_cnt" parameterType="map" resultType="hashmap">
+		  SELECT COUNT(1) as CNT
+		  			 ,SUM(A.DLIVY_QTY) as DLIVY_QTY
+		  			 ,SUM(A.CRCT_DLIVY_QTY) AS CRCT_DLIVY_QTY
+					 ,SUM(A.EXCA_DLIVY_QTY) AS EXCA_DLIVY_QTY
+		    FROM
+		    		  (    
+		                 SELECT NVL(A.MFC_BIZRID, E.MFC_BIZRID) AS MFC_BIZRID
+			                        ,NVL(A.MFC_BIZRNO, E.MFC_BIZRNO) AS MFC_BIZRNO
+			                        ,NVL(A.CUST_BIZRID, E.CUST_BIZRID) AS CUST_BIZRID
+			                        ,NVL(A.CUST_BIZRNO, E.CUST_BIZRNO) AS CUST_BIZRNO
+			                        ,NVL(A.CTNR_CD, E.CTNR_CD) AS CTNR_CD
+			                        ,NVL(A.DLIVY_QTY,0) AS DLIVY_QTY
+			                        ,NVL(E.DLIVY_QTY,0) AS CRCT_DLIVY_QTY
+			                        ,NVL(A.DLIVY_QTY,0) + NVL(E.DLIVY_QTY,0) AS EXCA_DLIVY_QTY
+		                  FROM
+			                     (
+			                       SELECT A.MFC_BIZRID, A.MFC_BIZRNO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CTNR_CD
+			                                  ,NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+			                         FROM EPDM_DLIVY_MST A
+			                                  ,EPDM_DLIVY_INFO B
+			                      WHERE 1=1
+			                          AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+			                          AND B.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+				                      <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+													AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+										        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+										            #{type.MFC_BIZRID_NO}
+										        </foreach>
+									 </if>    
+									 <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+													AND	B.CUST_BIZRID||';'||B.CUST_BIZRNO  IN
+										        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+										            #{type.WHSDL_BIZRID_NO}
+										        </foreach>
+									 </if>
+			                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CTNR_CD
+			                     ) A
+			                     FULL OUTER JOIN
+			                     (
+			                        SELECT A.MFC_BIZRID, A.MFC_BIZRNO, A.CUST_BIZRID, A.CUST_BIZRNO, A.CTNR_CD
+			                                   ,NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+			                          FROM EXCA_DLIVY_CRCT A
+			                        WHERE 1=1
+			                            AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I')
+			                            AND A.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			                             <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+													AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+										        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+										            #{type.MFC_BIZRID_NO}
+										        </foreach>
+										 </if>    
+										 <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+													AND	A.CUST_BIZRID||';'||A.CUST_BIZRNO  IN
+										        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+										            #{type.WHSDL_BIZRID_NO}
+										        </foreach>
+										 </if>
+			                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, A.CUST_BIZRID, A.CUST_BIZRNO,A.CTNR_CD
+			                     ) E
+			                     ON A.MFC_BIZRID = E.MFC_BIZRID AND A.MFC_BIZRNO = E.MFC_BIZRNO AND A.CUST_BIZRID = E.CUST_BIZRID AND A.CUST_BIZRNO = E.CUST_BIZRNO AND A.CTNR_CD = E.CTNR_CD
+		                ) A
+		    		 
+			         ,EPCN_STD_CTNR_CD B
+			         ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+                     ,EPCN_BIZR_INFO D
+                     ,EPCN_BIZR_INFO F
+		   WHERE 1=1
+		       AND A.CTNR_CD = B.CTNR_CD
+		       AND B.LANG_SE_CD = C.LANG_SE_CD 
+		       AND A.MFC_BIZRID = D.BIZRID
+		       AND A.MFC_BIZRNO = D.BIZRNO
+		       AND A.CUST_BIZRID = F.BIZRID(+)
+               AND A.CUST_BIZRNO = F.BIZRNO(+)
+               <choose>
+                  <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+                      AND SUBSTR(B.CTNR_CD,2,1) in ('1','2')
+                  </when>
+                  <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+                      AND SUBSTR(B.CTNR_CD,2,1) in ('3','4')
+                  </when>
+               </choose>
+               <choose>
+                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "Y" '>
+                      AND SUBSTR(B.CTNR_CD,4,2) = 00
+                  </when>
+                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "N" '>
+                     AND SUBSTR(B.CTNR_CD,4,2) != 00
+                  </when>
+               </choose>
+               <if test='PRPS_CD != null and PRPS_CD != "" '>
+                 AND B.PRPS_CD = #{PRPS_CD}
+               </if>
+               <if test='ALKND_CD != null and ALKND_CD != "" '>
+                 AND B.ALKND_CD = #{ALKND_CD}
+               </if>
+		       <if test="CTNR_LIST !=null and CTNR_LIST.size >0" >
+						AND	B.CTNR_CD IN
+			        <foreach collection="CTNR_LIST"  item="type"  open="(" close=")" separator=",">
+			            #{type.CTNR_CD}
+			        </foreach>
+				</if>
+		       
+	</select>
+	
+	<select id="epce6101501_select2" parameterType="map" resultType="hashmap">
+			SELECT 
+						EPCN_BIZR_ABBR_NM(A.MFC_BIZRID ,A.MFC_BIZRNO) AS BIZRNM   
+				       ,NVL(SUM(DECODE(B.PRPS_CD, '0', EXCA_DLIVY_QTY )), 0) AS PRPS0
+		               ,NVL(SUM(DECODE(B.PRPS_CD, '1', EXCA_DLIVY_QTY )), 0) AS PRPS1
+		               ,NVL(SUM(DECODE(B.PRPS_CD, '2', EXCA_DLIVY_QTY )), 0) AS PRPS2
+		               ,NVL(SUM(EXCA_DLIVY_QTY ), 0) AS DLIVY_QTY
+		     FROM 
+		     		  (    
+		                 SELECT NVL(A.MFC_BIZRID, E.MFC_BIZRID) AS MFC_BIZRID
+			                        ,NVL(A.MFC_BIZRNO, E.MFC_BIZRNO) AS MFC_BIZRNO
+			                        ,NVL(A.CUST_BIZRID, E.CUST_BIZRID) AS CUST_BIZRID
+			                        ,NVL(A.CUST_BIZRNO, E.CUST_BIZRNO) AS CUST_BIZRNO
+			                        ,NVL(A.CTNR_CD, E.CTNR_CD) AS CTNR_CD
+			                        ,NVL(A.DLIVY_QTY,0) AS DLIVY_QTY
+			                        ,NVL(E.DLIVY_QTY,0) AS CRCT_DLIVY_QTY
+			                        ,NVL(A.DLIVY_QTY,0) + NVL(E.DLIVY_QTY,0) AS EXCA_DLIVY_QTY
+		                  FROM
+			                     (
+			                       SELECT A.MFC_BIZRID, A.MFC_BIZRNO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CTNR_CD
+			                                  ,NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+			                         FROM EPDM_DLIVY_MST A
+			                                  ,EPDM_DLIVY_INFO B
+			                      WHERE 1=1
+			                          AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+			                          AND B.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+				                      <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+													AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+										        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+										            #{type.MFC_BIZRID_NO}
+										        </foreach>
+									 </if>    
+									 <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+													AND	B.CUST_BIZRID||';'||B.CUST_BIZRNO  IN
+										        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+										            #{type.WHSDL_BIZRID_NO}
+										        </foreach>
+									 </if>
+			                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, B.CUST_BIZRID, B.CUST_BIZRNO, B.CTNR_CD
+			                     ) A
+			                     FULL OUTER JOIN
+			                     (
+			                        SELECT A.MFC_BIZRID, A.MFC_BIZRNO, A.CUST_BIZRID, A.CUST_BIZRNO, A.CTNR_CD
+			                                   ,NVL(SUM(DLIVY_QTY),0) AS DLIVY_QTY 
+			                          FROM EXCA_DLIVY_CRCT A
+			                        WHERE 1=1
+			                            AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I')
+			                            AND A.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			                             <if test="MFC_LIST !=null and MFC_LIST.size >0" >
+													AND	A.MFC_BIZRID||';'||A.MFC_BIZRNO  IN
+										        <foreach collection="MFC_LIST"  item="type"  open="(" close=")" separator=",">
+										            #{type.MFC_BIZRID_NO}
+										        </foreach>
+										 </if>    
+										 <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+													AND	A.CUST_BIZRID||';'||A.CUST_BIZRNO  IN
+										        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+										            #{type.WHSDL_BIZRID_NO}
+										        </foreach>
+										 </if>
+			                       GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, A.CUST_BIZRID, A.CUST_BIZRNO,A.CTNR_CD
+			                     ) E
+			                     ON A.MFC_BIZRID = E.MFC_BIZRID AND A.MFC_BIZRNO = E.MFC_BIZRNO AND A.CUST_BIZRID = E.CUST_BIZRID AND A.CUST_BIZRNO = E.CUST_BIZRNO AND A.CTNR_CD = E.CTNR_CD
+		                ) A
+		     		  
+			         ,EPCN_STD_CTNR_CD B
+			         ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') C
+			         ,EPCN_BIZR_INFO D
+			         
+		   WHERE 1=1
+		       AND A.CTNR_CD = B.CTNR_CD
+		       AND B.LANG_SE_CD = C.LANG_SE_CD
+		       AND A.MFC_BIZRID = D.BIZRID
+		       AND A.MFC_BIZRNO = D.BIZRNO
+               <choose>
+                  <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "1" '>
+                      AND SUBSTR(B.CTNR_CD,2,1) in ('1','2')
+                  </when>
+                  <when test='CTNR_SE !=null and CTNR_SE !="" and CTNR_SE == "2" '>
+                      AND SUBSTR(B.CTNR_CD,2,1) in ('3','4')
+                  </when>
+               </choose>
+               <choose>
+                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "Y" '>
+                      AND SUBSTR(B.CTNR_CD,4,2) = 00
+                  </when>
+                  <when test='STANDARD_YN !=null and STANDARD_YN !="" and STANDARD_YN == "N" '>
+                     AND SUBSTR(B.CTNR_CD,4,2) != 00
+                  </when>
+               </choose>
+               <if test='PRPS_CD != null and PRPS_CD != "" '>
+                 AND B.PRPS_CD = #{PRPS_CD}
+               </if>
+               <if test='ALKND_CD != null and ALKND_CD != "" '>
+                 AND B.ALKND_CD = #{ALKND_CD}
+               </if>
+		       <if test="CTNR_LIST !=null and CTNR_LIST.size >0" >
+						AND	B.CTNR_CD IN
+			        <foreach collection="CTNR_LIST"  item="type"  open="(" close=")" separator=",">
+			            #{type.CTNR_CD}
+			        </foreach>
+			   </if>
+		       
+		 GROUP BY A.MFC_BIZRID, A.MFC_BIZRNO, D.SEL_ORD, D.BIZRNM
+		 ORDER BY D.SEL_ORD, D.BIZRNM
+	</select>
+
+</mapper>
+

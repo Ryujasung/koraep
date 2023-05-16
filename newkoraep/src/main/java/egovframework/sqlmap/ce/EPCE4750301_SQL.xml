@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE4750301Mapper">
+
+	<select id="epce4750301_select" resultType="hashmap">
+		   SELECT A.STAC_DOC_NO
+	   			  ,A.EXCA_ISSU_SE_CD
+		          ,EPCN_ETC_NM(A.EXCA_ISSU_SE_CD, 'C025') AS EXCA_ISSU_SE_NM
+	   			  ,<![CDATA[ '<a href="javascript:fn_page();" class="gridLink" >'||TO_CHAR(TO_DATE(A.EXCA_REG_DT,'YYYYMMDD'),'YYYY-MM-DD')||'</a>' ]]>AS EXCA_REG_DT_PAGE
+	   			  ,B.BIZRNM
+		          ,A.BIZRID
+		          ,A.BIZRNO
+		          ,A.PAY_BANK_CD AS BANK_CD
+		          ,EPCN_ETC_NM(DECODE(A.EXCA_SE_CD,'A',A.ACP_BANK_CD,'C',A.PAY_BANK_CD), 'S090') AS BANK_NM
+		          ,ECL_DECRYPT(DECODE(A.EXCA_SE_CD,'A',A.ACP_ACCT_NO,'C',A.PAY_ACCT_NO)) AS ACCT_NO
+		          ,A.PAY_ACCT_DPSTR_NM AS ACCT_DPSTR_NM
+		          ,NVL(A.GTN, 0) AS GTN
+		          ,NVL(A.WHSL_FEE_TOT, 0) + NVL(A.RTL_FEE_TOT, 0) AS FEE
+				  ,NVL(A.WHSL_FEE_STAX_TOT, 0) AS FEE_STAX
+		          ,A.EXCA_AMT
+		          ,A.EXCA_PROC_STAT_CD
+				  ,EPCN_ETC_NM(A.EXCA_PROC_STAT_CD, 'C024') AS EXCA_PROC_STAT_NM
+				  ,DECODE(A.EXCA_ISSU_SE_CD, 'C', 'C', A.EXCA_STD_CD) as EXCA_STD_CD
+				  ,TO_CHAR(TO_DATE(A.REAL_PAY_DT || A.REAL_PAY_TM, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS REAL_PAY_DT
+                  ,NVL(A.YEAR_CHG_YN, 'N') AS YEAR_CHG_YN
+                  ,A.TX_EXEC_CD
+		      	  ,EPCN_ETC_NM(A.TX_EXEC_CD, 'D062') AS TX_EXEC_NM
+			 FROM 
+			 	EPGM_EXCA_LST A
+			 	,EPCN_BIZR_INFO B
+		   WHERE 1=1
+		   
+		   		<choose>
+			   	   <when test='EXCA_STD_CD_SEL == "C" '>
+			   	   		AND A.EXCA_STD_CD IS NULL
+		       			AND A.EXCA_ISSU_SE_CD IN ('C') /* 교환정산 */
+			   	   </when>
+			   	   <otherwise>
+				   	   	AND A.EXCA_STD_CD = #{EXCA_STD_CD_SEL}
+		       			AND A.EXCA_ISSU_SE_CD in ('G', 'F') /* 보증금, 취급수수료 */
+			   	   </otherwise>
+		   	   </choose>
+		   	   
+		       AND A.EXCA_SE_CD = 'C' /* 환급 */
+		       AND A.BIZRID = B.BIZRID
+		       AND A.BIZRNO = B.BIZRNO
+		       
+		       <if test='BIZRID != null and BIZRID != "" '>
+			      AND A.BIZRID = #{BIZRID}
+			   </if>
+			   <if test='BIZRNO != null and BIZRNO != "" '>
+			      AND A.BIZRNO = #{BIZRNO}
+			   </if>
+			   <if test='EXCA_PROC_STAT_CD_SEL != null and EXCA_PROC_STAT_CD_SEL != "" '>
+		       	  AND A.EXCA_PROC_STAT_CD = #{EXCA_PROC_STAT_CD_SEL}
+		       </if>
+		       <if test='TX_EXEC_CD_SEL != null and TX_EXEC_CD_SEL != "" '>
+		       	  AND A.TX_EXEC_CD = #{TX_EXEC_CD_SEL}
+			   </if>
+		   ORDER BY A.EXCA_REG_DT DESC, B.SEL_ORD, B.BIZRNM
+	</select>
+	
+	<update id="epce4750301_update" >
+		UPDATE EPGM_EXCA_LST A
+			  SET EXCA_PROC_STAT_CD = #{EXCA_PROC_STAT_CD}
+			  		,LK_SITE_NO = #{LK_SITE_NO}
+				    ,LK_REG_DATE = #{LK_REG_DATE}
+				    ,LK_REG_TIME = #{LK_REG_TIME}
+				    ,LK_REG_SEQ = #{LK_REG_SEQ}
+				    
+				    <if test='BF_EXCA_PROC_STAT_CD == "R" '>
+				    ,(PAY_BANK_CD, PAY_ACCT_NO, PAY_ACCT_DPSTR_NM)
+             	 		= (SELECT ACP_BANK_CD, ACP_ACCT_NO, ACP_ACCT_DPSTR_NM 
+             	 			   FROM EPCN_BIZR_INFO B
+             	 			 WHERE B.BIZRID = A.BIZRID
+             	 			     AND B.BIZRNO = A.BIZRNO
+             	 			) 
+				    </if>
+				    
+		 WHERE 1=1
+		 	 AND STAC_DOC_NO = #{STAC_DOC_NO}
+		 	 AND EXCA_ISSU_SE_CD = #{EXCA_ISSU_SE_CD}
+		 	 AND EXCA_PROC_STAT_CD = #{BF_EXCA_PROC_STAT_CD}
+	</update>
+	
+	<update id="epce4750301_update2" >
+		UPDATE EPGM_EXCA_LST 
+			  SET EXCA_PROC_STAT_CD = #{EXCA_PROC_STAT_CD}
+			  		,UPD_PRSN_ID = #{S_USER_ID}
+			  		,UPD_DTTM = SYSDATE
+		 WHERE 1=1
+		 	 AND LK_REG_DATE = #{LK_REG_DATE}
+			 AND LK_REG_TIME = #{LK_REG_TIME}
+		 	 AND EXCA_PROC_STAT_CD = 'C' /* 연계전송처리중 */
+		 	 
+		 	  <choose>
+			   	   <when test='EXCA_STD_CD == "C" '>
+			   	   		AND EXCA_ISSU_SE_CD IN ('C') /* 교환정산 */
+			   	   </when>
+			   	   <otherwise>
+				   	   	 AND EXCA_ISSU_SE_CD IN ('G', 'F') /* 보증금, 취급수수료 */
+			   	   </otherwise>
+		   	   </choose>
+		 	 
+	</update>
+    
+    <update id="INSERT_FI_Z_KORA_ECDOCU" parameterType="hashmap">
+        INSERT INTO NEOE.FI_Z_KORA_ECDOCU@DBSVR
+			   (
+			    CD_COMPANY
+			    ,NO_EC
+			    ,NO_ECLINE
+			    ,NO_ECDOCU
+			    ,CD_PC
+			    ,TP_EC
+			    ,YY_CALC
+			    ,TP_CALC
+			    ,DT_ACCT
+			    ,AM_EC1
+			    ,AM_EC2
+			    ,AM_VAT1
+			    ,AM_EC3
+			    ,AM_VAT2
+			    ,CD_PARTNER1
+			    ,CD_BANK1
+			    ,NO_DEPOSIT1
+			    ,NM_BANK1
+			    ,CD_PARTNER2
+			    ,CD_BANK2
+			    ,NO_DEPOSIT2
+			    ,NM_BANK2
+			    ,CD_CMSTRA
+			    ,CD_BANK3
+			    ,NO_DEPOSIT3
+			    ,NM_BANK3
+			    ,ST_PROC1
+			    ,ST_PROC2
+			    ,NO_DOCU1
+			    ,NO_DOCU2
+			    ,ID_INSERT
+			    ,DTS_INSERT
+			    ,ID_UPDATE
+			    ,DTS_UPDATE
+			    ,AM_EC4
+			    ,YN_RE /* 재전송 */
+			    ,YN_BEGIN
+			    ,NM_NOTE
+			   )
+			   (
+			    SELECT
+				          'COSMO'
+				          ,A.LK_REG_DATE||A.LK_REG_TIME|| #{LK_EXCA_SE_CD} /* 생산자정산지급 */
+				          ,ROW_NUMBER()OVER(ORDER BY A.STAC_DOC_NO, A.EXCA_ISSU_SE_CD ) /* 일련번호 */
+				          ,A.EXCA_ISSU_SE_CD || A.STAC_DOC_NO /* 빈용기 묶음 문서번호 */
+				          ,'5000'
+				          ,#{LK_EXCA_SE_CD} /* 생산자정산지급 */
+				          ,DECODE(A.YEAR_CHG_YN,'Y',A.STD_YEAR, DECODE(#{EXCA_STD_CD}, 'C', A.STD_YEAR, 'M', A.STD_YEAR, (SELECT EXCA_SE_YEAR FROM EXCA_STD_MGNT WHERE EXCA_STD_CD = A.EXCA_STD_CD)))
+				          ,'1' /* 0:비정산 , 1:정산 */
+				          ,A.LK_REG_DATE /* 일자 */
+				          ,DECODE(#{LK_EXCA_SE_CD}, '7', CASE WHEN A.EXCA_ISSU_SE_CD = 'G' THEN NVL(A.GTN, 0) WHEN A.EXCA_ISSU_SE_CD = 'F' THEN 0 WHEN A.EXCA_ISSU_SE_CD = 'C' THEN NVL(A.EXCA_AMT, 0) END, 'C', CASE WHEN A.EXCA_ISSU_SE_CD = 'G' THEN NVL(A.GTN, 0) WHEN A.EXCA_ISSU_SE_CD = 'F' THEN 0 WHEN A.EXCA_ISSU_SE_CD = 'C' THEN NVL(A.EXCA_AMT, 0) END, 0) /* 보증금 */
+				          ,NVL(A.WHSL_FEE_TOT, 0) 
+				          ,NVL(A.WHSL_FEE_STAX_TOT, 0) 
+				          ,NVL(A.RTL_FEE_TOT, 0) 
+				          ,0 
+				          ,C.ERP_BIZR_CD
+                          ,DECODE(#{LK_EXCA_SE_CD},'A', '088', '')
+                          ,DECODE(#{LK_EXCA_SE_CD},'A', (SELECT RSV_ITEM1 AS GTN_ACCT_NO FROM EPCN_ETC_CD WHERE GRP_CD = 'D035' AND ETC_CD = DECODE(#{LK_EXCA_SE_CD}, '5', '32', '6', '31', 'A', '31')), '')
+                          ,DECODE(#{LK_EXCA_SE_CD},'A', C.BIZR_ABBR_NM, '')
+				          ,C.ERP_BIZR_CD
+				          ,''
+				          ,''
+				          ,''
+				          ,''
+				          ,DECODE(#{LK_EXCA_SE_CD}, '7', A.PAY_BANK_CD , 'C', A.PAY_BANK_CD, '')
+				     	  ,DECODE(#{LK_EXCA_SE_CD}, '7', PI_DECRYPT(A.PAY_ACCT_NO), 'C', PI_DECRYPT(A.PAY_ACCT_NO), '')
+				          ,DECODE(#{LK_EXCA_SE_CD}, '7', A.PAY_ACCT_DPSTR_NM, 'C', A.PAY_ACCT_DPSTR_NM, '')
+				          ,'0' /* 0:미처리, 1:집금전표+집금데이타생성 , 2:이체전표생성  */
+				          ,'0' /* 0:집금미실행 , 1:집금실행 */
+				          ,''
+				          ,''
+				          ,'SHINHAN'
+				          ,TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+				          ,''
+				          ,''
+				          ,DECODE(#{LK_EXCA_SE_CD}, 'A', NVL(A.GTN_BAL_INDE_AMT, 0) + NVL(ABS(A.AGTN_INDE_AMT), 0), 0)
+				          ,#{YN_RE}
+				          ,'N'
+				          ,DECODE(#{EXCA_STD_CD},'C','교환정산','M','수기정산', (SELECT SUBSTR(EXCA_STD_NM,1,50) FROM EXCA_STD_MGNT WHERE EXCA_STD_CD = A.EXCA_STD_CD) )
+			    FROM EPGM_EXCA_LST A 
+		   				 ,EPCN_BIZR_INFO C 
+			  WHERE 1=1
+			  	  AND A.BIZRID = C.BIZRID
+			      AND A.BIZRNO = C.BIZRNO
+			      AND A.EXCA_PROC_STAT_CD = 'C' /* 연계전송처리중 */ 
+			      AND A.LK_REG_DATE = #{LK_REG_DATE}
+			      AND A.LK_REG_TIME = #{LK_REG_TIME}
+			      
+			      <choose>
+				   	   <when test='EXCA_STD_CD == "C" '>
+				   	   		AND A.EXCA_ISSU_SE_CD IN ('C') /* 교환정산 */
+				   	   </when>
+				   	   <otherwise>
+					   	   	 AND A.EXCA_ISSU_SE_CD IN ('G', 'F') /* 보증금, 취급수수료 */
+				   	   </otherwise>
+			   	   </choose>
+
+			 )
+    </update>
+    
+    
+	<update id="INSERT_FI_Z_KORA_ECDOCU_C" parameterType="hashmap">
+        INSERT INTO NEOE.FI_Z_KORA_ECDOCU@DBSVR
+			   (
+			    CD_COMPANY
+			    ,NO_EC
+			    ,NO_ECLINE
+			    ,NO_ECDOCU
+			    ,CD_PC
+			    ,TP_EC
+			    ,YY_CALC
+			    ,TP_CALC
+			    ,DT_ACCT
+			    ,AM_EC1
+			    ,AM_EC2
+			    ,AM_VAT1
+			    ,AM_EC3
+			    ,AM_VAT2
+			    ,CD_PARTNER1
+			    ,CD_BANK1
+			    ,NO_DEPOSIT1
+			    ,NM_BANK1
+			    ,CD_PARTNER2
+			    ,CD_BANK2
+			    ,NO_DEPOSIT2
+			    ,NM_BANK2
+			    ,CD_CMSTRA
+			    ,CD_BANK3
+			    ,NO_DEPOSIT3
+			    ,NM_BANK3
+			    ,ST_PROC1
+			    ,ST_PROC2
+			    ,NO_DOCU1
+			    ,NO_DOCU2
+			    ,ID_INSERT
+			    ,DTS_INSERT
+			    ,ID_UPDATE
+			    ,DTS_UPDATE
+			    ,AM_EC4
+			    ,YN_RE
+			    ,YN_BEGIN
+			    ,NM_NOTE
+			   )
+			   (
+			    SELECT
+			    	      'COSMO'
+				          ,A.LK_REG_DATE||A.LK_REG_TIME||#{LK_EXCA_SE_CD}
+				          ,ROW_NUMBER()OVER(ORDER BY A.STAC_DOC_NO)
+				          ,A.EXCA_ISSU_SE_CD || A.STAC_DOC_NO
+				          ,'5000'
+				          ,#{LK_EXCA_SE_CD}
+				          ,A.STD_YEAR
+				          ,'1'
+				          ,A.LK_REG_DATE 
+				          ,'0'
+				          ,'0'
+				          ,'0'
+				          ,'0'
+				          ,'0'
+				          ,B.ERP_BIZR_CD
+				          ,''
+				          ,''
+				          ,B.BIZR_ABBR_NM
+				          ,(SELECT AA.ERP_BIZR_CD FROM EPCN_BIZR_INFO AA WHERE AA.BIZRID = C.EXCH_EXCA_TRGT_BIZRID AND AA.BIZRNO = C.EXCH_EXCA_TRGT_BIZRNO)
+				          ,''
+				          ,''
+				          ,''
+				          ,''
+				          ,''
+				          ,''
+				          ,(SELECT AA.BIZR_ABBR_NM FROM EPCN_BIZR_INFO AA WHERE AA.BIZRID = C.EXCH_EXCA_TRGT_BIZRID AND AA.BIZRNO = C.EXCH_EXCA_TRGT_BIZRNO)
+				          ,'0'
+				          ,'0'
+				          ,''
+				          ,''
+				          ,'SHINHAN'
+				          ,TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')  
+				          ,''
+				          ,''
+				          ,C.EXCH_DLIVY_GTN - C.EXCH_WRHS_GTN
+				          ,#{YN_RE}
+				          ,'N'
+				          ,'교환정산'
+			    FROM 	  EPGM_EXCA_LST A 
+		   				 ,EPCN_BIZR_INFO B
+		   				 ,EXCA_EXCH C 
+			  WHERE 1=1
+			  	  AND A.BIZRID = B.BIZRID
+			      AND A.BIZRNO = B.BIZRNO
+			      AND A.EXCA_PROC_STAT_CD = 'C' 
+			      AND A.EXCA_ISSU_SE_CD IN ('C')
+			      AND A.LK_REG_DATE = #{LK_REG_DATE}
+			      AND A.LK_REG_TIME = #{LK_REG_TIME}
+			      AND A.STAC_DOC_NO = C.STAC_DOC_NO
+			 )
+    </update>
+	
+</mapper>

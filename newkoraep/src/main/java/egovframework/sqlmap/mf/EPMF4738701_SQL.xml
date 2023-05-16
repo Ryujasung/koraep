@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF4738701Mapper">
+<!-- 입고정정 -->
+	
+	<!-- 입고정정   조회  -->
+	<select id="epmf4738701_select4" parameterType="map"  resultType="hashmap">
+		<if test='excelYn == null or excelYn == "" '>
+				SELECT 
+									 *
+				 FROM (  
+				</if>  
+				<![CDATA[
+				 		SELECT   
+				 				ROW_NUMBER()OVER(ORDER BY  B.WRHS_CRCT_REG_DT DESC, A.WHSDL_BIZRID ,A.MFC_BIZRID ,A.MFC_BRCH_ID) AS PNO
+								, A.WRHS_DOC_NO
+								, A.RTN_DOC_NO
+								, B.WRHS_CRCT_DOC_NO
+				                , '<a href="javascript:dtl_link(1);" target="_self" class="gridLink">'||TO_CHAR(TO_DATE(A.WRHS_CFM_DT, 'yyyymmdd'),'yyyy-mm-dd')||'</a>' AS WRHS_CFM_DT
+				                , A.WRHS_CFM_DT AS WRHS_CFM_DT_ORI                							
+								, '<a href="javascript:dtl_link(2);" target="_self" class="gridLink">'||EPCN_ETC_NM(B.WRHS_CRCT_STAT_CD , 'C002')||'</a>'  AS WRHS_CRCT_STAT_CD_NM 	
+								, EPCN_ETC_NM(B.WRHS_CRCT_STAT_CD , 'C002') AS WRHS_CRCT_STAT_CD_NM_ORI
+								, B.WRHS_CRCT_STAT_CD       
+								, C.CUST_BIZRNM
+								, C.CUST_BRCH_NM
+								, C.MFC_BIZRNM
+								, C.MFC_BRCH_NM
+								, PI_DECRYPT(A.WHSDL_BIZRNO) AS WHSDL_BIZRNO
+								, A.WHSDL_BIZRNO AS WHSDL_BIZRNO_ORI
+								, A.WHSDL_BIZRID
+								, A.WHSDL_BRCH_ID
+								, A.WHSDL_BRCH_NO
+								, A.MFC_BIZRID
+								, A.MFC_BIZRNO
+								, A.MFC_BRCH_ID
+								, A.MFC_BRCH_NO
+								, A.FH_CFM_QTY_TOT +A.FB_CFM_QTY_TOT +A.DRCT_CFM_QTY_TOT AS CFM_QTY_TOT
+								, A.CFM_GTN_TOT
+								, A.CFM_WHSL_FEE_TOT
+								, A.CFM_WHSL_FEE_STAX_TOT
+								, A.CFM_RTL_FEE_TOT
+								, A.CFM_GTN_TOT+A.CFM_WHSL_FEE_TOT+ A.CFM_WHSL_FEE_STAX_TOT+ A.CFM_RTL_FEE_TOT AS CFM_AMT
+								, B.CRCT_QTY_TOT
+								, B.CRCT_GTN_TOT
+								, B.CRCT_WHSL_FEE_TOT
+								, B.CRCT_WHSL_FEE_STAX_TOT
+								, B.CRCT_RTL_FEE_TOT
+								, B.CRCT_GTN_TOT+ B.CRCT_WHSL_FEE_TOT+B.CRCT_WHSL_FEE_STAX_TOT+B.CRCT_RTL_FEE_TOT AS CRCT_AMT	
+								, C.BIZR_TP_CD
+								, E.FH_RTN_QTY_TOT +E.FB_RTN_QTY_TOT +E.DRCT_RTN_QTY_TOT AS RTN_QTY_TOT
+								, B.CRCT_WRHS_CFM_DT
+								, B.CRCT_RTN_DT
+								, S.CET_FYER_EXCA_YN
+						]]>	  
+						 
+						 FROM 	  
+						 		   (SELECT     
+				 		      					WRHS_CRCT_DOC_NO
+				 		      					,WRHS_CRCT_STAT_CD
+				 		      					,WRHS_DOC_NO
+				 		      					,EXCA_STD_CD
+				 		      					,WRHS_CRCT_REG_DT
+				 		      					,CRCT_RTN_DT
+												,CRCT_WRHS_CFM_DT
+												,SUM(CRCT_QTY) AS CRCT_QTY_TOT
+												,SUM(CRCT_GTN) 	AS CRCT_GTN_TOT
+												,SUM(CRCT_WHSL_FEE) AS CRCT_WHSL_FEE_TOT
+												,SUM(CRCT_WHSL_FEE_STAX) AS CRCT_WHSL_FEE_STAX_TOT
+												,SUM(CRCT_RTL_FEE) AS CRCT_RTL_FEE_TOT
+						 		    FROM 
+						 		      			EXCA_WRHS_CRCT
+						 		    WHERE 1=1
+						 		    AND 		EXCA_STD_CD = #{EXCA_STD_CD}
+						 		    GROUP BY WRHS_CRCT_DOC_NO,WRHS_DOC_NO,WRHS_CRCT_STAT_CD,EXCA_STD_CD,WRHS_CRCT_REG_DT,CRCT_RTN_DT,CRCT_WRHS_CFM_DT
+					 		       )B
+					 		       ,EPCM_CFM_MST    			A
+						 		   ,EPCN_DTSS_CUST_INFO	C
+								   ,EPCM_RTN_MST 				E
+								   ,EXCA_STD_MGNT				S
+						WHERE 1=1
+							AND B.WRHS_DOC_NO 	  	= A.WRHS_DOC_NO
+							AND A.WHSDL_BIZRID			= C.CUST_BIZRID
+							AND A.WHSDL_BIZRNO		= C.CUST_BIZRNO	
+							AND A.WHSDL_BRCH_ID		= C.CUST_BRCH_ID
+							AND A.WHSDL_BRCH_NO		= C.CUST_BRCH_NO	
+							AND A.MFC_BIZRID				= C.MFC_BIZRID
+							AND A.MFC_BIZRNO				= C.MFC_BIZRNO
+							AND A.MFC_BRCH_ID			= C.MFC_BRCH_ID
+							AND A.MFC_BRCH_NO			= C.MFC_BRCH_NO 
+							AND B.WRHS_DOC_NO 	  	= E.WRHS_DOC_NO
+							AND B.EXCA_STD_CD			= S.EXCA_STD_CD
+						
+						<if test="WRHS_CRCT_STAT_CD !=''  and WRHS_CRCT_STAT_CD !=null">
+							AND B.WRHS_CRCT_STAT_CD = #{WRHS_CRCT_STAT_CD}
+						</if>
+						 <if test="MFC_BIZRID !=''  and MFC_BIZRID !=null">
+							AND A.MFC_BIZRID 			= #{MFC_BIZRID}
+							AND A.MFC_BIZRNO 		= #{MFC_BIZRNO}
+						</if>
+						<if test="MFC_BRCH_ID !=''  and MFC_BRCH_ID !=null">
+							AND A.MFC_BRCH_ID 		= #{MFC_BRCH_ID}
+							AND A.MFC_BRCH_NO 	= #{MFC_BRCH_NO}
+						</if>
+						<if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+							AND C.BIZR_TP_CD 			= #{BIZR_TP_CD}
+						</if>
+						<if test="WHSDL_BIZRID !=''  and WHSDL_BIZRID !=null">
+							AND A.WHSDL_BIZRID 	= #{WHSDL_BIZRID}
+							AND A.WHSDL_BIZRNO 	= #{WHSDL_BIZRNO}
+						</if>  
+						    
+						<if test="EXCA_TRGT_SE.equalsIgnoreCase('I')" >   
+								 <if test="MFC_BIZRID  ==null ">   
+										AND	A.MFC_BIZRID || ';' || A.MFC_BIZRNO IN  
+							        <foreach collection="MFC_BIZRNM_RETURN"  item="type"  open="(" close=")" separator=",">
+							            #{type.BIZRID_NO}
+							        </foreach>
+					       		</if>  
+			 			</if>	
+			 			
+			 		<if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+					 AND EXISTS (
+					 					   SELECT 'X'
+				                             FROM EPCN_BRCH_INFO S1
+				                           WHERE 1=1
+				                              AND A.MFC_BIZRID = S1.BIZRID
+				                              AND A.MFC_BIZRNO = S1.BIZRNO
+				                              AND A.MFC_BRCH_ID = S1.BRCH_ID
+				                              AND A.MFC_BRCH_NO = S1.BRCH_NO
+						                      AND EXISTS (    
+						                      					   SELECT 'X'
+										                             FROM EPCN_BRCH_INFO S2
+										                           WHERE 1=1
+										                              AND S1.BIZRID = S2.BIZRID
+										                              AND S1.BIZRNO = S2.BIZRNO
+										                              AND (
+											                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+											                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+										                                     ) 
+										                              AND S2.BRCH_ID = #{S_BRCH_ID}
+										                              AND S2.BRCH_NO = #{S_BRCH_NO}
+											          			)
+		                         		)
+				 </if>
+			 			
+	    <if test='excelYn == null or excelYn == "" '>
+			           ORDER BY  B.WRHS_CRCT_REG_DT DESC, A.WHSDL_BIZRID ,A.MFC_BIZRID ,A.MFC_BRCH_ID
+			)
+			WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+		</if>	     
+	</select>
+	
+	<!--토탈 조회수-->
+	<select id="epmf4738701_select4_cnt" parameterType="map" resultType="hashmap">
+					SELECT   
+				 				COUNT(1) as CNT
+				 				, SUM(A.FH_CFM_QTY_TOT +A.FB_CFM_QTY_TOT +A.DRCT_CFM_QTY_TOT) AS CFM_QTY_TOT
+								, SUM(A.CFM_GTN_TOT) as CFM_GTN_TOT
+								, SUM(A.CFM_WHSL_FEE_TOT) as CFM_WHSL_FEE_TOT
+								, SUM(A.CFM_WHSL_FEE_STAX_TOT) as CFM_WHSL_FEE_STAX_TOT
+								, SUM(A.CFM_RTL_FEE_TOT) as CFM_RTL_FEE_TOT
+								, SUM(A.CFM_GTN_TOT+A.CFM_WHSL_FEE_TOT+ A.CFM_WHSL_FEE_STAX_TOT+ A.CFM_RTL_FEE_TOT) AS CFM_AMT
+								, SUM(B.CRCT_QTY_TOT) as CRCT_QTY_TOT
+								, SUM(B.CRCT_GTN_TOT) as CRCT_GTN_TOT
+								, SUM(B.CRCT_WHSL_FEE_TOT) as CRCT_WHSL_FEE_TOT
+								, SUM(B.CRCT_WHSL_FEE_STAX_TOT) as CRCT_WHSL_FEE_STAX_TOT
+								, SUM(B.CRCT_RTL_FEE_TOT) as CRCT_RTL_FEE_TOT
+								, SUM(B.CRCT_GTN_TOT+ B.CRCT_WHSL_FEE_TOT+B.CRCT_WHSL_FEE_STAX_TOT+B.CRCT_RTL_FEE_TOT) AS CRCT_AMT	
+								, SUM(E.FH_RTN_QTY_TOT +E.FB_RTN_QTY_TOT +E.DRCT_RTN_QTY_TOT) AS RTN_QTY_TOT
+					 FROM 	
+						 		   	
+						 		   (SELECT     
+				 		      					WRHS_CRCT_DOC_NO
+				 		      					,WRHS_CRCT_STAT_CD
+				 		      					,WRHS_DOC_NO
+				 		      					,EXCA_STD_CD
+				 		      					,WRHS_CRCT_REG_DT
+				 		      					,CRCT_RTN_DT
+												,CRCT_WRHS_CFM_DT
+												,SUM(CRCT_QTY) AS CRCT_QTY_TOT
+												,SUM(CRCT_GTN) 	AS CRCT_GTN_TOT
+												,SUM(CRCT_WHSL_FEE) AS CRCT_WHSL_FEE_TOT
+												,SUM(CRCT_WHSL_FEE_STAX) AS CRCT_WHSL_FEE_STAX_TOT
+												,SUM(CRCT_RTL_FEE) AS CRCT_RTL_FEE_TOT
+						 		    FROM 
+						 		      			EXCA_WRHS_CRCT
+						 		    WHERE 1=1
+						 		    AND 		EXCA_STD_CD = #{EXCA_STD_CD}
+						 		    GROUP BY WRHS_CRCT_DOC_NO,WRHS_DOC_NO,WRHS_CRCT_STAT_CD,EXCA_STD_CD,WRHS_CRCT_REG_DT,CRCT_RTN_DT,CRCT_WRHS_CFM_DT
+					 		       )B
+					 		       ,EPCM_CFM_MST    			A
+						 		   ,EPCN_DTSS_CUST_INFO	C
+								   ,EPCM_RTN_MST 				E
+						WHERE 1=1
+						AND B.WRHS_DOC_NO 	  	= A.WRHS_DOC_NO
+						AND A.WHSDL_BIZRID			= C.CUST_BIZRID
+						AND A.WHSDL_BIZRNO		= C.CUST_BIZRNO	
+						AND A.WHSDL_BRCH_ID		= C.CUST_BRCH_ID
+						AND A.WHSDL_BRCH_NO		= C.CUST_BRCH_NO	
+						AND A.MFC_BIZRID				= C.MFC_BIZRID
+						AND A.MFC_BIZRNO			= C.MFC_BIZRNO
+						AND A.MFC_BRCH_ID			= C.MFC_BRCH_ID
+						AND A.MFC_BRCH_NO			= C.MFC_BRCH_NO 
+						AND B.WRHS_DOC_NO 	  	= E.WRHS_DOC_NO
+						
+						<if test="WRHS_CRCT_STAT_CD !=''  and WRHS_CRCT_STAT_CD !=null">
+							AND B.WRHS_CRCT_STAT_CD = #{WRHS_CRCT_STAT_CD}
+						</if>
+						 <if test="MFC_BIZRID !=''  and MFC_BIZRID !=null">
+							AND A.MFC_BIZRID 			= #{MFC_BIZRID}
+							AND A.MFC_BIZRNO 		= #{MFC_BIZRNO}
+						</if>
+						<if test="MFC_BRCH_ID !=''  and MFC_BRCH_ID !=null">
+							AND A.MFC_BRCH_ID 		= #{MFC_BRCH_ID}
+							AND A.MFC_BRCH_NO 	= #{MFC_BRCH_NO}
+						</if>
+						<if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+							AND C.BIZR_TP_CD 			= #{BIZR_TP_CD}
+						</if>
+						<if test="WHSDL_BIZRID !=''  and WHSDL_BIZRID !=null">
+							AND A.WHSDL_BIZRID 	= #{WHSDL_BIZRID}
+							AND A.WHSDL_BIZRNO 	= #{WHSDL_BIZRNO}
+						</if>
+						 
+						<if test="EXCA_TRGT_SE.equalsIgnoreCase('I')" >
+								 <if test="MFC_BIZRID  ==null ">
+										AND	A.MFC_BIZRID || ';' || A.MFC_BIZRNO IN
+							        <foreach collection="MFC_BIZRNM_RETURN"  item="type"  open="(" close=")" separator=",">
+							            #{type.BIZRID_NO}
+							        </foreach>
+					       		</if>
+			 			</if>	
+			 			
+			 		<if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+					 AND EXISTS (
+					 					   SELECT 'X'
+				                             FROM EPCN_BRCH_INFO S1
+				                           WHERE 1=1
+				                              AND A.MFC_BIZRID = S1.BIZRID
+				                              AND A.MFC_BIZRNO = S1.BIZRNO
+				                              AND A.MFC_BRCH_ID = S1.BRCH_ID
+				                              AND A.MFC_BRCH_NO = S1.BRCH_NO
+						                      AND EXISTS (    
+						                      					   SELECT 'X'
+										                             FROM EPCN_BRCH_INFO S2
+										                           WHERE 1=1
+										                              AND S1.BIZRID = S2.BIZRID
+										                              AND S1.BIZRNO = S2.BIZRNO
+										                              AND (
+											                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+											                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')                            
+										                                     ) 
+										                              AND S2.BRCH_ID = #{S_BRCH_ID}
+										                              AND S2.BRCH_NO = #{S_BRCH_NO}
+											          			)
+		                         		)
+				 </if>
+
+	</select>
+	
+	<!--상태체크-->
+	<select id="epmf4738701_select5" parameterType="map" resultType="int">
+		SELECT COUNT(1)  
+		  FROM EXCA_WRHS_CRCT 
+		WHERE 1=1
+		    AND WRHS_CRCT_DOC_NO = #{WRHS_CRCT_DOC_NO}
+		<choose>
+				<when test="STAT_CD_CHK.equalsIgnoreCase('1')">
+					AND	WRHS_CRCT_STAT_CD != #{WRHS_CRCT_STAT_CD_CHK}
+				</when>
+				<when test="STAT_CD_CHK.equalsIgnoreCase('2')">
+					AND	WRHS_CRCT_STAT_CD NOT IN ('R','T')
+				</when>
+		</choose>
+	</select>
+	
+	<select id="epmf4738701_select6" parameterType="map" resultType="int">
+		  SELECT COUNT(1)
+  			FROM EXCA_STD_MGNT 
+  		  WHERE EXCA_STD_CD IN (SELECT EXCA_STD_CD FROM EXCA_WRHS_CRCT WHERE WRHS_CRCT_DOC_NO = #{WRHS_CRCT_DOC_NO})
+  		      AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN CRCT_PSBL_ST_DT AND CRCT_PSBL_END_DT
+  		      AND EXCA_STAT_CD = 'S'
+	</select>
+	
+	<!-- 입고정정  정정확인,정정반려,확인취소 상태 변경-->
+	<update id="epmf4738701_update" parameterType="map">
+		    UPDATE 
+		    			EXCA_WRHS_CRCT 
+		    SET 
+		    			 WRHS_CRCT_STAT_CD		=	#{WRHS_CRCT_STAT_CD}
+		    			,UPD_PRSN_ID					=	#{REG_PRSN_ID}
+						,UPD_DTTM					=	SYSDATE
+		    WHERE 1=1
+		    AND		WRHS_CRCT_DOC_NO 		=	#{WRHS_CRCT_DOC_NO}
+	</update>
+	
+	  
+	<!-- ****************************************************************** -->	
+	<!--  입고정정 내역조회     -->
+	<!-- ****************************************************************** -->	
+	<!-- 입고정정 내역조회 상세조회  -->
+	<select id="epmf4738764_select"  parameterType="map"  resultType="hashmap">
+        SELECT DISTINCT 
+						A.WRHS_CFM_DT
+						,(SELECT CAR_NO FROM EPCM_RTN_MST WHERE WRHS_DOC_NO = A.WRHS_DOC_NO) AS CAR_NO
+						,B.BIZRNM 						 AS MFC_BIZRNM
+						,ECL_DECRYPT(B.BIZRNO)	 AS MFC_BIZRNO	
+						,B.RPST_NM					 AS MFC_RPST_NM
+						,D.BRCH_NM					 AS MFC_BRCH_NM
+						,B.RPST_TEL_NO1||'-'||B.RPST_TEL_NO2||'-'||B.RPST_TEL_NO3 AS MFC_RPST_TEL_NO
+						,B.ADDR1||' '||B.ADDR2 		 AS MFC_ADDR
+						,C.BIZRNM						 AS WHSDL_BIZRNM
+						,ECL_DECRYPT(C.BIZRNO)	 AS WHSDL_BIZRNO
+						,C.RPST_NM					 AS WHSDL_RPST_NM		
+						,C.RPST_TEL_NO1||'-'||C.RPST_TEL_NO2||'-'||C.RPST_TEL_NO3 AS WHSDL_RPST_TEL_NO
+						,C.ADDR1||' '||C.ADDR2 		 AS WHSDL_ADDR
+						,A.WRHS_DOC_NO
+						,E.WRHS_CRCT_REG_DT
+						,E.WRHS_CRCT_DOC_NO
+						,E.WRHS_CRCT_STAT_CD
+                        ,E.CRCT_WRHS_CFM_DT 
+                        ,E.CRCT_RTN_DT                        
+						,(SELECT CET_FYER_EXCA_YN FROM EXCA_STD_MGNT WHERE EXCA_STD_CD = E.EXCA_STD_CD) AS CET_FYER_EXCA_YN
+			FROM 	EPCM_CFM_MST A			
+						,EPCN_BIZR_INFO B			 
+						,EPCN_BIZR_INFO C 		
+						,EPCN_BRCH_INFO D		
+						,EXCA_WRHS_CRCT  E
+			WHERE 1=1
+			AND 	A.MFC_BIZRID  	= B.BIZRID
+			AND		A.MFC_BIZRNO 	= B.BIZRNO
+			AND 	A.WHSDL_BIZRID  = C.BIZRID
+			AND		A.WHSDL_BIZRNO 	= C.BIZRNO
+			AND 	A.WRHS_DOC_NO 	= E.WRHS_DOC_NO
+			AND 	B.BIZRID  	 	= D.BIZRID
+			AND		B.BIZRNO 	 	= D.BIZRNO
+			AND		A.MFC_BIZRID 	= #{MFC_BIZRID}
+			AND		A.MFC_BIZRNO 	= #{MFC_BIZRNO}
+			AND		A.WHSDL_BIZRID 	= #{WHSDL_BIZRID}
+			AND		A.WHSDL_BIZRNO 	= ECL_ENCRYPT(#{WHSDL_BIZRNO})
+			AND 	D.BRCH_ID 		= #{MFC_BRCH_ID}
+			AND 	D.BRCH_NO 		= #{MFC_BRCH_NO}	
+			AND	    E.WRHS_CRCT_DOC_NO = #{WRHS_CRCT_DOC_NO}
+	</select>
+	
+	<!-- 입고정정 내역조회 입고 그리드 부분  -->
+	<select id="epmf4738764_select2"  parameterType="map"  resultType="hashmap">
+				SELECT 
+							EPCN_ETC_NM(C.PRPS_CD , 'E002') AS PRPS_NM
+							,C.PRPS_CD
+							,C.CTNR_NM
+							,A.CTNR_CD
+							,EPCN_ETC_NM(C.CPCT_CD , 'E001') AS CPCT_NM
+							,A.CFM_QTY
+						    ,A.CFM_GTN
+							,A.CFM_WHSL_FEE
+							,A.CFM_WHSL_FEE_STAX
+							,A.CFM_RTL_FEE
+							,A.CFM_GTN +A.CFM_WHSL_FEE+A.CFM_WHSL_FEE_STAX +A.CFM_RTL_FEE  AS AMT_TOT
+						 	 ,NVL(A.DMGB_QTY,0) AS DMGB_QTY
+							 ,NVL(A.VRSB_QTY,0) AS VRSB_QTY
+							,B.WHSDL_BIZRID
+							,B.WHSDL_BIZRNO
+							,B.WHSDL_BRCH_ID
+							,B.WHSDL_BRCH_NO
+							,B.MFC_BIZRID
+							,B.MFC_BIZRNO
+							,B.MFC_BRCH_ID
+							,B.MFC_BRCH_NO
+							,DECODE( SUBSTR(A.CTNR_CD,2,1),'3' ,'2' ,'1') AS CTNR_SE
+							,B.RTN_DOC_NO
+							,B.WRHS_DOC_NO
+							,G.RTN_DT
+							,NVL((select RTN_QTY from EPCM_RTN_INFO where 1=1
+									AND CTNR_CD = A.CTNR_CD
+									AND RTN_DOC_NO = B.RTN_DOC_NO
+									),0) AS RTN_QTY
+							,A.RMK   
+							,SUBSTR(A.RMK ,3) AS RMK_C   		
+				FROM 	EPCM_CFM_INFO A
+							,EPCM_CFM_MST B
+							,EPCN_STD_CTNR_CD C
+							,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+							,(
+			                   SELECT LANG_NM
+			                     FROM EPCN_LANG_INFO A
+			                             ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') B
+			                   WHERE A.LANG_CD = 'prf_file2'
+			                       AND A.LANG_SE_CD = B.LANG_SE_CD
+			                 )F
+			                ,EPCM_RTN_MST G
+				WHERE  1=1
+				AND 		A.WRHS_DOC_NO 	= B.WRHS_DOC_NO
+				AND		A.CTNR_CD 			= C.CTNR_CD
+				AND		B.RTN_DOC_NO		= G.RTN_DOC_NO		
+				AND 		C.LANG_SE_CD 		= E.LANG_SE_CD
+				AND	    B.WRHS_DOC_NO	= #{WRHS_DOC_NO}
+	</select>
+	
+	<!-- 입고정정 내역조회 입고정정  그리드 부분 -->
+	<select id="epmf4738764_select3"  parameterType="map"  resultType="hashmap">
+				SELECT 
+					
+							EPCN_ETC_NM(C.PRPS_CD , 'E002') AS PRPS_NM
+							,C.PRPS_CD
+							,C.CTNR_NM
+							,A.CTNR_CD
+							,EPCN_ETC_NM(C.CPCT_CD , 'E001') AS CPCT_NM
+							,A.CRCT_QTY
+						    ,A.CRCT_GTN
+							,A.CRCT_WHSL_FEE
+							,A.CRCT_WHSL_FEE_STAX
+							,A.CRCT_RTL_FEE
+							,A.CRCT_GTN +A.CRCT_WHSL_FEE+A.CRCT_WHSL_FEE_STAX +A.CRCT_RTL_FEE  AS AMT_TOT
+						 	,NVL(A.CRCT_DMGB_QTY,0) AS CRCT_DMGB_QTY
+							,NVL(A.CRCT_VRSB_QTY,0) AS CRCT_VRSB_QTY
+							,B.WHSDL_BIZRID
+							,B.WHSDL_BIZRNO
+							,B.WHSDL_BRCH_ID
+							,B.WHSDL_BRCH_NO
+							,B.MFC_BIZRID
+							,B.MFC_BIZRNO
+							,B.MFC_BRCH_ID
+							,B.MFC_BRCH_NO
+							,DECODE( SUBSTR(A.CTNR_CD,2,1),'3' ,'2' ,'1') AS CTNR_SE
+							,B.RTN_DOC_NO
+							,B.WRHS_DOC_NO
+							,G.RTN_DT
+							,NVL((SELECT RTN_QTY FROM EPCM_RTN_INFO WHERE 1=1
+									AND CTNR_CD = A.CTNR_CD
+									AND RTN_DOC_NO = B.RTN_DOC_NO
+									),0) AS RTN_QTY
+							,A.RMK       
+							,SUBSTR(A.RMK ,3) AS RMK_C   	
+							,A.CRCT_RTN_DT
+							,A.CRCT_WRHS_CFM_DT
+				FROM 	EXCA_WRHS_CRCT A
+							,EPCM_CFM_MST B
+							,EPCN_STD_CTNR_CD C
+							,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+							 ,EPCM_RTN_MST G
+				WHERE  1=1
+				AND 		A.WRHS_DOC_NO 	= B.WRHS_DOC_NO
+				AND		A.CTNR_CD 			= C.CTNR_CD
+				AND		B.RTN_DOC_NO		= G.RTN_DOC_NO		
+				AND 		C.LANG_SE_CD 		= E.LANG_SE_CD
+				AND	    B.WRHS_DOC_NO	= #{WRHS_DOC_NO}
+				AND	    A.WRHS_CRCT_DOC_NO	= #{WRHS_CRCT_DOC_NO}
+	</select>
+	
+	<!-- 입고정정 내역조회 삭제 -->
+	<delete id="epmf4738764_delete"  parameterType="map" >
+		DELETE FROM EXCA_WRHS_CRCT WHERE 1=1
+		AND WRHS_CRCT_DOC_NO	= #{WRHS_CRCT_DOC_NO}
+		AND WRHS_DOC_NO			= #{WRHS_DOC_NO}
+	</delete>
+	
+	<update id="epmf4738764_update" parameterType="map" >
+	
+		UPDATE EPCM_CFM_MST SET
+					WRHS_CRCT_DOC_NO =''
+					,UPD_PRSN_ID	= #{UPD_PRSN_ID}
+					,UPD_DTTM	= SYSDATE
+		WHERE 1=1
+		AND WRHS_DOC_NO =#{WRHS_DOC_NO}
+		AND WRHS_CRCT_DOC_NO	= #{WRHS_CRCT_DOC_NO}
+	
+	</update>
+	
+</mapper>
+

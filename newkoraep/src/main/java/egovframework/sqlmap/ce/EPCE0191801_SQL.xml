@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE0191801Mapper">
+
+	
+    <!-- 기준취급수수료관리 조회 -->
+	<select id="epce0191801_select" parameterType="map" resultType="hashmap">
+	    
+	    SELECT 
+			A.CTNR_CD
+			,A.LANG_SE_CD
+			,A.REG_SN
+			,A.STD_FEE
+			,A.PSBL_ST_FEE
+			,A.PSBL_END_FEE
+			,A.STD_WHSL_FEE
+			,A.PSBL_ST_WHSL_FEE
+			,A.PSBL_END_WHSL_FEE
+			,A.STD_RTL_FEE
+			,A.PSBL_ST_RTL_FEE
+			,A.PSBL_END_RTL_FEE
+			,A.APLC_ST_DT
+			,A.APLC_END_DT
+			,B.CTNR_NM
+			,C.STD_DPS
+			,NVL(A.PSBL_ST_FEE,0)||' ~ '||NVL(A.PSBL_END_FEE,0) AS PSBL_FEE 
+			,NVL(A.PSBL_ST_WHSL_FEE,0)||' ~ '||NVL(A.PSBL_END_WHSL_FEE,0) AS PSBL_WHSL_FEE 
+			,NVL(A.PSBL_ST_RTL_FEE,0)||' ~ '||NVL(A.PSBL_END_RTL_FEE,0) AS PSBL_RTL_FEE 
+			,CASE 
+	           WHEN A.APLC_ST_DT IS NOT NULL 
+	           AND   A.APLC_END_DT IS NOT NULL 
+	           THEN TO_CHAR(TO_DATE(A.APLC_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(A.APLC_END_DT,'YYYYMMDD'),'YYYY-MM-DD') 
+	           ELSE '' 
+	         END AS APLC_DT
+	    
+	   FROM  EPCN_STD_FEE_MGNT		A   
+	            , EPCN_STD_CTNR_CD		B
+	             , EPCN_STD_DPS_MGNT 	C
+	   WHERE 1=1
+	   AND  A.CTNR_CD			=  B.CTNR_CD
+	   AND  A.CTNR_CD			=	C.CTNR_CD
+	   AND  A.LANG_SE_CD	=	C.LANG_SE_CD
+	   AND  A.CTNR_CD			=  #{CTNR_CD}
+	   AND  A.LANG_SE_CD	=  #{LANG_SE_CD}
+	   AND A.USE_YN='Y'
+	   ORDER BY APLC_ST_DT DESC
+	</select>
+<!-- 	   AND C.APLC_ST_DT		&lt;= TO_CHAR(SYSDATE,'YYYYMMDD') -->
+	
+	    <!-- 기준취급수수료관리 삭제가능한지  조회 -->
+	<select id="epce0191801_select2" parameterType="map" resultType="int">
+		SELECT
+			COUNT(*)  AS NCNT 
+		FROM EPCN_STD_FEE_MGNT
+		WHERE   1=1
+		AND  CTNR_CD			=  #{CTNR_CD}
+		AND  LANG_SE_CD	    =  #{LANG_SE_CD}
+		AND	 REG_SN            =  #{REG_SN}
+		AND   USE_YN            = 'Y'
+		AND   APLC_ST_DT		&lt;= TO_CHAR(SYSDATE,'YYYYMMDD')
+	</select>
+	
+		<!-- 기준취급수수료관리 삭제 -->
+    <delete id="epce0191801_delete" parameterType="map" >
+
+	     UPDATE 
+	           EPCN_STD_FEE_MGNT
+	      SET
+				USE_YN			    =  'N'
+				,UPD_PRSN_ID		=  #{RGST_PRSN_ID}
+				,UPD_DTTM        =  SYSDATE 
+	     WHERE  1=1
+	     AND	  CTNR_CD         = #{CTNR_CD}
+	     AND  LANG_SE_CD    = #{LANG_SE_CD}
+		 AND	 REG_SN            = #{REG_SN}
+  
+   </delete>
+	
+    <!--기준취급수수료등록  저장 및 수정 시 중복 적용기간조회  -->
+   	<select id="epce0191831_select" parameterType="map" resultType="int">
+
+		 SELECT COUNT(1) AS NCNT 
+		 FROM EPCN_STD_FEE_MGNT 
+		 WHERE  CTNR_CD  = #{CTNR_CD}
+		 AND    LANG_SE_CD =  #{LANG_SE_CD}
+		 AND    USE_YN           = 'Y'
+	     AND APLC_END_DT 	>= 	#{START_DT}   
+	     AND APLC_ST_DT 	  &lt;=	#{END_DT}
+		<if test='SAVE_CHK== "U"'>
+		  AND REG_SN		 	!=		#{REG_SN}
+		</if> 
+			
+    </select>
+
+    <!--등록순번  -->
+   	<select id="epce0191831_select2" parameterType="map" resultType="string">
+	             
+                 SELECT NVL(MAX(REG_SN),0) + 1 AS REG_SN 
+				 FROM EPCN_STD_FEE_MGNT 
+			     WHERE  1=1
+			     AND     CTNR_CD      =  #{CTNR_CD}
+			     AND     LANG_SE_CD =  #{LANG_SE_CD}
+	
+    </select>
+
+     <!-- 기준취급수수료등록 적용기간 시작날자 끝날짜 조회 -->
+	<select id="epce0191831_select3" parameterType="map" resultType="hashmap">
+
+		 SELECT 
+			 TO_CHAR(NVL(TO_DATE(MAX(APLC_END_DT),'YYYYMMDD')+1,SYSDATE),'YYYY-MM-DD') AS APLC_ST_DT 
+			,TO_CHAR(NVL(TO_DATE(MAX(APLC_END_DT),'YYYYMMDD')+30,SYSDATE+30),'YYYY-MM-DD') AS APLC_END_DT 
+		 FROM EPCN_STD_FEE_MGNT 
+		 WHERE  1=1
+		 AND     USE_YN           = 'Y'
+		 AND		CTNR_CD = #{CTNR_CD}
+		 AND		LANG_SE_CD =  #{LANG_SE_CD}
+
+    </select>
+
+    <!--기준취급수수료등록 추가  -->
+    <insert id="epce0191831_insert" parameterType="map">
+         
+        INSERT 
+			    INTO EPCN_STD_FEE_MGNT
+				    (
+				      CTNR_CD
+				     ,LANG_SE_CD
+				     ,REG_SN
+				     ,STD_FEE
+					 ,PSBL_ST_FEE
+				 	 ,PSBL_END_FEE
+					 ,STD_WHSL_FEE
+					 ,PSBL_ST_WHSL_FEE
+					 ,PSBL_END_WHSL_FEE
+					 ,STD_RTL_FEE
+					 ,PSBL_ST_RTL_FEE
+					 ,PSBL_END_RTL_FEE
+				     ,APLC_ST_DT
+				     ,APLC_END_DT
+				     ,REG_PRSN_ID 
+				     ,REG_DTTM
+				     )
+			     VALUES
+			       (
+				   #{CTNR_CD}
+				   ,#{LANG_SE_CD}
+				   ,#{REG_SN}
+			       ,#{STD_FEE}
+				   ,#{PSBL_ST_FEE}
+				   ,#{PSBL_END_FEE}
+				   ,#{STD_WHSL_FEE}
+			       ,#{PSBL_ST_WHSL_FEE}
+				   ,#{PSBL_END_WHSL_FEE}
+				   ,#{STD_RTL_FEE}
+				   ,#{PSBL_ST_RTL_FEE}
+				   ,#{PSBL_END_RTL_FEE}
+				   ,#{START_DT}
+				   ,#{END_DT}
+				   ,#{RGST_PRSN_ID}
+				   ,SYSDATE
+			       )
+			       
+    </insert>
+    <!--기준취급수수료관리이력 추가  -->
+    <insert id="epce0191831_insert2" parameterType="map">
+         
+        INSERT 
+			    INTO EPCN_STD_FEE_ALT_HIST
+				    (
+				     ALT_DTTM
+				     ,CTNR_CD
+				     ,LANG_SE_CD
+				     ,REG_SN
+				     ,BTN_SE_CD
+					 ,STD_FEE
+					 ,PSBL_ST_FEE
+					 ,PSBL_END_FEE
+					 ,STD_WHSL_FEE
+					 ,PSBL_ST_WHSL_FEE
+					 ,PSBL_END_WHSL_FEE
+					 ,STD_RTL_FEE
+					 ,PSBL_ST_RTL_FEE
+					 ,PSBL_END_RTL_FEE
+					 ,APLC_ST_DT
+					 ,APLC_END_DT
+				     ,REG_PRSN_ID 
+				     ,REG_DTTM
+				     )
+			    VALUES
+			       (
+			            ( SELECT
+				         TO_CHAR(SYSTIMESTAMP,'YYYYMMDDHH24MISSFF1')
+					       SYSTIMESTAMP
+					       FROM DUAL	  
+				       	 )
+				   ,#{CTNR_CD}
+				   ,#{LANG_SE_CD}
+                   ,#{REG_SN}
+				   ,#{BTN_SE_CD}
+			       ,#{STD_FEE}
+				   ,#{PSBL_ST_FEE}
+				   ,#{PSBL_END_FEE}
+				   ,#{STD_WHSL_FEE}
+			       ,#{PSBL_ST_WHSL_FEE}
+				   ,#{PSBL_END_WHSL_FEE}
+				   ,#{STD_RTL_FEE}
+				   ,#{PSBL_ST_RTL_FEE}
+				   ,#{PSBL_END_RTL_FEE}
+				   ,#{START_DT}
+				   ,#{END_DT}
+				   ,#{RGST_PRSN_ID}
+				     ,SYSDATE
+			       )
+			       
+    </insert>
+    
+<!--
+//*****************************************************************************************************************************************************************
+//	기준취급수수료 수정
+//*****************************************************************************************************************************************************************
+  -->
+
+   <!-- 기준취급수수료변경 수정-->
+   <update id="epce0191842_update" parameterType="map">
+   
+            UPDATE
+		  	        EPCN_STD_FEE_MGNT
+			SET
+					 STD_FEE					= #{STD_FEE}
+					,PSBL_ST_FEE				= #{PSBL_ST_FEE}
+					,PSBL_END_FEE			= #{PSBL_END_FEE}
+					,STD_WHSL_FEE			= #{STD_WHSL_FEE}
+					,PSBL_ST_WHSL_FEE		= #{PSBL_ST_WHSL_FEE}
+					,PSBL_END_WHSL_FEE  = #{PSBL_END_WHSL_FEE}
+					,STD_RTL_FEE				= #{STD_RTL_FEE}
+					,PSBL_ST_RTL_FEE		= #{PSBL_ST_RTL_FEE}
+					,PSBL_END_RTL_FEE     = #{PSBL_END_RTL_FEE}
+					,APLC_ST_DT				= #{START_DT}
+					,APLC_END_DT			= #{END_DT}
+					,UPD_PRSN_ID				=  #{RGST_PRSN_ID}
+					,UPD_DTTM      			=  SYSDATE 
+					
+			 WHERE 1=1
+			 AND  USE_YN          = 'Y'
+			 AND	 CTNR_CD          = #{CTNR_CD}
+		     AND	 LANG_SE_CD		= #{LANG_SE_CD}
+			 AND	 REG_SN				= #{REG_SN}
+				 
+   </update>
+
+
+</mapper>
+

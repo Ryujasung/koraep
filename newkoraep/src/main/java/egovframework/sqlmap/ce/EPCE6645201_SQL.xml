@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE6645201Mapper">
+    
+    <!-- 직접회수등록정보 조회 -->
+	<select id="epce6645201_select"  resultType="hashmap">   
+	 <if test='excelYn == null or excelYn == "" '>   
+	   SELECT
+	   			    PNO
+	   			    ,DRCT_RTRVL_DOC_NO
+			        ,DRCT_RTRVL_REG_DT
+			        ,DRCT_RTRVL_DT
+			        ,DRCT_RTRVL_DT_PAGE
+			        ,MFC_BIZRNM
+			        ,MFC_BRCH_NM
+			        ,DRCT_RTRVL_QTY
+			        ,DRCT_PAY_GTN
+			        ,DRCT_RTRVL_STAT_CD
+			        ,DRCT_RTRVL_STAT_NM
+			        ,SYS_SE
+			        ,SYS_SE_NM
+			        ,MFC_BIZRID
+			        ,MFC_BIZRNO
+			        ,MFC_BRCH_ID
+			        ,MFC_BRCH_NO
+			        ,BIZR_TP_CD
+		 FROM
+			 	(
+	 </if>
+		          SELECT ROW_NUMBER()OVER(ORDER BY A.DRCT_RTRVL_REG_DT DESC, A.DRCT_RTRVL_DT DESC, A.MFC_BIZRID, A.MFC_BRCH_ID) AS PNO 
+		          			,A.DRCT_RTRVL_DOC_NO
+					        ,TO_CHAR(TO_DATE(A.DRCT_RTRVL_REG_DT, 'YYYYMMDD'), 'YYYY-MM-DD') AS DRCT_RTRVL_REG_DT
+					        ,<![CDATA[ '<a href="javascript:link();" target="_self" class="gridLink">'||TO_CHAR(TO_DATE(A.DRCT_RTRVL_DT, 'yyyymmdd'),'yyyy-mm-dd')||'</a>' AS DRCT_RTRVL_DT_PAGE ]]>
+					        ,TO_CHAR(TO_DATE(A.DRCT_RTRVL_DT, 'YYYYMMDD'), 'YYYY-MM-DD') AS DRCT_RTRVL_DT
+					        ,C.BIZRNM AS MFC_BIZRNM
+					        ,C.BRCH_NM AS MFC_BRCH_NM
+					        ,B.DRCT_RTRVL_QTY
+					        ,B.DRCT_PAY_GTN
+					        ,A.DRCT_RTRVL_STAT_CD
+					        ,EPCN_ETC_NM(A.DRCT_RTRVL_STAT_CD, 'D012') AS DRCT_RTRVL_STAT_NM
+					        ,A.SYS_SE
+					        ,EPCN_ETC_NM(A.SYS_SE, 'S004') AS SYS_SE_NM
+					        ,A.MFC_BIZRID
+					        ,A.MFC_BIZRNO
+					        ,A.MFC_BRCH_ID
+					        ,A.MFC_BRCH_NO
+					        ,C.BIZR_TP_CD
+					FROM EPDM_DRCT_RTRVL_MST A
+					        ,(
+					            SELECT DRCT_RTRVL_DOC_NO
+						                   ,SUM(DRCT_RTRVL_QTY) AS DRCT_RTRVL_QTY
+						                   ,SUM(DRCT_PAY_GTN) AS DRCT_PAY_GTN
+						                   ,SUM(DRCT_PAY_FEE) AS DRCT_PAY_FEE
+					              FROM EPDM_DRCT_RTRVL_INFO
+					            WHERE 1=1
+					            GROUP BY DRCT_RTRVL_DOC_NO
+					         ) B
+					         ,EPCN_BRCH_INFO C
+					WHERE 1=1
+					    AND A.DRCT_RTRVL_DOC_NO = B.DRCT_RTRVL_DOC_NO
+					    AND A.MFC_BRCH_ID = C.BRCH_ID
+						AND A.MFC_BRCH_NO = C.BRCH_NO
+						AND A.MFC_BIZRID = C.BIZRID
+						AND A.MFC_BIZRNO = C.BIZRNO
+					    
+					    <if test='SEL_TERM_SE == "dt" '>
+					    	AND A.DRCT_RTRVL_DT BETWEEN  REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+					    </if>
+					    <if test='SEL_TERM_SE == "regDt" '>
+					    	AND A.DRCT_RTRVL_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+					    </if>			    
+						<if test="MFC_BIZRID !='' and MFC_BIZRID !=null">
+							AND A.MFC_BIZRID 		= #{MFC_BIZRID}
+							AND A.MFC_BIZRNO 	= #{MFC_BIZRNO}
+						</if>
+						<if test="BRCH_ID !='' and BRCH_ID !=null">
+							AND A.MFC_BRCH_ID = #{BRCH_ID}
+							AND A.MFC_BRCH_NO = #{BRCH_NO}
+						</if>
+						<if test="SYS_SE !='' and SYS_SE !=null">
+							AND A.SYS_SE	 = #{SYS_SE}
+						</if>
+						<if test="DRCT_RTRVL_STAT_CD !='' and DRCT_RTRVL_STAT_CD !=null">
+							AND A.DRCT_RTRVL_STAT_CD = #{DRCT_RTRVL_STAT_CD}
+						</if>
+					    
+					 ORDER BY A.DRCT_RTRVL_REG_DT DESC, A.DRCT_RTRVL_DT DESC, A.MFC_BIZRID, A.MFC_BRCH_ID
+		<if test='excelYn == null or excelYn == "" '>			 
+		           )
+	     WHERE 1=1
+	         AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE} 
+	    </if>
+	</select>
+	
+	
+	<!-- 직접회수등록정보 조회 -->
+	<select id="epce6645201_select_cnt"  resultType="hashmap">
+	 
+
+          SELECT COUNT(*) AS CNT
+			        ,SUM(B.DRCT_RTRVL_QTY) AS DRCT_RTRVL_QTY
+			        ,SUM(B.DRCT_PAY_GTN) AS DRCT_PAY_GTN
+			FROM EPDM_DRCT_RTRVL_MST A
+			        ,(
+			            SELECT DRCT_RTRVL_DOC_NO
+				                   ,SUM(DRCT_RTRVL_QTY) AS DRCT_RTRVL_QTY
+				                   ,SUM(DRCT_PAY_GTN) AS DRCT_PAY_GTN
+				                   ,SUM(DRCT_PAY_FEE) AS DRCT_PAY_FEE
+			              FROM EPDM_DRCT_RTRVL_INFO
+			            WHERE 1=1
+			            GROUP BY DRCT_RTRVL_DOC_NO
+			         ) B
+			WHERE 1=1
+			    AND A.DRCT_RTRVL_DOC_NO = B.DRCT_RTRVL_DOC_NO
+			    
+			    <if test='SEL_TERM_SE == "dt" '>
+			    	AND A.DRCT_RTRVL_DT BETWEEN  REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			    </if>
+			    <if test='SEL_TERM_SE == "regDt" '>
+			    	AND A.DRCT_RTRVL_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			    </if>
+			    					    
+				<if test="MFC_BIZRID !=''  and MFC_BIZRID !=null">
+					AND A.MFC_BIZRID 		= #{MFC_BIZRID}
+					AND A.MFC_BIZRNO 	= #{MFC_BIZRNO}
+				</if>
+				<if test="BRCH_ID !=''  and BRCH_ID !=null">
+					AND A.MFC_BRCH_ID = #{BRCH_ID}
+					AND A.MFC_BRCH_NO = #{BRCH_NO}
+				</if>
+				<if test="REG_SE !=''  and REG_SE !=null">
+					AND A.SYS_SE	 = #{REG_SE}
+				</if>
+				<if test="DRCT_RTRVL_STAT_CD !=''  and DRCT_RTRVL_STAT_CD !=null">
+					AND A.DRCT_RTRVL_STAT_CD = #{DRCT_RTRVL_STAT_CD}
+				</if>
+					    
+	</select>
+
+	<!-- 상세조회  -->
+	<select id="epce6645264_select"  resultType="hashmap" parameterType="map">
+		   SELECT A.DRCT_RTRVL_DT
+		   			  ,B.BIZRNM AS MFC_BIZRNM
+			          ,ECL_DECRYPT(B.BIZRNO) AS MFC_BIZRNO_DE
+			          ,B.RPST_NM AS MFC_RPST_NM
+			          ,B.RPST_TEL_NO1||'-'||B.RPST_TEL_NO2||'-'||B.RPST_TEL_NO3 AS MFC_RPST_TEL_NO
+			          ,B.ADDR1||' '||B.ADDR2 AS MFC_ADDR
+			          ,C.BRCH_NM AS MFC_BRCH_NM
+			          ,A.DRCT_RTRVL_STAT_CD
+		     FROM EPDM_DRCT_RTRVL_MST A
+		          	 ,EPCN_BIZR_INFO B
+		        	 ,EPCN_BRCH_INFO C
+		  WHERE 1=1
+		      AND A.DRCT_RTRVL_DOC_NO = #{DRCT_RTRVL_DOC_NO}
+		      AND A.MFC_BIZRID = B.BIZRID
+		      AND A.MFC_BIZRNO = B.BIZRNO
+		      AND A.MFC_BRCH_ID = C.BRCH_ID
+		      AND A.MFC_BRCH_NO = C.BRCH_NO
+	</select>
+	
+	<!-- 상세조회 (그리드)  -->
+	<select id="epce6645264_select2"  resultType="hashmap" parameterType="map">
+		   SELECT C.BRCH_NM AS MFC_BRCH_NM
+			          ,B.BIZRNM AS CUST_NM
+			          ,ECL_DECRYPT(B.BIZRNO) AS CUST_BIZRNO_DE
+			          ,E.PRPS_CD
+			          ,EPCN_ETC_NM(E.PRPS_CD, 'E002') AS PRPS_NM
+			          ,E.CTNR_NM
+			          ,E.CTNR_CD
+			          ,E.CPCT_CD
+			          ,EPCN_ETC_NM(E.CPCT_CD, 'E001') AS CPCT_NM
+			          ,D.DRCT_RTRVL_QTY
+			          ,D.DRCT_PAY_GTN
+			          ,D.DRCT_PAY_FEE
+			          ,D.RMK
+			          ,C.BIZR_TP_CD
+		     FROM EPDM_DRCT_RTRVL_MST A
+		              ,EPCN_BIZR_INFO B
+		        	  ,EPCN_BRCH_INFO C
+			          ,EPDM_DRCT_RTRVL_INFO D
+			          ,EPCN_STD_CTNR_CD E
+			          ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') F
+		  WHERE 1=1
+		      AND A.DRCT_RTRVL_DOC_NO = #{DRCT_RTRVL_DOC_NO}
+		      AND A.DRCT_RTRVL_DOC_NO = D.DRCT_RTRVL_DOC_NO
+		      AND D.CUST_BIZRID = B.BIZRID
+		      AND D.CUST_BIZRNO = B.BIZRNO
+		      AND A.MFC_BIZRID = C.BIZRID
+			  AND A.MFC_BIZRNO = C.BIZRNO
+		      AND A.MFC_BRCH_ID = C.BRCH_ID
+		      AND A.MFC_BRCH_NO = C.BRCH_NO
+		      AND D.CTNR_CD = E.CTNR_CD
+		      AND E.LANG_SE_CD = F.LANG_SE_CD
+		ORDER BY C.BRCH_NM, E.PRPS_CD
+	</select>
+	
+	<!-- 상태체크 -->
+	<select id="epce6645201_select3" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		  FROM EPDM_DRCT_RTRVL_MST 
+		WHERE 1=1
+			AND DRCT_RTRVL_DOC_NO = #{DRCT_RTRVL_DOC_NO}
+			AND DRCT_RTRVL_STAT_CD != 'RG'
+	</select>
+	
+	<!-- 정보 삭제 -->
+	<delete id="epce6645201_delete" parameterType="map">
+		DECLARE
+		    BEGIN
+		    
+		    	/* API TMP 삭제 */
+		    	 DELETE
+				   FROM EPDM_DRCT_RTRVL_LST_TMP C
+				 WHERE 1=1
+				     AND EXISTS (
+				                  SELECT 'X'
+				                    FROM EPDM_DRCT_RTRVL_MST A
+				                         	,EPDM_DRCT_RTRVL_INFO B
+				                   WHERE 1=1
+				                     AND A.DRCT_RTRVL_DOC_NO = #{DRCT_RTRVL_DOC_NO}
+				                     AND A.REG_PRSN_ID = 'API'
+				                     AND A.DRCT_RTRVL_STAT_CD = 'RG'
+				                     AND A.DRCT_RTRVL_DOC_NO = B.DRCT_RTRVL_DOC_NO
+				                     AND C.DRCT_RTRVL_REG_DTTM = A.DRCT_RTRVL_REG_DT
+				                     AND C.MFC_BIZRNO = A.MFC_BIZRNO
+				                     AND C.DRCT_RTRVL_DT = A.DRCT_RTRVL_DT
+				                     AND C.CTNR_CD = B.CTNR_CD
+				                )
+				 ;
+				 
+				  DELETE
+				    FROM EPDM_DRCT_RTRVL_DTL_TMP C
+				   WHERE 1=1
+				     AND EXISTS (
+				                  SELECT 'X'
+				                    FROM EPDM_DRCT_RTRVL_MST A
+				                         	,EPDM_DRCT_RTRVL_INFO B
+				                 WHERE 1=1
+				                     AND A.DRCT_RTRVL_DOC_NO = #{DRCT_RTRVL_DOC_NO}
+				                     AND A.REG_PRSN_ID = 'API'
+				                     AND A.DRCT_RTRVL_STAT_CD = 'RG'
+				                     AND A.DRCT_RTRVL_DOC_NO = B.DRCT_RTRVL_DOC_NO
+				                     AND C.DRCT_RTRVL_REG_DTTM = A.DRCT_RTRVL_REG_DT
+				                     AND C.MFC_BIZRNO = A.MFC_BIZRNO
+				                     AND C.MFC_BRCH_NO = A.MFC_BRCH_NO
+				                     AND C.DRCT_RTRVL_DT = A.DRCT_RTRVL_DT
+				                     AND C.CUST_BIZRNO = B.CUST_BIZRNO
+				                     AND C.CTNR_CD = B.CTNR_CD
+				                )
+				 ;               
+		    
+			    DELETE 
+			      FROM EPDM_DRCT_RTRVL_INFO A
+			    WHERE 1=1
+			        AND DRCT_RTRVL_DOC_NO = #{DRCT_RTRVL_DOC_NO}
+			        AND EXISTS (SELECT 'X' FROM EPDM_DRCT_RTRVL_MST B
+			                           WHERE 1=1
+			                               AND A.DRCT_RTRVL_DOC_NO = B.DRCT_RTRVL_DOC_NO
+			                               AND B.DRCT_RTRVL_STAT_CD = 'RG'
+			                         )
+			        ;
+			    
+			    DELETE FROM EPDM_DRCT_RTRVL_MST  WHERE DRCT_RTRVL_DOC_NO = #{DRCT_RTRVL_DOC_NO} AND DRCT_RTRVL_STAT_CD = 'RG';
+			    
+	   		 END;
+	</delete>
+	
+</mapper>

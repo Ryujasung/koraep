@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+		
+		<title>Sign Solution V3</title>
+	</head>
+	<body>
+		<script type="text/javascript" src="../CC_WSTD_home/unisignweb/js/unisignwebclient.js?v=1"></script>
+		<script type="text/javascript" src="./UniSignWeb_Multi_Init_Nim.js?v=1"></script>	
+	
+		<script>								
+			function Encode() 
+			{
+				var textBox = document.getElementById('plainText');
+				var encodedTextBox = document.getElementById('encodedText');
+				
+				var encodedText = unisign.Base64Encoding( textBox.value);
+						
+				if ( null == encodedText || '' == encodedText )
+				{
+					unisign.GetLastError(
+						function(errCode, errMsg) 
+						{ 
+							alert('Error code : ' + errCode + '\n\nError Msg : ' + errMsg); 
+						}
+					);
+				} 
+				else {					
+					alert( 'Base64Encoding에 성공하였습니다.' );
+					encodedTextBox.value = encodedText;
+				} 
+				
+				document.getElementById('encode').blur();
+			}
+			
+			
+		</script>							
+		<table cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td style="border-top:2px solid #1a98cc;border-bottom:2px solid #1a98cc;">
+					<table cellpadding="0" cellspacing="0" width="100%" style="text-align:center;">
+						<tr>
+							<td style="padding:10px 10px 0 10px">
+								<textarea id="plainText" rows="10" cols="50">abcdefghijklmnopqrstuvwxyz1234567890~!@#$%^&amp;*()</textarea> 
+								<br><a href="#" id="encode" onclick="javascript:Encode();"><img src="img/btn_go.gif" vspace="10"></a>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td width="50">&nbsp;
+				</td>
+				<td style="border-top:2px solid #1a98cc;border-bottom:2px solid #1a98cc;">
+					<table cellpadding="0" cellspacing="0" width="100%" style="text-align:center;">
+						<tr>
+							<td style="padding:10px 10px 0 10px">
+								<textarea id="encodedText" rows="10" cols="50"></textarea>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
+
+
+

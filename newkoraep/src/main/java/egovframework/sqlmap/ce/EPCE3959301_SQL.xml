@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3959301Mapper">
+
+	<!-- 등록메뉴 리스트 -->
+	<select id="epce3959301_select" resultType="hashmap">
+	   SELECT MENU_CD
+		          ,A.LANG_SE_CD
+		          ,MENU_NM
+		          ,MENU_SET_CD
+		          ,EPCN_ETC_NM(MENU_SET_CD, 'M001') AS MENU_SET_NM
+		          ,MENU_GRP_CD
+		          ,MENU_GRP_NM
+		          ,MENU_LVL
+		          ,UP_MENU_CD
+		          ,MENU_URL
+		          ,MENU_ORD
+		          ,MENU_SE_CD
+		          ,EPCN_ETC_NM(MENU_SE_CD, 'M003') AS MENU_SE_NM
+		          ,USE_YN
+		          ,REG_PRSN_ID
+		          ,TO_CHAR(REG_DTTM, 'YYYY-MM-DD') AS REG_DTTM
+		          ,UPD_PRSN_ID
+		          ,TO_CHAR(UPD_DTTM, 'YYYY-MM-DD') AS UPD_DTTM
+	     FROM EPCN_MENU A
+	     	      ,(SELECT ETC_CD, SEL_ORD, LANG_SE_CD FROM EPCN_ETC_CD WHERE GRP_CD = 'M002' ) B
+	   WHERE 1=1
+	   	   AND A.MENU_GRP_CD = B.ETC_CD
+	   	   AND A.LANG_SE_CD = B.LANG_SE_CD
+	   	  <if test='LANG_SE_CD_SEL != null and LANG_SE_CD_SEL != "" '>
+	   	  	AND A.LANG_SE_CD = #{LANG_SE_CD_SEL}
+	   	  </if>
+	      <if test='MENU_SET_CD_SEL != null and MENU_SET_CD_SEL != "" '>
+	   	  	AND MENU_SET_CD = #{MENU_SET_CD_SEL}
+	   	  </if>
+	   	  <if test='MENU_GRP_CD_SEL != null and MENU_GRP_CD_SEL != "" '>
+	   	  	AND MENU_GRP_CD = #{MENU_GRP_CD_SEL}
+	   	  </if>     
+	   	  AND MENU_LVL > 1
+	   	  
+	  START WITH A.MENU_LVL = '1' CONNECT BY PRIOR A.MENU_CD = A.UP_MENU_CD
+     ORDER SIBLINGS BY B.SEL_ORD, A.MENU_ORD
+
+	</select>
+	
+	<!-- 버튼 리스트 -->
+	<select id="epce3959301_select2" resultType="hashmap">
+		 SELECT BTN_CD, 
+			        MENU_CD, 
+			        LANG_SE_CD, 
+			        BTN_NM, 
+			        BTN_SE_CD, 
+			        EPCN_ETC_NM(BTN_SE_CD, 'M004') AS BTN_SE_NM,
+			        BTN_LC_SE, 
+			        EPCN_ETC_NM(BTN_LC_SE, 'M006') AS BTN_LC_SE_NM,
+			        EXEC_INFO, 
+			        REG_PRSN_ID, 
+			        REG_DTTM, 
+			        UPD_PRSN_ID, 
+			        UPD_DTTM,
+			        SEL_ORD,
+			        DEL_YN
+		   FROM EPCN_BTN
+		 WHERE 1=1
+		     AND MENU_CD = #{MENU_CD}
+		     AND LANG_SE_CD = #{LANG_SE_CD}
+		     AND NVL(DEL_YN, 'N') = 'N'
+		 ORDER BY BTN_LC_SE, SEL_ORD
+	</select>
+	
+	<!-- 버튼 수정 및 등록 -->
+	<update id="epce3959301_update"  parameterType="hashmap">
+		MERGE INTO EPCN_BTN 
+		  USING DUAL ON (LANG_SE_CD = #{LANG_SE_CD} AND MENU_CD = #{MENU_CD} AND BTN_CD = #{BTN_CD})
+		    WHEN MATCHED THEN
+		      UPDATE SET BTN_NM = #{BTN_NM}
+				                ,BTN_SE_CD = #{BTN_SE_CD}
+				                ,BTN_LC_SE = #{BTN_LC_SE}
+				                ,EXEC_INFO = #{EXEC_INFO}
+				                ,UPD_PRSN_ID = #{S_USER_ID}
+				                ,UPD_DTTM = SYSDATE
+				                ,DEL_YN = 'N'
+				                ,SEL_ORD = #{SEL_ORD}
+		    WHEN NOT MATCHED THEN
+		      INSERT(
+			        BTN_CD, 
+			        MENU_CD, 
+			        LANG_SE_CD, 
+			        BTN_NM, 
+			        BTN_SE_CD, 
+			        BTN_LC_SE, 
+			        EXEC_INFO, 
+			        REG_PRSN_ID, 
+			        REG_DTTM,
+			        DEL_YN,
+			        SEL_ORD
+				)
+				VALUES(
+					TRIM(#{BTN_CD}), 
+			        #{MENU_CD}, 
+			        #{LANG_SE_CD}, 
+			        #{BTN_NM}, 
+			        #{BTN_SE_CD}, 
+			        #{BTN_LC_SE}, 
+			        #{EXEC_INFO}, 
+			        #{S_USER_ID}, 
+			        SYSDATE,
+			        'N',
+			        #{SEL_ORD}
+				)
+	</update>
+	
+	<!-- 버튼 수정 및 등록 -->
+	<update id="epce3959301_update2"  parameterType="hashmap">
+		
+		DECLARE
+		    BEGIN
+		    
+		  	    DELETE FROM EPCN_ATH_GRP_BTN
+  				WHERE 1=1
+			        AND LANG_SE_CD = #{LANG_SE_CD}
+			        AND MENU_CD = #{MENU_CD}
+			        AND BTN_CD = #{BTN_CD}
+			    ;
+		    
+				DELETE FROM EPCN_BTN 
+				WHERE 1=1
+				    AND LANG_SE_CD = #{LANG_SE_CD}
+				    AND MENU_CD = #{MENU_CD}
+				    AND BTN_CD = #{BTN_CD}
+				; 
+			  
+		  END;
+	</update>
+	
+</mapper>

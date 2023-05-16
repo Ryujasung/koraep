@@ -1,0 +1,27 @@
+
+.YJcalendar-wrap {position:relative;}
+.YJcalendar-wrap .YJcalendar-trigger {display: block; position: absolute; top: 5px; right: 5px; width: 24px; height: 24px; background: url(../../images/common/ico_calendar.png) 0 0 no-repeat; text-indent: -9999em;}
+.YJcalendar-wrap .YJcalendar-inner {width:240px; box-sizing:border-box; border-top: 3px solid #565862; border-radius: 5px; box-shadow: 0px 2px 2px 0px rgba(189, 189, 189, 1); background:#ffffff;}
+
+.YJcalendar-wrap.YJcalendar-type-input .YJcalendar-inner {display:none; overflow: hidden; position:absolute; top: 40px; z-index:1;}
+.YJcalendar-wrap.YJcalendar-type-input.open .YJcalendar-inner {display:block;}
+
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-head {height:30px; text-align:center; position:relative;}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-head .YJcalendar-select-area {font-weight: 700; font-size: 13px; line-height: 30px; color: #222222;}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-head .YJcalendar-select-area select {width:80px; height:20px; padding: 0;}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-head .YJcalendar-month-prev {position:absolute; top:0; left:0; width: 30px; height: 30px; background: url(../../images/common/view_prev.png) center center no-repeat; text-indent: -9999em;}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-head .YJcalendar-year-prev {position:absolute; top:20px; left:0;}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-head .YJcalendar-month-next {position:absolute; top:0; right:0; width: 30px; height: 30px; background: url(../../images/common/view_next.png) center center no-repeat; text-indent: -9999em;}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-head .YJcalendar-year-next {position:absolute; top:20px; right:0;}
+
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-body {}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-body table {}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-body table thead tr th {height:30px; background: #f0624a; font-size: 12px; color: #ffffff;}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-body table tbody tr td {height:30px; background:#ffffff; font-size: 12px; color:#333333; cursor:pointer; text-align: center; vertical-align: middle;}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-body table tbody tr td:hover {background:#478bbd; color: #ffffff;}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-body table tbody tr td.today {font-weight: 700; color: #f0624a !important;}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-body table tbody tr td.sunday {color:#f0624a;}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-body table tbody tr td.holiday {color:#f0624a;}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-body table tbody tr td.saturday {color:#478bbd;}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-body table tbody tr td.selected {background:#478bbd; color: #ffffff;}
+.YJcalendar-wrap .YJcalendar-inner .YJcalendar-body table tbody tr td.disabled {background:#eeeeee; color:#bbbbbb !important; cursor: default;}

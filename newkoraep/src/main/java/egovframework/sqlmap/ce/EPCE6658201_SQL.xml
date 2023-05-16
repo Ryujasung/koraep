@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE6658201Mapper">
+   
+	<!-- 출고 상세조회 생산자부분  -->
+	<select id="epce66582641_select"  resultType="hashmap" parameterType="map">
+		 SELECT B.BIZRNM AS MFC_BIZRNM
+					,ECL_DECRYPT(B.BIZRNO) AS MFC_BIZRNO
+					,B.RPST_NM AS MFC_RPST_NM
+					,B.RPST_TEL_NO1||'-'||B.RPST_TEL_NO2||'-'||B.RPST_TEL_NO3 AS MFC_RPST_TEL_NO
+					,B.ADDR1||' '||B.ADDR2 AS MFC_ADDR
+				<if test='MFC_BRCH_ID !="" and MFC_BRCH_ID !=null and MFC_BRCH_NO !="" and MFC_BRCH_NO !=null'>
+					,C.BRCH_NM AS MFC_BRCH_NM
+				</if>
+			FROM EPCN_BIZR_INFO B
+				<if test='MFC_BRCH_ID !="" and MFC_BRCH_ID !=null and MFC_BRCH_NO !="" and MFC_BRCH_NO !=null'>
+					,EPCN_BRCH_INFO C
+				</if>
+			WHERE 1=1
+				AND B.BIZRID 	= #{MFC_BIZRID}
+				AND B.BIZRNO 	= #{MFC_BIZRNO}
+			<if test='MFC_BRCH_ID !="" and MFC_BRCH_ID !=null and MFC_BRCH_NO !="" and MFC_BRCH_NO !=null'>
+				AND C.BRCH_ID 	= #{MFC_BRCH_ID}
+				AND C.BRCH_NO = #{MFC_BRCH_NO}
+				AND B.BIZRID  	= C.BIZRID
+				AND B.BIZRNO 	= C.BIZRNO
+			</if>
+	</select>
+
+	<!-- 출고 상세조회 그리드 쪽  -->
+	<select id="epce66582641_select2"  resultType="hashmap" parameterType="map">
+		SELECT TO_CHAR(TO_DATE(B.DLIVY_DT, 'YYYYMMDD'), 'YYYY-MM-DD') AS DLIVY_DT
+					,B.CUST_NM
+					,PI_DECRYPT(B.CUST_BIZRNO) as CUST_BIZRNO
+					,C.CTNR_NM
+					,EPCN_ETC_NM(C.PRPS_CD , 'E002') AS PRPS_SE
+					,CASE WHEN SUBSTR(C.CTNR_CD,4,2) = 00 THEN '표준용기' ELSE '비표준용기' END AS STANDARD_NM
+					,EPCN_ETC_NM(C.CPCT_CD , 'E001') AS CPCT_NM
+					,B.DLIVY_QTY
+					,DECODE(B.DLIVY_QTY, 0, 0, B.DLIVY_GTN/B.DLIVY_QTY) AS DPS
+					,B.DLIVY_GTN AS AMT
+					,EPCN_ETC_NM(B.DLIVY_SE , 'D015') AS DLIVY_SE_NM
+					,B.RMK
+					,A.DLIVY_STAT_CD
+			FROM EPDM_DLIVY_MST A
+					,EPDM_DLIVY_INFO B
+					,EPCN_STD_CTNR_CD C
+					,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') D
+		WHERE 1=1
+			AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+			AND B.CTNR_CD = C.CTNR_CD
+			AND C.LANG_SE_CD = D.LANG_SE_CD
+			
+			<if test='DLIVY_DOC_NO !="" and DLIVY_DOC_NO !=null'>
+				AND A.DLIVY_DOC_NO = #{DLIVY_DOC_NO}
+			</if>
+			
+			<if test='BILL_DOC_NO !="" and BILL_DOC_NO !=null'>
+				AND A.MAPP_BILL_DOC_NO = #{BILL_DOC_NO}
+			</if>
+			
+			<if test='MFC_BIZRID !="" and MFC_BIZRID !=null and MFC_BIZRNO !="" and MFC_BIZRNO !=null'>
+				AND A.MFC_BIZRID 	= #{MFC_BIZRID}
+				AND A.MFC_BIZRNO = #{MFC_BIZRNO}
+			</if>
+			<if test='START_DT_SEL !="" and START_DT_SEL !=null and END_DT_SEL !="" and END_DT_SEL !=null'>
+				AND A.DLIVY_STAT_CD = 'RG' /* D011  출고등록 */
+		      	AND A.DLIVY_REG_DT BETWEEN replace(#{START_DT_SEL}, '-', '') AND replace(#{END_DT_SEL}, '-', '')
+			</if>
+			
+            <if test='STD_YEAR !="" and STD_YEAR !=null'>
+                AND A.STD_YEAR = #{STD_YEAR}
+            </if>
+
+		ORDER BY B.DLIVY_DT, B.CUST_NM, C.CTNR_NM
+	</select>
+
+    <!-- 출고등록정보 조회 -->
+	<select id="epce6658201_select2"  resultType="hashmap">
+		<if test='excelYn == null or excelYn == "" '>
+		 SELECT 
+		 			PNO 
+					,DLIVY_DOC_NO
+					,MFC_BIZRNM
+		            ,MFC_BRCH_NM
+			 		,MFC_BIZRID
+			 		,MFC_BIZRNO
+			 		,MFC_BRCH_ID
+			 		,MFC_BRCH_NO
+					,DLIVY_REG_DT
+					,DLIVY_DT_VIEW
+					,DLIVY_STAT_NM
+					,SYS_SE_NM
+					,DLIVY_QTY_TOT
+					,DLIVY_GTN_TOT
+					,DLIVY_STAT_CD
+					,SYS_SE
+		FROM (
+		</if>
+					SELECT  
+							ROW_NUMBER()OVER(ORDER BY A.DLIVY_REG_DT DESC, A.MFC_BIZRID, A.MFC_BRCH_ID) AS PNO 
+							,A.DLIVY_DOC_NO
+							,EPCN_BIZR_NM(A.MFC_BIZRID,A.MFC_BIZRNO) AS MFC_BIZRNM
+				            ,EPCN_BRCH_NM(A.MFC_BRCH_ID,A.MFC_BRCH_NO,A.MFC_BIZRID,A.MFC_BIZRNO) AS MFC_BRCH_NM
+					 		,A.MFC_BIZRID
+					 		,A.MFC_BIZRNO
+					 		,A.MFC_BRCH_ID
+					 		,A.MFC_BRCH_NO
+			<![CDATA[	, '<a href="javascript:link();" target="_self" class="gridLink">'||TO_CHAR(TO_DATE(A.DLIVY_REG_DT, 'yyyymmdd'),'yyyy-mm-dd')||'</a>' AS DLIVY_REG_DT 	]]>
+							,TO_CHAR(TO_DATE(A.DLIVY_REG_DT,'YYYYMMDD'), 'YYYY-MM-DD') AS DLIVY_DT_VIEW
+							,B.ETC_CD_NM AS DLIVY_STAT_NM
+							,C.ETC_CD_NM AS SYS_SE_NM
+							,A.DLIVY_QTY_TOT
+							,A.DLIVY_GTN_TOT
+							,A.DLIVY_STAT_CD
+							,A.SYS_SE
+					FROM EPDM_DLIVY_MST A
+							,(SELECT ETC_CD, ETC_CD_NM
+				                 FROM
+				                 EPCN_ETC_CD
+				                 WHERE GRP_CD = 'D011'
+				                 <if test="DLIVY_STAT_CD !=''  and DLIVY_STAT_CD !=null">
+				                 AND ETC_CD =#{DLIVY_STAT_CD}
+				                 </if>
+				                 ) B
+				             ,(SELECT ETC_CD, ETC_CD_NM
+				                 FROM
+				                 EPCN_ETC_CD
+				                 WHERE GRP_CD = 'S004'
+				                 <if test="SYS_SE !=''  and SYS_SE !=null">
+				                 AND ETC_CD =#{SYS_SE}
+				                 </if>
+				                 ) C
+						WHERE 1=1
+							AND DLIVY_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+							
+							<if test="MFC_BIZRID !=''  and MFC_BIZRID !=null">
+							AND A.MFC_BIZRID 		= #{MFC_BIZRID}
+							AND A.MFC_BIZRNO 	= #{MFC_BIZRNO}
+							</if>
+							<if test="BRCH_ID !=''  and BRCH_ID !=null">
+							AND A.MFC_BRCH_ID 	= #{BRCH_ID}
+							AND A.MFC_BRCH_NO = #{BRCH_NO}
+							</if>
+							<if test="REG_SE !=''  and REG_SE !=null">
+							AND A.SYS_SE		= #{REG_SE}
+							</if>
+							<if test="DLIVY_STAT_CD !=''  and DLIVY_STAT_CD !=null">
+							AND A.DLIVY_STAT_CD		= #{DLIVY_STAT_CD}
+							AND B.ETC_CD		= #{DLIVY_STAT_CD}
+							</if>
+							AND A.DLIVY_STAT_CD = B.ETC_CD
+							AND A.SYS_SE = C.ETC_CD
+							
+					ORDER BY A.DLIVY_REG_DT DESC, A.MFC_BIZRID, A.MFC_BRCH_ID
+					
+		<if test='excelYn == null or excelYn == "" '>
+	            )
+          WHERE 1=1
+              AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+        </if>
+        
+	</select>
+	
+	<!-- 출고정보변경 등록시 출고등록상태인지 조회 -->
+	<select id="epce6658201_select3" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM EPDM_DLIVY_MST 
+		WHERE 1=1
+		AND DLIVY_DOC_NO =#{DLIVY_DOC_NO}
+		AND DLIVY_STAT_CD != 'RG'
+	</select>
+	
+	<!-- 출고관리 조회 카운트 -->
+	<select id="epce6658201_select4" parameterType="map" resultType="hashmap">
+		SELECT  
+			COUNT(*) AS CNT
+			,SUM(DLIVY_QTY_TOT) AS DLIVY_QTY_TOT
+			,SUM(DLIVY_GTN_TOT) AS DLIVY_GTN_TOT
+			
+			FROM EPDM_DLIVY_MST A
+			,(SELECT ETC_CD, ETC_CD_NM
+                 FROM
+                 EPCN_ETC_CD
+                 WHERE GRP_CD = 'D011'
+                 <if test="DLIVY_STAT_CD !=''  and DLIVY_STAT_CD !=null">
+                 AND ETC_CD =#{DLIVY_STAT_CD}
+                 </if>
+                 ) B
+             ,(SELECT ETC_CD, ETC_CD_NM
+                 FROM
+                 EPCN_ETC_CD
+                 WHERE GRP_CD = 'S004'
+                 <if test="SYS_SE !=''  and SYS_SE !=null">
+                 AND ETC_CD =#{SYS_SE}
+                 </if>
+                 ) C
+		WHERE 1=1
+			AND DLIVY_REG_DT BETWEEN  REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+			
+			<if test="MFC_BIZRID !=''  and MFC_BIZRID !=null">
+			AND A.MFC_BIZRID 		= #{MFC_BIZRID}
+			AND A.MFC_BIZRNO 	= #{MFC_BIZRNO}
+			</if>
+			<if test="BRCH_ID !=''  and BRCH_ID !=null">
+			AND A.MFC_BRCH_ID 	= #{BRCH_ID}
+			AND A.MFC_BRCH_NO = #{BRCH_NO}
+			</if>
+			<if test="SYS_SE !=''  and SYS_SE !=null">
+			AND A.SYS_SE		= #{SYS_SE}
+			</if>
+			<if test="DLIVY_STAT_CD !=''  and DLIVY_STAT_CD !=null">
+			AND A.DLIVY_STAT_CD		= #{DLIVY_STAT_CD}
+			AND B.ETC_CD		= #{DLIVY_STAT_CD}
+			</if>
+			AND A.DLIVY_STAT_CD = B.ETC_CD
+			AND A.SYS_SE = C.ETC_CD
+	</select>
+	
+	<!-- 출고정보 삭제 -->
+	<delete id="epce6658201_delete" parameterType="map">
+		DECLARE
+		    BEGIN
+		    
+		    	/* API TMP 삭제 */
+			    DELETE
+		           FROM EPDM_DLIVY_LST_TMP C
+		          WHERE 1=1
+		            AND EXISTS (
+		                       	SELECT 'X'
+		                           FROM EPDM_DLIVY_MST A, EPDM_DLIVY_INFO B
+		                          WHERE 1=1
+		                            AND A.DLIVY_DOC_NO = #{DLIVY_DOC_NO}
+		                            AND A.DLIVY_STAT_CD = 'RG' 
+		                            AND A.REG_PRSN_ID = 'API'
+		                            AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+		                            AND C.DLIVY_REG_DTTM = A.DLIVY_REG_DT /* 등록일자 */
+		                            AND C.MFC_BIZRNO = A.MFC_BIZRNO
+		                            AND C.DLIVY_DT = B.DLIVY_DT
+		                            AND C.CTNR_CD = B.CTNR_CD
+		                        )
+		         ;
+		         
+		         
+		         DELETE
+		           FROM EPDM_DLIVY_DTL_TMP C
+		          WHERE 1=1
+		            AND EXISTS (
+		                       	SELECT 'X'
+		                           FROM EPDM_DLIVY_MST A, EPDM_DLIVY_INFO B
+		                          WHERE 1=1
+		                            AND A.DLIVY_DOC_NO = #{DLIVY_DOC_NO}
+		                            AND A.DLIVY_STAT_CD = 'RG' 
+		                            AND A.REG_PRSN_ID = 'API'
+		                            AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+		                            AND C.DLIVY_REG_DTTM = A.DLIVY_REG_DT /* 등록일자 */
+		                            AND C.MFC_BIZRNO = A.MFC_BIZRNO
+		                            AND C.MFC_BRCH_NO = A.MFC_BRCH_NO
+		                            AND C.CUST_BIZRNO = B.CUST_BIZRNO
+		                            AND C.DLIVY_DT = B.DLIVY_DT
+		                            AND C.CTNR_CD = B.CTNR_CD
+		                        )
+		         ;
+		    
+			    DELETE 
+			      FROM EPDM_DLIVY_INFO A 
+			    WHERE DLIVY_DOC_NO= #{DLIVY_DOC_NO} 
+			        AND EXISTS (SELECT 'X' FROM EPDM_DLIVY_MST B 
+			                           WHERE 1=1
+			                               AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO 
+			                               AND B.DLIVY_STAT_CD = 'RG' 
+			                          );
+			    
+			    DELETE FROM EPDM_DLIVY_MST  WHERE DLIVY_DOC_NO= #{DLIVY_DOC_NO} AND DLIVY_STAT_CD = 'RG';
+  
+	   		 END;
+	</delete>
+	
+</mapper>

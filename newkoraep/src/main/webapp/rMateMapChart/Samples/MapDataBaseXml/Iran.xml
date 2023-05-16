@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<State code="100" label="Tehran" symbol="Tehran"/>
+	<State code="200" label="Qum" symbol="Qum"/>
+	<State code="300" label="Markazi" symbol="Markazi"/>
+	<State code="400" label="Qazvin" symbol="Qazvin"/>
+	<State code="500" label="Gilan" symbol="Gilan"/>
+	<State code="600" label="Ardabil" symbol="Ardabil"/>
+	<State code="700" label="Zanjan" symbol="Zanjan"/>
+	<State code="800" label="EastAzerbaijan" symbol="EastAzerbaijan"/>
+	<State code="900" label="westAzerbaijan" symbol="westAzerbaijan"/>
+	<State code="1000" label="Kurdistan" symbol="Kurdistan"/>
+	<State code="1100" label="Hamadan" symbol="Hamadan"/>
+	<State code="1200" label="Kermanshah" symbol="Kermanshah"/>
+	<State code="1300" label="Ilam" symbol="Ilam"/>
+	<State code="1400" label="Lorestan" symbol="Lorestan"/>
+	<State code="1500" label="Khuzestan" symbol="Khuzestan"/>
+	<State code="1600" label="ChaharmahalandBakhtiari" symbol="ChaharmahalandBakhtiari"/>
+	<State code="1700" label="KohgiluyehandBoyerAhmad" symbol="KohgiluyehandBoyerAhmad"/>
+	<State code="1800" label="Bushehr" symbol="Bushehr"/>
+	<State code="1900" label="Fars" symbol="Fars"/>
+	<State code="2000" label="Hormozgan" symbol="Hormozgan"/>
+	<State code="2100" label="SistanandBaluchestan" symbol="SistanandBaluchestan"/>
+	<State code="2200" label="Kerman" symbol="Kerman"/>
+	<State code="2300" label="Yazd" symbol="Yazd"/>
+	<State code="2400" label="Isfahan" symbol="Isfahan"/>
+	<State code="2500" label="Semnan" symbol="Semnan"/>
+	<State code="2600" label="Mazandaran" symbol="Mazandaran"/>
+	<State code="2700" label="Golestan" symbol="Golestan"/>
+	<State code="2800" label="NorthKhorasan" symbol="NorthKhorasan"/>
+	<State code="2900" label="RazaviKhorasan" symbol="RazaviKhorasan"/>
+	<State code="3000" label="SouthKhorasan" symbol="SouthKhorasan"/>
+	<State code="3100" label="Alborz" symbol="Alborz"/>
+</Map>

@@ -1,0 +1,546 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+	<title>CrossCert 웹표준 프로그램</title>
+	
+	<style type="text/css">
+	<!--
+		@charset "utf-8";
+		@font-face{ 
+		font-family : NanumGothic;
+		src: url(font/NanumGothic.eot);/* ie6~8 */
+		src: local(※), url(font/NanumGothic.woff) format('woff');/* ie9, 크롬, 파이어폭스, 오페라, 사파리 */
+		}
+
+		.btn_fnVestCertCall{
+		font-family: "Dotum";
+		font-size: 11px;
+		background-color: #eee; border: 1px solid #aaa;
+		cursor: pointer;
+		margin: 0 auto;
+		}
+		.btn_fnVestCertCall:hover{
+			background-color: #ccc; outline: 2px solid #332255;
+		}
+		.hide{display:none;}
+
+		/* -------- common -------- */
+		body,div,ul,ol,li,nav,section,footer{margin: 0px auto; padding: 0px; font-family :NanumGothic, dotum, Georgia, serif,san-serif; font-size : 12px;color: #333;}
+		h1,h2,h3,h4,h5{ margin: 0px; padding: 0px; font-weight: normal;}
+		ul,li{ list-style: none; }
+		a{text-decoration:none}
+		body{overflow-y:scroll }
+		img{ border: 0px;  }
+
+
+		/* style */
+		h1{ font-size : 32px;letter-spacing:-0.05em; color: #2e58a6;}
+		h2{ font-size : 24px;letter-spacing:-0.05em;  color: #2e58a6;}
+		h3{ font-size : 22px;letter-spacing:-0.05em; line-height: 150%; color: #000}
+		h4{ font-size : 12px;line-height: 130%;}
+		input,textarea{ border:0px;font-size : 12px; padding:5px; height: 24px;color: #666;background: #fff}
+
+		.blind{font-size : 0px; line-height: 0px; width: 0px; height: 0px; overflow: hidden; position: absolute;  text-indent: -999px}
+		.floL{float: left;  }
+		.floR{float: right;  }
+		.cleB{clear: both;  }
+
+		/* -------- skip navi -------- */
+		#skip a{position: absolute; top:0px;left:-9999px;}
+		#skip a:focus, #skip a:active{left:0px;padding: 5px 10px; color: #000;font-weight: bold;background-color: #ccc;}	
+
+		/* -------- header -------- */
+		header{background:#2e58a6; height:80px;line-height: 80px;}
+		nav{ width: 980px;}
+		nav ul li{float: left;}
+		nav h1 a{width: 210px; line-height: 80px; height:80px;margin-right: 60px; background: url(../images/logo.png) 0px 0px no-repeat; display: block; }
+		#gnb>ul>li a{ color: #fff;font-size : 18px; padding: 0px 20px;  display: block;}
+		#gnb>ul>li>a:hover, #gnb>ul>li>a:focus, #gnb>ul>li.active>a{color: #fff; background:#244997}
+
+
+		/* -------- footer -------- */
+		footer{background:#f2f2f2; width:100%;}  
+		footer span{ display: block;  }
+		footer ul{width: 980px;  padding: 5px 0px 30px 0px;}
+		footer li{color: #838587}
+		.logo_footer{display: block; width: 180px; height:50px; background: url(../images/logo.png) 0px -80px no-repeat; }
+
+
+		/* -------- contents -------- */	
+		#contents{ width:980px;padding:20px 0px 40px 0px}
+		/* main */
+		#main_menu{width:365px; text-align: center;}
+		#main_menu li{display: block; height:135px; line-height:135px;float: left; font-size:28px; letter-spacing:-0.05em}
+		#main_menu a{color:#fff; display: block;}
+		#main_menu a:hover, #main_menu a:focus{background:rgba(0, 0, 0, 0.2);}
+		.main_menu1{ width:365px;background:#2e58a6 url('../images/icon2.png') no-repeat 315px 0px; margin-bottom:10px; }
+		.main_menu2{ width:177px;background:#04aabe url('../images/icon2.png') no-repeat 125px -135px;margin-bottom:10px; margin-right:10px; }
+		.main_menu3{ width:177px;background:#6937a6 url('../images/icon2.png') no-repeat 125px -270px;margin-bottom:10px}
+		.main_menu4{ width:177px;background:#1296cd url('../images/icon2.png') no-repeat 125px -405px;margin-right:10px}
+		.main_menu5{ width:177px;background:#cc3d2e url('../images/icon2.png') no-repeat 125px -540px;}
+
+		#main_aside{width: 595px }
+
+		#banner_main { margin-top: 10px;}
+		#banner_main li{border: 1px solid #dee0e2;float: left;}
+		#banner_main a{height: 130px; width: 147px;  display: block;}
+		#banner_main a:hover,#banner_main a:focus{background:rgba(0, 0, 0, 0.05);}
+		.banner_main1{background: url('../images/banner_main.jpg') no-repeat 0 -3px; }
+		.banner_main2{margin-left: -1px;   background: url('../images/banner_main.jpg') no-repeat 0 -125px; }
+		.banner_main3{margin-left: -1px;   background: url('../images/banner_main.jpg') no-repeat 0 -255px; }
+		.banner_main4{margin-left: -1px;   background: url('../images/banner_main.jpg') no-repeat 0 -385px; }
+
+		/* left menu */
+		article{width:210px; float: left; margin-bottom: 40px}
+		#sub_menu{border: 1px solid #dee0e2; border-top: 3px solid #2e58a6; height: 260px; }
+		#sub_menu h2{ background-color: #f6f7f9;text-align: center;color: #2e58a6;line-height: 77px }
+
+		#sub_menu>ul>li>a:hover, #sub_menu>ul>li>a:focus, #sub_menu>ul>li.active>a{font-weight: bold; }
+		#sub_menu a{color: #666;font-size : 16px; line-height:50px; color: #333; display: block; padding-left: 28px }
+
+		#banner li{margin:6px 0px; border: 1px solid #dee0e2; width:208px; height:60px;}
+		#banner li a{width:208px; height:60px; }
+		#banner a:hover,#banner a:focus{background-color:rgba(0, 0, 0, 0.02); }
+		.banner1{background: url(../images/banner.jpg) 0px 0px no-repeat;}
+		.banner2{background: url(../images/banner.jpg) 0px -60px no-repeat;}
+		.banner3{background: url(../images/banner.jpg) 0px -120px no-repeat;}
+		.banner4{background: url(../images/banner.jpg) 0px -180px no-repeat;}
+
+		section{float: right; width: 710px; padding-bottom: 40px;}
+		section li{ line-height: 145% }
+		section h1{ border-bottom:1px solid #ccc;height:60px; line-height: 60px; margin-bottom: 20px}
+
+		/* setup */
+		#setup{ width: 710px; margin: auto; padding-top: 20px}
+		.loading{ border:1px solid #dee0e2;padding: 1px 0px }
+
+		/* list */
+		#list li{text-align: left;line-height: 180%; background: url('../images/icon_dot.gif') no-repeat 0 8px; padding-left: 8px;margin-left: 5px }
+		#list_bl{ margin: 5px 0px 10px }
+		#list_bl li{text-align: left;line-height: 180%;font-size : 14px;color: #2e58a6;}
+
+		#list_bl2{ margin: 5px 0px 10px }
+		#list_bl2 li{text-align: center;line-height: 180%;font-size : 14px;color: #2e58a6;}
+
+		/* location */
+		#location{ text-align: right;color: #959595}
+
+		/* tab */
+		#tab{ text-align: center; border-bottom: 1px solid #dcdcdc; height: 41px; margin-bottom: 20px}
+		#tab li{ float: right; }
+		#tab li:last-child {margin-right: -1px}
+		#tab a{ font-size : 16px; line-height: 40px; width: 200px;  text-align: center;  color: #333;}
+		#tab a:hover, #tab a:focus{ font-weight: bold;}
+		.tab_on{ margin-right: 0px; background: #fff;border: 1px solid #dcdcdc; border-bottom: 1px solid #fff; display: block; width: 200px; }
+		.tab_off{margin-right: 0px; background: #f7f8f8; border: 1px solid #dcdcdc;  display: block;width: 200px; }
+
+		/* table */
+		table {border-collapse: collapse; width:100%; border-top: 2px solid #5e6062; border-left: 2px solid #fff; border-right: 2px solid #fff;margin-top:10px;text-align:center;font-size : 12px}
+		td{ background: #f7f8f9 }
+		td a{ color: #333 }
+		td a:hover{ color: #28459d}
+		th, td {padding:8px; border: 1px solid #dee0e2; line-height: 140%; }
+		td li{ text-align: left;line-height: 180%; background: url('../images/icon_dot.gif') no-repeat 0 8px; padding-left: 8px;margin-left: 5px}
+		.event{text-align: left; }
+		.safe{ background: #fff }
+
+		.price{font-size :20px;letter-spacing:-0.02em;color: #000 }
+		.price>span{text-decoration: line-through; font-size : 14px; line-height: 150%;color: #666}
+
+		/* step */
+		#step_img{ width: 100%; height: 60px; margin-bottom: 20px;}
+		#step_img li{float: left;text-align: center; color: #0049ad;font-weight: bold;}
+		.apply{background: url('../images/step.jpg') no-repeat;}
+		.apply_1{ width: 21%;margin-top: 20px}.apply_2{ width:25%;margin-top: 10px }.apply_3{ width: 26%;margin-top: 10px }.apply_4{width: 27%;margin-top: 10px}
+		.issue{background: url('../images/step.jpg') no-repeat 0px -60px;}
+		.issue_1{ width:18% ;margin-top: 10px }.issue_2{ width: 18%  ;margin-top: 10px }.issue_3{ width: 15%  ;margin-top: 10px }.issue_4{ width: 18% ;margin-top: 10px  }.issue_5{ width: 16%  ;margin-top: 10px }.issue_6{ width: 15%  ;margin-top: 20px }
+
+		#step{ border-top: 2px solid #5e6062 ; width: 100%}
+		#step li{ border-bottom: 1px solid #dee0e2;font-size : 14px; padding: 10px 0px}
+		#step li ul li b{ width: 20px; font-size :24px; color: #2e58a6;padding-right: 5px }
+		#step li ul li{ border-bottom: 0px;display: inline;  }
+
+
+		/* button */
+		#btn{ text-align: center; margin-top:15px}
+
+		#btn li{ display: inline;  }
+		.bl a{height: 32px; line-height: 32px;  border: 1px solid #244997; background: #2e58a6;color: #fff; padding: 10px 30px;font-size : 18px;}
+		.bl a:hover,.bl a:focus{color: #2e58a6; background: #fff}
+
+		.bl_s a{height: 32px; line-height: 32px; border: 1px solid #244997; background: #2e58a6;color: #fff; padding: 7px 20px; margin:5px;font-size : 12px;}
+		.bl_s a:hover,.bl_s a:focus{color: #2e58a6; background: #fff}
+
+		.wh a{height: 32px; line-height: 32px;  background: #fff;color: #2e58a6;border: 1px solid #244997; padding: 10px 10px;font-size : 18px;}
+		.wh a:hover,.wh a:focus{ background: #2e58a6;color: #fff;}
+
+		.wh_s a{line-height: 32px;  background: #fff;color: #2e58a6;border: 1px solid #244997;  padding: 7px 20px; font-size : 12px;}
+		.wh_s a:hover,.wh_s a:focus{ background: #2e58a6;color: #fff;}
+
+
+		.setting{ color: red;}
+		#map{ width: 100%; margin: 5px 0px 10px 0px }
+
+	//-->
+	</style>
+	
+	<script type="text/javascript" src="../CC_WSTD_home/unisignweb/framework/json2.js" ></script>
+</head>
+
+
+<body>
+	<br><br><br>
+	<div id="setup">
+	
+		<ul id="list_bl">
+			<li>공인인증서관리 프로그램인 CrossCert 웹표준 모듈을 설치합니다.</li>
+			<li>설치가 완료되면 [F5]키를 눌러 새로고침을 하시거나, 브라우저를 닫은 후 다시 접속하여 주시기 바랍니다.</li>
+			<li>아래의 설치상태에서 설치하기(클릭)을 눌러 PC에 다운로드 후 실행하세요.</li>
+			<li>설치화면이 반복적으로 나올 경우 웹브라우저를 종료하고 다시 접속하세요.</li>
+		</ul>
+		<table>
+			<tr>
+				<th width="20%">프로그램명</th>
+				<th width="20%">기능</th>
+				<th width="20%"><font color= "blue"><b>설치상태</b></font></th>
+				<th width="20%">운영체제(OS)</th>
+				<th>웹브라우저</th>
+			</tr>
+			<tr>
+				<td>인증프로그램</td>
+				<td>CrossCert 웹표준을 위한 프로그램</td>
+				<td>
+					<div id="status_text"></div>
+				</td>
+				<td>
+					<script type="text/javascript">
+					/* 사용자 OS */
+			    	var userOs = "";
+			        var ua = navigator.userAgent;
+
+			        if( ua.indexOf("NT 5.0") != -1 ) {
+			        	userOs = "Windows 2000";
+			        }
+
+			        else if( ua.indexOf("NT 5.1") != -1 ) {
+			        	userOs = "Windows XP";
+			        }
+
+			        else if( ua.indexOf("NT 5.2") != -1 ) {
+			        	userOs = "Windows Server 2003";
+			        }
+
+			        else if( ua.indexOf("NT 6.0") != -1 ) {
+			        	userOs = "Windows Vista";
+			        }
+
+			        else if( ua.indexOf("NT 6.1") != -1 ) {
+			        	userOs = "Windows 7";
+			        }
+
+			        else if( ua.indexOf("NT 6.2") != -1 ) {
+			        	userOs = "Windows 8";
+			        }
+			        
+			        else if( ua.indexOf("NT 6.3") != -1 ) {
+			        	userOs = "Windows 8.1";
+			        }
+			        
+			        else if( ua.indexOf("NT 6.4") != -1 ) {
+			        	userOs = "Windows 10";
+			        }
+			        
+			        else if( ua.indexOf("NT 10.0") != -1 ) {
+			        	userOs = "Windows 10";
+			        }
+
+			        else if( ua.indexOf("98") != -1 ) {
+			        	userOs = "Windows 98";
+			        }
+
+			        else if( ua.indexOf("95") != -1 ) {
+			        	userOs = "Windows 95";
+			        }
+
+			        else if( ua.indexOf("Linux") != -1 ) {
+			        	userOs = "Linux";
+			        }
+
+			        else if( ua.indexOf("Mac") != -1 ) {
+			        	userOs = "mac";
+			        }
+
+			        else{
+			        	userOs = "미확인";
+			        }
+					document.write(userOs);
+					</script>
+				</td>
+				<td>
+					<script type="text/javascript">
+					/* 브라우저 확인 */
+			        var Browser = { a : navigator.userAgent.toLowerCase() }
+			        var browserNm = "";
+			        var browserVr = "";
+
+			        if( Browser.a.indexOf('msie 6') != -1 ) {
+			            browserNm = "Internet Explorer";
+			            browserVr = "v.6";
+			        }
+
+			        if( Browser.a.indexOf('msie 7') != -1 ) {
+			            browserNm = "Internet Explorer";
+			            browserVr = "v.7";
+			        }
+
+			        /* IE8 부터는 msie 값으로 브라우저 버전을 분별할수 없음 trident 값으로 해야한다. */
+			        if( Browser.a.indexOf('trident/4.0') != -1 ) {
+			            browserNm = "Internet Explorer";
+			            browserVr = "v.8";
+			        }
+
+			        if( Browser.a.indexOf('trident/5.0') != -1 ) {
+			            browserNm = "Internet Explorer";
+			            browserVr = "v.9";
+			        }
+
+			        if( Browser.a.indexOf('trident/6.0') != -1 ) {
+			            browserNm = "Internet Explorer";
+			            browserVr = "v.10";
+			        }
+			        
+			        if( Browser.a.indexOf('trident/7.0') != -1 ) {
+			            browserNm = "Internet Explorer";
+			            browserVr = "v.11";
+			        }
+			        
+			        if( Browser.a.indexOf('edge') != -1 ) {
+			            browserNm = "Edge Browser";
+			            browserVr = "";
+			        }
+
+			        if( !!window.opera ) {
+			            browserNm = "opera";
+			            browserVr = "";
+			        }
+
+			        if( Browser.a.indexOf('safari') != -1 ) {
+			            browserNm = "safari";
+			            browserVr = "";
+			        }
+
+			        if( Browser.a.indexOf('applewebkit/5') != -1 ) {
+			            browserNm = "safari3";
+			            browserVr = "";
+			        }
+
+			        if( Browser.a.indexOf('mac') != -1 ) {
+			            browserNm = "mac";
+			            browserVr = "";
+			        }
+
+			        if( Browser.a.indexOf('chrome') != -1 ) {
+			            browserNm = "chrome";
+			            browserVr = "";
+			        }
+
+			        if( Browser.a.indexOf('firefox') != -1 ) {
+			            browserNm = "firefox";
+			            browserVr = "";
+			        }
+			        document.write(browserNm + "<br/>" + browserVr);
+					</script>
+				</td>
+			</tr>
+		</table>
+		<div id="btn" class="bl_s"><a href="javascript:location.reload()">새로고침</a></div>
+
+		<br>
+		<div id="setup">	
+		<ul id="list_bl2">
+			<li>인증서 관리프로그램이 정상적으로 구동되지 않은 상태 일 경우,</li>
+			<li>아래의 인증서 관리프로그램 정상구동 확인을 선택 바랍니다.</li>
+		</ul>
+		<div align="center" id="btn_run" class="hide">
+		<input type="button" class="btn_fnVestCertCall" onclick="fnVestCertCall()" 
+		                style="font-size:10pt; color:#ff0000; font-weight:bold;" value="인증서 관리프로그램 정상구동 확인(클릭)" >
+		</div>
+	</div>
+
+
+<script language='javascript'> 
+	var mainPageUrl = "./SignDataVIDVerify.html";
+	var lastestVersion = "2.0.4.0";
+	var chkCount = 0;
+	var versionCheck = false;
+	var iframesrc = "https://127.0.0.1:14461";
+	var cntAdd = 0;
+	var sessionID = Math.random();
+	// IE 안됨
+	// get Token informations form HSM
+	function parseInt(s){
+		var ver = s.replace(/\./g, "");
+		return ver * 1;
+	}
+	
+	var text = {
+		"messageNumber": 0,
+		"sessionID": "" + sessionID,
+		"operation":"GetVersion"
+	};
+	
+	function send () {
+	// 1. test for windows.postMessage
+		var request = document.getElementById("hsmiframe").contentWindow;
+		request.postMessage(JSON.stringify(text), iframesrc);
+	};
+	
+	function statusMsg(txt, cnt){
+		//txt = '● ' + txt;
+		if(cnt) for(var i=0; i<cnt; i++) txt += ".";
+		document.getElementById("status_text").innerHTML = txt
+	}
+	
+	var openFlag = false;	//20160323 - 두번호출 방지
+	var receivedData = function (event){
+		if(event.origin == iframesrc){
+			var obj = JSON.parse(event.data);
+			if( !obj || !obj.list || !obj.list[0]){
+				setTimeout(send, 2000);
+				return;
+			} 
+			var currentVersion = obj.list[0].version;
+			var cv = currentVersion.split('.');
+			currentVersion = cv[0] + cv[1] + cv[2] + '.0';
+			currentVersion = parseInt(currentVersion);
+			if(obj.list == null || currentVersion < parseInt(lastestVersion)){
+				//statusMsg("인증서 관리 프로그램이 최신버전이 아닙니다.<br>최신버전으로 설치해주시기바랍니다.<br><br>최신버전 : " + lastestVersion + "<br>설치버전 : " + cv[0] +'.'+ cv[1] +'.'+ cv[2] + '.0');
+				statusMsg('<span class="setting">최신버전이 아닙니다 </span><div id="btn" class="wh_s"><a href="/CC_WSTD_home/install/VestCertSetup.exe">설치하기(클릭)</a></div>' );
+				document.getElementById("btn_run").style.display = "block";
+				//alert("인증서 관리 프로그램이 최신버전이 아닙니다.\n최신버전으로 설치해주시기바랍니다.\n\n최신버전 : " + lastestVersion + "\n설치버전 : " + obj.list[0].version);
+				if(versionCheck == false) document.getElementById("hsmiframe").src = '/CC_WSTD_home/install/VestCertSetup.exe';
+				versionCheck = true;
+				setTimeout(send, 2000);
+			}else{
+				if(openFlag) return;
+				openFlag = true;
+				statusMsg("인증서 관리 프로그램이 설치되었습니다");
+				setTimeout(function(){
+					//document.location.href = mainPageUrl;
+					opener.fn_move(true);
+					self.close();
+				}, 500);
+			}
+		}else{
+			return;
+		}
+	}
+	
+	function removeEvent(){
+		cntAdd--;
+		if (typeof window.addEventListener === 'function') {
+		    // Check for addEventListener first, since IE9/10 have both,
+		    // but you should use the standard over the deprecated IE-specific one
+		    window.removeEventListener('message', receivedData, false);
+		} else if (typeof window.attachEvent === 'function') {
+		    window.detachEvent('onmessage', receivedData);
+		} else {
+			window.detachEvent('onmessage', receivedData);
+		}
+	}
+	
+	function addEvent(){
+		if(cntAdd > 0) removeEvent();
+		if (typeof window.addEventListener === 'function') {
+		    // Check for addEventListener first, since IE9/10 have both,
+		    // but you should use the standard over the deprecated IE-specific one
+		    window.addEventListener('message', receivedData, false);
+		} else if (typeof window.attachEvent === 'function') {
+		    window.attachEvent('onmessage', receivedData);
+		} else {
+			window.attachEvent('onmessage', receivedData);
+		}
+		cntAdd++;
+	}
+
+	function UniSignWeb_LoadObject(){
+		document.writeln("<iframe src='"+iframesrc+"' name='hsmiframe' id='hsmiframe' style='visibility:hidden;position:absolute' onload='send();'></iframe>");
+	}
+	
+	var iframeLoaded = false;
+	var fnInstallCheck = function(rv){
+		iframeLoaded = false;
+		var isFirst = true;
+		var fnResult = function(obj, r){
+			iframeLoaded = r;
+			if(isFirst){
+				isFirst = false;
+				if(obj && obj.parentNode) obj.parentNode.removeChild(obj);
+				rv(r);
+			}
+		}
+		
+		var chkImg;
+		if (navigator.userAgent.indexOf("MSIE 7.0") != -1) {
+			chkImg = document.createElement("<img id='hsmImg' src='"+iframesrc + '/TIC?cd=' + Math.random() + "' onload='' onerror='' />");
+			chkImg.onerror = function() {fnResult(chkImg, false);};
+			chkImg.onload = function() {fnResult(chkImg, true);};
+			chkImg.style.display = "none";
+		} else {
+			chkImg = document.createElement('img');
+			chkImg.setAttribute('id', "hsmImg");
+			chkImg.setAttribute('src', iframesrc + '/TIC?cd=' + Math.random());
+			chkImg.onerror = function() {fnResult(chkImg, false);};
+			chkImg.onload = function() {fnResult(chkImg, true);};
+			chkImg.style.display = "none";
+		}
+		document.body.appendChild(chkImg);
+		
+		if (navigator.userAgent.indexOf("MSIE 8") != -1) {
+			var ie8 = function(){
+				if(iframeLoaded == false) setTimeout(ie8, 100);
+				else fnResult(null, true);
+			}
+			setTimeout(ie8, 100);
+		}
+	};
+
+	function fnVestCertCall(){
+		document.getElementById("hsmiframe").src = "mangowire:///";
+		setTimeout(function(){document.location.reload();}, 5000);
+	}
+	
+	var fnChecker = function(r){
+		if(r){
+			chkCount = 0;
+			if(versionCheck == false){
+				document.getElementById("hsmiframe").src = iframesrc;
+				statusMsg("설치된 인증서 관리프로그램 버전 확인중", chkCount);
+				addEvent();
+				setTimeout(send, 200);
+				setTimeout(function(){fnChecker(true);}, 1000);
+			}
+		}else{
+			if(navigator.userAgent.indexOf("Firefox") > -1){
+				statusMsg("인증서 관리 프로그램이 설치되어있지 않거나 실행중이 아닙니다<br>FireFox 브라우져일 경우 설치후 브라우져를 재시작 하셔야 합니다.");
+			}else if (navigator.userAgent.indexOf("MSIE 7.0") > -1 && navigator.userAgent.indexOf("compatible") < 0) {
+				statusMsg("사용중인 IE7 브라우져에서는 동작하지 않습니다. 타 브라우져 또는 IE버전을 업데이트 하시길 바랍니다.");
+				document.getElementById("btn_run").style.display = "block";
+			} else {
+				//statusMsg("인증서 관리 프로그램이 설치되어있지 않거나 실행중이 아닙니다<br><br>설치가 되었다면 아래 버튼을 눌러 실행하시기 바랍니다.");
+				statusMsg('<span class="setting">미설치 </span><div id="btn" class="wh_s"><a href="/CC_WSTD_home/install/VestCertSetup.exe">설치하기(클릭)</a></div>' );
+				document.getElementById("btn_run").style.display = "block";
+			}
+		}
+		chkCount++;
+	};
+	addEvent();
+	UniSignWeb_LoadObject();
+	fnInstallCheck(fnChecker);
+		
+</script>
+</body>
+</html>

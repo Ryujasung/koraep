@@ -1,0 +1,89 @@
+<div id="us-div-cert-view" class="us-layout-cert-view" oncontextmenu="return false" onselectstart="return false">
+    <div id="us-div-view-title" class="us-layer-title">
+		<p id="us-view-lbl-title" class="us-layer-lbl-title"></p>
+    </div>    
+    <div id="us-div-view-body" class="us-layer-body">
+        <ul id="us-view-tab" class="us-layout-view-tab">
+        	<li class="us-view-tab1">
+        		<a href="#none" id="us-view-tab-simple" class="us-view-tab-tag active"></a>
+            	<div id="us-view-simple" class="us-layout-view-content">
+                	<div class="us-layout-view-simple us-view-tab-content">
+                        <dl>
+                            <dt id="us-view-cert-info" class="us-layout-view-cert-info"></dt>
+                            <dd>
+                                <p class="us-layout-view-cert-img"><img id="us-view-cert-status-img" /></p>
+                                <div id="us-view-cert-status-msg" class="us-layout-view-cert-status"></div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt id="us-view-cert-subject-name"></dt>
+                            <dd id="us-view-cert-subject-name-data"></dd>
+                        </dl>
+                        <dl>
+                            <dt id="us-view-cert-issuer-name"></dt>
+                            <dd id="us-view-cert-issuer-name-data"></dd>
+                        </dl>
+                        <dl class="us-layout-view-cert-validity-date">
+                            <dt id="us-view-cert-validity-date" class="us-layout-view-cert-info-subject"></dt>
+                            <dd class="us-layout-view-cert-info-data"><span id="us-view-cert-validity-date-from"></span> ~ <span id="us-view-cert-validity-date-to"></span></dd>
+                        </dl>
+                        <div id="us-view-cert-purpose" class="us-layout-view-cert-purpose"></div>
+                    </div>
+                </div>
+            </li>
+            <li class="us-view-tab2">
+            	<a href="#none" id="us-view-tab-detail" class="us-view-tab-tag"></a>
+                <div id="us-view-detail" class="us-layout-view-content">                                        
+                    <div class="us-layout-view-detail us-view-tab-content">                                            
+                        <div id="us-view-list" class="us-layout-view-list">
+                            <div id="us-view-list-inner" class="us-layout-view-list-inner">
+                                <table id="us-view-tbl-list" class="us-layout-view-tbl-list">
+                                    <caption id="us-view-tbl-list-caption" class="us-layout-view-tbl-list-caption"> </caption>
+                                    <thead><tr><th id="us-view-tbl-list-th" class="us-layout-view-tbl-list-th"> </th></tr></thead>
+                                    <tbody><tr><td id="us-view-tbl-list-td" class="us-layout-view-tbl-list-td"> </td></tr></tbody>
+                                    <tfoot><tr><td> </td></tr></tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="us-view-detail-data" class="us-layout-view-detail-data">
+                            <textarea id="us-view-detail-text-box" class="us-layout-view-detail-text-box" readonly="readonly"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="us-view-tab3" id="us-view-tab3">
+            	<a href="#none" id="us-view-tab-certpath" class="us-view-tab-tag"></a>
+                <div id="us-view-certpath" class="us-layout-view-content">
+                	<div class="us-layout-view-certpath us-view-tab-content">
+                		<dl>
+                            <dt id="us-view-certpath-info" class="us-layout-view-cert-info"></dt>
+                            <dd>
+                            	<ul id="us-view-certpath-info-tree"></ul>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt id="us-view-certpath-version"></dt>
+                            <dd id="us-view-certpath-version-data"></dd>
+                        </dl>
+                        <dl>
+                            <dt id="us-view-certpath-date"></dt>
+                            <dd><span id="us-view-certpath-date-from"></span> ~ <span id="us-view-certpath-date-to"></span></dd>
+                        </dl>
+                        <dl>
+                            <dd id="us-view-certpath-hash" class="subject"></dd>
+                            <dd id="us-view-certpath-hash-data"></dd>
+                        </dl>
+                        <div id="us-view-certpath-tail" class="link"></div>
+                	</div>
+		    	</div>
+            </li>
+        </ul>
+        <div class="us-layer-btns">
+            <ul>
+                <li><input type="button" class="us-normal-btn btn-info" id="us-view-cert-cps-btn" /></li>
+                <li><input type="button" class="us-normal-btn btn-confirm" id="us-view-cert-confirm-btn" /></li>
+            </ul>                                    
+        </div>                                        
+    </div>
+    <button id="us-view-cls-img-btn" class="us-layer-cls-btn" type="button"><img id="us-view-cls-btn-img" /></button>        
+</div>

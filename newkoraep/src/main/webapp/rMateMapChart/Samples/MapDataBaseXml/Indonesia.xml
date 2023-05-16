@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Region code="100" label="WestPapua" symbol="WestPapua">
+		<Province code="101" label="PapuaBarat" symbol="PapuaBarat"/>
+		<Province code="102" label="Papua" symbol="Papua"/>
+	</Region>
+	<Region code="200" label="KepulauanMaluku" symbol="KepulauanMaluku">
+		<Province code="201" label="Maluku" symbol="Maluku"/>
+		<Province code="202" label="MalukuUtara" symbol="MalukuUtara"/>
+	</Region>
+	<Region code="300" label="NusaTenggar" symbol="NusaTenggar">
+		<Province code="301" label="NusaTenggaraBarat" symbol="NusaTenggaraBarat"/>
+		<Province code="302" label="NusaTenggaraTimur" symbol="NusaTenggaraTimur"/>
+		<Province code="303" label="Bali" symbol="Bali"/>
+	</Region>
+	<Region code="400" label="Sumatera" symbol="Sumatera">
+		<Province code="401" label="NanggröeAcehDarussalam" symbol="NanggröeAcehDarussalam"/>
+		<Province code="402" label="KepulauanBangkaBelitung" symbol="KepulauanBangkaBelitung"/>
+		<Province code="403" label="Bengkulu" symbol="Bengkulu"/>
+		<Province code="404" label="Jambi" symbol="Jambi"/>
+		<Province code="405" label="Lampung" symbol="Lampung"/>
+		<Province code="406" label="Riau" symbol="Riau"/>
+		<Province code="407" label="KepulauanRiau" symbol="KepulauanRiau"/>
+		<Province code="408" label="SumateraSelatan" symbol="SumateraSelatan"/>
+		<Province code="409" label="SumateraBarat" symbol="SumateraBarat"/>
+		<Province code="410" label="SumateraUtara" symbol="SumateraUtara"/>
+	</Region>
+	<Region code="500" label="Sulawesi" symbol="Sulawesi">
+		<Province code="501" label="Gorontalo" symbol="Gorontalo"/>
+		<Province code="502" label="SulawesiBarat" symbol="SulawesiBarat"/>
+		<Province code="503" label="SulawesiSelatan" symbol="SulawesiSelatan"/>
+		<Province code="504" label="SulawesiUtara" symbol="SulawesiUtara"/>
+		<Province code="505" label="SulawesiTenggara" symbol="SulawesiTenggara"/>
+		<Province code="506" label="SulawesiTengah" symbol="SulawesiTengah"/>
+	</Region>
+	<Region code="600" label="Jawa" symbol="Jawa">
+		<Province code="601" label="Banten" symbol="Banten"/>
+		<Province code="602" label="DaerahIstimewaYogyakarta" symbol="DaerahIstimewaYogyakarta"/>
+		<Province code="603" label="JawaBarat" symbol="JawaBarat"/>
+		<Province code="604" label="JawaTengah" symbol="JawaTengah"/>
+		<Province code="605" label="JawaTimur" symbol="JawaTimur"/>
+		<Province code="606" label="DaerahKhususIbukotaJakarta" symbol="DaerahKhususIbukotaJakarta"/>
+	</Region>
+	<Region code="700" label="Kalimantan" symbol="Kalimantan">
+		<Province code="701" label="KalimantanBarat" symbol="KalimantanBarat"/>
+		<Province code="702" label="KalimantanSelatan" symbol="KalimantanSelatan"/>
+		<Province code="703" label="KalimantanUtara" symbol="KalimantanUtara"/>
+		<Province code="704" label="KalimantanTengah" symbol="KalimantanTengah"/>
+		<Province code="705" label="KalimantanTimur" symbol="KalimantanTimur"/>
+	</Region>
+</Map>

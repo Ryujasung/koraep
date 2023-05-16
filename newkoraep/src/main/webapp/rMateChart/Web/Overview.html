@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>rMate HTML5 Chart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="rMateChart for HTML5, Riamore Soft 2016">
+<meta name="keywords" content="HTML5,Chart,JavaScript,CSS,Ajax,Graph,rMateChart">
+
+<style type="text/css">
+
+@font-face{
+	font-family:open-sans;
+	src:url(./fonts/OpenSans.woff);
+}
+
+html, body{
+	line-height:1;
+	font-family:open-sans, "malgun gothic";
+	padding:0;
+	margin:0;
+}
+
+div{
+	box-sizing:border-box;
+}
+
+.overview{
+	margin:30px 0px 40px 0;
+	width:1080px;
+}
+
+.overview_title{
+	height:75px;
+	background:url(./Images/title.png) center no-repeat;
+}
+
+.overview_title > div{
+	margin-top:12px;
+	font-size:23px;
+	letter-spacing:0;
+}
+
+#chart_overview{
+	padding-left:48px;
+	display:inline-block;
+}
+
+#chart_overview div{
+	display:inline-block;
+}
+
+#chart_overview > div{
+	width:142px;
+	height:123px;
+	margin-right:64px;
+	margin-top:45px;
+	background-repeat:no-repeat;
+	background-position:50% 0;
+	position:relative;
+	cursor:pointer;
+	float:left;
+}
+
+#chart_overview > div > div{
+	bottom:0;
+	margin-top:15px;
+	font-size:13px;
+	width:100%;
+	position:absolute;
+	font-family:open-sans;
+	color:#555;
+	text-align:center;
+}
+
+</style>
+
+<!-- jQuery -->
+<script src="./jQuery/jquery-1.12.4.min.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+	$("#chart_overview").bind("click", function(event){
+		var sampleLi, 
+			menuType, sampleURL,
+			chartMenu = event.target,
+			menu = window.parent.menuFrame;
+		
+		if(chartMenu.id == "chart_overview")
+			return;
+		
+		chartMenu = chartMenu.innerText;
+
+		if(chartMenu.indexOf("Gauge") > -1){
+			if(chartMenu.indexOf("Simple") > -1 && (chartMenu = "Gauge"))
+				sampleLi = menu.document.getElementById(chartMenu).nextSibling.childNodes[0];
+			else
+				sampleLi = menu.document.getElementById(chartMenu).nextSibling.childNodes[3];
+			sampleURL = getSampleURL(sampleLi.childNodes[0]);
+		}else{
+			if(chartMenu == "OverlayBubble"){
+				chartMenu = "Pyramid";
+				sampleLi = menu.document.getElementById(chartMenu).nextSibling.childNodes[4];
+			}else
+				sampleLi = menu.document.getElementById(chartMenu).nextSibling.childNodes[0];
+			sampleURL = getSampleURL(sampleLi.childNodes[0]);
+		}
+		
+		menuType = menu.document.getElementById(chartMenu);
+		if(!menuType._expand)
+			menu.expandItem(menuType);
+		menu.selectTypeItem(sampleLi);
+		window.parent.sampleFrame.frameElement.src = "./Samples/" + sampleURL;
+	});
+});
+
+// return sample url
+function getSampleURL(a){
+	a = a.href.split("/");
+	return a[a.length - 1];
+}
+
+</script>
+
+</head>
+<body>
+<div class="overview">
+	<div class="overview_title"></div>
+	<div id="chart_overview">
+		<div style="background-image:url(./Images/line.jpg);"><div>Line</div></div>
+		<div style="background-image:url(./Images/column.jpg);"><div>Column</div></div>
+		<div style="background-image:url(./Images/bar.jpg);"><div>Bar</div></div>
+		<div style="background-image:url(./Images/area.jpg);"><div>Area</div></div>
+		<div style="background-image:url(./Images/pie.jpg);"><div>Pie</div></div>
+		<div style="background-image:url(./Images/bubble.jpg);"><div>Bubble</div></div>
+		<div style="background-image:url(./Images/plot.jpg);"><div>Plot</div></div>
+		<div style="background-image:url(./Images/combination.jpg);"><div>Combination</div></div>
+		<div style="background-image:url(./Images/from_to.jpg);"><div>From - To</div></div>
+		<div style="background-image:url(./Images/radar.jpg);"><div>Radar</div></div>
+		<div style="background-image:url(./Images/target.jpg);"><div>Target vs Actual</div></div>
+		<div style="background-image:url(./Images/history.jpg);"><div>History</div></div>
+		<div style="background-image:url(./Images/realtime.jpg);"><div>RealTime</div></div>
+		<div style="background-image:url(./Images/scroll.jpg);"><div>Scroll</div></div>
+		<div style="background-image:url(./Images/equalizer.jpg);"><div>Equalizer</div></div>
+		<div style="background-image:url(./Images/broken.jpg);"><div>BrokenAxis</div></div>
+		<div style="background-image:url(./Images/image.jpg);"><div>Image</div></div>
+		<div style="background-image:url(./Images/image_matrix.jpg);"><div>ImageMatrix</div></div>
+		<div style="background-image:url(./Images/wing.jpg);"><div>Wing</div></div>
+		<div style="background-image:url(./Images/wind_rose.jpg);"><div>WindRose</div></div>
+		<div style="background-image:url(./Images/candlestick.jpg);"><div>Candlestick</div></div>
+		<div style="background-image:url(./Images/treemap.jpg);"><div>TreeMap</div></div>
+		<div style="background-image:url(./Images/word_cloud.jpg);"><div>WordCloud</div></div>
+		<div style="background-image:url(./Images/matrix.jpg);"><div>Matrix</div></div>
+		<div style="background-image:url(./Images/overlaybubble.jpg);"><div>OverlayBubble</div></div>
+		<div style="background-image:url(./Images/pyramid.jpg);"><div>Pyramid</div></div>
+		<div style="background-image:url(./Images/histogram.jpg);"><div>Histogram</div></div>
+		<div style="background-image:url(./Images/vector.jpg);"><div>Vector</div></div>
+		<div style="background-image:url(./Images/error_bar.jpg);"><div>ErrorBar</div></div>
+		<div style="background-image:url(./Images/box_plot.jpg);"><div>BoxPlot</div></div>
+		<div style="background-image:url(./Images/slide.jpg);"><div>Slide</div></div>
+		<div style="background-image:url(./Images/motion.jpg);"><div>Motion</div></div>
+		<div style="background-image:url(./Images/realtime_premium.jpg);"><div>RealTime-Premium</div></div>
+		<div style="background-image:url(./Images/simple_gauge.jpg);"><div>SimpleGauge</div></div>
+		<div style="background-image:url(./Images/gauge.jpg);"><div>Gauge</div></div>
+	</div>
+</div>
+</body>
+</html>

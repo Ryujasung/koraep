@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<State code="100" label="Nova Scotia" symbol="Novascotia"/>
+	<State code="200" label="New Brunswick" symbol="Newbrunswick"/>
+	<State code="300" label="British Columbia" symbol="Britishcolumbia"/>
+	<State code="400" label="Yukon" symbol="Yukon" horizontalCenterGap="-15" verticalCenterGap="10"/>
+	<State code="500" label="Quebec" symbol="Quebec" horizontalCenterGap="-20" verticalCenterGap="0"/>
+	<State code="600" label="Manitoba" symbol="Manitoba" horizontalCenterGap="0" verticalCenterGap="-10"/>
+	<State code="700" label="Ontario" symbol="Ontario"/>
+	<State code="800" label="Saskatchewan" symbol="Saskatchewan"/>
+	<State code="900" label="Alberta" symbol="Alberta" horizontalCenterGap="0" verticalCenterGap="-20"/>
+	<State code="1000" label="Newfoundland and Labrador" symbol="Newfoundlandandlabrador"/>
+	<State code="1100" label="Prince Edward Island" symbol="Princeedwardisland"/>
+	<State code="1200" label="Northwest Territories" symbol="Northwestterritories" horizontalCenterGap="10" verticalCenterGap="75"/>
+	<State code="1300" label="Nunavut" symbol="Nunavut" horizontalCenterGap="-10" verticalCenterGap="60"/>
+</Map>

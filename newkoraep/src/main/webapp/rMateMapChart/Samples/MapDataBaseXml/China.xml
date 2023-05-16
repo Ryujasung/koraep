@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<State code="100" label="Anhui" symbol="Anhui"/>
+	<State code="200" label="Beijing" symbol="Beijing"/>
+	<State code="300" label="Chongqing" symbol="Chongqing" horizontalCenterGap="10" verticalCenterGap="0"/>
+	<State code="400" label="Fujian" symbol="Fujian"/>
+	<State code="500" label="Gansu" symbol="Gansu" horizontalCenterGap="-20" verticalCenterGap="-20"/>
+	<State code="600" label="Guangdong" symbol="Guangdong"/>
+	<State code="700" label="Guangxi" symbol="Guangxi"/>
+	<State code="800" label="Guizhou" symbol="Guizhou"/>
+	<State code="900" label="Hainan" symbol="Hainan"/>
+	<State code="1000" label="Hebei" symbol="Hebei" horizontalCenterGap="-10" verticalCenterGap="10"/>
+	<State code="1100" label="Heilongjiang" symbol="Heilongjiang" horizontalCenterGap="0" verticalCenterGap="20"/>
+	<State code="1200" label="Henan" symbol="Henan"/>
+	<State code="1300" label="Hongkong" symbol="Hongkong"/>
+	<State code="1400" label="Hubei" symbol="Hubei"/>
+	<State code="1500" label="Hunan" symbol="Hunan"/>
+	<State code="1600" label="Innermongolia" symbol="Innermongolia" horizontalCenterGap="0" verticalCenterGap="50"/>
+	<State code="1700" label="Jiangsu" symbol="Jiangsu" horizontalCenterGap="10" verticalCenterGap="-10"/>
+	<State code="1800" label="Jiangxi" symbol="Jiangxi"/>
+	<State code="1900" label="Jilin" symbol="Jilin"/>
+	<State code="2000" label="Liaoning" symbol="Liaoning"/>
+	<State code="2100" label="Ningxia" symbol="Ningxia"/>
+	<State code="2200" label="Qinghai" symbol="Qinghai"/>
+	<State code="2300" label="Shaanxi" symbol="Shaanxi" horizontalCenterGap="0" verticalCenterGap="20"/>
+	<State code="2400" label="Shandong" symbol="Shandong"/>
+	<State code="2500" label="Shanghai" symbol="Shanghai"/>
+	<State code="2600" label="Shanxi" symbol="Shanxi" horizontalCenterGap="0" verticalCenterGap="10"/>
+	<State code="2700" label="Sichuan" symbol="Sichuan" horizontalCenterGap="-10" verticalCenterGap="-10"/>
+	<State code="2800" label="Tianjin" symbol="Tianjin"/>
+	<State code="2900" label="Tibet" symbol="Tibet"/>
+	<State code="3000" label="Xinjiang" symbol="Xinjiang" horizontalCenterGap="0" verticalCenterGap="20"/>
+	<State code="3100" label="Yunnan" symbol="Yunnan" horizontalCenterGap="0" verticalCenterGap="10"/>
+	<State code="3200" label="Zhejiang" symbol="Zhejiang"/>
+</Map>

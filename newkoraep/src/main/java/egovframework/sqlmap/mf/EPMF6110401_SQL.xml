@@ -1,0 +1,867 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF6110401Mapper">
+
+	<!-- 입고현황 조회  -->
+	<select id="epmf6110401_select" parameterType="map"   resultType="hashmap">
+			<if test='excelYn == null or excelYn == "" '>
+			 SELECT 
+							*
+			 FROM (
+			 </if>
+							SELECT 
+								ROW_NUMBER()OVER(ORDER BY  T1.MFC_BIZRID , T1.WHSDL_BIZRID ) AS PNO
+								,T1.MFC_BIZRNO
+								,T1.MFC_BIZRID
+								,EPCN_BIZR_NM(T1.MFC_BIZRID,T1.MFC_BIZRNO)   AS MFC_BIZRNM
+								,T1.WHSDL_BIZRNO
+								,T1.WHSDL_BIZRID
+								,EPCN_BIZR_NM(T1.WHSDL_BIZRID,T1.WHSDL_BIZRNO)   AS WHSDL_BIZRNM
+								,PI_DECRYPT(T1.WHSDL_BIZRNO) as WHSDL_BIZRNO_DE
+								,T1.CTNR_CD
+								,CASE WHEN SUBSTR(T1.CTNR_CD,4,2) = 00 THEN '표준용기' ELSE '비표준용기' END AS STANDARD_NM
+								,EPCN_ETC_NM(T1.AREA_CD,'B010')   AS AREA
+								,T1.QTY_TOT
+								,T1.CRCT_QTY_TOT
+								,T2.CTNR_NM
+								,EPCN_ETC_NM(T2.PRPS_CD,'E002')    AS PRPS_CD
+								,EPCN_ETC_NM(T2.CPCT_CD,'E001')    AS CPCT_CD
+							 FROM
+							(
+								
+								SELECT 
+											 NVL(A.MFC_BIZRNO, B.MFC_BIZRNO) AS MFC_BIZRNO
+											 ,NVL(A.MFC_BIZRID, B.MFC_BIZRID) AS MFC_BIZRID
+											 ,NVL(A.WHSDL_BIZRNO, B.WHSDL_BIZRNO) AS WHSDL_BIZRNO
+											 ,NVL(A.WHSDL_BIZRID, B.WHSDL_BIZRID) AS WHSDL_BIZRID
+											 ,NVL(A.CTNR_CD, B.CTNR_CD) AS CTNR_CD
+											 ,NVL(A.AREA_CD, B.AREA_CD) AS AREA_CD
+											 ,NVL(A.QTY_TOT, B.QTY_TOT) AS QTY_TOT
+											 ,NVL(A.CRCT_QTY_TOT,0) + NVL(B.CRCT_QTY_TOT,0) AS CRCT_QTY_TOT
+								  FROM
+												  (	
+													  SELECT  MFC_BIZRNO
+																 ,MFC_BIZRID
+																 ,WHSDL_BIZRNO
+																 ,WHSDL_BIZRID
+																 ,B.CTNR_CD as CTNR_CD
+																 ,AREA_CD
+																 ,NVL(SUM(B.CFM_QTY),0) AS QTY_TOT
+																 ,NVL(SUM(NVL2(D.WRHS_DOC_NO, 0, B.CFM_QTY)),0) AS CRCT_QTY_TOT
+														FROM EPCM_CFM_MST A
+														     	,EPCM_CFM_INFO B
+														     	,EPCN_BRCH_INFO C
+														     	,(
+											                      	 SELECT distinct WRHS_DOC_NO
+											                           FROM EXCA_WRHS_CRCT A
+											                         WHERE 1=1
+											                             AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+											                      ) D
+													WHERE 1=1
+														AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+														AND A.WHSDL_BIZRID = C.BIZRID
+														AND A.WHSDL_BIZRNO =C.BIZRNO
+														AND A.WHSDL_BRCH_ID = C.BRCH_ID
+														AND A.WHSDL_BRCH_NO = C.BRCH_NO
+														AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+														AND A.WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+														
+														AND B.WRHS_DOC_NO = D.WRHS_DOC_NO(+)
+														
+														<if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+															AND C.BIZR_TP_CD = #{BIZR_TP_CD}
+														</if>
+														
+														<if test='S_BRCH_ID != null and S_BRCH_ID != "" '>
+											              AND EXISTS (
+														                           SELECT 'X'
+														                             FROM EPCN_BRCH_INFO C
+														                           WHERE 1=1
+														                               AND A.MFC_BIZRID = C.BIZRID
+														                               AND A.MFC_BIZRNO = C.BIZRNO
+												                                       AND A.MFC_BRCH_ID = C.BRCH_ID
+														                               AND A.MFC_BRCH_NO = C.BRCH_NO 
+													                                   AND EXISTS (
+															                                              SELECT 'X'
+															                                                FROM EPCN_BRCH_INFO D
+															                                              WHERE 1=1
+															                                                  AND C.BIZRID = D.BIZRID
+															                                                  AND C.BIZRNO = D.BIZRNO
+															                                                  AND (
+																                                                        (C.BRCH_ID = D.BRCH_ID AND C.BRCH_NO = D.BRCH_NO)
+																                                                      OR C.GRP_BRCH_NO = DECODE(D.GRP_YN, 'Y', D.BRCH_NO, '')                            
+															                                                         ) 
+															                                                  AND D.BRCH_ID = #{S_BRCH_ID} 
+															                                                  AND D.BRCH_NO = #{S_BRCH_NO}
+																                                          )                 
+												                         		)
+											              </if>
+												
+													GROUP BY MFC_BIZRNO, WHSDL_BIZRNO , B.CTNR_CD, AREA_CD , WHSDL_BIZRID , MFC_BIZRID
+												) A
+												FULL OUTER JOIN (
+						                        SELECT MFC_BIZRNO
+						                             ,MFC_BIZRID
+						                             ,WHSDL_BIZRNO
+						                             ,WHSDL_BIZRID
+						                             ,CTNR_CD
+						                             ,AREA_CD
+						                             ,SUM(QTY_TOT) AS QTY_TOT
+						                             ,SUM(CRCT_QTY_TOT) AS CRCT_QTY_TOT
+						                        FROM (												
+																			SELECT  MFC_BIZRNO
+																						 ,MFC_BIZRID
+																						 ,WHSDL_BIZRNO
+																						 ,WHSDL_BIZRID
+																						 ,D.CTNR_CD as CTNR_CD
+																						 ,AREA_CD
+																						 ,0 AS QTY_TOT
+																						 ,NVL(SUM(D.CRCT_QTY),0) AS CRCT_QTY_TOT
+																				FROM EPCM_CFM_MST A
+																				     	,EPCN_BRCH_INFO C
+																				     	,(
+																	                      	 SELECT WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, SUM(CRCT_QTY) AS CRCT_QTY
+																	                           FROM EXCA_WRHS_CRCT A
+																	                         WHERE 1=1
+																	                             AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+																	                             AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+																								             				  SELECT 'X' FROM EXCA_WRHS_CRCT B
+																								             				  WHERE 1=1
+																								             				     AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+																								             				     AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+																								             				     AND B.MNUL_EXCA_SE IS NOT NULL
+																								             				)
+																	                        GROUP BY WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT
+																	                      ) D
+																			WHERE 1=1
+																				AND A.WHSDL_BIZRID = C.BIZRID
+																				AND A.WHSDL_BIZRNO =C.BIZRNO
+																				AND A.WHSDL_BRCH_ID = C.BRCH_ID
+																				AND A.WHSDL_BRCH_NO = C.BRCH_NO
+																				AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+																				AND D.CRCT_WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+																				
+																				AND A.WRHS_DOC_NO = D.WRHS_DOC_NO
+																				
+																				<if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+																					AND C.BIZR_TP_CD = #{BIZR_TP_CD}
+																				</if>
+																				
+																				<if test='S_BRCH_ID != null and S_BRCH_ID != "" '>
+																	              AND EXISTS (
+																				                           SELECT 'X'
+																				                             FROM EPCN_BRCH_INFO C
+																				                           WHERE 1=1
+																				                               AND A.MFC_BIZRID = C.BIZRID
+																				                               AND A.MFC_BIZRNO = C.BIZRNO
+																		                                       AND A.MFC_BRCH_ID = C.BRCH_ID
+																				                               AND A.MFC_BRCH_NO = C.BRCH_NO 
+																			                                   AND EXISTS (
+																					                                              SELECT 'X'
+																					                                                FROM EPCN_BRCH_INFO D
+																					                                              WHERE 1=1
+																					                                                  AND C.BIZRID = D.BIZRID
+																					                                                  AND C.BIZRNO = D.BIZRNO
+																					                                                  AND (
+																						                                                        (C.BRCH_ID = D.BRCH_ID AND C.BRCH_NO = D.BRCH_NO)
+																						                                                      OR C.GRP_BRCH_NO = DECODE(D.GRP_YN, 'Y', D.BRCH_NO, '')                            
+																					                                                         ) 
+																					                                                  AND D.BRCH_ID = #{S_BRCH_ID} 
+																					                                                  AND D.BRCH_NO = #{S_BRCH_NO}
+																						                                          )                 
+																		                         		)
+																	              </if>
+																		
+																			GROUP BY MFC_BIZRNO, WHSDL_BIZRNO , D.CTNR_CD, AREA_CD , WHSDL_BIZRID , MFC_BIZRID
+                                                                            
+                                                                            UNION ALL
+                                                                            
+                                                                            SELECT  A.MFC_BIZRNO
+                                                                                         ,A.MFC_BIZRID
+                                                                                         ,A.WHSDL_BIZRNO
+                                                                                         ,A.WHSDL_BIZRID
+                                                                                         ,A.CTNR_CD
+                                                                                         ,C.AREA_CD
+                                                                                         ,0 AS QTY_TOT
+                                                                                         ,NVL(SUM(A.CRCT_QTY),0) AS CRCT_QTY_TOT
+                                                                                FROM   (
+                                                                                             SELECT WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, 
+                                                                                                      MNUL_MFC_BIZRID AS MFC_BIZRID,
+                                                                                                      MNUL_MFC_BIZRNO AS MFC_BIZRNO,
+                                                                                                      MNUL_MFC_BRCH_ID AS MFC_BRCH_ID,
+                                                                                                      MNUL_MFC_BRCH_NO AS MFC_BRCH_NO,
+                                                                                                      MNUL_WHSDL_BIZRID AS WHSDL_BIZRID,
+                                                                                                      MNUL_WHSDL_BIZRNO AS WHSDL_BIZRNO,
+                                                                                                      MNUL_WHSDL_BRCH_ID AS WHSDL_BRCH_ID,
+                                                                                                      MNUL_WHSDL_BRCH_NO AS WHSDL_BRCH_NO,
+                                                                                                      SUM(CRCT_QTY) AS CRCT_QTY
+                                                                                               FROM EXCA_WRHS_CRCT A
+                                                                                             WHERE 1=1
+                                                                                                 AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+                                                                                                 AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+                                                                                                                              SELECT 'X' FROM EXCA_WRHS_CRCT B
+                                                                                                                              WHERE 1=1
+                                                                                                                                 AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+                                                                                                                                 AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+                                                                                                                                 AND B.MNUL_EXCA_SE IS NOT NULL
+                                                                                                                            )
+                                                                                            GROUP BY WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT,
+                                                                                                      MNUL_MFC_BIZRID,
+                                                                                                      MNUL_MFC_BIZRNO,
+                                                                                                      MNUL_MFC_BRCH_ID,
+                                                                                                      MNUL_MFC_BRCH_NO,
+                                                                                                      MNUL_WHSDL_BIZRID,
+                                                                                                      MNUL_WHSDL_BIZRNO,
+                                                                                                      MNUL_WHSDL_BRCH_ID,
+                                                                                                      MNUL_WHSDL_BRCH_NO                                                                                            
+                                                                                          ) A
+                                                                                        ,EPCN_BRCH_INFO C
+                                                                            WHERE 1=1
+                                                                                AND A.WHSDL_BIZRID = C.BIZRID
+                                                                                AND A.WHSDL_BIZRNO = C.BIZRNO
+                                                                                AND A.WHSDL_BRCH_ID = C.BRCH_ID
+                                                                                AND A.WHSDL_BRCH_NO = C.BRCH_NO
+                                                                                AND A.CRCT_WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+                                                                                
+                                                                                AND 'IN-0' = A.WRHS_DOC_NO                                                                            
+                                                                                
+                                                                                <if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+                                                                                    AND C.BIZR_TP_CD = #{BIZR_TP_CD}
+                                                                                </if>
+                                                                                
+                                                                                <if test='S_BRCH_ID != null and S_BRCH_ID != "" '>
+                                                                                  AND EXISTS (
+                                                                                                           SELECT 'X'
+                                                                                                             FROM EPCN_BRCH_INFO C
+                                                                                                           WHERE 1=1
+                                                                                                               AND A.MFC_BIZRID = C.BIZRID
+                                                                                                               AND A.MFC_BIZRNO = C.BIZRNO
+                                                                                                               AND A.MFC_BRCH_ID = C.BRCH_ID
+                                                                                                               AND A.MFC_BRCH_NO = C.BRCH_NO 
+                                                                                                               AND EXISTS (
+                                                                                                                                  SELECT 'X'
+                                                                                                                                    FROM EPCN_BRCH_INFO D
+                                                                                                                                  WHERE 1=1
+                                                                                                                                      AND C.BIZRID = D.BIZRID
+                                                                                                                                      AND C.BIZRNO = D.BIZRNO
+                                                                                                                                      AND (
+                                                                                                                                                (C.BRCH_ID = D.BRCH_ID AND C.BRCH_NO = D.BRCH_NO)
+                                                                                                                                              OR C.GRP_BRCH_NO = DECODE(D.GRP_YN, 'Y', D.BRCH_NO, '')                            
+                                                                                                                                             ) 
+                                                                                                                                      AND D.BRCH_ID = #{S_BRCH_ID} 
+                                                                                                                                      AND D.BRCH_NO = #{S_BRCH_NO}
+                                                                                                                                  )                 
+                                                                                                        )
+                                                                                  </if>
+                                                                            GROUP BY MFC_BIZRNO, WHSDL_BIZRNO , CTNR_CD, AREA_CD , WHSDL_BIZRID , MFC_BIZRID
+                                                                    )
+																	GROUP BY MFC_BIZRNO
+												                             ,MFC_BIZRID
+												                             ,WHSDL_BIZRNO
+												                             ,WHSDL_BIZRID
+												                             ,CTNR_CD
+												                             ,AREA_CD                                                                            
+																	) B
+														ON (
+																	   A.CTNR_CD = B.CTNR_CD
+																AND A.MFC_BIZRID = B.MFC_BIZRID 
+																AND A.MFC_BIZRNO = B.MFC_BIZRNO 
+                            									AND A.WHSDL_BIZRID = B.WHSDL_BIZRID 
+                            									AND A.WHSDL_BIZRNO = B.WHSDL_BIZRNO
+															)	
+								
+	
+							) T1
+							, EPCN_STD_CTNR_CD T2
+							JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+							ON   T2.LANG_SE_CD = E.LANG_SE_CD
+							       
+							WHERE 1=1
+							AND 	T1.CTNR_CD = T2.CTNR_CD
+						<if test="PRPS_CD !=''  and PRPS_CD !=null">
+							AND T2.PRPS_CD = #{PRPS_CD}
+						</if>   
+						
+						<if test="MFC_BIZRID !=''  and MFC_BIZRID !=null">
+							AND T1.MFC_BIZRID 		= #{MFC_BIZRID}
+							AND T1.MFC_BIZRNO 	= #{MFC_BIZRNO}
+						</if>
+						<if test="WHSDL_BIZRID !=''  and WHSDL_BIZRID !=null">
+							AND T1.WHSDL_BIZRID 	= #{WHSDL_BIZRID}
+							AND T1.WHSDL_BIZRNO 	= #{WHSDL_BIZRNO}
+						</if>
+						<if test="AREA_CD !=''  and AREA_CD !=null">
+							AND T1.AREA_CD = #{AREA_CD}
+						</if>
+						<if test="CTNR_CD !=''  and CTNR_CD !=null">
+							AND T2.CTNR_CD = #{CTNR_CD}
+						</if>
+						
+			              ORDER BY  T1.MFC_BIZRID , T1.WHSDL_BIZRID 
+	    <if test='excelYn == null or excelYn == "" '>
+			)
+			WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+		</if>	     
+	</select>
+	
+	<!--엑셀 총 카운트 -->
+	<select id="epmf6110401_select_cnt" parameterType="map" resultType="hashmap">
+				 	SELECT 
+								COUNT(1) as CNT
+								,SUM(T1.QTY_TOT) as QTY_TOT
+								,SUM(T1.CRCT_QTY_TOT) as CRCT_QTY_TOT
+					FROM
+							(
+								SELECT 
+											 NVL(A.MFC_BIZRNO, B.MFC_BIZRNO) AS MFC_BIZRNO
+											 ,NVL(A.MFC_BIZRID, B.MFC_BIZRID) AS MFC_BIZRID
+											 ,NVL(A.WHSDL_BIZRNO, B.WHSDL_BIZRNO) AS WHSDL_BIZRNO
+											 ,NVL(A.WHSDL_BIZRID, B.WHSDL_BIZRID) AS WHSDL_BIZRID
+											 ,NVL(A.CTNR_CD, B.CTNR_CD) AS CTNR_CD
+											 ,NVL(A.AREA_CD, B.AREA_CD) AS AREA_CD
+											 ,NVL(A.QTY_TOT, B.QTY_TOT) AS QTY_TOT
+											 ,NVL(A.CRCT_QTY_TOT,0) + NVL(B.CRCT_QTY_TOT,0) AS CRCT_QTY_TOT
+								  FROM
+												  (	
+													  SELECT  MFC_BIZRNO
+																 ,MFC_BIZRID
+																 ,WHSDL_BIZRNO
+																 ,WHSDL_BIZRID
+																 ,B.CTNR_CD as CTNR_CD
+																 ,AREA_CD
+																 ,NVL(SUM(B.CFM_QTY),0) AS QTY_TOT
+																 ,NVL(SUM(NVL2(D.WRHS_DOC_NO, 0, B.CFM_QTY)),0) AS CRCT_QTY_TOT
+														FROM EPCM_CFM_MST A
+														     	,EPCM_CFM_INFO B
+														     	,EPCN_BRCH_INFO C
+														     	,(
+											                      	 SELECT distinct WRHS_DOC_NO
+											                           FROM EXCA_WRHS_CRCT A
+											                         WHERE 1=1
+											                             AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+											                      ) D
+													WHERE 1=1
+														AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+														AND A.WHSDL_BIZRID = C.BIZRID
+														AND A.WHSDL_BIZRNO =C.BIZRNO
+														AND A.WHSDL_BRCH_ID = C.BRCH_ID
+														AND A.WHSDL_BRCH_NO = C.BRCH_NO
+														AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+														AND A.WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+														
+														AND B.WRHS_DOC_NO = D.WRHS_DOC_NO(+)
+														
+														<if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+															AND C.BIZR_TP_CD = #{BIZR_TP_CD}
+														</if>
+														
+														<if test='S_BRCH_ID != null and S_BRCH_ID != "" '>
+											              AND EXISTS (
+														                           SELECT 'X'
+														                             FROM EPCN_BRCH_INFO C
+														                           WHERE 1=1
+														                               AND A.MFC_BIZRID = C.BIZRID
+														                               AND A.MFC_BIZRNO = C.BIZRNO
+												                                       AND A.MFC_BRCH_ID = C.BRCH_ID
+														                               AND A.MFC_BRCH_NO = C.BRCH_NO 
+													                                   AND EXISTS (
+															                                              SELECT 'X'
+															                                                FROM EPCN_BRCH_INFO D
+															                                              WHERE 1=1
+															                                                  AND C.BIZRID = D.BIZRID
+															                                                  AND C.BIZRNO = D.BIZRNO
+															                                                  AND (
+																                                                        (C.BRCH_ID = D.BRCH_ID AND C.BRCH_NO = D.BRCH_NO)
+																                                                      OR C.GRP_BRCH_NO = DECODE(D.GRP_YN, 'Y', D.BRCH_NO, '')                            
+															                                                         ) 
+															                                                  AND D.BRCH_ID = #{S_BRCH_ID} 
+															                                                  AND D.BRCH_NO = #{S_BRCH_NO}
+																                                          )                 
+												                         		)
+											              </if>
+												
+													GROUP BY MFC_BIZRNO, WHSDL_BIZRNO , B.CTNR_CD, AREA_CD , WHSDL_BIZRID , MFC_BIZRID
+												) A
+												FULL OUTER JOIN (
+						                        SELECT MFC_BIZRNO
+						                             ,MFC_BIZRID
+						                             ,WHSDL_BIZRNO
+						                             ,WHSDL_BIZRID
+						                             ,CTNR_CD
+						                             ,AREA_CD
+						                             ,SUM(QTY_TOT) AS QTY_TOT
+						                             ,SUM(CRCT_QTY_TOT) AS CRCT_QTY_TOT
+						                        FROM (														
+																			SELECT  MFC_BIZRNO
+																						 ,MFC_BIZRID
+																						 ,WHSDL_BIZRNO
+																						 ,WHSDL_BIZRID
+																						 ,D.CTNR_CD as CTNR_CD
+																						 ,AREA_CD
+																						 ,0 AS QTY_TOT
+																						 ,NVL(SUM(D.CRCT_QTY),0) AS CRCT_QTY_TOT
+																				FROM EPCM_CFM_MST A
+																				     	,EPCN_BRCH_INFO C
+																				     	,(
+																	                      	 SELECT WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, SUM(CRCT_QTY) AS CRCT_QTY
+																	                           FROM EXCA_WRHS_CRCT A
+																	                         WHERE 1=1
+																	                             AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+																	                             AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+																								             				  SELECT 'X' FROM EXCA_WRHS_CRCT B
+																								             				  WHERE 1=1
+																								             				     AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+																								             				     AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+																								             				     AND B.MNUL_EXCA_SE IS NOT NULL
+																								             				)
+																	                        GROUP BY WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT
+																	                      ) D
+																			WHERE 1=1
+																				AND A.WHSDL_BIZRID = C.BIZRID
+																				AND A.WHSDL_BIZRNO =C.BIZRNO
+																				AND A.WHSDL_BRCH_ID = C.BRCH_ID
+																				AND A.WHSDL_BRCH_NO = C.BRCH_NO
+																				AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+																				AND D.CRCT_WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+																				
+																				AND A.WRHS_DOC_NO = D.WRHS_DOC_NO
+																				
+																				<if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+																					AND C.BIZR_TP_CD = #{BIZR_TP_CD}
+																				</if>
+																				
+																				<if test='S_BRCH_ID != null and S_BRCH_ID != "" '>
+																	              AND EXISTS (
+																				                           SELECT 'X'
+																				                             FROM EPCN_BRCH_INFO C
+																				                           WHERE 1=1
+																				                               AND A.MFC_BIZRID = C.BIZRID
+																				                               AND A.MFC_BIZRNO = C.BIZRNO
+																		                                       AND A.MFC_BRCH_ID = C.BRCH_ID
+																				                               AND A.MFC_BRCH_NO = C.BRCH_NO 
+																			                                   AND EXISTS (
+																					                                              SELECT 'X'
+																					                                                FROM EPCN_BRCH_INFO D
+																					                                              WHERE 1=1
+																					                                                  AND C.BIZRID = D.BIZRID
+																					                                                  AND C.BIZRNO = D.BIZRNO
+																					                                                  AND (
+																						                                                        (C.BRCH_ID = D.BRCH_ID AND C.BRCH_NO = D.BRCH_NO)
+																						                                                      OR C.GRP_BRCH_NO = DECODE(D.GRP_YN, 'Y', D.BRCH_NO, '')                            
+																					                                                         ) 
+																					                                                  AND D.BRCH_ID = #{S_BRCH_ID} 
+																					                                                  AND D.BRCH_NO = #{S_BRCH_NO}
+																						                                          )                 
+																		                         		)
+																	              </if>
+																		
+																			GROUP BY MFC_BIZRNO, WHSDL_BIZRNO , D.CTNR_CD, AREA_CD , WHSDL_BIZRID , MFC_BIZRID
+
+                                                                            UNION ALL
+                                                                            
+                                                                            SELECT  A.MFC_BIZRNO
+                                                                                         ,A.MFC_BIZRID
+                                                                                         ,A.WHSDL_BIZRNO
+                                                                                         ,A.WHSDL_BIZRID
+                                                                                         ,A.CTNR_CD
+                                                                                         ,C.AREA_CD
+                                                                                         ,0 AS QTY_TOT
+                                                                                         ,NVL(SUM(A.CRCT_QTY),0) AS CRCT_QTY_TOT
+                                                                                FROM   (
+                                                                                             SELECT WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, 
+                                                                                                      MNUL_MFC_BIZRID AS MFC_BIZRID,
+                                                                                                      MNUL_MFC_BIZRNO AS MFC_BIZRNO,
+                                                                                                      MNUL_MFC_BRCH_ID AS MFC_BRCH_ID,
+                                                                                                      MNUL_MFC_BRCH_NO AS MFC_BRCH_NO,
+                                                                                                      MNUL_WHSDL_BIZRID AS WHSDL_BIZRID,
+                                                                                                      MNUL_WHSDL_BIZRNO AS WHSDL_BIZRNO,
+                                                                                                      MNUL_WHSDL_BRCH_ID AS WHSDL_BRCH_ID,
+                                                                                                      MNUL_WHSDL_BRCH_NO AS WHSDL_BRCH_NO,
+                                                                                                      SUM(CRCT_QTY) AS CRCT_QTY
+                                                                                               FROM EXCA_WRHS_CRCT A
+                                                                                             WHERE 1=1
+                                                                                                 AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+                                                                                                 AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+                                                                                                                              SELECT 'X' FROM EXCA_WRHS_CRCT B
+                                                                                                                              WHERE 1=1
+                                                                                                                                 AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+                                                                                                                                 AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+                                                                                                                                 AND B.MNUL_EXCA_SE IS NOT NULL
+                                                                                                                            )
+                                                                                            GROUP BY WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT,
+                                                                                                      MNUL_MFC_BIZRID,
+                                                                                                      MNUL_MFC_BIZRNO,
+                                                                                                      MNUL_MFC_BRCH_ID,
+                                                                                                      MNUL_MFC_BRCH_NO,
+                                                                                                      MNUL_WHSDL_BIZRID,
+                                                                                                      MNUL_WHSDL_BIZRNO,
+                                                                                                      MNUL_WHSDL_BRCH_ID,
+                                                                                                      MNUL_WHSDL_BRCH_NO                                                                                            
+                                                                                          ) A
+                                                                                        ,EPCN_BRCH_INFO C
+                                                                            WHERE 1=1
+                                                                                AND A.WHSDL_BIZRID = C.BIZRID
+                                                                                AND A.WHSDL_BIZRNO = C.BIZRNO
+                                                                                AND A.WHSDL_BRCH_ID = C.BRCH_ID
+                                                                                AND A.WHSDL_BRCH_NO = C.BRCH_NO
+                                                                                AND A.CRCT_WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+                                                                                
+                                                                                AND 'IN-0' = A.WRHS_DOC_NO                                                                            
+                                                                                
+                                                                                <if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+                                                                                    AND C.BIZR_TP_CD = #{BIZR_TP_CD}
+                                                                                </if>
+                                                                                
+                                                                                <if test='S_BRCH_ID != null and S_BRCH_ID != "" '>
+                                                                                  AND EXISTS (
+                                                                                                           SELECT 'X'
+                                                                                                             FROM EPCN_BRCH_INFO C
+                                                                                                           WHERE 1=1
+                                                                                                               AND A.MFC_BIZRID = C.BIZRID
+                                                                                                               AND A.MFC_BIZRNO = C.BIZRNO
+                                                                                                               AND A.MFC_BRCH_ID = C.BRCH_ID
+                                                                                                               AND A.MFC_BRCH_NO = C.BRCH_NO 
+                                                                                                               AND EXISTS (
+                                                                                                                                  SELECT 'X'
+                                                                                                                                    FROM EPCN_BRCH_INFO D
+                                                                                                                                  WHERE 1=1
+                                                                                                                                      AND C.BIZRID = D.BIZRID
+                                                                                                                                      AND C.BIZRNO = D.BIZRNO
+                                                                                                                                      AND (
+                                                                                                                                                (C.BRCH_ID = D.BRCH_ID AND C.BRCH_NO = D.BRCH_NO)
+                                                                                                                                              OR C.GRP_BRCH_NO = DECODE(D.GRP_YN, 'Y', D.BRCH_NO, '')                            
+                                                                                                                                             ) 
+                                                                                                                                      AND D.BRCH_ID = #{S_BRCH_ID} 
+                                                                                                                                      AND D.BRCH_NO = #{S_BRCH_NO}
+                                                                                                                                  )                 
+                                                                                                        )
+                                                                                  </if>
+                                                                            GROUP BY MFC_BIZRNO, WHSDL_BIZRNO , CTNR_CD, AREA_CD , WHSDL_BIZRID , MFC_BIZRID
+                                                                    )
+																	GROUP BY MFC_BIZRNO
+												                             ,MFC_BIZRID
+												                             ,WHSDL_BIZRNO
+												                             ,WHSDL_BIZRID
+												                             ,CTNR_CD
+												                             ,AREA_CD                                                                            
+																	) B
+														ON (
+																	   A.CTNR_CD = B.CTNR_CD
+																AND A.MFC_BIZRID = B.MFC_BIZRID 
+																AND A.MFC_BIZRNO = B.MFC_BIZRNO 
+                            									AND A.WHSDL_BIZRID = B.WHSDL_BIZRID 
+                            									AND A.WHSDL_BIZRNO = B.WHSDL_BIZRNO
+															)	
+			
+							) T1
+							, EPCN_STD_CTNR_CD T2
+							JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+							ON   T2.LANG_SE_CD = E.LANG_SE_CD
+				WHERE 1=1
+				AND 	T1.CTNR_CD = T2.CTNR_CD  
+	  
+			<if test="PRPS_CD !=''  and PRPS_CD !=null">
+				AND T2.PRPS_CD = #{PRPS_CD}
+			</if>
+			<if test="MFC_BIZRID !=''  and MFC_BIZRID !=null">
+				AND T1.MFC_BIZRID 		= #{MFC_BIZRID}
+				AND T1.MFC_BIZRNO 	= #{MFC_BIZRNO}
+			</if>
+			<if test="WHSDL_BIZRID !=''  and WHSDL_BIZRID !=null">
+				AND T1.WHSDL_BIZRID 	= #{WHSDL_BIZRID}
+				AND T1.WHSDL_BIZRNO 	= #{WHSDL_BIZRNO}
+			</if>
+			<if test="AREA_CD !=''  and AREA_CD !=null">
+				AND T1.AREA_CD = #{AREA_CD}
+			</if>
+			<if test="CTNR_CD !=''  and CTNR_CD !=null">
+				AND T2.CTNR_CD = #{CTNR_CD}
+			</if>  
+	</select>
+
+	<!-- 차트조회  -->  
+	<select id="epmf6110401_select2"  parameterType="map"   resultType="hashmap">
+				SELECT     
+							 EPCN_BIZR_ABBR_NM(MFC_BIZRID ,MFC_BIZRNO) AS BIZRNM  
+							,NVL(SUM(CRCT_QTY_TOT), 0)AS CFM_QTY_TOT
+							,NVL(SUM( CASE PRPS_CD WHEN '0' THEN CRCT_QTY_TOT ELSE 0 END ), 0) AS FB_CFM_QTY_TOT
+							,NVL(SUM( CASE PRPS_CD WHEN '1' THEN CRCT_QTY_TOT ELSE 0 END ), 0) AS FH_CFM_QTY_TOT
+							,NVL(SUM( CASE PRPS_CD WHEN '2' THEN CRCT_QTY_TOT ELSE 0 END ), 0) AS DRCT_CFM_QTY_TOT				    	
+												    	
+				 FROM   
+							(
+								SELECT 
+											 NVL(A.MFC_BIZRNO, B.MFC_BIZRNO) AS MFC_BIZRNO
+											 ,NVL(A.MFC_BIZRID, B.MFC_BIZRID) AS MFC_BIZRID
+											 ,NVL(A.WHSDL_BIZRNO, B.WHSDL_BIZRNO) AS WHSDL_BIZRNO
+											 ,NVL(A.WHSDL_BIZRID, B.WHSDL_BIZRID) AS WHSDL_BIZRID
+											 ,NVL(A.CTNR_CD, B.CTNR_CD) AS CTNR_CD
+											 ,NVL(A.AREA_CD, B.AREA_CD) AS AREA_CD
+											 ,NVL(A.QTY_TOT, B.QTY_TOT) AS QTY_TOT
+											 ,NVL(A.CRCT_QTY_TOT,0) + NVL(B.CRCT_QTY_TOT,0) AS CRCT_QTY_TOT
+								  FROM
+												  (	
+													  SELECT  MFC_BIZRNO
+																 ,MFC_BIZRID
+																 ,WHSDL_BIZRNO
+																 ,WHSDL_BIZRID
+																 ,B.CTNR_CD as CTNR_CD
+																 ,AREA_CD
+																 ,NVL(SUM(B.CFM_QTY),0) AS QTY_TOT
+																 ,NVL(SUM(NVL2(D.WRHS_DOC_NO, 0, B.CFM_QTY)),0) AS CRCT_QTY_TOT
+														FROM EPCM_CFM_MST A
+														     	,EPCM_CFM_INFO B
+														     	,EPCN_BRCH_INFO C
+														     	,(
+											                      	 SELECT distinct WRHS_DOC_NO
+											                           FROM EXCA_WRHS_CRCT A
+											                         WHERE 1=1
+											                             AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+											                      ) D
+													WHERE 1=1
+														AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+														AND A.WHSDL_BIZRID = C.BIZRID
+														AND A.WHSDL_BIZRNO =C.BIZRNO
+														AND A.WHSDL_BRCH_ID = C.BRCH_ID
+														AND A.WHSDL_BRCH_NO = C.BRCH_NO
+														AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+														AND A.WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+														
+														AND B.WRHS_DOC_NO = D.WRHS_DOC_NO(+)
+														
+														<if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+															AND C.BIZR_TP_CD = #{BIZR_TP_CD}
+														</if>
+														
+														<if test='S_BRCH_ID != null and S_BRCH_ID != "" '>
+											              AND EXISTS (
+														                           SELECT 'X'
+														                             FROM EPCN_BRCH_INFO C
+														                           WHERE 1=1
+														                               AND A.MFC_BIZRID = C.BIZRID
+														                               AND A.MFC_BIZRNO = C.BIZRNO
+												                                       AND A.MFC_BRCH_ID = C.BRCH_ID
+														                               AND A.MFC_BRCH_NO = C.BRCH_NO 
+													                                   AND EXISTS (
+															                                              SELECT 'X'
+															                                                FROM EPCN_BRCH_INFO D
+															                                              WHERE 1=1
+															                                                  AND C.BIZRID = D.BIZRID
+															                                                  AND C.BIZRNO = D.BIZRNO
+															                                                  AND (
+																                                                        (C.BRCH_ID = D.BRCH_ID AND C.BRCH_NO = D.BRCH_NO)
+																                                                      OR C.GRP_BRCH_NO = DECODE(D.GRP_YN, 'Y', D.BRCH_NO, '')                            
+															                                                         ) 
+															                                                  AND D.BRCH_ID = #{S_BRCH_ID} 
+															                                                  AND D.BRCH_NO = #{S_BRCH_NO}
+																                                          )                 
+												                         		)
+											              </if>
+												
+													GROUP BY MFC_BIZRNO, WHSDL_BIZRNO , B.CTNR_CD, AREA_CD , WHSDL_BIZRID , MFC_BIZRID
+												) A
+												FULL OUTER JOIN (
+						                        SELECT MFC_BIZRNO
+						                             ,MFC_BIZRID
+						                             ,WHSDL_BIZRNO
+						                             ,WHSDL_BIZRID
+						                             ,CTNR_CD
+						                             ,AREA_CD
+						                             ,SUM(QTY_TOT) AS QTY_TOT
+						                             ,SUM(CRCT_QTY_TOT) AS CRCT_QTY_TOT
+						                        FROM (														
+																			SELECT  MFC_BIZRNO
+																						 ,MFC_BIZRID
+																						 ,WHSDL_BIZRNO
+																						 ,WHSDL_BIZRID
+																						 ,D.CTNR_CD as CTNR_CD
+																						 ,AREA_CD
+																						 ,0 AS QTY_TOT
+																						 ,NVL(SUM(D.CRCT_QTY),0) AS CRCT_QTY_TOT
+																				FROM EPCM_CFM_MST A
+																				     	,EPCN_BRCH_INFO C
+																				     	,(
+																	                      	 SELECT WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, SUM(CRCT_QTY) AS CRCT_QTY
+																	                           FROM EXCA_WRHS_CRCT A
+																	                         WHERE 1=1
+																	                             AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+																	                             AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+																								             				  SELECT 'X' FROM EXCA_WRHS_CRCT B
+																								             				  WHERE 1=1
+																								             				     AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+																								             				     AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+																								             				     AND B.MNUL_EXCA_SE IS NOT NULL
+																								             				)
+																	                        GROUP BY WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT
+																	                      ) D
+																			WHERE 1=1
+																				AND A.WHSDL_BIZRID = C.BIZRID
+																				AND A.WHSDL_BIZRNO =C.BIZRNO
+																				AND A.WHSDL_BRCH_ID = C.BRCH_ID
+																				AND A.WHSDL_BRCH_NO = C.BRCH_NO
+																				AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+																				AND D.CRCT_WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+																				
+																				AND A.WRHS_DOC_NO = D.WRHS_DOC_NO
+																				
+																				<if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+																					AND C.BIZR_TP_CD = #{BIZR_TP_CD}
+																				</if>
+																				
+																				<if test='S_BRCH_ID != null and S_BRCH_ID != "" '>
+																	              AND EXISTS (
+																				                           SELECT 'X'
+																				                             FROM EPCN_BRCH_INFO C
+																				                           WHERE 1=1
+																				                               AND A.MFC_BIZRID = C.BIZRID
+																				                               AND A.MFC_BIZRNO = C.BIZRNO
+																		                                       AND A.MFC_BRCH_ID = C.BRCH_ID
+																				                               AND A.MFC_BRCH_NO = C.BRCH_NO 
+																			                                   AND EXISTS (
+																					                                              SELECT 'X'
+																					                                                FROM EPCN_BRCH_INFO D
+																					                                              WHERE 1=1
+																					                                                  AND C.BIZRID = D.BIZRID
+																					                                                  AND C.BIZRNO = D.BIZRNO
+																					                                                  AND (
+																						                                                        (C.BRCH_ID = D.BRCH_ID AND C.BRCH_NO = D.BRCH_NO)
+																						                                                      OR C.GRP_BRCH_NO = DECODE(D.GRP_YN, 'Y', D.BRCH_NO, '')                            
+																					                                                         ) 
+																					                                                  AND D.BRCH_ID = #{S_BRCH_ID} 
+																					                                                  AND D.BRCH_NO = #{S_BRCH_NO}
+																						                                          )                 
+																		                         		)
+																	              </if>
+																		
+																			GROUP BY MFC_BIZRNO, WHSDL_BIZRNO , D.CTNR_CD, AREA_CD , WHSDL_BIZRID , MFC_BIZRID
+                                                                            
+                                                                            UNION ALL
+                                                                            
+                                                                            SELECT  A.MFC_BIZRNO
+                                                                                         ,A.MFC_BIZRID
+                                                                                         ,A.WHSDL_BIZRNO
+                                                                                         ,A.WHSDL_BIZRID
+                                                                                         ,A.CTNR_CD
+                                                                                         ,C.AREA_CD
+                                                                                         ,0 AS QTY_TOT
+                                                                                         ,NVL(SUM(A.CRCT_QTY),0) AS CRCT_QTY_TOT
+                                                                                FROM   (
+                                                                                             SELECT WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, 
+                                                                                                      MNUL_MFC_BIZRID AS MFC_BIZRID,
+                                                                                                      MNUL_MFC_BIZRNO AS MFC_BIZRNO,
+                                                                                                      MNUL_MFC_BRCH_ID AS MFC_BRCH_ID,
+                                                                                                      MNUL_MFC_BRCH_NO AS MFC_BRCH_NO,
+                                                                                                      MNUL_WHSDL_BIZRID AS WHSDL_BIZRID,
+                                                                                                      MNUL_WHSDL_BIZRNO AS WHSDL_BIZRNO,
+                                                                                                      MNUL_WHSDL_BRCH_ID AS WHSDL_BRCH_ID,
+                                                                                                      MNUL_WHSDL_BRCH_NO AS WHSDL_BRCH_NO,
+                                                                                                      SUM(CRCT_QTY) AS CRCT_QTY
+                                                                                               FROM EXCA_WRHS_CRCT A
+                                                                                             WHERE 1=1
+                                                                                                 AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+                                                                                                 AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+                                                                                                                              SELECT 'X' FROM EXCA_WRHS_CRCT B
+                                                                                                                              WHERE 1=1
+                                                                                                                                 AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+                                                                                                                                 AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+                                                                                                                                 AND B.MNUL_EXCA_SE IS NOT NULL
+                                                                                                                            )
+                                                                                            GROUP BY WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT,
+                                                                                                      MNUL_MFC_BIZRID,
+                                                                                                      MNUL_MFC_BIZRNO,
+                                                                                                      MNUL_MFC_BRCH_ID,
+                                                                                                      MNUL_MFC_BRCH_NO,
+                                                                                                      MNUL_WHSDL_BIZRID,
+                                                                                                      MNUL_WHSDL_BIZRNO,
+                                                                                                      MNUL_WHSDL_BRCH_ID,
+                                                                                                      MNUL_WHSDL_BRCH_NO                                                                                            
+                                                                                          ) A
+                                                                                        ,EPCN_BRCH_INFO C
+                                                                            WHERE 1=1
+                                                                                AND A.WHSDL_BIZRID = C.BIZRID
+                                                                                AND A.WHSDL_BIZRNO = C.BIZRNO
+                                                                                AND A.WHSDL_BRCH_ID = C.BRCH_ID
+                                                                                AND A.WHSDL_BRCH_NO = C.BRCH_NO
+                                                                                AND A.CRCT_WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-')
+                                                                                
+                                                                                AND 'IN-0' = A.WRHS_DOC_NO                                                                            
+                                                                                
+                                                                                <if test="BIZR_TP_CD !=''  and BIZR_TP_CD !=null">
+                                                                                    AND C.BIZR_TP_CD = #{BIZR_TP_CD}
+                                                                                </if>
+                                                                                
+                                                                                <if test='S_BRCH_ID != null and S_BRCH_ID != "" '>
+                                                                                  AND EXISTS (
+                                                                                                           SELECT 'X'
+                                                                                                             FROM EPCN_BRCH_INFO C
+                                                                                                           WHERE 1=1
+                                                                                                               AND A.MFC_BIZRID = C.BIZRID
+                                                                                                               AND A.MFC_BIZRNO = C.BIZRNO
+                                                                                                               AND A.MFC_BRCH_ID = C.BRCH_ID
+                                                                                                               AND A.MFC_BRCH_NO = C.BRCH_NO 
+                                                                                                               AND EXISTS (
+                                                                                                                                  SELECT 'X'
+                                                                                                                                    FROM EPCN_BRCH_INFO D
+                                                                                                                                  WHERE 1=1
+                                                                                                                                      AND C.BIZRID = D.BIZRID
+                                                                                                                                      AND C.BIZRNO = D.BIZRNO
+                                                                                                                                      AND (
+                                                                                                                                                (C.BRCH_ID = D.BRCH_ID AND C.BRCH_NO = D.BRCH_NO)
+                                                                                                                                              OR C.GRP_BRCH_NO = DECODE(D.GRP_YN, 'Y', D.BRCH_NO, '')                            
+                                                                                                                                             ) 
+                                                                                                                                      AND D.BRCH_ID = #{S_BRCH_ID} 
+                                                                                                                                      AND D.BRCH_NO = #{S_BRCH_NO}
+                                                                                                                                  )                 
+                                                                                                        )
+                                                                                  </if>
+                                                                            GROUP BY MFC_BIZRNO, WHSDL_BIZRNO , CTNR_CD, AREA_CD , WHSDL_BIZRID , MFC_BIZRID   
+                                                                    )
+																	GROUP BY MFC_BIZRNO
+												                             ,MFC_BIZRID
+												                             ,WHSDL_BIZRNO
+												                             ,WHSDL_BIZRID
+												                             ,CTNR_CD
+												                             ,AREA_CD                                                                                                                                                     
+																	) B
+														ON (
+																	   A.CTNR_CD = B.CTNR_CD
+																AND A.MFC_BIZRID = B.MFC_BIZRID 
+																AND A.MFC_BIZRNO = B.MFC_BIZRNO 
+                            									AND A.WHSDL_BIZRID = B.WHSDL_BIZRID 
+                            									AND A.WHSDL_BIZRNO = B.WHSDL_BIZRNO
+															)	
+
+							) T1
+							, EPCN_BIZR_INFO T3  
+							, EPCN_STD_CTNR_CD T2   
+							JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+							ON   T2.LANG_SE_CD = E.LANG_SE_CD   
+			WHERE 1=1  
+			AND T1.MFC_BIZRID 	= T3.BIZRID          
+		    AND T1.MFC_BIZRNO 	= T3.BIZRNO       
+			AND T1.CTNR_CD 		= T2.CTNR_CD           
+			<if test="PRPS_CD !=''  and PRPS_CD !=null">          
+				AND T2.PRPS_CD = #{PRPS_CD}
+			</if>   
+			<if test="MFC_BIZRID !=''  and MFC_BIZRID !=null">
+				AND T1.MFC_BIZRID 		= #{MFC_BIZRID}
+				AND T1.MFC_BIZRNO 		= #{MFC_BIZRNO}
+			</if>
+			<if test="WHSDL_BIZRID !=''  and WHSDL_BIZRID !=null">
+				AND T1.WHSDL_BIZRID 	= #{WHSDL_BIZRID}
+				AND T1.WHSDL_BIZRNO 	= #{WHSDL_BIZRNO}
+			</if>
+			<if test="CTNR_CD !=''  and CTNR_CD !=null">
+				AND T1.CTNR_CD 			= #{CTNR_CD}
+			</if>
+			<if test="AREA_CD !=''  and AREA_CD !=null">
+				AND T1.AREA_CD 			= #{AREA_CD}
+			</if>
+			
+			 GROUP BY MFC_BIZRID , MFC_BIZRNO, T3.SEL_ORD
+			 ORDER BY T3.SEL_ORD
+	</select>
+
+	
+</mapper>
+

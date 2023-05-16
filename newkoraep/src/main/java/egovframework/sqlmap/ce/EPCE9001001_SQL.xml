@@ -1,0 +1,818 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE9001001Mapper">
+  
+	<!-- 회수대비초과반환현황 조회  -->
+	<select id="epce9001001_select" parameterType="map"   resultType="hashmap">
+		  <if test='excelYn == null or excelYn == "" '>
+			SELECT
+							*
+			 FROM (
+		 </if>
+						SELECT    
+									ROWNUM AS PNO
+									,TOTALCOUNT
+									,PI_DECRYPT(WHSDL_BIZRNO) AS WHSDL_BIZRNO
+									,(SELECT  RPST_TEL_NO1||'-'||RPST_TEL_NO2||'-'||RPST_TEL_NO3 from EPCN_BIZR_INFO where BIZRID =WHSDL_BIZRID and BIZRNO =WHSDL_BIZRNO)    AS TEL_NO
+									,WHSDL_BIZRNM
+									,AREA_CD
+									,RTRVL_M
+									,RTRVL_H
+									,(RTRVL_M +RTRVL_H ) AS RTRVL_TOT
+									,DECODE( (RTRVL_M + RTRVL_H), 0, 0, ROUND((RTRVL_H / (RTRVL_M + RTRVL_H)),4) * 100) AS RTRVL_RT_H
+									,CFM_M
+									,CFM_H
+									,CFM_D
+									,(CFM_M +CFM_H +CFM_D) AS CFM_TOT
+									,DECODE( (CFM_M + CFM_H+CFM_D), 0, 0, ROUND((CFM_H / (CFM_M + CFM_H+CFM_D)),4) * 100) AS CFM_RT_H
+                                    ,(RTRVL_M - CFM_M ) AS RTRVL_CPR_RTRVL_M 
+                                    ,(RTRVL_H - CFM_H ) AS RTRVL_CPR_RTRVL_H 
+                                    ,(RTRVL_H - CFM_H ) - CFM_D + (RTRVL_M - CFM_M) AS RTRVL_CPR_RTRVL_TOT 
+									,DECODE(((CFM_H +CFM_D - RTRVL_H) + (CFM_M - RTRVL_M)),0,0, ROUND(((CFM_H + CFM_D - RTRVL_H) / ((CFM_H + CFM_D - RTRVL_H) + (CFM_M - RTRVL_M))),4) * 100) AS RTRVL_CPR_RTRVL_RT_H
+		    						,DECODE((RTRVL_H+RTRVL_M), 0, 0 , ROUND((CFM_H+CFM_D+CFM_M) / (RTRVL_H+RTRVL_M), 4) * 100) AS RTRVL_CPR_RTRVL_RT
+		    						,DECODE((RTRVL_H), 0, 0 , ROUND((CFM_H+CFM_D) / (RTRVL_H), 4) * 100) AS CFM_RTRVL_PER_H
+                  					,DECODE((RTRVL_M), 0, 0 , ROUND((CFM_M) / (RTRVL_M), 4) * 100) AS CFM_RTRVL_PER_M
+		    						
+						FROM 
+										(
+											 SELECT
+											 
+											 			COUNT(*)OVER() AS TOTALCOUNT
+											 			,WHSDL_BIZRID
+											 			,WHSDL_BIZRNO
+														,EPCN_BIZR_NM(WHSDL_BIZRID ,WHSDL_BIZRNO) AS WHSDL_BIZRNM
+														,EPCN_ETC_NM(AREA_CD,'B010') AS AREA_CD
+														,NVL(SUM 
+														              ( 
+														                  CASE TABLE_NM 
+														                      WHEN 'RTRVL' 
+														                      THEN DECODE(PRPS_CD, '0', QTY, 0)
+														                      ELSE 0 
+														                  END 
+														              ) 
+													  			,0) AS RTRVL_M
+													   ,NVL(SUM 
+														              ( 
+														                  CASE TABLE_NM 
+														                      WHEN 'RTRVL' 
+														                      THEN DECODE(PRPS_CD, '1', QTY, 0)
+														                      ELSE 0 
+														                  END 
+														              ) 
+													  			,0) AS RTRVL_H  			
+													    ,NVL(SUM 
+														              ( 
+														                  CASE TABLE_NM 
+														                      WHEN 'CFM' 
+														                      THEN DECODE(PRPS_CD, '0', QTY, 0)
+														                      ELSE 0 
+														                  END 
+														              ) 
+													  			,0) AS CFM_M 		
+													    ,NVL(SUM 
+														              ( 
+														                  CASE TABLE_NM 
+														                      WHEN 'CFM' 
+														                      THEN DECODE(PRPS_CD, '1', QTY, 0)
+														                      ELSE 0 
+														                  END 
+														              ) 
+													  			,0) AS CFM_H 	
+													  	 ,NVL(SUM 
+														              ( 
+														                  CASE TABLE_NM 
+														                      WHEN 'CFM' 
+														                      THEN DECODE(PRPS_CD, '2', QTY, 0)
+														                      ELSE 0 
+														                  END 
+														              ) 
+													  			,0) AS CFM_D  
+											FROM
+											
+													(
+														SELECT  
+																	TABLE_NM
+																	,SUM(NVL(QTY, 0)) AS QTY 
+																	,PRPS_CD
+																	,WHSDL_BIZRID
+																	,WHSDL_BIZRNO
+																	,AREA_CD
+														FROM 
+														(
+																SELECT 
+																		'RTRVL' AS TABLE_NM
+																		,A.WHSDL_BIZRID
+																		,A.WHSDL_BIZRNO
+																		,A.WHSDL_BRCH_ID
+																		,A.WHSDL_BRCH_NO				
+																		,SUM(B.RTRVL_QTY) AS QTY	
+																		,C.PRPS_CD
+														 		FROM 
+																		  EPCM_RTRVL_MST  A
+									                                    , EPCM_RTRVL_INFO B
+									                                    , EPCN_RTRVL_CTNR_CD C														 		
+																WHERE 1=1
+																AND A.RTRVL_DOC_NO = B.RTRVL_DOC_NO
+																AND A.RTRVL_STAT_CD NOT IN('RG','WG','RJ','WJ')
+																AND B.RTRVL_DT BETWEEN  REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+																AND B.RTRVL_CTNR_CD = C.RTRVL_CTNR_CD(+)
+																	<if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+																		AND	A.WHSDL_BIZRID||';'||A.WHSDL_BIZRNO  IN
+																		<foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+																			#{type.WHSDL_BIZRID_NO}
+																		</foreach>
+																	</if>	    																
+																GROUP BY A.WHSDL_BIZRID, A.WHSDL_BIZRNO, A.WHSDL_BRCH_ID, A.WHSDL_BRCH_NO, PRPS_CD
+														UNION ALL
+												SELECT 	  
+										'CFM' AS TABLE_NM	
+										,T3.WHSDL_BIZRID
+										,T3.WHSDL_BIZRNO
+										,T3.WHSDL_BRCH_ID
+										,T3.WHSDL_BRCH_NO
+										,sum(T3.CRCT_QTY_TOT) AS QTY
+                                        ,T4.PRPS_CD AS PRPS_CD
+							 FROM
+							(
+								SELECT 
+											 NVL(A.WHSDL_BRCH_NO, B.WHSDL_BRCH_NO) AS WHSDL_BRCH_NO
+											 ,NVL(A.WHSDL_BRCH_ID, B.WHSDL_BRCH_ID) AS WHSDL_BRCH_ID
+											 ,NVL(A.WHSDL_BIZRNO, B.WHSDL_BIZRNO) AS WHSDL_BIZRNO
+											 ,NVL(A.WHSDL_BIZRID, B.WHSDL_BIZRID) AS WHSDL_BIZRID
+											 ,NVL(A.CTNR_CD, B.CTNR_CD) AS CTNR_CD
+											 ,NVL(A.CRCT_QTY_TOT,0) + NVL(B.CRCT_QTY_TOT,0) AS CRCT_QTY_TOT
+								  FROM
+												  (	
+													  SELECT      WHSDL_BRCH_ID
+																 ,WHSDL_BRCH_NO
+																 ,WHSDL_BIZRNO
+																 ,WHSDL_BIZRID
+																 ,B.CTNR_CD as CTNR_CD
+																 ,NVL(SUM(NVL2(D.WRHS_DOC_NO, 0, B.CFM_QTY)),0) AS CRCT_QTY_TOT
+														FROM EPCM_CFM_MST A
+														     	,EPCM_CFM_INFO B
+														     	,EPCN_BRCH_INFO C
+														     	,(
+											                      	 SELECT distinct WRHS_DOC_NO
+											                           FROM EXCA_WRHS_CRCT A
+											                         WHERE 1=1
+											                             AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+											                      ) D
+													WHERE 1=1
+														AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+														AND A.WHSDL_BIZRID = C.BIZRID
+														AND A.WHSDL_BIZRNO =C.BIZRNO
+														AND A.WHSDL_BRCH_ID = C.BRCH_ID
+														AND A.WHSDL_BRCH_NO = C.BRCH_NO
+														AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+														AND A.WRHS_CFM_DT  BETWEEN  REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+														
+														AND B.WRHS_DOC_NO = D.WRHS_DOC_NO(+)
+														
+														 <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+																		AND	A.WHSDL_BIZRID||';'||A.WHSDL_BIZRNO  IN
+																		<foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+																			#{type.WHSDL_BIZRID_NO}
+																		</foreach>
+														</if>
+														  
+														  
+														  
+														
+														AND EXISTS (
+															                   SELECT 'X'
+															                     FROM EPCN_BRCH_INFO S1
+																                          ,EPCN_ATH_GRP_USER S2
+																                          ,EPCN_ATH_GRP_BIZR S3
+															                   WHERE 1=1
+															                       AND A.WHSDL_BIZRID = S1.BIZRID
+															                       AND A.WHSDL_BIZRNO = S1.BIZRNO
+															                       AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+															                       AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+															                       AND S2.USER_ID =  'webcashkora1' /**P*/
+															                       AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+															                       AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+															                       AND S1.AREA_CD = S3.AREA_CD
+														                  )
+												
+													GROUP BY WHSDL_BRCH_NO, WHSDL_BIZRNO , B.CTNR_CD, AREA_CD , WHSDL_BIZRID , WHSDL_BRCH_ID
+												) A
+												FULL OUTER JOIN (
+							                        SELECT WHSDL_BRCH_ID
+							                             ,WHSDL_BRCH_NO
+							                             ,WHSDL_BIZRNO
+							                             ,WHSDL_BIZRID
+							                             ,CTNR_CD
+							                             ,SUM(CRCT_QTY_TOT) AS CRCT_QTY_TOT	
+													FROM (							                             											
+																			SELECT  WHSDL_BRCH_ID
+							                             								 ,WHSDL_BRCH_NO
+																						 ,WHSDL_BIZRNO
+																						 ,WHSDL_BIZRID
+																						 ,D.CTNR_CD as CTNR_CD
+																						 ,NVL(SUM(D.CRCT_QTY),0) AS CRCT_QTY_TOT
+																				FROM EPCM_CFM_MST A
+																				     	,EPCN_BRCH_INFO C
+																				     	,(
+																	                      	 SELECT WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, SUM(CRCT_QTY) AS CRCT_QTY
+																	                           FROM EXCA_WRHS_CRCT A
+																	                         WHERE 1=1
+																	                             AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+																	                             AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+																								             				  SELECT 'X' FROM EXCA_WRHS_CRCT B
+																								             				  WHERE 1=1
+																								             				     AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+																								             				     AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+																								             				     AND B.MNUL_EXCA_SE IS NOT NULL
+																								             				)
+																	                        GROUP BY WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT
+																	                      ) D
+																			WHERE 1=1
+																				AND A.WHSDL_BIZRID = C.BIZRID
+																				AND A.WHSDL_BIZRNO =C.BIZRNO
+																				AND A.WHSDL_BRCH_ID = C.BRCH_ID
+																				AND A.WHSDL_BRCH_NO = C.BRCH_NO
+																				AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+																				AND D.CRCT_WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+																				
+                                                                                AND A.WRHS_DOC_NO = D.WRHS_DOC_NO
+																				
+																			 <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+																					AND	A.WHSDL_BIZRID||';'||A.WHSDL_BIZRNO  IN
+																					<foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+																						#{type.WHSDL_BIZRID_NO}
+																					</foreach>
+																			</if>
+																				  
+																				  
+																				  
+																				
+																				AND EXISTS (
+																					                   SELECT 'X'
+																					                     FROM EPCN_BRCH_INFO S1
+																						                          ,EPCN_ATH_GRP_USER S2
+																						                          ,EPCN_ATH_GRP_BIZR S3
+																					                   WHERE 1=1
+																					                       AND A.WHSDL_BIZRID = S1.BIZRID
+																					                       AND A.WHSDL_BIZRNO = S1.BIZRNO
+																					                       AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+																					                       AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+																					                       AND S2.USER_ID =  'webcashkora1' /**P*/
+																					                       AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+																					                       AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+																					                       AND S1.AREA_CD = S3.AREA_CD
+																				                  )
+																		
+																			GROUP BY WHSDL_BRCH_ID,WHSDL_BRCH_NO, WHSDL_BIZRNO , D.CTNR_CD, AREA_CD , WHSDL_BIZRID
+                                                                            
+                                                                            UNION ALL
+                                                                            
+                                                                            SELECT  A.WHSDL_BRCH_ID
+                                                                                         ,A.WHSDL_BRCH_NO
+                                                                                         ,A.WHSDL_BIZRNO
+                                                                                         ,A.WHSDL_BIZRID
+                                                                                         ,A.CTNR_CD
+                                                                                         ,NVL(SUM(A.CRCT_QTY),0) AS CRCT_QTY_TOT
+                                                                                FROM   (
+                                                                                             SELECT WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, 
+                                                                                                      MNUL_MFC_BIZRID AS MFC_BIZRID,
+                                                                                                      MNUL_MFC_BIZRNO AS MFC_BIZRNO,
+                                                                                                      MNUL_MFC_BRCH_ID AS MFC_BRCH_ID,
+                                                                                                      MNUL_MFC_BRCH_NO AS MFC_BRCH_NO,
+                                                                                                      MNUL_WHSDL_BIZRID AS WHSDL_BIZRID,
+                                                                                                      MNUL_WHSDL_BIZRNO AS WHSDL_BIZRNO,
+                                                                                                      MNUL_WHSDL_BRCH_ID AS WHSDL_BRCH_ID,
+                                                                                                      MNUL_WHSDL_BRCH_NO AS WHSDL_BRCH_NO,
+                                                                                                      SUM(CRCT_QTY) AS CRCT_QTY
+                                                                                               FROM EXCA_WRHS_CRCT A
+                                                                                             WHERE 1=1
+                                                                                                 AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+                                                                                                 AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+                                                                                                                              SELECT 'X' FROM EXCA_WRHS_CRCT B
+                                                                                                                              WHERE 1=1
+                                                                                                                                 AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+                                                                                                                                 AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+                                                                                                                                 AND B.MNUL_EXCA_SE IS NOT NULL
+                                                                                                                            )
+                                                                                            GROUP BY WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT,
+                                                                                                      MNUL_MFC_BIZRID,
+                                                                                                      MNUL_MFC_BIZRNO,
+                                                                                                      MNUL_MFC_BRCH_ID,
+                                                                                                      MNUL_MFC_BRCH_NO,
+                                                                                                      MNUL_WHSDL_BIZRID,
+                                                                                                      MNUL_WHSDL_BIZRNO,
+                                                                                                      MNUL_WHSDL_BRCH_ID,
+                                                                                                      MNUL_WHSDL_BRCH_NO                                                                                            
+                                                                                          ) A
+                                                                                        ,EPCN_BRCH_INFO C
+                                                                            WHERE 1=1
+                                                                                AND A.WHSDL_BIZRID = C.BIZRID
+                                                                                AND A.WHSDL_BIZRNO = C.BIZRNO
+                                                                                AND A.WHSDL_BRCH_ID = C.BRCH_ID
+                                                                                AND A.WHSDL_BRCH_NO = C.BRCH_NO
+                                                                                AND A.CRCT_WRHS_CFM_DT  BETWEEN  REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                                                                                
+                                                                                AND 'IN-0' = A.WRHS_DOC_NO
+                                                                                
+                                                                                  <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+																					AND	A.WHSDL_BIZRID||';'||A.WHSDL_BIZRNO  IN
+																					<foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+																						#{type.WHSDL_BIZRID_NO}
+																						</foreach>
+																				</if>
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                
+                                                                                AND EXISTS (
+                                                                                                       SELECT 'X'
+                                                                                                         FROM EPCN_BRCH_INFO S1
+                                                                                                                  ,EPCN_ATH_GRP_USER S2
+                                                                                                                  ,EPCN_ATH_GRP_BIZR S3
+                                                                                                       WHERE 1=1
+                                                                                                           AND A.WHSDL_BIZRID = S1.BIZRID
+                                                                                                           AND A.WHSDL_BIZRNO = S1.BIZRNO
+                                                                                                           AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+                                                                                                           AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+                                                                                                           AND S2.USER_ID =  'webcashkora1' /**P*/
+                                                                                                           AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+                                                                                                           AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+                                                                                                           AND S1.AREA_CD = S3.AREA_CD
+                                                                                                  )
+                                                                        
+                                                                            --GROUP BY A.WHSDL_BIZRID, A.WHSDL_BIZRNO, A.WHSDL_BRCH_ID, A.WHSDL_BRCH_NO, PRPS_CD
+                                                                            GROUP BY A.WHSDL_BRCH_NO, A.WHSDL_BIZRNO , A.CTNR_CD, C.AREA_CD , A.WHSDL_BIZRID , A.WHSDL_BRCH_ID
+                                                                    )
+																	GROUP BY WHSDL_BRCH_NO
+												                             ,WHSDL_BRCH_ID
+												                             ,WHSDL_BIZRNO
+												                             ,WHSDL_BIZRID
+												                             ,CTNR_CD
+																	) B
+														ON (
+																	   A.CTNR_CD = B.CTNR_CD
+																AND A.WHSDL_BRCH_ID = B.WHSDL_BRCH_ID 
+																AND A.WHSDL_BRCH_NO = B.WHSDL_BRCH_NO 
+                            									AND A.WHSDL_BIZRID = B.WHSDL_BIZRID 
+                            									AND A.WHSDL_BIZRNO = B.WHSDL_BIZRNO
+															)	
+															
+
+							) T3
+							, EPCN_STD_CTNR_CD T4
+								JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+								ON   T4.LANG_SE_CD = E.LANG_SE_CD
+							       
+							WHERE 1=1
+								AND 	T3.CTNR_CD = T4.CTNR_CD
+								GROUP BY T3.WHSDL_BIZRID, T3.WHSDL_BIZRNO,T3.WHSDL_BRCH_ID, T3.WHSDL_BRCH_NO, T4.PRPS_CD
+                                                               
+														) T1
+														,(SELECT AREA_CD,BIZRID ,BIZRNO ,BRCH_ID ,BRCH_NO, BIZR_TP_CD  
+														     FROM EPCN_BRCH_INFO A
+														   WHERE 1=1 
+															<if test="AREA_LIST !=null and AREA_LIST.size >0" >
+																			AND	AREA_CD IN
+																        <foreach collection="AREA_LIST"  item="type"  open="(" close=")" separator=",">
+																            #{type.AREA_CD}
+																        </foreach>
+															</if>
+															<if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+																			AND	BIZRID||';'||BIZRNO  IN
+																        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+																            #{type.WHSDL_BIZRID_NO}
+																        </foreach>
+															</if>
+															<if test=" BIZR_TP_CD !=null and BIZR_TP_CD !='' " >
+																AND BIZR_TP_CD =#{BIZR_TP_CD}
+															</if>
+															
+															AND EXISTS (
+																                   SELECT 'X'
+																                     FROM EPCN_ATH_GRP_USER S2
+																	                          ,EPCN_ATH_GRP_BIZR S3
+																                   WHERE 1=1
+																                       AND S2.USER_ID = #{T_USER_ID}
+																                       AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+																                       AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+																                       AND A.AREA_CD = S3.AREA_CD
+															                  )
+															
+													 	)T2    
+														WHERE 1=1
+														AND T1.WHSDL_BIZRID		= T2.BIZRID
+														AND T1.WHSDL_BIZRNO		= T2.BIZRNO
+														AND T1.WHSDL_BRCH_ID	= T2.BRCH_ID
+														AND T1.WHSDL_BRCH_NO	= T2.BRCH_NO
+														GROUP BY TABLE_NM , WHSDL_BIZRID	,WHSDL_BIZRNO	,PRPS_CD ,AREA_CD
+											)      
+											GROUP BY 	WHSDL_BIZRID	,WHSDL_BIZRNO,AREA_CD
+						) A     
+				
+				WHERE 1=1
+			 <if test="OVER_DIV eq 1">
+				<![CDATA[  AND  (RTRVL_H - CFM_H) < 0 ]]>
+			</if>
+			<if test="OVER_DIV eq 2">
+			    <![CDATA[  AND  (RTRVL_M - CFM_M) < 0 ]]>
+			</if>
+			<if test='excelYn == null or excelYn == "" '>
+			
+					<![CDATA[	 AND ROWNUM <= #{ROWS_PER_PAGE}*#{CURRENT_PAGE} ]]>
+					)   
+					WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+			</if>	     
+	</select>
+	
+	<!-- 차트조회  -->
+	<select id="epce9001001_select2"  parameterType="map"   resultType="hashmap">
+					SELECT 
+									AREA_CD
+									,RTRVL_M
+									,RTRVL_H
+									,CFM_M
+									,CFM_H
+									,CFM_D
+						FROM 
+										(
+											 SELECT
+														 EPCN_ETC_NM(AREA_CD,'B010') AS AREA_CD
+														,NVL(SUM 
+														              ( 
+														                  CASE TABLE_NM 
+														                      WHEN 'RTRVL' 
+														                      THEN DECODE(PRPS_CD, '0', QTY, 0)
+														                      ELSE 0 
+														                  END 
+														              ) 
+													  			,0) AS RTRVL_M
+													   ,NVL(SUM 
+														              ( 
+														                  CASE TABLE_NM 
+														                      WHEN 'RTRVL' 
+														                      THEN DECODE(PRPS_CD, '1', QTY, 0)
+														                      ELSE 0 
+														                  END 
+														              ) 
+													  			,0) AS RTRVL_H  			
+													    ,NVL(SUM 
+														              ( 
+														                  CASE TABLE_NM 
+														                      WHEN 'CFM' 
+														                      THEN DECODE(PRPS_CD, '0', QTY, 0)
+														                      ELSE 0 
+														                  END 
+														              ) 
+													  			,0) AS CFM_M 		
+													    ,NVL(SUM 
+														              ( 
+														                  CASE TABLE_NM 
+														                      WHEN 'CFM' 
+														                      THEN DECODE(PRPS_CD, '1', QTY, 0)
+														                      ELSE 0 
+														                  END 
+														              ) 
+													  			,0) AS CFM_H 	
+													  	 ,NVL(SUM 
+														              ( 
+														                  CASE TABLE_NM 
+														                      WHEN 'CFM' 
+														                      THEN DECODE(PRPS_CD, '2', QTY, 0)
+														                      ELSE 0 
+														                  END 
+														              ) 
+													  			,0) AS CFM_D  
+											FROM
+											
+													(
+														SELECT  
+																	TABLE_NM
+																	,SUM(NVL(QTY, 0)) AS QTY 
+																	,PRPS_CD
+																	,WHSDL_BIZRID
+																	,WHSDL_BIZRNO
+																	,AREA_CD
+														FROM 
+														(
+																SELECT 
+																		'RTRVL' AS TABLE_NM
+																		,A.WHSDL_BIZRID
+																		,A.WHSDL_BIZRNO
+																		,A.WHSDL_BRCH_ID
+																		,A.WHSDL_BRCH_NO				
+																		,SUM(B.RTRVL_QTY) AS QTY	
+																		,C.PRPS_CD
+														 		FROM 
+																		  EPCM_RTRVL_MST  A
+									                                    , EPCM_RTRVL_INFO B
+									                                    , EPCN_RTRVL_CTNR_CD C														 		
+																WHERE 1=1
+																AND A.RTRVL_DOC_NO = B.RTRVL_DOC_NO
+																AND A.RTRVL_STAT_CD NOT IN('RG','WG','RJ','WJ')
+																AND B.RTRVL_DT BETWEEN  REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+																AND B.RTRVL_CTNR_CD = C.RTRVL_CTNR_CD(+)
+																	<if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+																		AND	A.WHSDL_BIZRID||';'||A.WHSDL_BIZRNO  IN
+																		<foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+																			#{type.WHSDL_BIZRID_NO}
+																		</foreach>
+																	</if>	    																
+																GROUP BY A.WHSDL_BIZRID, A.WHSDL_BIZRNO, A.WHSDL_BRCH_ID, A.WHSDL_BRCH_NO, PRPS_CD
+														UNION ALL
+																SELECT 
+									 	  
+										'CFM' AS TABLE_NM	
+										,T3.WHSDL_BIZRID
+										,T3.WHSDL_BIZRNO
+										,T3.WHSDL_BRCH_ID
+										,T3.WHSDL_BRCH_NO
+										,sum(T3.CRCT_QTY_TOT) AS QTY
+                                        ,T4.PRPS_CD AS PRPS_CD
+							 FROM
+							(
+								SELECT 
+											 NVL(A.WHSDL_BRCH_NO, B.WHSDL_BRCH_NO) AS WHSDL_BRCH_NO
+											 ,NVL(A.WHSDL_BRCH_ID, B.WHSDL_BRCH_ID) AS WHSDL_BRCH_ID
+											 ,NVL(A.WHSDL_BIZRNO, B.WHSDL_BIZRNO) AS WHSDL_BIZRNO
+											 ,NVL(A.WHSDL_BIZRID, B.WHSDL_BIZRID) AS WHSDL_BIZRID
+											 ,NVL(A.CTNR_CD, B.CTNR_CD) AS CTNR_CD
+											 ,NVL(A.CRCT_QTY_TOT,0) + NVL(B.CRCT_QTY_TOT,0) AS CRCT_QTY_TOT
+								  FROM
+												  (	
+													  SELECT      WHSDL_BRCH_ID
+																 ,WHSDL_BRCH_NO
+																 ,WHSDL_BIZRNO
+																 ,WHSDL_BIZRID
+																 ,B.CTNR_CD as CTNR_CD
+																 ,NVL(SUM(NVL2(D.WRHS_DOC_NO, 0, B.CFM_QTY)),0) AS CRCT_QTY_TOT
+														FROM EPCM_CFM_MST A
+														     	,EPCM_CFM_INFO B
+														     	,EPCN_BRCH_INFO C
+														     	,(
+											                      	 SELECT distinct WRHS_DOC_NO
+											                           FROM EXCA_WRHS_CRCT A
+											                         WHERE 1=1
+											                             AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+											                      ) D
+													WHERE 1=1
+														AND A.WRHS_DOC_NO = B.WRHS_DOC_NO
+														AND A.WHSDL_BIZRID = C.BIZRID
+														AND A.WHSDL_BIZRNO =C.BIZRNO
+														AND A.WHSDL_BRCH_ID = C.BRCH_ID
+														AND A.WHSDL_BRCH_NO = C.BRCH_NO
+														AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+														AND A.WRHS_CFM_DT  BETWEEN  REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+														
+														AND B.WRHS_DOC_NO = D.WRHS_DOC_NO(+)
+														
+														 <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+																		AND	A.WHSDL_BIZRID||';'||A.WHSDL_BIZRNO  IN
+																		<foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+																			#{type.WHSDL_BIZRID_NO}
+																		</foreach>
+														</if>
+														  
+														  
+														  
+														
+														AND EXISTS (
+															                   SELECT 'X'
+															                     FROM EPCN_BRCH_INFO S1
+																                          ,EPCN_ATH_GRP_USER S2
+																                          ,EPCN_ATH_GRP_BIZR S3
+															                   WHERE 1=1
+															                       AND A.WHSDL_BIZRID = S1.BIZRID
+															                       AND A.WHSDL_BIZRNO = S1.BIZRNO
+															                       AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+															                       AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+															                       AND S2.USER_ID =  'webcashkora1' /**P*/
+															                       AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+															                       AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+															                       AND S1.AREA_CD = S3.AREA_CD
+														                  )
+												
+													GROUP BY WHSDL_BRCH_NO, WHSDL_BIZRNO , B.CTNR_CD, AREA_CD , WHSDL_BIZRID , WHSDL_BRCH_ID
+												) A
+												FULL OUTER JOIN (
+							                        SELECT WHSDL_BRCH_ID
+							                             ,WHSDL_BRCH_NO
+							                             ,WHSDL_BIZRNO
+							                             ,WHSDL_BIZRID
+							                             ,CTNR_CD
+							                             ,SUM(CRCT_QTY_TOT) AS CRCT_QTY_TOT	
+													FROM (							                             											
+																			SELECT  WHSDL_BRCH_ID
+							                             								 ,WHSDL_BRCH_NO
+																						 ,WHSDL_BIZRNO
+																						 ,WHSDL_BIZRID
+																						 ,D.CTNR_CD as CTNR_CD
+																						 ,NVL(SUM(D.CRCT_QTY),0) AS CRCT_QTY_TOT
+																				FROM EPCM_CFM_MST A
+																				     	,EPCN_BRCH_INFO C
+																				     	,(
+																	                      	 SELECT WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, SUM(CRCT_QTY) AS CRCT_QTY
+																	                           FROM EXCA_WRHS_CRCT A
+																	                         WHERE 1=1
+																	                             AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+																	                             AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+																								             				  SELECT 'X' FROM EXCA_WRHS_CRCT B
+																								             				  WHERE 1=1
+																								             				     AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+																								             				     AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+																								             				     AND B.MNUL_EXCA_SE IS NOT NULL
+																								             				)
+																	                        GROUP BY WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT
+																	                      ) D
+																			WHERE 1=1
+																				AND A.WHSDL_BIZRID = C.BIZRID
+																				AND A.WHSDL_BIZRNO =C.BIZRNO
+																				AND A.WHSDL_BRCH_ID = C.BRCH_ID
+																				AND A.WHSDL_BRCH_NO = C.BRCH_NO
+																				AND A.RTN_STAT_CD  IN ('WC','CC','IB','AC','PA','PP','PC')
+																				AND D.CRCT_WRHS_CFM_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+																				
+                                                                                AND A.WRHS_DOC_NO = D.WRHS_DOC_NO
+																				
+																			 <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+																					AND	A.WHSDL_BIZRID||';'||A.WHSDL_BIZRNO  IN
+																					<foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+																						#{type.WHSDL_BIZRID_NO}
+																					</foreach>
+																			</if>
+																				  
+																				  
+																				  
+																				
+																				AND EXISTS (
+																					                   SELECT 'X'
+																					                     FROM EPCN_BRCH_INFO S1
+																						                          ,EPCN_ATH_GRP_USER S2
+																						                          ,EPCN_ATH_GRP_BIZR S3
+																					                   WHERE 1=1
+																					                       AND A.WHSDL_BIZRID = S1.BIZRID
+																					                       AND A.WHSDL_BIZRNO = S1.BIZRNO
+																					                       AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+																					                       AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+																					                       AND S2.USER_ID =  'webcashkora1' /**P*/
+																					                       AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+																					                       AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+																					                       AND S1.AREA_CD = S3.AREA_CD
+																				                  )
+																		
+																			GROUP BY WHSDL_BRCH_ID,WHSDL_BRCH_NO, WHSDL_BIZRNO , D.CTNR_CD, AREA_CD , WHSDL_BIZRID
+                                                                            
+                                                                            UNION ALL
+                                                                            
+                                                                            SELECT A.WHSDL_BRCH_ID
+                                                                                         ,A.WHSDL_BRCH_NO
+                                                                                         ,A.WHSDL_BIZRNO
+                                                                                         ,A.WHSDL_BIZRID
+                                                                                         ,A.CTNR_CD
+                                                                                         ,NVL(SUM(A.CRCT_QTY),0) AS CRCT_QTY_TOT
+                                                                                FROM   (
+                                                                                             SELECT WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT, 
+                                                                                                      MNUL_MFC_BIZRID AS MFC_BIZRID,
+                                                                                                      MNUL_MFC_BIZRNO AS MFC_BIZRNO,
+                                                                                                      MNUL_MFC_BRCH_ID AS MFC_BRCH_ID,
+                                                                                                      MNUL_MFC_BRCH_NO AS MFC_BRCH_NO,
+                                                                                                      MNUL_WHSDL_BIZRID AS WHSDL_BIZRID,
+                                                                                                      MNUL_WHSDL_BIZRNO AS WHSDL_BIZRNO,
+                                                                                                      MNUL_WHSDL_BRCH_ID AS WHSDL_BRCH_ID,
+                                                                                                      MNUL_WHSDL_BRCH_NO AS WHSDL_BRCH_NO,
+                                                                                                      SUM(CRCT_QTY) AS CRCT_QTY
+                                                                                               FROM EXCA_WRHS_CRCT A
+                                                                                             WHERE 1=1
+                                                                                                 AND A.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E')
+                                                                                                 AND NOT EXISTS ( /* 수기입고정정 등록 원본 제외처리 */
+                                                                                                                              SELECT 'X' FROM EXCA_WRHS_CRCT B
+                                                                                                                              WHERE 1=1
+                                                                                                                                 AND A.LK_WRHS_CRCT_DOC_NO = B.WRHS_CRCT_DOC_NO
+                                                                                                                                 AND B.WRHS_CRCT_STAT_CD IN ('C', 'I', 'E') /* 정정확인, 정산 */
+                                                                                                                                 AND B.MNUL_EXCA_SE IS NOT NULL
+                                                                                                                            )
+                                                                                            GROUP BY WRHS_DOC_NO, CTNR_CD, CRCT_WRHS_CFM_DT,
+                                                                                                      MNUL_MFC_BIZRID,
+                                                                                                      MNUL_MFC_BIZRNO,
+                                                                                                      MNUL_MFC_BRCH_ID,
+                                                                                                      MNUL_MFC_BRCH_NO,
+                                                                                                      MNUL_WHSDL_BIZRID,
+                                                                                                      MNUL_WHSDL_BIZRNO,
+                                                                                                      MNUL_WHSDL_BRCH_ID,
+                                                                                                      MNUL_WHSDL_BRCH_NO                                                                                            
+                                                                                          ) A
+                                                                                        ,EPCN_BRCH_INFO C
+                                                                            WHERE 1=1
+                                                                                AND A.WHSDL_BIZRID = C.BIZRID
+                                                                                AND A.WHSDL_BIZRNO = C.BIZRNO
+                                                                                AND A.WHSDL_BRCH_ID = C.BRCH_ID
+                                                                                AND A.WHSDL_BRCH_NO = C.BRCH_NO
+                                                                                AND A.CRCT_WRHS_CFM_DT  BETWEEN  REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+                                                                                
+                                                                                AND 'IN-0' = A.WRHS_DOC_NO
+                                                                                
+                                                                                  <if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+																					AND	A.WHSDL_BIZRID||';'||A.WHSDL_BIZRNO  IN
+																					<foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+																						#{type.WHSDL_BIZRID_NO}
+																						</foreach>
+																				</if>
+                                                                                  
+                                                                                  
+                                                                                  
+                                                                                
+                                                                                AND EXISTS (
+                                                                                                       SELECT 'X'
+                                                                                                         FROM EPCN_BRCH_INFO S1
+                                                                                                                  ,EPCN_ATH_GRP_USER S2
+                                                                                                                  ,EPCN_ATH_GRP_BIZR S3
+                                                                                                       WHERE 1=1
+                                                                                                           AND A.WHSDL_BIZRID = S1.BIZRID
+                                                                                                           AND A.WHSDL_BIZRNO = S1.BIZRNO
+                                                                                                           AND A.WHSDL_BRCH_ID = S1.BRCH_ID
+                                                                                                           AND A.WHSDL_BRCH_NO = S1.BRCH_NO
+                                                                                                           AND S2.USER_ID =  'webcashkora1' /**P*/
+                                                                                                           AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+                                                                                                           AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+                                                                                                           AND S1.AREA_CD = S3.AREA_CD
+                                                                                                  )
+                                                                        
+                                                                            GROUP BY A.WHSDL_BRCH_NO, A.WHSDL_BIZRNO , A.CTNR_CD, C.AREA_CD , A.WHSDL_BIZRID , A.WHSDL_BRCH_ID
+                                                                    )
+																	GROUP BY WHSDL_BRCH_NO
+												                             ,WHSDL_BRCH_ID
+												                             ,WHSDL_BIZRNO
+												                             ,WHSDL_BIZRID
+												                             ,CTNR_CD
+																	) B
+														ON (
+																	   A.CTNR_CD = B.CTNR_CD
+																AND A.WHSDL_BRCH_ID = B.WHSDL_BRCH_ID 
+																AND A.WHSDL_BRCH_NO = B.WHSDL_BRCH_NO 
+                            									AND A.WHSDL_BIZRID = B.WHSDL_BIZRID 
+                            									AND A.WHSDL_BIZRNO = B.WHSDL_BIZRNO
+															)	
+															
+
+							) T3
+							, EPCN_STD_CTNR_CD T4
+								JOIN (SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+								ON   T4.LANG_SE_CD = E.LANG_SE_CD
+							       
+							WHERE 1=1
+								AND 	T3.CTNR_CD = T4.CTNR_CD
+								GROUP BY T3.WHSDL_BIZRID, T3.WHSDL_BIZRNO,T3.WHSDL_BRCH_ID, T3.WHSDL_BRCH_NO, T4.PRPS_CD
+
+														) T1  
+														,(SELECT AREA_CD,BIZRID ,BIZRNO ,BRCH_ID ,BRCH_NO, BIZR_TP_CD  
+														    FROM EPCN_BRCH_INFO A
+														    WHERE 1=1 
+															<if test="AREA_LIST !=null and AREA_LIST.size >0" >
+																			AND	AREA_CD IN
+																        <foreach collection="AREA_LIST"  item="type"  open="(" close=")" separator=",">
+																            #{type.AREA_CD}
+																        </foreach>
+															</if>
+															<if test="WHSDL_LIST !=null and WHSDL_LIST.size >0" >
+																			AND	BIZRID||';'||BIZRNO  IN
+																        <foreach collection="WHSDL_LIST"  item="type"  open="(" close=")" separator=",">
+																            #{type.WHSDL_BIZRID_NO}
+																        </foreach>
+															</if>
+															<if test=" BIZR_TP_CD !=null and BIZR_TP_CD !='' " >
+																AND BIZR_TP_CD =#{BIZR_TP_CD}
+															</if> 
+															
+															AND EXISTS (
+																                   SELECT 'X'
+																                     FROM EPCN_ATH_GRP_USER S2
+																	                          ,EPCN_ATH_GRP_BIZR S3
+																                   WHERE 1=1
+																                       AND S2.USER_ID = #{T_USER_ID}
+																                       AND S2.ATH_GRP_CD = S3.ATH_GRP_CD AND S2.BIZRID = S3.BIZRID AND S2.BIZRNO = S3.BIZRNO
+																                       AND S3.BIZR_ATH_SE = 'A' /* 권한구분 : 지역 */
+																                       AND A.AREA_CD = S3.AREA_CD
+															                  )
+															
+													 	)T2    
+														WHERE 1=1
+														AND T1.WHSDL_BIZRID		= T2.BIZRID
+														AND T1.WHSDL_BIZRNO		= T2.BIZRNO
+														AND T1.WHSDL_BRCH_ID		= T2.BRCH_ID
+														AND T1.WHSDL_BRCH_NO	= T2.BRCH_NO
+														GROUP BY TABLE_NM , WHSDL_BIZRID	,WHSDL_BIZRNO	,PRPS_CD ,AREA_CD
+											)      
+											GROUP BY 	AREA_CD
+						) A   
+				
+			WHERE 1=1
+			<if test="OVER_DIV eq 1">
+				<![CDATA[  AND  (RTRVL_H - CFM_H) < 0 ]]>
+			</if>
+			<if test="OVER_DIV eq 2">
+			    <![CDATA[  AND  (RTRVL_M - CFM_M) < 0 ]]>
+			</if>
+	</select>
+	
+	
+</mapper>
+

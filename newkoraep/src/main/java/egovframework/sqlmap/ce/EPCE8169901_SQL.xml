@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE8169901Mapper">
+    
+	<!-- FAQ 총 게시글 수 조회 -->
+    <select id="epce8169901_select1" parameterType="map" resultType="hashmap">
+        SELECT COUNT(*) AS CNT
+          FROM EPCN_FAQ
+         WHERE 1=1
+         <if test='CONDITION == "sbj"'>
+	       AND upper(SBJ) LIKE '%' || upper(#{WORD}) || '%'
+	     </if>
+	     <if test='CONDITION == "cntn"'>
+	       AND upper(CNTN) LIKE '%' || upper(#{WORD}) || '%'
+	     </if>
+    </select>
+    
+    <!-- FAQ 조회(Paging) -->
+	<select id="epce8169901_select2" parameterType="map" resultType="hashmap">
+	    SELECT FAQ_SEQ,
+		       SBJ,
+		       CNTN_TP,
+		       REG_DTTM,
+		       RNUM
+		  FROM (SELECT FAQ_SEQ,
+		               SBJ,
+		               CNTN_TP,
+		               REG_DTTM,
+		               ROWNUM AS RNUM
+		          FROM (SELECT FAQ_SEQ,
+		               SBJ,
+		               CNTN_TP,
+		               TO_CHAR(REG_DTTM, 'YYYYMMDD') AS REG_DTTM
+		          FROM EPCN_FAQ
+		         WHERE 1=1
+			     <if test='CONDITION == "sbj"'>
+			       AND upper(SBJ) LIKE '%' || upper(#{WORD}) || '%'
+			     </if>
+			     <if test='CONDITION == "cntn"'>
+			       AND upper(CNTN) LIKE '%' || upper(#{WORD}) || '%'
+			     </if>
+				 ORDER BY FAQ_SEQ DESC))
+		 WHERE 1=1
+	     <if test="PAGE != ''">
+		   AND RNUM BETWEEN #{STARTROW} AND #{ENDROW}
+	     </if>
+	</select>
+	
+	<!-- FAQ 첨부파일 조회 -->
+	<select id="epce8169901_select3" parameterType="map" resultType="hashmap">
+	    SELECT FAQ_SEQ
+		  FROM EPCN_FAQ_FILE
+		 GROUP BY FAQ_SEQ
+		 ORDER BY FAQ_SEQ
+	</select>
+    
+</mapper>

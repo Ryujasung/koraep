@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 입고확인취소요청조회 -->
+
+<mapper namespace="egovframework.mapper.ce.ep.EPCE6622201Mapper">
+
+  <!--입고확인취소요청조회  -->  
+  <select id="epce6622201_select2" parameterType="map" resultType="hashmap">
+  
+		 SELECT 
+		 			PNO 
+		 			, CNL_REQ_SEQ
+				    , REQ_DTTM
+				    , RTN_DOC_NO
+				    , WRHS_DOC_NO
+				    , BIZRNM
+				    , BRCH_NM
+				    , REQ_ID
+				    , USER_NM
+				    , ALT_REQ_STAT_NM
+				    , PARAM
+		  FROM (
+			     <![CDATA[
+					  SELECT ROW_NUMBER()OVER(ORDER BY A.CNL_REQ_SEQ DESC, A.REQ_STAT_CD DESC ) AS PNO 
+								, A.CNL_REQ_SEQ
+							    , TO_CHAR(A.REQ_DTTM,'YYYY-MM-DD') AS REQ_DTTM
+							    , A.RTN_DOC_NO
+							    , A.WRHS_DOC_NO
+							    , B.BIZRNM
+							    , C.BRCH_NM
+							    , A.REQ_ID
+							    , D.USER_NM
+							    , EPCN_ETC_NM(A.REQ_STAT_CD, 'D055') AS ALT_REQ_STAT_NM
+							    , '<a href="javascript:link();" class="gridLink">'||'확인'||'</a>' AS PARAM
+					  ]]>
+					FROM 
+						 	EPCM_CFM_CNL_REQ_INFO A
+						    , EPCN_BIZR_INFO B
+						    , EPCN_BRCH_INFO C
+						    , EPCN_USER_INFO D
+					WHERE 1=1
+					 	AND A.REQ_BIZRID = B.BIZRID
+					    AND A.REQ_BIZRNO = B.BIZRNO
+					    AND A.REQ_BRCH_ID = C.BRCH_ID
+					    AND A.REQ_BRCH_NO = C.BRCH_NO
+					    AND A.REQ_ID = D.USER_ID
+						AND TO_CHAR(A.REQ_DTTM,'YYYYMMDD') BETWEEN #{START_DT} AND #{END_DT}
+		
+					    <if test="REQ_ID != ''  "    >
+						    AND A.REQ_ID LIKE '%' || #{REQ_ID} || '%'
+					    </if>
+					    <if test="RTN_DOC_NO != ''">		
+						   AND A.RTN_DOC_NO LIKE '%' || #{RTN_DOC_NO} || '%'
+						</if>
+				         <if test="WRHS_DOC_NO != ''">
+						   AND A.WRHS_DOC_NO LIKE '%' || #{WRHS_DOC_NO} || '%'
+						 </if>
+						<if test="REQ_BIZRID != ''">
+						   AND A.REQ_BIZRID = #{REQ_BIZRID}
+						</if>
+						<if test="REQ_BIZRNO != ''">
+						   AND A.REQ_BIZRNO = #{REQ_BIZRNO}
+						</if>
+						<if test="DRCT_RTRVL_STAT_CD != ''">
+						   AND A.REQ_STAT_CD = #{DRCT_RTRVL_STAT_CD}
+						</if>
+			
+					ORDER BY A.CNL_REQ_SEQ DESC, A.REQ_STAT_CD DESC
+	  
+            )
+         WHERE 1=1
+             AND PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+	  
+  </select>
+
+  <!--입고확인취소요청조회  -->  
+  <select id="epce6622201_select2_cnt" parameterType="map" resultType="int">
+		SELECT COUNT(1)
+		FROM 
+			 	EPCM_CFM_CNL_REQ_INFO A
+			    , EPCN_BIZR_INFO B
+			    , EPCN_BRCH_INFO C
+			    , EPCN_USER_INFO D
+		WHERE 1=1
+		 	AND A.REQ_BIZRID = B.BIZRID
+		    AND A.REQ_BIZRNO = B.BIZRNO
+		    AND A.REQ_BRCH_ID = C.BRCH_ID
+		    AND A.REQ_BRCH_NO = C.BRCH_NO
+		    AND A.REQ_ID = D.USER_ID
+			AND TO_CHAR(A.REQ_DTTM,'YYYYMMDD') BETWEEN #{START_DT} AND #{END_DT}
+
+		    <if test="REQ_ID != ''  "    >
+			    AND A.REQ_ID LIKE '%' || #{REQ_ID} || '%'
+		    </if>
+		    <if test="RTN_DOC_NO != ''">		
+			   AND A.RTN_DOC_NO LIKE '%' || #{RTN_DOC_NO} || '%'
+			</if>
+	         <if test="WRHS_DOC_NO != ''">
+			   AND A.WRHS_DOC_NO LIKE '%' || #{WRHS_DOC_NO} || '%'
+			 </if>
+			<if test="REQ_BIZRID != ''">
+			   AND A.REQ_BIZRID = #{REQ_BIZRID}
+			</if>
+			<if test="REQ_BIZRNO != ''">
+			   AND A.REQ_BIZRNO = #{REQ_BIZRNO}
+			</if>
+			<if test="DRCT_RTRVL_STAT_CD != ''">
+			   AND A.REQ_STAT_CD = #{DRCT_RTRVL_STAT_CD}
+			</if>
+
+  </select>
+  
+  <!--입고확인취소요청조회 사유 팝업  -->  
+  <select id="epce6622201_select3" parameterType="map" resultType="String">
+		SELECT 
+			REQ_RSN
+		FROM 
+		 	EPCM_CFM_CNL_REQ_INFO
+		WHERE 1=1
+		 	AND CNL_REQ_SEQ = #{CNL_REQ_SEQ}
+
+  </select>
+
+
+</mapper>
+   

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 회수용기코드관리 -->
+
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3964901Mapper">
+
+    <!-- 회수용기코드조회 -->
+	<select id="epce3964901_select" parameterType="map" resultType="hashmap">
+		
+			SELECT  
+			           LANG_SE_CD 
+			           ,RTRVL_CTNR_CD 
+			           ,CTNR_NM 
+			           ,DECODE( USE_YN,'Y',EPCN_LANG_NM('use_y'),EPCN_LANG_NM('use_n')) AS USE_YN
+					   ,USE_YN AS USE_YN_ORI
+			           ,CPCT_CD
+			           ,PRPS_CD
+			           ,EPCN_ETC_NM(CPCT_CD , 'E001') AS CPCT_NM
+			           ,EPCN_ETC_NM(PRPS_CD , 'E002') AS PRPS_NM
+			FROM   
+			           EPCN_RTRVL_CTNR_CD           
+			WHERE  1=1
+			AND      LANG_SE_CD =     #{SEL_LANG_SE_CD}
+			
+			AND      USE_YN        =     #{SEL_USE_YN}
+			<if test="CTNR_NM != ''">
+			 AND  CTNR_NM LIKE '%' || #{SEL_CTNR_NM} || '%'
+			</if>
+	</select>
+	
+
+  <!-- 회수용기코드 수정 저장 조회 -->
+   <select id="epce3964901_select2" parameterType="map" resultType="int">
+   
+	    SELECT 
+	                COUNT(*) 
+	    FROM 
+	                EPCN_RTRVL_CTNR_CD
+	    WHERE    1=1
+	    AND       LANG_SE_CD  = #{LANG_SE_CD}
+	    AND       RTRVL_CTNR_CD   = TRIM(#{RTRVL_CTNR_CD})
+   
+   </select>   
+   
+   <!--저장  -->
+   <insert id="epce3964901_insert" parameterType="map">
+      
+            INSERT 
+		    INTO EPCN_RTRVL_CTNR_CD
+			    (
+			     RTRVL_CTNR_CD
+			     ,LANG_SE_CD
+			     ,CTNR_NM
+			     ,CPCT_CD
+			     ,PRPS_CD
+			     ,USE_YN 
+			     ,REG_PRSN_ID 
+			     ,REG_DTTM
+			     )
+		     VALUES
+		       (
+			   TRIM(#{RTRVL_CTNR_CD})
+			   ,#{LANG_SE_CD}
+			   ,#{CTNR_NM}
+		       ,#{CPCT_CD}
+			   ,#{PRPS_CD}
+			   ,#{USE_YN}
+			   ,#{RGST_PRSN_ID}
+			     ,SYSDATE
+		       )
+   
+   </insert>
+
+   <!-- 수정 -->
+    <update id="epce3964901_update" parameterType="map">
+    
+                UPDATE
+		  	        EPCN_RTRVL_CTNR_CD
+				SET
+					CTNR_NM        =  #{CTNR_NM},
+					PRPS_CD         =  #{PRPS_CD},
+					CPCT_CD         =  #{CPCT_CD},
+					USE_YN            =  #{USE_YN},
+					UPD_PRSN_ID   =  #{RGST_PRSN_ID},
+					UPD_DTTM       =   SYSDATE 
+				 WHERE 1=1
+				 AND RTRVL_CTNR_CD   = TRIM(#{RTRVL_CTNR_CD})
+				 AND LANG_SE_CD        = #{LANG_SE_CD}
+    
+    </update>
+   
+   
+</mapper>

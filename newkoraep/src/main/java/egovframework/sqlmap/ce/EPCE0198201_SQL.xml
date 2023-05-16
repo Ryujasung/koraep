@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE0198201Mapper">
+	       
+    <!-- 회수보증금관리 조회 -->
+	<select id="epce0198201_select" parameterType="map" resultType="hashmap">
+	    SELECT 
+			 A.RTRVL_CTNR_CD
+			,A.REG_SN
+			,A.RTRVL_DPS
+			,B.CTNR_NM
+			,A.LANG_SE_CD
+			,A.APLC_ST_DT
+			,A.APLC_END_DT
+			,CASE 
+	           WHEN A.APLC_ST_DT IS NOT NULL 
+	           AND   A.APLC_END_DT IS NOT NULL 
+	           THEN TO_CHAR(TO_DATE(A.APLC_ST_DT,'YYYYMMDD'),'YYYY-MM-DD')||' ~ '||TO_CHAR(TO_DATE(A.APLC_END_DT,'YYYYMMDD'),'YYYY-MM-DD') 
+	           ELSE '' 
+	         END AS APLC_DT 
+	   FROM EPCN_RTRVL_DPS_MGNT A
+	            ,EPCN_RTRVL_CTNR_CD  B
+	   WHERE 1=1
+	   AND  A.RTRVL_CTNR_CD	=  B.RTRVL_CTNR_CD
+	   AND  A.LANG_SE_CD		=  B.LANG_SE_CD
+	   AND  B.USE_YN           		=  'Y'
+	   AND  A.RTRVL_CTNR_CD	=  #{RTRVL_CTNR_CD}
+	   AND  A.LANG_SE_CD		=  #{LANG_SE_CD}
+	   ORDER BY APLC_ST_DT DESC
+	</select>
+	
+    <!-- 회수보증금관리 삭제가능한지  조회 -->
+	<select id="epce0198201_select2" parameterType="map" resultType="int">
+		SELECT
+			COUNT(1)
+		FROM EPCN_RTRVL_DPS_MGNT
+		WHERE   1=1
+		AND	RTRVL_CTNR_CD	=  #{RTRVL_CTNR_CD}
+		AND	LANG_SE_CD	    =  #{LANG_SE_CD}
+		AND	REG_SN            	=  #{REG_SN}
+		AND	APLC_ST_DT &lt;= TO_CHAR(SYSDATE,'YYYYMMDD')
+	</select>
+	
+	<!-- 회수보증금관리 삭제 -->
+    <delete id="epce0198201_delete" parameterType="map" >
+	     DELETE FROM EPCN_RTRVL_DPS_MGNT
+	     WHERE  1=1
+	     AND		RTRVL_CTNR_CD	= #{RTRVL_CTNR_CD}
+	     AND  	LANG_SE_CD		= #{LANG_SE_CD}
+		 AND	 	REG_SN				= #{REG_SN}
+   </delete>
+   
+   
+ <!--  
+//*****************************************************************************************************************************************************************
+//		회수보증금등록
+//*****************************************************************************************************************************************************************
+-->
+
+    <!--회수보증금저장 및 수정 시 중복 적용기간조회  -->
+   	<select id="epce0198231_select" parameterType="map" resultType="int">
+		 SELECT 
+		 			COUNT(1)
+		 FROM 
+		 			EPCN_RTRVL_DPS_MGNT 
+		 WHERE  1=1
+		 AND		RTRVL_CTNR_CD  	= 		#{RTRVL_CTNR_CD}
+		 AND		LANG_SE_CD 			=  	#{LANG_SE_CD}
+	     AND 	APLC_END_DT 		>= 	REPLACE(#{START_DT}, '-')  
+	     AND 	APLC_ST_DT 			&lt;= REPLACE(#{END_DT}, '-')
+		<if test='SAVE_CHK== "U"'>
+	      AND REG_SN		 			!=		#{REG_SN}
+		</if> 
+    </select>
+
+    <!--등록순번  -->
+   	<select id="epce0198231_select2" parameterType="map" resultType="string">
+             SELECT NVL(MAX(REG_SN),0) + 1 AS REG_SN 
+			 FROM EPCN_RTRVL_DPS_MGNT 
+		     WHERE  1=1
+		     AND     RTRVL_CTNR_CD		=  #{RTRVL_CTNR_CD}
+		     AND     LANG_SE_CD			=  #{LANG_SE_CD}
+    </select>
+
+     <!-- 회수보증금등록 적용기간 시작날자 끝날짜 조회 -->
+	<select id="epce0198231_select3" parameterType="map" resultType="hashmap">
+		 SELECT 
+			 TO_CHAR(NVL(TO_DATE(MAX(APLC_END_DT),'YYYYMMDD')+1,SYSDATE),'YYYY-MM-DD') AS APLC_ST_DT 
+			,TO_CHAR(NVL(TO_DATE(MAX(APLC_END_DT),'YYYYMMDD')+30,SYSDATE+30),'YYYY-MM-DD') AS APLC_END_DT 
+		 FROM EPCN_RTRVL_DPS_MGNT 
+		 WHERE  1=1
+		 AND		RTRVL_CTNR_CD =	#{RTRVL_CTNR_CD}
+		 AND		LANG_SE_CD 		=  #{LANG_SE_CD}
+    </select>
+
+    <!--회수보증금관리 추가  -->
+    <insert id="epce0198231_insert" parameterType="map">
+         
+        INSERT 
+			    INTO EPCN_RTRVL_DPS_MGNT
+				    (
+				      RTRVL_CTNR_CD
+				     ,LANG_SE_CD
+				     ,REG_SN
+				     ,RTRVL_DPS
+				     ,APLC_ST_DT
+				     ,APLC_END_DT
+				     ,REG_PRSN_ID 
+				     ,REG_DTTM
+				     )
+			     VALUES
+			       (
+				   #{RTRVL_CTNR_CD}
+				   ,#{LANG_SE_CD}
+				   ,#{REG_SN}
+			       ,#{RTRVL_DPS}
+				   ,REPLACE(#{START_DT}, '-')
+				   ,REPLACE(#{END_DT}, '-')
+				   ,#{RGST_PRSN_ID}
+				     ,SYSDATE
+			       )
+			       
+    </insert>
+    
+<!--  
+//*****************************************************************************************************************************************************************
+//		회수보증금수정
+//*****************************************************************************************************************************************************************
+-->
+
+ 	<!-- 회수보증금수정 초기값 -->
+	<select id="epce0198242_select" parameterType="map" resultType="hashmap">
+		 SELECT 
+					A.RTRVL_CTNR_CD
+					,A.LANG_SE_CD
+					,A.REG_SN
+					,A.RTRVL_DPS
+					,A.APLC_ST_DT
+					,A.APLC_END_DT
+					,B.CTNR_NM
+		 FROM 
+		 			EPCN_RTRVL_DPS_MGNT A
+		 			,EPCN_RTRVL_CTNR_CD B
+		 WHERE  1=1
+		 AND		A.RTRVL_CTNR_CD 	=	B.RTRVL_CTNR_CD
+		 AND		A.LANG_SE_CD 		=  B.LANG_SE_CD
+		 AND		A.RTRVL_CTNR_CD 	=	#{RTRVL_CTNR_CD}
+		 AND		A.LANG_SE_CD 		=  #{LANG_SE_CD}
+		 AND		A.REG_SN				=  #{REG_SN}
+    </select>
+
+   <!-- 회수보증금관리 수정-->
+   <update id="epce0198242_update" parameterType="map">
+            UPDATE
+		  	        EPCN_RTRVL_DPS_MGNT
+			SET
+					 RTRVL_DPS		=  #{RTRVL_DPS}
+					,APLC_ST_DT		=  REPLACE(#{START_DT}, '-')
+					,APLC_END_DT    =  REPLACE(#{END_DT}, '-')
+					,UPD_PRSN_ID		=  #{RGST_PRSN_ID}
+					,UPD_DTTM        =  SYSDATE 
+			 WHERE 1=1
+			 AND	 RTRVL_CTNR_CD	= #{RTRVL_CTNR_CD}
+		     AND	 LANG_SE_CD			= #{LANG_SE_CD}
+			 AND	 REG_SN					= #{REG_SN}
+   </update>
+
+
+</mapper>
+

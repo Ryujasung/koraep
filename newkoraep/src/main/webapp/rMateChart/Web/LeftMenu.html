@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>rMate HTML5 Chart</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="rMateChart for HTML5, Riamore Soft 2017">
+<meta name="keywords" content="HTML5,Chart,JavaScript,CSS,Ajax,Graph,rMateChart">
+
+<link href="./jQuery/jquery.mCustomScrollbar.css" rel="stylesheet">
+<link href="./menu.css" rel="stylesheet">
+
+<script type="text/javascript" src="./JS/sample_info.js"></script>
+<script type="text/javascript" src="./JS/common.js"></script>
+<script type="text/javascript" src="./JS/left_menu_util.js"></script>
+
+<!-- jQuery -->
+<script src="./jQuery/jquery-1.12.4.min.js"></script>
+<script src="./jQuery/jquery.mCustomScrollbar.js"></script>
+<script src="./jQuery/jquery.mousewheel.min.js"></script>
+
+<script type="text/javascript">
+
+var activeLi,
+	activeMenuName,
+	typeScrollBar, propScrollBar,
+	scrollBarNames = {"chart_type_list" : "typeScrollBar", "properties_list" : "propScrollBar"};
+
+$(document).ready(function(){
+	// create sample
+	createSample();
+
+	if(compIE()){
+		setupSampleListsHeight();
+		$(window).bind("resize", setupSampleListsHeight);
+	}
+	
+	setupEvent();// browser resize handler
+
+	$("#chart_type_list").mCustomScrollbar();
+	$("#properties_list").mCustomScrollbar();
+});
+
+</script>
+</head>
+<body>
+	<div class="wrapper">
+		<a href="./Overview.html" target="sampleFrame"><div class="title"></div></a>
+		<div id="sample_menus" class="sample_menus">
+			<span class="chart_type_menu sample_menus_active">CHART TYPE&nbsp;&nbsp;<span class="expand">+</span></span>
+			<span class="properties_menu">PROPERTIES&nbsp;&nbsp;<span class="expand">+</span></span>
+		</div>
+		<div id="sample_lists" class="sample_lists">
+			<div id="chart_type_list" class="chart_type_list"></div>
+			<div id="properties_list" class="properties_list"></div>
+		</div>
+		<div class="manual_menus">
+			<span><a href="../../Docs/api/index.html" target="_blank">API</a></span>
+			<span><a href="../../Docs/rMate차트HTML5_사용설명서.pdf" target="_blank">MANUAL</a></span>
+			<span><a href="../Tutorial.html" target="sampleFrame">TUTORIAL</a></span>
+		</div>
+		<div class="footer">
+			<span>HTML5 <font color="#ee3334">v5.0</font></span>
+			<span>COPYRIGHT 2014 RIAMORE</span>
+			<span>ALL RIGHTS RESERVED.</span>
+		</div>
+	</div>
+</body>
+</html>

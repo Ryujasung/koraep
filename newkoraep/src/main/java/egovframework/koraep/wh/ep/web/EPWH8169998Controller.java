@@ -1,0 +1,100 @@
+package egovframework.koraep.wh.ep.web;
+
+import java.util.HashMap;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import net.sf.json.JSONObject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import egovframework.koraep.ce.ep.service.CommonCeService;
+import egovframework.koraep.wh.ep.service.EPWH8169998Service;
+
+/**
+ * FAQ 등록 Controller
+ * @author pc
+ *
+ */
+@Controller
+public class EPWH8169998Controller {
+	
+	@Resource(name="epwh8169998Service")
+	private EPWH8169998Service epwh8169998Service;
+	
+	@Resource(name="commonceService")
+	private CommonCeService commonceService;
+	
+	/**
+	 * FAQ 등록 페이지 호출
+	 * @param model
+	 * @param request
+	 * @return
+	 * @
+	 */
+	@RequestMapping(value="/WH/EPWH8169998.do", produces="application/text; charset=utf8")
+	public String epwh8169998(ModelMap model, HttpServletRequest request)  {
+		
+		String title = commonceService.getMenuTitle("EPWH8169998");	//타이틀
+		model.addAttribute("titleSub", title);
+		
+		//조회 상태유지
+		model = epwh8169998Service.epwh8169998(model, request);
+		
+		return "/WH/EPWH8169998";
+		
+	}
+	
+	/**
+	 * FAQ 수정 페이지 호출
+	 * @param model
+	 * @param request
+	 * @return
+	 * @
+	 */
+	@RequestMapping(value="/WH/EPWH8169942.do", produces="application/text; charset=utf8")
+	public String epwh8169942(ModelMap model, HttpServletRequest request)  {
+		
+		String title = commonceService.getMenuTitle("EPWH8169942");	//타이틀
+		model.addAttribute("titleSub", title);
+		
+		//조회 상태유지
+		model = epwh8169998Service.epwh8169998(model, request);
+		
+		return "/WH/EPWH8169998";
+		
+	}
+	
+	/**
+	 * FAQ 등록
+	 * @param model
+	 * @param request
+	 * @return
+	 * @
+	 */
+	@RequestMapping(value="/WH/EPWH8169998_09.do", produces="application/text; charset=utf8")
+	@ResponseBody
+	public String epwh8169998_update(@RequestParam HashMap<String, String> data, HttpServletRequest request)  {
+	
+		String errCd = "";
+		
+		try{
+			errCd = epwh8169998Service.epwh8169998_update(data, request);
+		}catch(Exception e){
+			errCd = e.getMessage();
+		}
+		
+		JSONObject rtnObj = new JSONObject();
+		rtnObj.put("RSLT_CD", errCd);
+		rtnObj.put("RSLT_MSG", commonceService.getErrorMsgNew(request, "A", errCd));
+		
+		return rtnObj.toString();
+		
+	}
+
+}

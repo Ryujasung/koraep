@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Expires" content="-1"/>
+<meta http-equiv="Progma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache" />
+<title>TouchEn nxKey 키보드보안 설치</title>
+<link   type="text/css" href="css/install_handler.css" rel="stylesheet" />
+<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/dncepekefegjiljlfbihljgogephdhph"/>
+<script type="text/javascript">
+var TNK_SR = "";
+var TouchEnKey_installpage = "";//설치페이지 확인을 위해 전역으로 변수 설정
+</script>
+<script type="text/javascript" src="/TouchEn/nxKey/js/TouchEnNxKey.js"></script>
+<script type="text/javascript">
+var thisBrowserInfo = "[OS : " + TOUCHENEX_UTIL.getOSInfo().platform + " / " + TOUCHENEX_UTIL.getOSInfo().bit + "] [Browser : "  + TOUCHENEX_UTIL.getBrowserInfo().browser + " / " + TOUCHENEX_UTIL.getBrowserInfo().version + "]";
+/**
+  * 메인 페이지 이동 함수 설명 : 설치 완료시 메인페이지 이동 함수 호출 한다. 
+  * 페이지 onload 때 [ touchenexInfo.tkMainpage = fn_getUrlParameter("url"); ] 호출하여 보낸 페이지 값을 저장한다.
+  */
+ function TK_moveMainPage() {
+ 	location.href = touchenexInfo.tkMainpage;
+ }
+ var TouchEnNxKeyInstall = setInterval(function(){
+ 	TK_isInstallcheck();
+ 	if(touchenexInfo.tkInstalled){
+ 		clearInterval(TouchEnNxKeyInstall);
+ 		//설치완료 후 메인페이지 이동 로직 추가
+ 		location.href = touchenexInfo.tkMainpage;
+ 	}else{
+ 		document.getElementById("ex_download").style.display = "none";
+ 		if (TOUCHENEX_UTIL.isIE() || TOUCHENEX_UTIL.isSafari() ) {
+ 			document.getElementById("ex_installed").style.display = "none";
+ 		} else { 
+ 			document.getElementById("ex_installed").style.display = "block";
+ 		}
+ 		document.getElementById("tk_download").style.display = "none";
+ 		document.getElementById("tk_installed").style.display = "block";
+ 		if(!touchenexInfo.clInstalled){
+ 			document.getElementById("tk_download").style.display = "block";
+ 			document.getElementById("tk_installed").style.display = "none";
+ 		} else {
+ 			document.getElementById("tk_download").style.display = "none";
+ 			document.getElementById("tk_installed").style.display = "block";
+ 		}
+ 		if (TOUCHENEX_UTIL.isIE() || TOUCHENEX_UTIL.isSafari()) {
+ 		}else{
+	  		if(!touchenexInfo.exInstalled){
+	  			document.getElementById("ex_download").style.display = "block";
+	  			document.getElementById("ex_installed").style.display = "none";
+	  		}else{
+	  			document.getElementById("ex_download").style.display = "none";
+	  			document.getElementById("ex_installed").style.display = "block";
+	  		}
+ 		}
+ 	}
+ },500);
+  
+
+ function TouchEnKey_extensionInstall() {
+ 	if(TOUCHENEX_UTIL.isChrome() || TOUCHENEX_UTIL.isFirefox() || TOUCHENEX_UTIL.isOpera()){
+ 		TouchEnKey_extensiondownload();
+ 	}
+ }
+function TK_getUrlParameter(name) {
+    var value = "";
+    try {
+        var url = document.location.href;
+        var idx = url.indexOf("?");
+        var params = "&"+url.substring(idx+1);
+        idx = params.indexOf("&" + name + "=");
+        if (idx >= 0) value = params.substring(idx+name.length+2);
+        idx = value.indexOf("&");
+        if (idx >= 0) value = value.substring(0, idx);
+        value = decodeURIComponent(value);
+    } catch(err) {}
+    return value;
+}
+
+window.onload = function(){
+	if(!TOUCHENEX_UTIL.isChrome() && !TOUCHENEX_UTIL.isFirefox() && !TOUCHENEX_UTIL.isOpera()){
+		document.getElementById("ex_download").style.display = "none";
+		document.getElementById("ex_installed").style.display = "none";
+	}
+	touchenexInfo.tkMainpage = TK_getUrlParameter("url");	// 설치페이지로 이동 시킨 페이지 정보를 저장한다.
+};
+
+</script>
+</head>
+
+<body>
+
+<div id="installVP_wrap">
+    <div id="container">
+        <div><img src="images/top_logo.gif" /></div>
+
+        <div id="downVP">
+            <div><img src="images/install_line.gif" /></div>
+            <br/>
+
+            <div id="downVP_multi">
+                <div id="title">TouchEn nxKey 키보드보안 프로그램 설치</div>
+                <div id="msg">
+                    <ul>
+                        <li> ≫ 하단의 버튼을 눌러 프로그램을 다운로드 받아 설치 하시기 바랍니다.</li>
+                        <li> ≫ 수동설치후에 반드시 <a href="javascript:navigator.plugins.refresh(true);location.reload();">[새로고침]</a> 을 하거나 해당사이트로 재 접속하여주시기 바랍니다.</li>
+                        <li> ≫ 접속PC정보: <script>document.write(thisBrowserInfo)</script></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="downVP_btn">
+            	<div id="inn">
+            		<div><img src="images/install_line_mini.gif" /></div>
+            		<div id="ex_download">
+	                	<label for="ex_download">브라우저 확장 기능 설치 : </label><button id="ex_download" type="button" onclick="javascript:TouchEnKey_extensionInstall();">등록하기</button><br/>
+	                </div>
+	                <div id="ex_installed" style="display:none">
+	                	<label>브라우저 확장 기능 설치 : </label><span class="instxt"><b>설치 완료</b></span><br/>
+	                </div>
+	                <div id="tk_download">
+	                	<label for="main_download">키보드보안 프로그램 설치 : </label><button id="main_download" type="button" onclick="javascript:TouchEnKey_download();">다운로드</button>
+	                </div>
+	                <div id="tk_installed"  style="display:none">
+	                	<label>키보드보안 프로그램 설치 : </label><span class="instxt"><b>설치 완료</b></span>
+	                </div>
+	                <div><img src="images/install_line_mini.gif" /></div>
+                </div>
+            </div>
+
+            <div><img src="images/install_line.gif" /></div>
+            <div id="downVP_msg">
+                <ul>
+                    <li>설치완료 후 장시간 화면이 멈춰있거나 설치가 반복될경우 다음을 확인하시기 바랍니다.
+                       <br/>(1) 정상적인 설치/동작확인을 위하여 <a href="javascript:TK_isInstallcheck();"><b>접속확인</b></a>을 선택하여 정상적으로 접속되는지 확인합니다.
+                    </li>
+                    <li>설치가 정상적으로 되지 않는 경우에는 사용중인 브라우저를 모두 종료한뒤 [제어판]의 [프로그램 추가제거]에서 [TouchEn nxKey with E2E for 32(64)Bit]삭제 후에 수동설치 파일로 재 설치후  이용하십시오.</li>
+                    <li>키보드보안 프로그램 설치안내: <b><a href="http://faq.touchen.co.kr" target="_guide">[설치안내바로가기]</a></b></li>
+                </ul>
+            </div>
+            <div><img src="images/install_line.gif" /></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE8169997Mapper">
+    
+	<resultMap id="faqMap" type="hashmap">
+		<result property="FAQ_SEQ" column="FAQ_SEQ" />
+		<result property="SBJ" column="SBJ" />
+		<result property="CNTN_TP" column="CNTN_TP"  />
+		<result property="CNTN" column="CNTN"  javaType="java.lang.String" jdbcType="CLOB" />
+	</resultMap>
+    
+	<!-- FAQ 상세조회 -->
+	<select id="epce8169997_select1" parameterType="map" resultMap="faqMap">
+	    SELECT FAQ_SEQ,
+	    	   SBJ,
+	    	   CNTN_TP,
+	    	   CNTN,
+	    	   TO_CHAR(REG_DTTM, 'YYYY-MM-DD') AS REG_DTTM,
+	    	   REG_PRSN_ID AS REG_ID
+	      FROM EPCN_FAQ
+	     WHERE 1=1
+	       AND FAQ_SEQ = #{FAQ_SEQ}
+    </select>
+    
+	<!-- FAQ 이전글 조회 -->
+	<select id="epce8169997_select2" parameterType="map" resultType="hashmap">
+	    SELECT FAQ_SEQ,
+		       SBJ
+		  FROM EPCN_FAQ
+		 WHERE FAQ_SEQ = (SELECT MAX(FAQ_SEQ)
+		          FROM EPCN_FAQ
+		         WHERE FAQ_SEQ &lt; #{FAQ_SEQ})
+    </select>
+    
+	<!-- FAQ 다음글 조회 -->
+	<select id="epce8169997_select3" parameterType="map" resultType="hashmap">
+	    SELECT FAQ_SEQ,
+		       SBJ
+		  FROM EPCN_FAQ
+		 WHERE FAQ_SEQ = (SELECT MIN(FAQ_SEQ)
+		          FROM EPCN_FAQ
+		         WHERE FAQ_SEQ > #{FAQ_SEQ})
+    </select>
+    
+	<!-- FAQ 첨부파일 조회 -->
+	<select id="epce8169997_select4" parameterType="map" resultType="hashmap">
+	    SELECT FAQ_SEQ,
+	    	   REG_SN,
+	    	   FILE_NM,
+	    	   SAVE_FILE_NM,
+	    	   FILE_PATH
+	      FROM EPCN_FAQ_FILE
+	     WHERE 1=1
+	       AND FAQ_SEQ = #{FAQ_SEQ}
+	     ORDER BY FAQ_SEQ, REG_SN
+	</select>
+	
+	<!-- 첨부파일 리스트 삭제 -->
+	<delete id="epce8169997_delete1" parameterType="map">
+	    DELETE
+	      FROM EPCN_FAQ_FILE
+	     WHERE 1=1
+	       AND FAQ_SEQ = #{FAQ_SEQ}
+	</delete>
+	
+	<!-- FAQ 삭제 -->
+	<delete id="epce8169997_delete2" parameterType="map">
+	    DELETE
+	      FROM EPCN_FAQ
+	     WHERE 1=1
+	       AND FAQ_SEQ = #{FAQ_SEQ}
+	</delete>
+    
+</mapper>

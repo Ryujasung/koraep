@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF6198401Mapper">
+
+	<!-- 출고대비초과회수현황 조회  -->
+	<select id="epmf6198401_select" parameterType="map"   resultType="hashmap">
+			<if test='excelYn == null or excelYn == "" '>
+			 SELECT 
+				*
+			 FROM (
+			 </if>
+				SELECT 
+					 ROWNUM AS PNO	
+					,TOTALCOUNT
+					,MFC_BIZRNM
+					,MFC_BRCH_NM
+					,WHSDL_BIZRNM
+					,AREA_CD
+					,DLIVY_M
+					,DLIVY_H
+					,(DLIVY_M +DLIVY_H ) AS DLIVY_TOT
+					,DECODE( (DLIVY_M + DLIVY_H), 0, 0, ROUND((DLIVY_H / (DLIVY_M + DLIVY_H)),4) * 100) AS DLIVY_RT_H
+					,CFM_M
+					,CFM_H
+					,CFM_D
+					,(CFM_M +CFM_H +CFM_D) AS CFM_TOT
+					,DECODE( (CFM_M + CFM_H+CFM_D), 0, 0, ROUND((CFM_H / (CFM_M + CFM_H+CFM_D)),4) * 100) AS CFM_RT_H
+					,(CFM_M - DLIVY_M )AS DLIVY_CPR_RTRVL_M
+					,(CFM_H - DLIVY_H )AS DLIVY_CPR_RTRVL_H
+					,(CFM_H + CFM_D - DLIVY_H)+(CFM_M - DLIVY_M)  AS DLIVY_RTRVL_TOT
+					,DECODE(((CFM_H +CFM_D - DLIVY_H) + (CFM_M - DLIVY_M)),0,0, ROUND(((CFM_H + CFM_D - DLIVY_H) / ((CFM_H + CFM_D - DLIVY_H) + (CFM_M - DLIVY_M))),4) * 100) AS DLIVY_CPR_RTRVL_RT_H
+  						,DECODE((DLIVY_H+DLIVY_M), 0, 0 , ROUND((CFM_H+CFM_D+CFM_M) / (DLIVY_H+DLIVY_M), 4) * 100) AS DLIVY_CPR_RTRVL_RT
+				FROM 
+					(  
+						 SELECT
+				 			COUNT(*)OVER() AS TOTALCOUNT
+							,EPCN_BIZR_NM(MFC_BIZRID ,MFC_BIZRNO) AS MFC_BIZRNM
+							,EPCN_BRCH_NM(MFC_BRCH_ID,MFC_BRCH_NO,MFC_BIZRID ,MFC_BIZRNO) AS MFC_BRCH_NM	
+							,EPCN_BIZR_NM(WHSDL_BIZRID ,WHSDL_BIZRNO) AS WHSDL_BIZRNM
+							,EPCN_ETC_NM(AREA_CD,'B010') AS AREA_CD
+							,NVL(SUM 
+							              ( 
+							                  CASE TABLE_NM 
+							                      WHEN 'DLIVY' 
+							                      THEN DECODE(PRPS_CD, '0', QTY, 0)
+							                      ELSE 0 
+							                  END 
+							              ) 
+						  			,0) AS DLIVY_M
+						   ,NVL(SUM 
+							              ( 
+							                  CASE TABLE_NM 
+							                      WHEN 'DLIVY' 
+							                      THEN DECODE(PRPS_CD, '1', QTY, 0)
+							                      ELSE 0 
+							                  END 
+							              ) 
+						  			,0) AS DLIVY_H  			
+						    ,NVL(SUM 
+							              ( 
+							                  CASE TABLE_NM 
+							                      WHEN 'CFM' 
+							                      THEN DECODE(PRPS_CD, '0', QTY, 0)
+							                      ELSE 0 
+							                  END 
+							              ) 
+						  			,0) AS CFM_M 		
+						    ,NVL(SUM 
+							              ( 
+							                  CASE TABLE_NM 
+							                      WHEN 'CFM' 
+							                      THEN DECODE(PRPS_CD, '1', QTY, 0)
+							                      ELSE 0 
+							                  END 
+							              ) 
+						  			,0) AS CFM_H 	
+						  	 ,NVL(SUM 
+							              ( 
+							                  CASE TABLE_NM 
+							                      WHEN 'CFM' 
+							                      THEN DECODE(PRPS_CD, '2', QTY, 0)
+							                      ELSE 0 
+							                  END 
+							              ) 
+						  			,0) AS CFM_D
+						FROM
+							(
+								SELECT  
+									 TABLE_NM
+									 ,SUM(NVL(QTY, 0)) AS QTY 
+									,CTNR_CD
+									,PRPS_CD
+									,MFC_BIZRID
+									,MFC_BIZRNO
+									,MFC_BRCH_ID
+									,MFC_BRCH_NO
+									,WHSDL_BIZRID
+									,WHSDL_BIZRNO
+									,AREA_CD
+								FROM 
+								(
+										SELECT 
+												'DLIVY' AS TABLE_NM
+												,A.MFC_BIZRID
+												,A.MFC_BIZRNO
+												,A.MFC_BRCH_ID
+												,A.MFC_BRCH_NO
+												,B.CUST_BIZRID AS WHSDL_BIZRID
+												,B.CUST_BIZRNO AS WHSDL_BIZRNO
+												,B.CUST_BRCH_ID AS  WHSDL_BRCH_ID
+												,B.CUST_BRCH_NO AS WHSDL_BRCH_NO
+												,B.DLIVY_QTY AS QTY	
+												,B.CTNR_CD
+												,(SELECT PRPS_CD FROM EPCN_STD_CTNR_CD WHERE CTNR_CD =B.CTNR_CD ) PRPS_CD
+								 		FROM 
+										EPDM_DLIVY_MST A
+										,(SELECT * FROM EPDM_DLIVY_INFO WHERE DLIVY_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-') ) B
+										WHERE 1=1
+										AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+										
+								UNION ALL
+			                                           
+                                       SELECT 
+                                               'DLIVY' AS TABLE_NM
+                                               ,A.MFC_BIZRID
+                                               ,A.MFC_BIZRNO
+                                               ,A.MFC_BRCH_ID
+                                               ,A.MFC_BRCH_NO
+                                               ,A.CUST_BIZRID AS WHSDL_BIZRID
+                                               ,A.CUST_BIZRNO AS WHSDL_BIZRNO
+                                               ,A.CUST_BRCH_ID AS  WHSDL_BRCH_ID
+                                               ,A.CUST_BRCH_NO AS WHSDL_BRCH_NO
+                                               ,A.DLIVY_QTY AS QTY 
+                                               ,A.CTNR_CD
+                                               ,(SELECT PRPS_CD FROM EPCN_STD_CTNR_CD WHERE CTNR_CD =A.CTNR_CD ) PRPS_CD
+                                       FROM 
+                                           EXCA_DLIVY_CRCT A
+                                       WHERE 1=1
+                                       	AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I')
+                                           AND A.DLIVY_DT BETWEEN   REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')
+			                                                       										
+								UNION ALL
+										SELECT 
+												'CFM' AS TABLE_NM
+												,C.MFC_BIZRID
+												,C.MFC_BIZRNO
+												,C.MFC_BRCH_ID
+												,C.MFC_BRCH_NO
+												,C.WHSDL_BIZRID
+												,C.WHSDL_BIZRNO
+												,C.WHSDL_BRCH_ID
+												,C.WHSDL_BRCH_NO
+												,D.CFM_QTY AS QTY
+												,D.CTNR_CD
+												,(SELECT PRPS_CD FROM EPCN_STD_CTNR_CD WHERE CTNR_CD =D.CTNR_CD ) PRPS_CD
+										 FROM 
+										 		(
+													 SELECT A.*
+													    FROM EPCM_CFM_MST A, EPCM_RTN_MST B
+													  WHERE 1=1 
+													      AND B.RTN_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-') 
+													      AND A.RTN_STAT_CD NOT IN ('RG', 'WJ', 'SM', 'SW', 'RR', 'FC')  
+													      AND A.RTN_DOC_NO = B.RTN_DOC_NO
+												) C
+												,EPCM_CFM_INFO D
+										WHERE 1=1
+											AND C.WRHS_DOC_NO = D.WRHS_DOC_NO
+								) T1
+								,(SELECT AREA_CD,BIZRID ,BIZRNO ,BRCH_ID ,BRCH_NO, BIZR_TP_CD 
+								    FROM EPCN_BRCH_INFO 
+									WHERE 1=1 
+									 <if test=" AREA_CD !=null and AREA_CD !='' " >
+											AND AREA_CD = #{AREA_CD}
+									 </if>
+									 <if test=" WHSDL_BIZRID !=null and WHSDL_BIZRID !='' " >
+											AND BIZRID = #{WHSDL_BIZRID}
+											AND BIZRNO = #{WHSDL_BIZRNO}
+									 </if>
+									 <if test=" BIZR_TP_CD !=null and BIZR_TP_CD !='' " >
+										AND BIZR_TP_CD =#{BIZR_TP_CD}
+									 </if>
+							 	)T2    
+								WHERE 1=1
+								AND T1.WHSDL_BIZRID		= T2.BIZRID(+)
+								AND T1.WHSDL_BIZRNO		= T2.BIZRNO(+)
+								AND T1.WHSDL_BRCH_ID	= T2.BRCH_ID(+)
+								AND T1.WHSDL_BRCH_NO	= T2.BRCH_NO(+)
+								<if test=" MFC_BIZRID !=null and MFC_BIZRID !='' " >
+									AND T1.MFC_BIZRID = #{MFC_BIZRID}
+									AND T1.MFC_BIZRNO = #{MFC_BIZRNO}
+								</if>    														
+	  							<if test=" MFC_BRCH_ID !=null and MFC_BRCH_ID !='' " >
+									AND T1.MFC_BRCH_ID	= #{MFC_BRCH_ID}
+									AND T1.MFC_BRCH_NO	 = #{MFC_BRCH_NO}
+								</if>
+								
+								 <if test=" AREA_CD !=null and AREA_CD !='' " >
+									AND T2.AREA_CD = #{AREA_CD}
+								 </if>
+								 <if test=" WHSDL_BIZRID !=null and WHSDL_BIZRID !='' " >
+									AND T2.BIZRID = #{WHSDL_BIZRID}
+									AND T2.BIZRNO = #{WHSDL_BIZRNO}
+								 </if>
+								 <if test=" BIZR_TP_CD !=null and BIZR_TP_CD !='' " >
+									AND T2.BIZR_TP_CD =#{BIZR_TP_CD}
+								 </if>								
+								<if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+									 AND EXISTS (
+							 					   SELECT 'X'
+						                             FROM EPCN_BRCH_INFO S1
+						                           WHERE 1=1
+						                              AND T1.MFC_BIZRID = S1.BIZRID
+						                              AND T1.MFC_BIZRNO = S1.BIZRNO
+						                              AND T1.MFC_BRCH_ID = S1.BRCH_ID
+						                              AND T1.MFC_BRCH_NO = S1.BRCH_NO
+								                      AND EXISTS (    
+							                      					   SELECT 'X'
+											                           FROM EPCN_BRCH_INFO S2
+											                           WHERE 1=1
+											                              AND S1.BIZRID = S2.BIZRID
+											                              AND S1.BIZRNO = S2.BIZRNO
+											                              AND (
+												                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+												                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')
+											                                     ) 
+											                              AND S2.BRCH_ID = #{S_BRCH_ID}
+											                              AND S2.BRCH_NO = #{S_BRCH_NO}
+													          		)
+						                         	)
+								 	</if>
+								
+								GROUP BY TABLE_NM , MFC_BIZRID,MFC_BIZRNO,MFC_BRCH_ID,MFC_BRCH_NO	,WHSDL_BIZRID	,WHSDL_BIZRNO	,CTNR_CD ,PRPS_CD ,AREA_CD
+							)   c_tot   
+							GROUP BY 	MFC_BIZRID,MFC_BIZRNO	,MFC_BRCH_ID,MFC_BRCH_NO,WHSDL_BIZRID	,WHSDL_BIZRNO,AREA_CD
+					) b_pno
+	    <if test='excelYn == null or excelYn == "" '>
+					<![CDATA[ WHERE ROWNUM <=  #{ROWS_PER_PAGE}*#{CURRENT_PAGE}  ]]>
+			) a_all  
+					WHERE PNO BETWEEN (#{ROWS_PER_PAGE}*(#{CURRENT_PAGE}-1))+1 AND #{ROWS_PER_PAGE}*#{CURRENT_PAGE}
+		</if>
+	</select>
+	
+	<!-- 차트조회  -->
+	<select id="epmf6198401_select2"  parameterType="map"   resultType="hashmap">   
+		 SELECT
+			EPCN_BIZR_ABBR_NM(MFC_BIZRID ,MFC_BIZRNO) AS MFC_BIZRNM
+			,NVL(SUM 
+			              ( 
+			                  CASE TABLE_NM 
+			                      WHEN 'DLIVY' 
+			                      THEN DECODE(PRPS_CD, '0', QTY, 0)
+			                      ELSE 0 
+			                  END 
+			              ) 
+		  			,0) AS DLIVY_M
+		   ,NVL(SUM 
+			              ( 
+			                  CASE TABLE_NM 
+			                      WHEN 'DLIVY' 
+			                      THEN DECODE(PRPS_CD, '1', QTY, 0)
+			                      ELSE 0 
+			                  END 
+			              ) 
+		  			,0) AS DLIVY_H
+		    ,NVL(SUM 
+			              ( 
+			                  CASE TABLE_NM 
+			                      WHEN 'CFM' 
+			                      THEN DECODE(PRPS_CD, '0', QTY, 0)
+			                      ELSE 0 
+			                  END 
+			              ) 
+		  			,0) AS CFM_M
+		  	,NVL(SUM 
+			              ( 
+			                  CASE TABLE_NM 
+			                      WHEN 'CFM' 
+			                      THEN DECODE(PRPS_CD, '2', QTY, 0)
+			                      ELSE 0 
+			                  END 
+			              ) 
+		  			,0) AS CFM_D
+		     ,NVL(SUM	(CASE TABLE_NM  WHEN 'CFM' THEN DECODE(PRPS_CD, '1', QTY, 0) ELSE 0 END),0) AS CFM_H
+		FROM
+			(
+				SELECT
+					 TABLE_NM
+					 ,SUM(NVL(QTY, 0)) AS QTY
+					,CTNR_CD
+					,PRPS_CD
+					,MFC_BIZRID
+					,MFC_BIZRNO
+					,MFC_BRCH_ID
+					,MFC_BRCH_NO
+					,WHSDL_BIZRID
+					,WHSDL_BIZRNO
+					,AREA_CD
+				FROM 
+				(
+					SELECT 
+							'DLIVY' AS TABLE_NM
+							,A.MFC_BIZRID
+							,A.MFC_BIZRNO
+							,A.MFC_BRCH_ID
+							,A.MFC_BRCH_NO
+							,B.CUST_BIZRID AS WHSDL_BIZRID
+							,B.CUST_BIZRNO AS WHSDL_BIZRNO
+							,B.CUST_BRCH_ID AS  WHSDL_BRCH_ID
+							,B.CUST_BRCH_NO AS WHSDL_BRCH_NO
+							,B.DLIVY_QTY AS QTY	
+							,B.CTNR_CD
+							,(SELECT PRPS_CD FROM EPCN_STD_CTNR_CD WHERE CTNR_CD =B.CTNR_CD ) PRPS_CD
+			 		FROM 
+					EPDM_DLIVY_MST A
+					,(SELECT * FROM EPDM_DLIVY_INFO WHERE DLIVY_DT  BETWEEN   REPLACE(#{START_DT}, '-') AND  REPLACE(#{END_DT}, '-') ) B
+					WHERE 1=1
+					AND A.DLIVY_DOC_NO = B.DLIVY_DOC_NO
+
+					UNION ALL
+
+                    SELECT 
+                            'DLIVY' AS TABLE_NM
+                            ,A.MFC_BIZRID
+                            ,A.MFC_BIZRNO
+                            ,A.MFC_BRCH_ID
+                            ,A.MFC_BRCH_NO
+                            ,A.CUST_BIZRID AS WHSDL_BIZRID
+                            ,A.CUST_BIZRNO AS WHSDL_BIZRNO
+                            ,A.CUST_BRCH_ID AS  WHSDL_BRCH_ID
+                            ,A.CUST_BRCH_NO AS WHSDL_BRCH_NO
+                            ,A.DLIVY_QTY AS QTY 
+                            ,A.CTNR_CD
+                            ,(SELECT PRPS_CD FROM EPCN_STD_CTNR_CD WHERE CTNR_CD =A.CTNR_CD ) PRPS_CD
+                    FROM 
+                        EXCA_DLIVY_CRCT A
+                    WHERE 1=1
+                    	AND A.DLIVY_CRCT_STAT_CD IN ('C', 'I')
+                        AND A.DLIVY_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-')					
+					
+					UNION ALL
+						
+					SELECT 
+							'CFM' AS TABLE_NM
+							,C.MFC_BIZRID
+							,C.MFC_BIZRNO
+							,C.MFC_BRCH_ID
+							,C.MFC_BRCH_NO
+							,C.WHSDL_BIZRID
+							,C.WHSDL_BIZRNO
+							,C.WHSDL_BRCH_ID
+							,C.WHSDL_BRCH_NO
+							,D.CFM_QTY AS QTY	
+							,D.CTNR_CD
+							,(SELECT PRPS_CD FROM EPCN_STD_CTNR_CD WHERE CTNR_CD =D.CTNR_CD ) PRPS_CD
+					 FROM 
+							(
+								 SELECT A.*
+								    FROM EPCM_CFM_MST A, EPCM_RTN_MST B
+								  WHERE 1=1 
+								      AND B.RTN_DT BETWEEN REPLACE(#{START_DT}, '-') AND REPLACE(#{END_DT}, '-') 
+								      AND A.RTN_STAT_CD NOT IN ('RG', 'WJ', 'SM', 'SW', 'RR', 'FC')  
+								      AND A.RTN_DOC_NO = B.RTN_DOC_NO
+							) C
+							,EPCM_CFM_INFO D
+					WHERE 1=1
+					AND C.WRHS_DOC_NO = D.WRHS_DOC_NO
+				) T1
+				,(SELECT AREA_CD,BIZRID ,BIZRNO ,BRCH_ID ,BRCH_NO, BIZR_TP_CD  FROM EPCN_BRCH_INFO WHERE 1=1 
+					 <if test=" AREA_CD !=null and AREA_CD !='' " >
+							AND AREA_CD = #{AREA_CD}
+					 </if>
+					 <if test=" WHSDL_BIZRID !=null and WHSDL_BIZRID !='' " >
+							AND BIZRID = #{WHSDL_BIZRID}
+							AND BIZRNO = #{WHSDL_BIZRNO}
+					 </if>
+					<if test=" BIZR_TP_CD !=null and BIZR_TP_CD !='' " >
+						AND BIZR_TP_CD =#{BIZR_TP_CD}
+					</if>
+			 	)T2
+				WHERE 1=1
+				AND T1.WHSDL_BIZRID		= T2.BIZRID(+)
+				AND T1.WHSDL_BIZRNO		= T2.BIZRNO(+)
+				AND T1.WHSDL_BRCH_ID	= T2.BRCH_ID(+)
+				AND T1.WHSDL_BRCH_NO	= T2.BRCH_NO(+)
+				<if test=" MFC_BIZRID !=null and MFC_BIZRID !='' " >
+					AND T1.MFC_BIZRID = #{MFC_BIZRID}
+					AND T1.MFC_BIZRNO = #{MFC_BIZRNO}
+				</if>
+				<if test=" MFC_BRCH_ID !=null and MFC_BRCH_ID !='' " >
+					AND T1.MFC_BRCH_ID	= #{MFC_BRCH_ID}
+					AND T1.MFC_BRCH_NO	 = #{MFC_BRCH_NO}
+				</if>
+				
+				 <if test=" AREA_CD !=null and AREA_CD !='' " >
+					AND T2.AREA_CD = #{AREA_CD}
+				 </if>
+				 <if test=" WHSDL_BIZRID !=null and WHSDL_BIZRID !='' " >
+					AND T2.BIZRID = #{WHSDL_BIZRID}
+					AND T2.BIZRNO = #{WHSDL_BIZRNO}
+				 </if>
+				<if test=" BIZR_TP_CD !=null and BIZR_TP_CD !='' " >
+					AND T2.BIZR_TP_CD =#{BIZR_TP_CD}
+				</if>				
+				<if test='S_BRCH_ID !=null and S_BRCH_ID !="" '>
+					 AND EXISTS (
+					 					   SELECT 'X'
+				                             FROM EPCN_BRCH_INFO S1
+				                           WHERE 1=1
+				                              AND T1.MFC_BIZRID = S1.BIZRID
+				                              AND T1.MFC_BIZRNO = S1.BIZRNO
+				                              AND T1.MFC_BRCH_ID = S1.BRCH_ID
+				                              AND T1.MFC_BRCH_NO = S1.BRCH_NO
+						                      AND EXISTS (    
+				                      					   SELECT 'X'
+								                           FROM EPCN_BRCH_INFO S2
+								                           WHERE 1=1
+								                              AND S1.BIZRID = S2.BIZRID
+								                              AND S1.BIZRNO = S2.BIZRNO
+								                              AND (
+									                                    (S1.BRCH_ID = S2.BRCH_ID AND S1.BRCH_NO = S2.BRCH_NO)
+									                                 	OR S1.GRP_BRCH_NO = DECODE(S2.GRP_YN, 'Y', S2.BRCH_NO, '')
+								                                     ) 
+								                              AND S2.BRCH_ID = #{S_BRCH_ID}
+								                              AND S2.BRCH_NO = #{S_BRCH_NO}
+											          		)
+		                         		)
+				 	</if>
+				
+				GROUP BY TABLE_NM , MFC_BIZRID,MFC_BIZRNO,MFC_BRCH_ID,MFC_BRCH_NO	,WHSDL_BIZRID	,WHSDL_BIZRNO	,CTNR_CD ,PRPS_CD ,AREA_CD
+		)
+		GROUP BY 	MFC_BIZRID,MFC_BIZRNO
+	</select>
+	
+	
+</mapper>
+

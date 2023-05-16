@@ -1,0 +1,92 @@
+/* 스토리지 저장매체 selected 배경 */
+.m-us-layout-storage-wrap ul li button.m-us-layout-storage-btn-on
+{
+	background : #D30D3E ;
+}
+
+/* 스토리지 레이어창 테두리 */
+.m-us-layout-storage-more-wrap
+{
+	border-color:#D30D3E ;
+}
+
+/* 인증서 LIST 배경 */
+.m-us-layout-list
+{
+	background : #D30D3E ;
+}
+
+/* 인증서보기 TAB 버튼 */
+.m-us-layout-view-tab li a.active
+{
+	background : #D30D3E ;
+}
+.m-us-view-tab-content
+{
+	border-color : #D30D3E ;
+}
+
+/* 인증서보기 TAB B LIST 선택시 */
+.m-us-layout-view-grid-row-data-selected-element
+{
+	background : #D30D3E ;
+}
+
+/* 메인 타이틀 폰트 */
+.m-us-layout-lbl-title
+{
+	color : #fff ;
+}
+
+/* 메인 상단 배경 */
+.m-us-layout-title{
+	background:#D30D3E;
+}
+
+/* 메인 상단 이미지 배경 높이 */
+.m-us-layout-logo{
+	height:auto;
+	background:#D30D3E;
+}
+
+/* 스토리지 레이어창 저장매체 배경 */
+.m-us-layout-storage-more-wrap ul li button.m-us-layout-storage-btn-on
+{
+	background : #FF7698 ;
+}
+.m-us-layout-storage-select-list ul li button.m-us-layout-storage-btn-on
+{
+	background : #FF7698 ;
+}
+
+/* 인증서암호/암호창 테두리 색상 */
+.m-us-layout-pw .m-us-layout-lbl-pw .m-us-pw-text1
+{
+	color : #D30D3E ;
+}
+.m-us-layout-pw .m-us-layout-pw-text
+{
+	border-color : #D30D3E ;
+}
+
+/* 확인/취소 버튼 폰트 */
+.m-us-normal-btn,.m-us-normal-btn.btn-confirm,.m-us-layout-normal-btn.bstyle-btn
+{
+	background : #FF7698 ;
+	color : #FFFFFF ;
+}
+.m-us-layout-normal-btn
+{
+	background : #B5B8BE ;
+	color : #FFFFFF ;
+}
+
+
+/* ##### [tablet mode] ##### */
+@media all and (min-width: 768px){
+/* 메인 상단 이미지 배경 높이 */
+.m-us-layout-logo{
+	height:auto;
+	background:#D30D3E;
+}	
+}

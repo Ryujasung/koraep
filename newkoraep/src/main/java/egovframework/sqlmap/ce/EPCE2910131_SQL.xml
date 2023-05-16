@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE2910131Mapper">
+
+    <!-- 반환내역서등록 도매업자 구분  -->
+	<select id="epce2910131_select"  resultType="hashmap">
+			SELECT
+					 	 ETC_CD,ETC_CD_NM 
+			FROM 
+						EPCN_ETC_CD  A
+			JOIN 		(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+			ON   		A.LANG_SE_CD = E.LANG_SE_CD
+			WHERE 	1=1
+			AND		GRP_CD='B001'
+			AND		ETC_CD IN( 'W1','W2')
+	</select>
+
+	
+
+	<!-- 반환내역서등록 등록시 검색 등록한 용기명 있는지 조회 -->
+	<select id="epce2910131_select3" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM EPCM_RTN_MST A
+				 ,EPCM_RTN_INFO B 
+		WHERE 1=1
+		AND A.RTN_DOC_NO			=B.RTN_DOC_NO
+		AND	A.WHSDL_BIZRID		=#{CUST_BIZRID}
+		AND	A.WHSDL_BIZRNO		=#{CUST_BIZRNO}
+		AND	A.WHSDL_BRCH_ID		=#{CUST_BRCH_ID}
+		AND	A.WHSDL_BRCH_NO		=#{CUST_BRCH_NO}
+		AND	A.MFC_BIZRID				=#{MFC_BIZRID}
+		AND	A.MFC_BIZRNO			=#{MFC_BIZRNO}
+		AND	A.MFC_BRCH_ID			=#{MFC_BRCH_ID}
+		AND	A.MFC_BRCH_NO			=#{MFC_BRCH_NO}
+		AND	A.RTN_REG_DT			=TO_CHAR(SYSDATE,'YYYYMMDD')
+		AND	A.RTN_DT					=REPLACE(#{RTN_DT}, '-')
+		AND	B.CTNR_CD					=#{CTNR_CD}
+	</select>
+	
+	<!-- 반환내역서등록 엑셀 업로드 조회 -->
+	<select id="epce2910131_select4" parameterType="map" resultType="hashmap">
+    SELECT  
+	             A.LANG_SE_CD
+	            , A.CTNR_CD
+	            , A.REG_SN
+                , A.WHSL_FEE AS RTN_WHSL_FEE_UTPC
+                , A.RTL_FEE AS RTN_RTL_FEE_UTPC
+                , A.CUST_BIZRID 
+				, A.CUST_BIZRNO 
+				, A.CUST_BRCH_ID
+				, A.CUST_BRCH_NO 
+				, A.STD_FEE_YN
+                , B.CTNR_NM
+                , B.CTNR_CD
+                , EPCN_ETC_NM(B.CPCT_CD , 'E001') AS CPCT_NM
+                , EPCN_ETC_NM(B.PRPS_CD , 'E002') AS PRPS_NM
+                , B.PRPS_CD
+                , CASE WHEN SUBSTR(B.CTNR_CD,4,2) = 00 THEN '표준용기' ELSE '비표준용기' END AS STANDARD_NM
+				, DECODE( SUBSTR(B.CTNR_CD,2,1),3,2,1) AS BIZR_TP_CD
+                , C.STD_DPS AS RTN_GTN_UTPC
+                , ( C.STD_DPS * #{RTN_QTY} ) AS RTN_GTN
+                , ( A.WHSL_FEE * #{RTN_QTY} ) AS RTN_WHSL_FEE
+                , TRUNC( ((A.WHSL_FEE * #{RTN_QTY}) + (A.RTL_FEE * #{RTN_QTY} )) * 0.1 ) AS RTN_WHSL_FEE_STAX
+                , ( A.RTL_FEE * #{RTN_QTY} ) AS RTN_RTL_FEE 
+                , ( C.STD_DPS * #{RTN_QTY} ) + ( A.WHSL_FEE * #{RTN_QTY} ) + TRUNC( ((A.WHSL_FEE * #{RTN_QTY}) + (A.RTL_FEE * #{RTN_QTY} )) * 0.1 )  + ( A.RTL_FEE * #{RTN_QTY} ) AS AMT_TOT
+                , G.MFC_BIZRNM
+                , G.MFC_BRCH_NM
+                , G.MFC_BRCH_ID
+				, G.MFC_BRCH_NO
+				, G.MFC_BIZRID
+				, G.MFC_BIZRNO
+				, G.MFC_BIZRID||';'||G.MFC_BIZRNO AS MFC_BIZRNM_CD 
+				, G.MFC_BRCH_ID||';'||G.MFC_BRCH_NO AS MFC_BRCH_NM_CD
+                , #{RTN_QTY} AS RTN_QTY
+                , #{BOX_QTY} AS BOX_QTY
+                , #{CAR_NO} AS CAR_NO
+				, #{RTN_DT} AS RTN_DT
+				, #{SYS_SE} AS SYS_SE
+				, #{RTN_STAT_CD} AS RTN_STAT_CD
+				,DECODE( SUBSTR(A.CTNR_CD,2,1),'3' ,'2' ,'1') AS CTNR_SE
+				, 'aplc' AS RTL_FEE_SELECT
+				,'' AS RMK_SELECT
+				
+      FROM 
+               EPCN_INDV_FEE_MGNT A
+               ,EPCN_STD_CTNR_CD B
+               ,EPCN_STD_DPS_MGNT C
+               ,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+               ,(SELECT CTNR_CD, LANG_SE_CD, REG_SN, MIN(STD_FEE_YN)  AS STD_FEE_YN 
+                   FROM EPCN_INDV_FEE_MGNT 
+					WHERE 1=1
+					AND MFC_BIZRNO 		=	ECL_ENCRYPT(#{MFC_BIZRNO})
+					AND MFC_BRCH_NO 	=	#{MFC_BRCH_NO}
+					AND CUST_BIZRID 		=	#{CUST_BIZRID}
+					AND CUST_BIZRNO 	=	#{CUST_BIZRNO}
+					AND CUST_BRCH_ID	=	#{CUST_BRCH_ID}
+					AND CUST_BRCH_NO 	=	#{CUST_BRCH_NO}
+			        GROUP BY CTNR_CD, LANG_SE_CD, REG_SN
+                 ) F
+                 ,( 	SELECT * FROM EPCN_DTSS_CUST_INFO WHERE 1=1	             
+					 AND	 STAT_CD 			='Y'
+            		 AND	 MFC_BIZRNO 	=	ECL_ENCRYPT(#{MFC_BIZRNO})
+					 AND	 MFC_BRCH_NO 	=  #{MFC_BRCH_NO}
+					 AND CUST_BIZRID 		=	#{CUST_BIZRID}
+					 AND CUST_BIZRNO 	=	#{CUST_BIZRNO}
+					 AND CUST_BRCH_ID	=	#{CUST_BRCH_ID}
+					 AND CUST_BRCH_NO 	=	#{CUST_BRCH_NO}
+                 ) G
+     	WHERE 1=1
+		AND A.CTNR_CD            	= 	B.CTNR_CD
+		AND A.LANG_SE_CD      	= 	B.LANG_SE_CD
+		AND A.CTNR_CD            	= 	C.CTNR_CD
+		AND A.LANG_SE_CD        = 	C.LANG_SE_CD
+		AND A.LANG_SE_CD       	= 	E.LANG_SE_CD       
+		AND A.CTNR_CD        		= 	F.CTNR_CD
+        AND A.LANG_SE_CD      	= 	F.LANG_SE_CD
+        AND A.REG_SN          		= 	F.REG_SN
+        AND A.STD_FEE_YN      	= 	F.STD_FEE_YN  
+		AND A.MFC_BIZRNO 		=	ECL_ENCRYPT(#{MFC_BIZRNO})
+		AND A.MFC_BRCH_NO 	=	#{MFC_BRCH_NO}
+		AND A.CUST_BIZRID 		=	#{CUST_BIZRID}
+		AND A.CUST_BIZRNO 		=	#{CUST_BIZRNO}
+		AND A.CUST_BRCH_ID		=	#{CUST_BRCH_ID}    
+		AND A.CUST_BRCH_NO 	=	#{CUST_BRCH_NO}        
+		AND A.CTNR_CD				=	#{CTNR_CD}        
+		<choose>   
+			<when test="BIZR_TP_CD.equalsIgnoreCase('W1')">      
+					AND SUBSTR(A.CTNR_CD,3,1) IN (1,0)     
+			</when>          
+			<otherwise>   
+					AND SUBSTR(A.CTNR_CD,3,1) =   '2'    
+			</otherwise>          
+		</choose>       
+		AND  REPLACE(#{RTN_DT}, '-') BETWEEN  C.APLC_ST_DT and  C.APLC_END_DT 
+		AND  REPLACE(#{RTN_DT}, '-') BETWEEN  A.APLC_ST_DT and  A.APLC_END_DT
+	</select>
+
+	<!-- 반환관리 마스터 등록 -->
+	<insert id="epce2910131_insert" parameterType="map" >
+		INSERT
+			INTO EPCM_RTN_MST
+				(
+					RTN_DOC_NO
+					,WHSDL_BIZRID
+					,WHSDL_BIZRNO
+					,WHSDL_BRCH_ID
+					,WHSDL_BRCH_NO
+					,MFC_BIZRID
+					,MFC_BIZRNO
+					,MFC_BRCH_ID
+					,MFC_BRCH_NO
+					,SYS_SE
+					,RTN_REG_DT
+					,RTN_DT
+					,CAR_NO
+					,RTN_STAT_CD
+					,REG_PRSN_ID
+					,REG_DTTM
+			  )
+			  VALUES
+			  (
+			 	 #{RTN_DOC_NO}
+				,#{CUST_BIZRID}
+				,#{CUST_BIZRNO}
+				,#{CUST_BRCH_ID}
+				,#{CUST_BRCH_NO}
+				,#{MFC_BIZRID}
+				,#{MFC_BIZRNO}
+				,#{MFC_BRCH_ID}
+				,#{MFC_BRCH_NO}
+				,#{SYS_SE}
+				, TO_CHAR(SYSDATE,'YYYYMMDD')
+				,REPLACE(#{RTN_DT}, '-')
+				,#{CAR_NO}
+				,#{RTN_STAT_CD}
+				,#{REG_PRSN_ID}
+				,SYSDATE
+			  )
+	</insert>
+	
+	<!-- 반환관리상세 등록 -->
+	<insert id="epce2910131_insert2" parameterType="map" >
+		INSERT
+			INTO EPCM_RTN_INFO
+				(
+				 RTN_DOC_NO
+				,CTNR_CD
+				,BOX_QTY
+				,RTN_QTY
+				,RTN_GTN
+				,RTN_WHSL_FEE
+				,RTN_WHSL_FEE_STAX
+				,RTN_RTL_FEE
+				,REG_PRSN_ID
+				,REG_DTTM
+				,RTN_GTN_UTPC
+				,RTN_WHSL_FEE_UTPC
+				,RTN_RTL_FEE_UTPC
+				<if test='RMK !=null and RMK !="" '>
+				,RMK
+				</if>
+				)
+				VALUES   
+				(
+				 #{RTN_DOC_NO}
+				,#{CTNR_CD}
+				,#{BOX_QTY}
+				,#{RTN_QTY}
+				,#{RTN_GTN}
+				,#{RTN_WHSL_FEE}
+				,#{RTN_WHSL_FEE_STAX}
+				,#{RTN_RTL_FEE}
+				,#{REG_PRSN_ID}
+				,SYSDATE
+				,#{RTN_GTN_UTPC}
+				,#{RTN_WHSL_FEE_UTPC}  
+				,#{RTN_RTL_FEE_UTPC}
+				<if test='RMK !=null and RMK !="" '>
+				,#{RMK}      
+				</if>      
+				)
+	</insert>
+	
+	<update id="epce2910131_update" parameterType="map" >
+		UPDATE  
+			 EPCM_RTN_MST  SET
+				(
+				 FB_RTN_QTY_TOT
+				, FH_RTN_QTY_TOT
+				, DRCT_RTN_QTY_TOT
+				, RTN_GTN_TOT
+				, RTN_WHSL_FEE_TOT
+				, RTN_WHSL_FEE_STAX_TOT
+				, RTN_RTL_FEE_TOT
+				 ) = (
+						SELECT 
+									SUM(DECODE(B.PRPS_CD,'0',RTN_QTY,0))
+									,SUM(DECODE(B.PRPS_CD,'1',RTN_QTY,0))
+									,SUM(DECODE(B.PRPS_CD,'2',RTN_QTY,0))
+									,SUM(RTN_GTN)
+									,SUM(RTN_WHSL_FEE)
+									,SUM(RTN_WHSL_FEE_STAX)
+									,SUM(RTN_RTL_FEE)
+						FROM
+									EPCM_RTN_INFO A
+									,EPCN_STD_CTNR_CD B
+									,(SELECT LANG_SE_CD FROM EPCN_LANG_CD WHERE USE_YN = 'Y' AND STD_YN = 'Y' AND ROWNUM = '1') E
+									
+						WHERE 1=1
+						AND A.CTNR_CD 		= B.CTNR_CD
+						AND B.LANG_SE_CD  	= E.LANG_SE_CD
+						AND RTN_DOC_NO 	= #{RTN_DOC_NO}
+					  )
+			WHERE 1=1
+			AND RTN_DOC_NO =#{RTN_DOC_NO}
+	</update>
+	
+
+</mapper>
+

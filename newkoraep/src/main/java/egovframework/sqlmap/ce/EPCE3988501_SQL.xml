@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3988501Mapper">
+
+	<!-- 등록일자제한설정 조회 -->
+	<select id="epce3988501_select" resultType="hashmap">
+			SELECT 
+						EPCN_ETC_NM(WORK_SE , 'S016') AS WORK_NM
+						,WORK_SE
+						,EPCN_ETC_NM(RTC_ST_DT_SE , 'S017') AS RTC_ST_DT_NM
+						,RTC_ST_DT_SE
+						,EPCN_ETC_NM(RTC_ST_SE , 'S018') AS RTC_ST_NM
+						,RTC_ST_SE
+						,EPCN_ETC_NM(RTC_END_DT_SE , 'S017') AS RTC_END_DT_NM
+						,RTC_END_DT_SE
+						,EPCN_ETC_NM(RTC_END_SE , 'S018') AS RTC_END_NM
+						,RTC_END_SE
+						,CASE 
+						WHEN RTC_ST_DT_SE = 'Y' 
+						THEN TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY')
+						ELSE RTC_ST_DT
+						END AS RTC_ST_DT
+						,CASE       
+						WHEN RTC_END_DT_SE = 'Y' 
+						THEN TO_CHAR(ADD_MONTHS(SYSDATE,+12),'YYYY')
+						ELSE RTC_END_DT   
+						END AS RTC_END_DT                  
+			FROM    	        
+						EPCN_RTC_DT_MGNT  
+			ORDER BY WORK_SE ASC  
+	</select>         
+
+	<!-- 등록일자제한설정 저장,변경-->
+	<update id="epce3988501_insert"  parameterType="hashmap">
+		MERGE INTO EPCN_RTC_DT_MGNT 
+		USING DUAL
+		ON (WORK_SE = #{WORK_SE})
+		WHEN MATCHED THEN
+			UPDATE SET
+					 RTC_ST_DT_SE	= #{RTC_ST_DT_SE}
+					 ,RTC_ST_SE		= #{RTC_ST_SE}
+					,RTC_ST_DT    		= #{RTC_ST_DT}
+					,RTC_END_DT_SE	= #{RTC_END_DT_SE}
+					,RTC_END_SE		= #{RTC_END_SE}
+					,RTC_END_DT		= #{RTC_END_DT}
+					,UPD_PRSN_ID		= #{REG_PRSN_ID}
+					,UPD_DTTM		= SYSDATE   
+		WHEN NOT MATCHED THEN      
+			INSERT 
+				(
+				WORK_SE
+				,RTC_ST_DT_SE
+				,RTC_ST_SE
+				,RTC_ST_DT
+				,RTC_END_DT_SE
+				,RTC_END_SE
+				,RTC_END_DT
+				,REG_PRSN_ID
+				,REG_DTTM
+				)
+				VALUES
+				(
+				#{WORK_SE}
+				,#{RTC_ST_DT_SE}
+				,#{RTC_ST_SE}
+				,#{RTC_ST_DT}
+				,#{RTC_END_DT_SE}
+				,#{RTC_END_SE}
+				,#{RTC_END_DT}
+				,#{REG_PRSN_ID}
+				,SYSDATE
+				)
+	</update>
+
+</mapper>
+

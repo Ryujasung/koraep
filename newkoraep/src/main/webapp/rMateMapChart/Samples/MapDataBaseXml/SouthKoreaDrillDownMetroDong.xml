@@ -1,0 +1,1527 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Province code="90000" label="서울" symbol="Seoul" horizontalCenterGap="0" verticalCenterGap="1">
+		<Gu code="90100" label="강남구" symbol="Gangnam" horizontalCenterGap="-5">
+			<Dong code="90101" label="개포1동" symbol="Gaepo1dong"/>
+			<Dong code="90102" label="개포2동" symbol="Gaepo2dong"/>
+			<Dong code="90103" label="개포4동" symbol="Gaepo4dong"/>
+			<Dong code="90104" label="논현1동" symbol="Nonhyeon1dong"/>
+			<Dong code="90105" label="논현2동" symbol="Nonhyeon2dong"/>
+			<Dong code="90106" label="대치1동" symbol="Daechi1dong"/>
+			<Dong code="90107" label="대치2동" symbol="Daechi2dong"/>
+			<Dong code="90108" label="대치4동" symbol="Daechi_4dong"/>
+			<Dong code="90109" label="도곡1동" symbol="Dogok1dong"/>
+			<Dong code="90110" label="도곡2동" symbol="Dogok2dong" horizontalCenterGap="0" verticalCenterGap="5"/>
+			<Dong code="90111" label="삼성1동" symbol="Samseong1dong"/>
+			<Dong code="90112" label="삼성2동" symbol="Samseong2dong"/>
+			<Dong code="90113" label="세곡동" symbol="Segokdong"/>
+			<Dong code="90114" label="수서동" symbol="Suseodong"/>
+			<Dong code="90115" label="신사동" symbol="Sinsadong" horizontalCenterGap="10" verticalCenterGap="0"/>
+			<Dong code="90116" label="압구정동" symbol="Apgujeongdong"/>
+			<Dong code="90117" label="역삼1동" symbol="Yeoksam1dong" horizontalCenterGap="-10" verticalCenterGap="0"/>
+			<Dong code="90118" label="역삼2동" symbol="Yeoksam2dong"/>
+			<Dong code="90119" label="일원1동" symbol="Irwon1dong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="90120" label="일원2동" symbol="Irwon2dong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="90121" label="일원본동" symbol="Irwonbondong"/>
+			<Dong code="90122" label="청담동" symbol="Cheongdamdong"/>
+		</Gu>
+		<Gu code="90200" label="강동구" symbol="Gangdong">
+			<Dong code="90201" label="강일동" symbol="Gangildong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="90202" label="고덕1동" symbol="Godeok1dong" horizontalCenterGap="2" verticalCenterGap="0"/>
+			<Dong code="90203" label="고덕2동" symbol="Godeok2dong"/>
+			<Dong code="90204" label="길동" symbol="Gildong"/>
+			<Dong code="90205" label="둔촌1동" symbol="Dunchon1dong"/>
+			<Dong code="90206" label="둔촌2동" symbol="Dunchon2dong"/>
+			<Dong code="90207" label="명일1동" symbol="Myeongil1dong" horizontalCenterGap="0" verticalCenterGap="-10"/>
+			<Dong code="90208" label="명일2동" symbol="Myeongil2dong" horizontalCenterGap="-7" verticalCenterGap="0"/>
+			<Dong code="90209" label="상일동" symbol="Sangildong"/>
+			<Dong code="90210" label="성내1동" symbol="Seongnae1dong"/>
+			<Dong code="90211" label="성내2동" symbol="Seongnae2dong"/>
+			<Dong code="90212" label="성내3동" symbol="Seongnae3dong" horizontalCenterGap="2" verticalCenterGap="0"/>
+			<Dong code="90213" label="암사1동" symbol="Amsa1dong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="90214" label="암사2동" symbol="Amsa2dong"/>
+			<Dong code="90215" label="암사3동" symbol="Amsa3dong"/>
+			<Dong code="90216" label="천호1동" symbol="Cheonho1dong" horizontalCenterGap="2" verticalCenterGap="0"/>
+			<Dong code="90217" label="천호2동" symbol="Cheonho2dong"/>
+			<Dong code="90218" label="천호3동" symbol="Cheonho3dong" horizontalCenterGap="-6" verticalCenterGap="0"/>
+		</Gu>
+		<Gu code="90300" label="강북구" symbol="Gangbuk" horizontalCenterGap="-6" verticalCenterGap="6">
+			<Dong code="90301" label="번1동" symbol="Beon1dong"/>
+			<Dong code="90302" label="번2동" symbol="Beon2dong" horizontalCenterGap="0" verticalCenterGap="-10"/>
+			<Dong code="90303" label="번3동" symbol="Beon3dong"/>
+			<Dong code="90304" label="인수동" symbol="Insudong"/>
+			<Dong code="90305" label="미아동" symbol="Miadong"/>
+			<Dong code="90306" label="삼각산동" symbol="Samgaksandong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="90307" label="삼양동" symbol="Samyangdong" horizontalCenterGap="-2" verticalCenterGap="0"/>
+			<Dong code="90308" label="송천동" symbol="Songcheondong" horizontalCenterGap="3" verticalCenterGap="0"/>
+			<Dong code="90309" label="송중동" symbol="Songjungdong" horizontalCenterGap="2" verticalCenterGap="0"/>
+			<Dong code="90310" label="수유1동" symbol="Suyu1dong"/>
+			<Dong code="90311" label="수유2동" symbol="Suyu2dong" horizontalCenterGap="2" verticalCenterGap="0"/>
+			<Dong code="90312" label="수유3동" symbol="Suyu3dong"/>
+			<Dong code="90313" label="우이동" symbol="Uidong"/>
+		</Gu>
+		<Gu code="90400" label="강서구" symbol="Gangseo">
+			<Dong code="90401" label="발산1동" symbol="Balsan1dong"/>
+			<Dong code="90402" label="방화1동" symbol="Banghwa1dong" horizontalCenterGap="10" verticalCenterGap="0"/>
+			<Dong code="90403" label="방화2동" symbol="Banghwa2dong"/>
+			<Dong code="90404" label="방화3동" symbol="Banghwa3dong" horizontalCenterGap="0" verticalCenterGap="10"/>
+			<Dong code="90405" label="등촌1동" symbol="Deungchon1dong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="90406" label="등촌2동" symbol="Deungchon2dong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="90407" label="등촌3동" symbol="Deungchon3dong"/>
+			<Dong code="90408" label="가양1동" symbol="Gayang1dong" horizontalCenterGap="-5" verticalCenterGap="0"/>
+			<Dong code="90409" label="가양2동" symbol="Gayang2dong"/>
+			<Dong code="90410" label="가양3동" symbol="Gayang3dong"/>
+			<Dong code="90411" label="공항동" symbol="Gonghangdong"/>
+			<Dong code="90412" label="화곡1동" symbol="Hwagok1dong"/>
+			<Dong code="90413" label="화곡2동" symbol="Hwagok2dong"/>
+			<Dong code="90414" label="화곡3동" symbol="Hwagok3dong"/>
+			<Dong code="90415" label="화곡4동" symbol="Hwagok4dong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="90416" label="화곡6동" symbol="Hwagok6dong"/>
+			<Dong code="90417" label="화곡8동" symbol="Hwagok8dong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="90418" label="화곡본동" symbol="Hwagokbondong"/>
+			<Dong code="90419" label="우장산동" symbol="Ujangsandong"/>
+			<Dong code="90420" label="염창동" symbol="Yeomchangdong"/>
+		</Gu>
+		<Gu code="90500" label="관악구" symbol="Gwanak">
+			<Dong code="90501" label="낙성대동" symbol="Nakseongdaedong" horizontalCenterGap="-5" verticalCenterGap="0"/>
+			<Dong code="90502" label="난곡동" symbol="Nangokdong"/>
+			<Dong code="90503" label="난향동" symbol="Nanhyangdong"/>
+			<Dong code="90504" label="남현동" symbol="Namhyeondong"/>
+			<Dong code="90505" label="대학동" symbol="Daehakdong"/>
+			<Dong code="90506" label="미성동" symbol="Miseongdong" horizontalCenterGap="0" verticalCenterGap="-10"/>
+			<Dong code="90507" label="보라매동" symbol="Boramaedong"/>
+			<Dong code="90508" label="삼성동" symbol="Samsungdong"/>
+			<Dong code="90509" label="서림동" symbol="Seorimdong"/>
+			<Dong code="90510" label="서원동" symbol="Seowondong"/>
+			<Dong code="90511" label="성현동" symbol="Seonghyeondong"/>
+			<Dong code="90512" label="신림동" symbol="Sillimdong"/>
+			<Dong code="90513" label="신사동" symbol="Sinsadong_GA"/>
+			<Dong code="90514" label="신원동" symbol="Sinwondong"/>
+			<Dong code="90515" label="은천동" symbol="Euncheondong" horizontalCenterGap="5" verticalCenterGap="-5"/>
+			<Dong code="90516" label="인헌동" symbol="Inheondong"/>
+			<Dong code="90517" label="조원동" symbol="Jowondong"/>
+			<Dong code="90518" label="중앙동" symbol="Jungangdong"/>
+			<Dong code="90519" label="청림동" symbol="Cheongnimdong" horizontalCenterGap="5" verticalCenterGap="-5"/>
+			<Dong code="90520" label="청룡동" symbol="Cheongnyongdong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="90521" label="행운동" symbol="Haengundong"/>
+		</Gu>
+		<Gu code="90600" label="광진구" symbol="Gwangjin">
+			<Dong code="90601" label="광장동" symbol="Gwangjangdong"/>
+			<Dong code="90602" label="구의1동" symbol="Guui1dong"/>
+			<Dong code="90603" label="구의2동" symbol="Guui2dong" horizontalCenterGap="-3" verticalCenterGap="0"/>
+			<Dong code="90604" label="구의3동" symbol="Guui3dong"/>
+			<Dong code="90605" label="군자동" symbol="Gunjadong"/>
+			<Dong code="90606" label="능동" symbol="Neungdong"/>
+			<Dong code="90607" label="자양1동" symbol="Jayang1dong"/>
+			<Dong code="90608" label="자양2동" symbol="Jayang2dong"/>
+			<Dong code="90609" label="자양3동" symbol="Jayang3dong"/>
+			<Dong code="90610" label="자양4동" symbol="Jayang4dong"/>
+			<Dong code="90611" label="중곡1동" symbol="Junggok1dong"/>
+			<Dong code="90612" label="중곡2동" symbol="Junggok2dong"/>
+			<Dong code="90613" label="중곡3동" symbol="Junggok3dong"/>
+			<Dong code="90614" label="중곡4동" symbol="Junggok4dong"/>
+			<Dong code="90615" label="화양동" symbol="Hwayangdong"/>
+		</Gu>
+		<Gu code="90700" label="구로구" symbol="Guro" horizontalCenterGap="-10" verticalCenterGap="2">
+			<Dong code="90701" label="가리봉동" symbol="Garibongdong"/>
+			<Dong code="90702" label="개봉1동" symbol="Gaebong1dong"/>
+			<Dong code="90703" label="개봉2동" symbol="Gaebong2dong" horizontalCenterGap="-5" verticalCenterGap="0"/>
+			<Dong code="90704" label="개봉3동" symbol="Gaebong3dong" horizontalCenterGap="-5" verticalCenterGap="0"/>
+			<Dong code="90705" label="고척1동" symbol="Gocheok1dong"/>
+			<Dong code="90706" label="고척2동" symbol="Gocheok2dong" horizontalCenterGap="0" verticalCenterGap="-10"/>
+			<Dong code="90707" label="구로1동" symbol="Guro1dong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="90708" label="구로2동" symbol="Guro2dong" horizontalCenterGap="15" verticalCenterGap="0"/>
+			<Dong code="90709" label="구로3동" symbol="Guro3dong"/>
+			<Dong code="90710" label="구로4동" symbol="Guro4dong"/>
+			<Dong code="90711" label="구로5동" symbol="Guro5dong"/>
+			<Dong code="90712" label="수궁동" symbol="Sugungdong"/>
+			<Dong code="90713" label="신도림동" symbol="Sindorimdong"/>
+			<Dong code="90714" label="오류1동" symbol="Oryu1dong"/>
+			<Dong code="90715" label="오류2동" symbol="Oryu2dong"/>
+		</Gu>
+		<Gu code="90800" label="금천구" symbol="Geumcheon">
+			<Dong code="90801" label="가산동" symbol="Gasandong"/>
+			<Dong code="90802" label="독산1동" symbol="Doksan1dong" horizontalCenterGap="5" verticalCenterGap="-0"/>
+			<Dong code="90803" label="독산2동" symbol="Doksan2dong" horizontalCenterGap="0" verticalCenterGap="-10"/>
+			<Dong code="90804" label="독산3동" symbol="Doksan3dong"/>
+			<Dong code="90805" label="독산4동" symbol="Doksan4dong"/>
+			<Dong code="90806" label="시흥1동" symbol="Siheung1dong"/>
+			<Dong code="90807" label="시흥2동" symbol="Siheung2dong"/>
+			<Dong code="90808" label="시흥3동" symbol="Siheung3dong"/>
+			<Dong code="90809" label="시흥4동" symbol="Siheung4dong"/>
+			<Dong code="90810" label="시흥5동" symbol="Siheung5dong" horizontalCenterGap="-10" verticalCenterGap="0"/>
+		</Gu>
+		<Gu code="90900" label="노원구" symbol="Nowon">
+			<Dong code="90901" label="공릉1동" symbol="Gongneung1dong" horizontalCenterGap="3" verticalCenterGap="0"/>
+			<Dong code="90902" label="공릉2동" symbol="Gongneung2dong"/>
+			<Dong code="90903" label="상계10동" symbol="Sanggye10dong"/>
+			<Dong code="90904" label="상계1동" symbol="Sanggye1dong" horizontalCenterGap="-10" verticalCenterGap="0"/>
+			<Dong code="90905" label="상계2동" symbol="Sanggye2dong" horizontalCenterGap="0" verticalCenterGap="-3"/>
+			<Dong code="90906" label="상계3.4동" symbol="Sanggye34dong"/>
+			<Dong code="90907" label="상계5동" symbol="Sanggye5dong" horizontalCenterGap="2" verticalCenterGap="0"/>
+			<Dong code="90908" label="상계6.7동" symbol="Sanggye67dong" horizontalCenterGap="0" verticalCenterGap="-10"/>
+			<Dong code="90909" label="상계8동" symbol="Sanggye8dong" horizontalCenterGap="2" verticalCenterGap="0"/>
+			<Dong code="90910" label="상계9동" symbol="Sanggye9dong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="90911" label="중계1동" symbol="Junggye1dong" horizontalCenterGap="2" verticalCenterGap="0"/>
+			<Dong code="90912" label="중계2.3동" symbol="Junggye23dong" horizontalCenterGap="2" verticalCenterGap="0"/>
+			<Dong code="90913" label="중계4동" symbol="Junggye4dong"/>
+			<Dong code="90914" label="중계본동" symbol="Junggyebondong"/>
+			<Dong code="90915" label="하계1동" symbol="Hagye1dong"/>
+			<Dong code="90916" label="하계2동" symbol="Hagye2dong" horizontalCenterGap="2" verticalCenterGap="0"/>
+		</Gu>
+		<Gu code="91000" label="도봉구" symbol="Dobong">
+			<Dong code="91001" label="도봉1동" symbol="Dobong1dong"/>
+			<Dong code="91002" label="도봉2동" symbol="Dobong2dong" horizontalCenterGap="4" verticalCenterGap="0"/>
+			<Dong code="91003" label="방학1동" symbol="Banghak1dong"/>
+			<Dong code="91004" label="방학2동" symbol="Banghak2dong" horizontalCenterGap="2" verticalCenterGap="0"/>
+			<Dong code="91005" label="방학3동" symbol="Banghak3dong" horizontalCenterGap="-2" verticalCenterGap="0"/>
+			<Dong code="91006" label="쌍문1동" symbol="SsangMun1dong" horizontalCenterGap="0" verticalCenterGap="5"/>
+			<Dong code="91007" label="쌍문2동" symbol="SsangMun2dong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="91008" label="쌍문3동" symbol="SsangMun3dong"/>
+			<Dong code="91009" label="쌍문4동" symbol="SsangMun4dong"/>
+			<Dong code="91010" label="창1동" symbol="Chang1dong" horizontalCenterGap="0" verticalCenterGap="-13"/>
+			<Dong code="91011" label="창2동" symbol="Chang2dong"/>
+			<Dong code="91012" label="창3동" symbol="Chang3dong"/>
+			<Dong code="91013" label="창4동" symbol="Chang4dong" horizontalCenterGap="3" verticalCenterGap="0"/>
+			<Dong code="91014" label="창5동" symbol="Chang5dong" horizontalCenterGap="0" verticalCenterGap="5"/>
+		</Gu>
+		<Gu code="91100" label="동대문구" symbol="Dongdaemun" verticalCenterGap="2">
+			<Dong code="91101" label="답십리1동" symbol="Dapsimni1dong" horizontalCenterGap="3" verticalCenterGap="-5"/>
+			<Dong code="91102" label="답십리2동" symbol="Dapsimni2dong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="91103" label="용신동" symbol="Yongsindong"/>
+			<Dong code="91104" label="이문1동" symbol="Imun1dong"/>
+			<Dong code="91105" label="이문2동" symbol="Imun2dong"/>
+			<Dong code="91106" label="장안1동" symbol="Jangan1dong"/>
+			<Dong code="91107" label="장안2동" symbol="Jangan2dong"/>
+			<Dong code="91108" label="전농1동" symbol="Jeonnong1dong"/>
+			<Dong code="91109" label="전농2동" symbol="Jeonnong2dong"/>
+			<Dong code="91110" label="제기동" symbol="Jegidong"/>
+			<Dong code="91111" label="청량리동" symbol="Cheongnyangridong" horizontalCenterGap="-3" verticalCenterGap="0"/>
+			<Dong code="91112" label="회기동" symbol="Hoegidong"/>
+			<Dong code="91113" label="휘경1동" symbol="Hwigyeong1dong" horizontalCenterGap="0" verticalCenterGap="-3"/>
+			<Dong code="91114" label="휘경2동" symbol="Hwigyeong2dong"/>
+		</Gu>
+		<Gu code="91200" label="동작구" symbol="Dongjak" horizontalCenterGap="2" verticalCenterGap="-4">
+			<Dong code="91201" label="노량진1동" symbol="Noryangjin1dong"/>
+			<Dong code="91202" label="노량진2동" symbol="Noryangjin2dong"/>
+			<Dong code="91203" label="대방동" symbol="Daebangdong"/>
+			<Dong code="91204" label="사당1동" symbol="Sadang1dong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="91205" label="사당2동" symbol="Sadang2dong"/>
+			<Dong code="91206" label="사당3동" symbol="Sadang3dong"/>
+			<Dong code="91207" label="사당4동" symbol="Sadang4dong"/>
+			<Dong code="91208" label="사당5동" symbol="Sadang5dong"/>
+			<Dong code="91209" label="상도1동" symbol="Sangdo1dong" horizontalCenterGap="-5" verticalCenterGap="10"/>
+			<Dong code="91210" label="상도2동" symbol="Sangdo2dong"/>
+			<Dong code="91211" label="상도3동" symbol="Sangdo3dong" horizontalCenterGap="-5" verticalCenterGap="10"/>
+			<Dong code="91212" label="상도4동" symbol="Sangdo4dong"/>
+			<Dong code="91213" label="신대방1동" symbol="Sindaebang1dong" horizontalCenterGap="0" verticalCenterGap="10"/>
+			<Dong code="91214" label="신대방2동" symbol="Sindaebang2dong"/>
+			<Dong code="91215" label="흑석동" symbol="Heukseokdong"/>
+		</Gu>
+		<Gu code="91300" label="마포구" symbol="Mapo" horizontalCenterGap="-1" verticalCenterGap="2">
+			<Dong code="91301" label="공덕동" symbol="Gongdeokdong" horizontalCenterGap="3" verticalCenterGap="0"/>
+			<Dong code="91302" label="대흥동" symbol="Daeheungdong" horizontalCenterGap="3" verticalCenterGap="0"/>
+			<Dong code="91303" label="도화동" symbol="Dohwadong"/>
+			<Dong code="91304" label="망원1동" symbol="Mangwon1dong"/>
+			<Dong code="91305" label="망원2동" symbol="Mangwon2dong"/>
+			<Dong code="91306" label="상암동" symbol="Sangamdong"/>
+			<Dong code="91307" label="서강동" symbol="Seogangdong"/>
+			<Dong code="91308" label="서교동" symbol="Seogyodong" horizontalCenterGap="-5" verticalCenterGap="0"/>
+			<Dong code="91309" label="성산1동" symbol="Seongsan1dong"/>
+			<Dong code="91310" label="성산2동" symbol="Seongsan2dong"/>
+			<Dong code="91311" label="신수동" symbol="Sinsudong"/>
+			<Dong code="91312" label="아현동" symbol="Ahyeondong" horizontalCenterGap="0" verticalCenterGap="-15"/>
+			<Dong code="91313" label="연남동" symbol="Yeonnamdong"/>
+			<Dong code="91314" label="염리동" symbol="Yeomnidong"/>
+			<Dong code="91315" label="용강동" symbol="Yonggangdong"/>
+			<Dong code="91316" label="합정동" symbol="Hapjeongdong"/>
+		</Gu>
+		<Gu code="91400" label="서대문구" symbol="Seodaemun" verticalCenterGap="4">
+			<Dong code="91401" label="북아현동" symbol="Bugahyeondong"/>
+			<Dong code="91402" label="북가좌1동" symbol="Bukgajwa1dong"/>
+			<Dong code="91403" label="북가좌2동" symbol="Bukgajwa2dong" horizontalCenterGap="-3" verticalCenterGap="0"/>
+			<Dong code="91404" label="천연동" symbol="Cheonyeondong"/>
+			<Dong code="91405" label="충현동" symbol="Chunghyeondong" horizontalCenterGap="2" verticalCenterGap="3"/>
+			<Dong code="91406" label="홍은1동" symbol="Hongeun1dong"/>
+			<Dong code="91407" label="홍은2동" symbol="Hongeun2dong" horizontalCenterGap="-3" verticalCenterGap="0"/>
+			<Dong code="91408" label="홍제1동" symbol="Hongje1dong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="91409" label="홍제2동" symbol="Hongje2dong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="91410" label="홍제3동" symbol="Hongje3dong"/>
+			<Dong code="91411" label="남가좌1동" symbol="Namgajwa1dong"/>
+			<Dong code="91412" label="남가좌2동" symbol="Namgajwa2dong"/>
+			<Dong code="91413" label="신촌동" symbol="Sinchondong" horizontalCenterGap="10" verticalCenterGap="0"/>
+			<Dong code="91414" label="연희동" symbol="Yeonhuidong"/>
+		</Gu>
+		<Gu code="91500" label="서초구" symbol="Seocho" horizontalCenterGap="-18" verticalCenterGap="-4">
+			<Dong code="91501" label="내곡동" symbol="Naegokdong"/>
+			<Dong code="91502" label="반포1동" symbol="Banpo1dong"/>
+			<Dong code="91503" label="반포2동" symbol="Banpo2dong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="91504" label="반포3동" symbol="Banpo3dong"/>
+			<Dong code="91505" label="반포4동" symbol="Banpo4dong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="91506" label="반포본동" symbol="Banpobondong"/>
+			<Dong code="91507" label="방배1동" symbol="Bangbae1dong"/>
+			<Dong code="91508" label="방배2동" symbol="Bangbae2dong" horizontalCenterGap="5" verticalCenterGap="10"/>
+			<Dong code="91509" label="방배3동" symbol="Bangbae3dong"/>
+			<Dong code="91510" label="방배4동" symbol="Bangbae4dong"/>
+			<Dong code="91511" label="방배본동" symbol="Bangbaebondong"/>
+			<Dong code="91512" label="서초1동" symbol="Seocho1dong"/>
+			<Dong code="91513" label="서초2동" symbol="Seocho2dong"/>
+			<Dong code="91514" label="서초3동" symbol="Seocho3dong"/>
+			<Dong code="91515" label="서초4동" symbol="Seocho4dong"/>
+			<Dong code="91516" label="양재1동" symbol="Yangjae1dong"/>
+			<Dong code="91517" label="양재2동" symbol="Yangjae2dong" horizontalCenterGap="0" verticalCenterGap="20"/>
+			<Dong code="91518" label="잠원동" symbol="Jamwondong" horizontalCenterGap="5" verticalCenterGap="0"/>
+		</Gu>
+		<Gu code="91600" label="성동구" symbol="Seongdong">
+			<Dong code="91601" label="왕십리도선동" symbol="Wangsimnidoseondong"/>
+			<Dong code="91602" label="왕십리2동" symbol="Wangsimni2dong"/>
+			<Dong code="91603" label="마장동" symbol="Majangdong"/>
+			<Dong code="91604" label="용답동" symbol="Yongdapdong"/>
+			<Dong code="91605" label="송정동" symbol="Songjeongdong" horizontalCenterGap="10" verticalCenterGap="20"/>
+			<Dong code="91606" label="성수2가3동" symbol="Seongsu2ga3dong"/>
+			<Dong code="91607" label="성수2가1동" symbol="Seongsu2ga1dong"/>
+			<Dong code="91608" label="사근동" symbol="Sageundong"/>
+			<Dong code="91609" label="성수1가2동" symbol="Seongsu1ga2dong"/>
+			<Dong code="91610" label="성수1가1동" symbol="Seongsu1ga1dong"/>
+			<Dong code="91611" label="행당1동" symbol="Haengdang1dong"/>
+			<Dong code="91612" label="행당2동" symbol="Haengdang2dong"/>
+			<Dong code="91613" label="응봉동" symbol="Eungbongdong" horizontalCenterGap="-5" verticalCenterGap="0"/>
+			<Dong code="91614" label="금호1가동" symbol="Geumho1gadong" horizontalCenterGap="0" verticalCenterGap="-10"/>
+			<Dong code="91615" label="금호2.3가동" symbol="Geumho23gadong" horizontalCenterGap="0" verticalCenterGap="5"/>
+			<Dong code="91616" label="금호4가동" symbol="Geumho4gadong"/>
+			<Dong code="91617" label="옥수동" symbol="Oksudong" horizontalCenterGap="0" verticalCenterGap="10"/>
+		</Gu>
+		<Gu code="91700" label="성북구" symbol="Seongbuk" horizontalCenterGap="-5" verticalCenterGap="6">
+			<Dong code="91701" label="길음1동" symbol="Gireum1dong"/>
+			<Dong code="91702" label="길음2동" symbol="Gireum2dong"/>
+			<Dong code="91703" label="돈암1동" symbol="Donam1dong"/>
+			<Dong code="91704" label="돈암2동" symbol="Donam2dong" horizontalCenterGap="-5" verticalCenterGap="0"/>
+			<Dong code="91705" label="동선동" symbol="Dongseondong" horizontalCenterGap="0" verticalCenterGap="-3"/>
+			<Dong code="91706" label="보문동" symbol="Bomundong"/>
+			<Dong code="91707" label="삼선동" symbol="Samseondong"/>
+			<Dong code="91708" label="석관동" symbol="Seokgwandong"/>
+			<Dong code="91709" label="성북동" symbol="Seongbukdong"/>
+			<Dong code="91710" label="안암동" symbol="Anamdong"/>
+			<Dong code="91711" label="월곡1동" symbol="Wolgok1dong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="91712" label="월곡2동" symbol="Wolgok2dong"/>
+			<Dong code="91713" label="장위1동" symbol="Jangwi1dong"/>
+			<Dong code="91714" label="장위2동" symbol="Jangwi2dong"/>
+			<Dong code="91715" label="장위3동" symbol="Jangwi3dong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="91716" label="정릉1동" symbol="Jeongneung1dong" horizontalCenterGap="0" verticalCenterGap="12"/>
+			<Dong code="91717" label="정릉2동" symbol="Jeongneung2dong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="91718" label="정릉3동" symbol="Jeongneung3dong" horizontalCenterGap="0" verticalCenterGap="10"/>
+			<Dong code="91719" label="정릉4동" symbol="Jeongneung4dong" horizontalCenterGap="10" verticalCenterGap="0"/>
+			<Dong code="91720" label="종암동" symbol="Jongamdong"/>
+		</Gu>
+		<Gu code="91800" label="송파구" symbol="Songpa">
+			<Dong code="91801" label="가락1동" symbol="Garak1dong" horizontalCenterGap="0" verticalCenterGap="-10"/>
+			<Dong code="91802" label="가락2동" symbol="Garak2dong"/>
+			<Dong code="91803" label="가락본동" symbol="Garakbondong"/>
+			<Dong code="91804" label="거여1동" symbol="Geoyeo1dong"/>
+			<Dong code="91805" label="거여2동" symbol="Geoyeo2dong"/>
+			<Dong code="91806" label="마천2동" symbol="Macheon2dong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="91807" label="문정1동" symbol="Munjeong1dong"/>
+			<Dong code="91808" label="문정2동" symbol="Munjeong2dong"/>
+			<Dong code="91809" label="방이1동" symbol="Bangi1dong"/>
+			<Dong code="91810" label="방이2동" symbol="Bangi2dong"/>
+			<Dong code="91811" label="삼전동" symbol="Samjeondong"/>
+			<Dong code="91812" label="석촌동" symbol="Seokchondong"/>
+			<Dong code="91813" label="송파1동" symbol="Songpa1dong"/>
+			<Dong code="91814" label="송파2동" symbol="Songpa2dong"/>
+			<Dong code="91815" label="오금동" symbol="Ogeumdong"/>
+			<Dong code="91816" label="오륜동" symbol="Oryundong"/>
+			<Dong code="91817" label="잠실2동" symbol="Jamsil2dong"/>
+			<Dong code="91818" label="잠실3동" symbol="Jamsil3dong" horizontalCenterGap="0" verticalCenterGap="20"/>
+			<Dong code="91819" label="잠실4동" symbol="Jamsil4dong"/>
+			<Dong code="91820" label="잠실6동" symbol="Jamsil6dong"/>
+			<Dong code="91821" label="잠실7동" symbol="Jamsil7dong"/>
+			<Dong code="91822" label="잠실본동" symbol="Jamsilbondong" horizontalCenterGap="5" verticalCenterGap="5"/>
+			<Dong code="91823" label="장지동" symbol="Jangjidong"/>
+			<Dong code="91824" label="풍납1동" symbol="Pungnap1dong"/>
+			<Dong code="91825" label="풍납2동" symbol="Pungnap2dong"/>
+		</Gu>
+		<Gu code="91900" label="양천구" symbol="Yangcheon" verticalCenterGap="5">
+			<Dong code="91901" label="목1동" symbol="Mok1dong" horizontalCenterGap="-5" verticalCenterGap="0"/>
+			<Dong code="91902" label="목2동" symbol="Mok2dong" horizontalCenterGap="-5" verticalCenterGap="0"/>
+			<Dong code="91903" label="목3동" symbol="Mok3dong" horizontalCenterGap="-7" verticalCenterGap="0"/>
+			<Dong code="91904" label="목4동" symbol="Mok4dong" horizontalCenterGap="-5" verticalCenterGap="0"/>
+			<Dong code="91905" label="목5동" symbol="Mok5dong"/>
+			<Dong code="91906" label="신월1동" symbol="Sinwol1dong"/>
+			<Dong code="91907" label="신월2동" symbol="Sinwol2dong" horizontalCenterGap="0" verticalCenterGap="-10"/>
+			<Dong code="91908" label="신월3동" symbol="Sinwol3dong"/>
+			<Dong code="91909" label="신월4동" symbol="Sinwol4dong" horizontalCenterGap="3" verticalCenterGap="0"/>
+			<Dong code="91910" label="신월5동" symbol="Sinwol5dong"/>
+			<Dong code="91911" label="신월6동" symbol="Sinwol6dong"/>
+			<Dong code="91912" label="신월7동" symbol="Sinwol7dong" horizontalCenterGap="0" verticalCenterGap="-20"/>
+			<Dong code="91913" label="신정1동" symbol="Sinjeong1dong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="91914" label="신정2동" symbol="Sinjeong2dong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="91915" label="신정3동" symbol="Sinjeong3dong" horizontalCenterGap="0" verticalCenterGap="15"/>
+			<Dong code="91916" label="신정4동" symbol="Sinjeong4dong"/>
+			<Dong code="91917" label="신정6동" symbol="Sinjeong6dong" horizontalCenterGap="0" verticalCenterGap="3"/>
+			<Dong code="91918" label="신정7동" symbol="Sinjeong7dong"/>
+		</Gu>
+		<Gu code="92000" label="영등포구" symbol="Yeongdeungpo" horizontalCenterGap="-4">
+			<Dong code="92001" label="당산1동" symbol="Dangsan1dong"/>
+			<Dong code="92002" label="당산2동" symbol="Dangsan2dong"/>
+			<Dong code="92003" label="대림1동" symbol="Daelim1dong"/>
+			<Dong code="92004" label="대림2동" symbol="Daelim2dong"/>
+			<Dong code="92005" label="대림3동" symbol="Daelim3dong"/>
+			<Dong code="92006" label="도림동" symbol="Dorimdong"/>
+			<Dong code="92007" label="문래동" symbol="Munraedong"/>
+			<Dong code="92008" label="신길1동" symbol="Singil1dong" horizontalCenterGap="5" verticalCenterGap="-10"/>
+			<Dong code="92009" label="신길3동" symbol="Singil3dong"/>
+			<Dong code="92010" label="신길4동" symbol="Singil4dong"/>
+			<Dong code="92011" label="신길5동" symbol="Singil5dong"/>
+			<Dong code="92012" label="신길6동" symbol="Singil6dong" horizontalCenterGap="0" verticalCenterGap="8"/>
+			<Dong code="92013" label="신길7동" symbol="Singil7dong" horizontalCenterGap="-3" verticalCenterGap="10"/>
+			<Dong code="92014" label="양평1동" symbol="Yangpyeong1dong"/>
+			<Dong code="92015" label="양평2동" symbol="Yangpyeong2dong"/>
+			<Dong code="92016" label="여의도동" symbol="Yeouidodong"/>
+			<Dong code="92017" label="영등포동" symbol="Yeongdeungpodong"/>
+			<Dong code="92018" label="영등포본동" symbol="Yeongdeungpobondong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+		</Gu>
+		<Gu code="92100" label="용산구" symbol="Yongsan">
+			<Dong code="92101" label="남영동" symbol="Namyeongdong"/>
+			<Dong code="92102" label="보광동" symbol="Bogwangdong" horizontalCenterGap="-5" verticalCenterGap="0"/>
+			<Dong code="92103" label="서빙고동" symbol="Seobinggodong"/>
+			<Dong code="92104" label="용문동" symbol="Yongmundong"/>
+			<Dong code="92105" label="용산2가동" symbol="Yongsan2gadong" horizontalCenterGap="-5" verticalCenterGap="0"/>
+			<Dong code="92106" label="원효로1동" symbol="Wonhyoro1dong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="92107" label="원효로2동" symbol="Wonhyoro2dong"/>
+			<Dong code="92108" label="이촌1동" symbol="Ichon1dong"/>
+			<Dong code="92109" label="이촌2동" symbol="Ichon2dong"/>
+			<Dong code="92110" label="이태원1동" symbol="Itaewon1dong"/>
+			<Dong code="92111" label="이태원2동" symbol="Itaewon2dong"/>
+			<Dong code="92112" label="청파동" symbol="Cheongpadong"/>
+			<Dong code="92113" label="한강로동" symbol="Hangangnodong"/>
+			<Dong code="92114" label="한남동" symbol="Hannamdong"/>
+			<Dong code="92115" label="효창동" symbol="Hyochangdong"/>
+			<Dong code="92116" label="후암동" symbol="Huamdong"/>
+		</Gu>
+		<Gu code="92200" label="은평구" symbol="Eunpyeong">
+			<Dong code="92201" label="갈현1동" symbol="Galhyeon1dong" horizontalCenterGap="0" verticalCenterGap="-8"/>
+			<Dong code="92202" label="갈현2동" symbol="Galhyeon2dong"/>
+			<Dong code="92203" label="구산동" symbol="Gusandong"/>
+			<Dong code="92204" label="녹번동" symbol="Nokbeondong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="92205" label="대조동" symbol="Daejodong"/>
+			<Dong code="92206" label="불광1동" symbol="Bulgwang1dong"/>
+			<Dong code="92207" label="불광2동" symbol="Bulgwang2dong"/>
+			<Dong code="92208" label="신사1동" symbol="Sinsa1dong" horizontalCenterGap="0" verticalCenterGap="-8"/>
+			<Dong code="92209" label="신사2동" symbol="Sinsa2dong"/>
+			<Dong code="92210" label="역촌동" symbol="Yeokchondong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="92211" label="응암1동" symbol="Eungam1dong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="92212" label="응암2동" symbol="Eungam2dong" horizontalCenterGap="0" verticalCenterGap="-3"/>
+			<Dong code="92213" label="응암3동" symbol="Eungam3dong" horizontalCenterGap="0" verticalCenterGap="5"/>
+			<Dong code="92214" label="진관동" symbol="Jingwandong"/>
+		</Gu>
+		<Gu code="92300" label="종로구" symbol="Jongno" horizontalCenterGap="-6" verticalCenterGap="14">
+			<Dong code="92301" label="부암동" symbol="Buamdong"/>
+			<Dong code="92302" label="창신1동" symbol="Changsin1dong" horizontalCenterGap="-2" verticalCenterGap="5"/>
+			<Dong code="92303" label="창신2동" symbol="Changsin2dong"/>
+			<Dong code="92304" label="창신3동" symbol="Changsin3dong"/>
+			<Dong code="92305" label="청운효자동" symbol="Cheongunhyojadong"/>
+			<Dong code="92306" label="가회동" symbol="Gahoedong"/>
+			<Dong code="92307" label="교남동" symbol="Gyonamdong" horizontalCenterGap="-2" verticalCenterGap="0"/>
+			<Dong code="92308" label="혜화동" symbol="Hyehwadong"/>
+			<Dong code="92309" label="이화동" symbol="Ihwadong"/>
+			<Dong code="92310" label="종로1234가동" symbol="Jongno1234gadong" horizontalCenterGap="0" verticalCenterGap="15"/>
+			<Dong code="92311" label="종로56가동" symbol="Jongno56gadong"/>
+			<Dong code="92312" label="무악동" symbol="Muakdong" horizontalCenterGap="3" verticalCenterGap="0"/>
+			<Dong code="92313" label="평창동" symbol="Pyeongchangdong"/>
+			<Dong code="92314" label="사직동" symbol="Sajikdong"/>
+			<Dong code="92315" label="삼청동" symbol="Samcheongdong" horizontalCenterGap="0" verticalCenterGap="-10"/>
+			<Dong code="92316" label="숭인1동" symbol="Sungin1dong"/>
+			<Dong code="92317" label="숭인2동" symbol="Sungin2dong" horizontalCenterGap="8" verticalCenterGap="-3"/>
+		</Gu>
+		<Gu code="92400" label="중구" symbol="SeoulJung">
+			<Dong code="92401" label="을지로동" symbol="Euljirodong" horizontalCenterGap="0" verticalCenterGap="-5"/>
+			<Dong code="92402" label="광희동" symbol="Gwanghuidong" horizontalCenterGap="0" verticalCenterGap="5"/>
+			<Dong code="92403" label="회현동" symbol="Hoehyeondong"/>
+			<Dong code="92404" label="황학동" symbol="Hwanghakdong"/>
+			<Dong code="92405" label="장춘동" symbol="Jangchungdong" horizontalCenterGap="3" verticalCenterGap="0"/>
+			<Dong code="92406" label="중림동" symbol="Jungnimdong"/>
+			<Dong code="92407" label="명동" symbol="Myeongdong" horizontalCenterGap="7" verticalCenterGap="0"/>
+			<Dong code="92408" label="필동" symbol="Pildong"/>
+			<Dong code="92409" label="신당1동" symbol="Sindang1dong"/>
+			<Dong code="92410" label="신당2동" symbol="Sindang2dong" horizontalCenterGap="-2" verticalCenterGap="0"/>
+			<Dong code="92411" label="신당3동" symbol="Sindang3dong" horizontalCenterGap="-2" verticalCenterGap="0"/>
+			<Dong code="92412" label="신당4동" symbol="Sindang4dong" horizontalCenterGap="-2" verticalCenterGap="0"/>
+			<Dong code="92413" label="신당5동" symbol="Sindang5dong" horizontalCenterGap="3" verticalCenterGap="-3"/>
+			<Dong code="92414" label="신당6동" symbol="Sindang6dong" horizontalCenterGap="0" verticalCenterGap="-3"/>
+			<Dong code="92415" label="소공동" symbol="Sogongdong"/>
+		</Gu>
+		<Gu code="92500" label="중랑구" symbol="Jungnang">
+			<Dong code="92501" label="중화1동" symbol="Junghwa1dong"/>
+			<Dong code="92502" label="중화2동" symbol="Junghwa2dong"/>
+			<Dong code="92503" label="망우3동" symbol="Mangu3dong"/>
+			<Dong code="92504" label="망우본동" symbol="Mangubondong" horizontalCenterGap="10" verticalCenterGap="0"/>
+			<Dong code="92505" label="묵1동" symbol="Muk1dong" horizontalCenterGap="-3" verticalCenterGap="0"/>
+			<Dong code="92506" label="묵2동" symbol="Muk2dong"/>
+			<Dong code="92507" label="면목2동" symbol="Myeonmok2dong"/>
+			<Dong code="92508" label="면목3.8동" symbol="Myeonmok38dong" horizontalCenterGap="10" verticalCenterGap="0"/>
+			<Dong code="92509" label="면목4동" symbol="Myeonmok4dong"/>
+			<Dong code="92510" label="면목5동" symbol="Myeonmok5dong"/>
+			<Dong code="92511" label="면목7동" symbol="Myeonmok7dong" horizontalCenterGap="0" verticalCenterGap="-10"/>
+			<Dong code="92512" label="면목본동" symbol="Myeonmokbondong"/>
+			<Dong code="92513" label="상봉1동" symbol="Sangbong1dong" horizontalCenterGap="5" verticalCenterGap="-5"/>
+			<Dong code="92514" label="상봉2동" symbol="Sangbong2dong" horizontalCenterGap="5" verticalCenterGap="0"/>
+			<Dong code="92515" label="신내1동" symbol="Sinnae1dong" horizontalCenterGap="0" verticalCenterGap="-20"/>
+			<Dong code="92516" label="신내2동" symbol="Sinnae2dong" horizontalCenterGap="0" verticalCenterGap="-10"/>
+		</Gu>
+	</Province>
+	<Province code="110000" label="인천" symbol="Incheon" horizontalCenterGap="5" verticalCenterGap="8">
+		<Gu code="110100" label="강화군" symbol="Ganghwa" horizontalCenterGap="30">
+			<Dong code="110101" label="강화읍" symbol="Ganghwa-eup"/>
+			<Dong code="110102" label="선원면" symbol="Seonwon-myeon"/>
+			<Dong code="110103" label="불은면" symbol="Bureun-myeon"/>
+			<Dong code="110104" label="길상면" symbol="Gilsang-myeon"/>
+			<Dong code="110105" label="화도면" symbol="Hwado-myeon"/>
+			<Dong code="110106" label="양도면" symbol="Yangdo-myeon"/>
+			<Dong code="110107" label="내가면" symbol="Naega-myeon"/>
+			<Dong code="110108" label="하점면" symbol="Hajeom-myeon"/>
+			<Dong code="110109" label="양사면" symbol="Yangsa-myeon"/>
+			<Dong code="110110" label="송해면" symbol="Songhae-myeon"/>
+			<Dong code="110111" label="교동면" symbol="Gyodong-myeon"/>
+			<Dong code="110112" label="삼산면" symbol="Samsan-myeon"/>
+			<Dong code="110113" label="서도면" symbol="Seodo-myeon"/>
+		</Gu>
+		<Gu code="110200" label="계양구" symbol="Gyeyang">
+			<Dong code="110201" label="효성1동" symbol="Hyoseong1-dong"/>
+			<Dong code="110202" label="효성2동" symbol="Hyoseong2-dong"/>
+			<Dong code="110203" label="계산1동" symbol="Gyesan1-dong"/>
+			<Dong code="110204" label="계산2동" symbol="Gyesan2-dong"/>
+			<Dong code="110205" label="계산3동" symbol="Gyesan3-dong"/>
+			<Dong code="110206" label="계산4동" symbol="Gyesan4-dong"/>
+			<Dong code="110207" label="작전1동" symbol="Jakjeon1-dong"/>
+			<Dong code="110208" label="작전2동" symbol="Jakjeon2-dong"/>
+			<Dong code="110209" label="작전서운동" symbol="Jakjeonseoun-dong"/>
+			<Dong code="110210" label="계양1동" symbol="yang1-dong"/>
+			<Dong code="110211" label="계양2동" symbol="yang2-dong"/>
+			<Dong code="110212" label="계양3동" symbol="yang3-dong"/>
+		</Gu>
+		<Gu code="110300" label="남구" symbol="IncheonNam" verticalCenterGap="3">
+			<Dong code="110301" label="숭의2동" symbol="Sungui2-dong"/>
+			<Dong code="110302" label="숭의1,3동" symbol="Sungui1.3-dong"/>
+			<Dong code="110303" label="숭의4동" symbol="Sungui4-dong"/>
+			<Dong code="110304" label="용현1,4동" symbol="Yonghyeon1.4-dong"/>
+			<Dong code="110305" label="용현2동" symbol="Yonghyeon2-dong"/>
+			<Dong code="110306" label="용현3동" symbol="Yonghyeon3-dong"/>
+			<Dong code="110307" label="용현5동" symbol="Yonghyeon5-dong"/>
+			<Dong code="110308" label="학익1동" symbol="Hagik1-dong"/>
+			<Dong code="110309" label="학익2동" symbol="Hagik2-dong"/>
+			<Dong code="110310" label="도화1동" symbol="Dohwa1-dong"/>
+			<Dong code="110311" label="도화2,3동" symbol="Dohwa2.3-dong"/>
+			<Dong code="110312" label="주안1동" symbol="Juan1-dong"/>
+			<Dong code="110313" label="주안2동" symbol="Juan2-dong"/>
+			<Dong code="110314" label="주안3동" symbol="Juan3-dong"/>
+			<Dong code="110315" label="주안4동" symbol="Juan4-dong"/>
+			<Dong code="110316" label="주안5동" symbol="Juan5-dong"/>
+			<Dong code="110317" label="주안6동" symbol="Juan6-dong"/>
+			<Dong code="110318" label="주안7동" symbol="Juan7-dong"/>
+			<Dong code="110319" label="주안8동" symbol="Juan8-dong"/>
+			<Dong code="110320" label="관교동" symbol="Gwangyo-dong"/>
+			<Dong code="110321" label="문학동" symbol="Munhak-dong"/>
+		</Gu>
+		<Gu code="110400" label="남동구" symbol="Namdong" horizontalCenterGap="5">
+			<Dong code="110401" label="구월1동" symbol="Guwol1-dong"/>
+			<Dong code="110402" label="구월2동" symbol="Guwol2-dong"/>
+			<Dong code="110403" label="구월3동" symbol="Guwol3-dong"/>
+			<Dong code="110404" label="구월4동" symbol="Guwol4-dong"/>
+			<Dong code="110405" label="간석1동" symbol="Ganseok1-dong"/>
+			<Dong code="110406" label="간석2동" symbol="Ganseok2-dong"/>
+			<Dong code="110407" label="간석3동" symbol="Ganseok3-dong"/>
+			<Dong code="110408" label="간석4동" symbol="Ganseok4-dong"/>
+			<Dong code="110409" label="만수1동" symbol="Mansu1-dong"/>
+			<Dong code="110410" label="만수2동" symbol="Mansu2-dong"/>
+			<Dong code="110411" label="만수3동" symbol="Mansu3-dong"/>
+			<Dong code="110412" label="만수4동" symbol="Mansu4-dong"/>
+			<Dong code="110413" label="만수5동" symbol="Mansu5-dong"/>
+			<Dong code="110414" label="만수6동" symbol="Mansu6-dong"/>
+			<Dong code="110415" label="장수서창동" symbol="Seochang-dong"/>
+			<Dong code="110416" label="남촌도림동" symbol="Namchondorim-dong"/>
+			<Dong code="110417" label="논현1동" symbol="Nonhyeon1-dong"/>
+			<Dong code="110418" label="논현2동" symbol="Nonhyeon2-dong"/>
+			<Dong code="110419" label="논현고잔동" symbol="Gojan-dong"/>
+		</Gu>
+		<Gu code="110500" label="동구" symbol="IncheonDong">
+			<Dong code="110501" label="만석동" symbol="Manseok-dong"/>
+			<Dong code="110502" label="화수1.화평동" symbol="Hwasu1hwapyeong-dong"/>
+			<Dong code="110503" label="화수2동" symbol="Hwasu2-dong"/>
+			<Dong code="110504" label="송현1.2동" symbol="Songhyeon12-dong"/>
+			<Dong code="110505" label="송현3동" symbol="Songhyeon3-dong"/>
+			<Dong code="110506" label="송림1동" symbol="Songnim1-dong"/>
+			<Dong code="110507" label="송림2동" symbol="Songnim2-dong"/>
+			<Dong code="110508" label="송림3.5동" symbol="Songnim3.5-dong"/>
+			<Dong code="110509" label="송림4동" symbol="Songnim4-dong"/>
+			<Dong code="110510" label="송림6동" symbol="Songnim6-dong"/>
+			<Dong code="110511" label="금창동" symbol="Geumchang-dong"/>
+		</Gu>
+		<Gu code="110600" label="부평구" symbol="Bupyeong">
+			<Dong code="110601" label="부평1동" symbol="Bupyeong1-dong"/>
+			<Dong code="110602" label="부평2동" symbol="Bupyeong2-dong"/>
+			<Dong code="110603" label="부평3동" symbol="Bupyeong3-dong"/>
+			<Dong code="110604" label="부평4동" symbol="Bupyeong4-dong"/>
+			<Dong code="110605" label="부평5동" symbol="Bupyeong5-dong"/>
+			<Dong code="110606" label="부평6동" symbol="Bupyeong6-dong"/>
+			<Dong code="110607" label="산곡1동" symbol="Sangok1-dong"/>
+			<Dong code="110608" label="산곡2동" symbol="Sangok2-dong"/>
+			<Dong code="110609" label="산곡3동" symbol="Sangok3-dong"/>
+			<Dong code="110610" label="산곡4동" symbol="Sangok4-dong"/>
+			<Dong code="110611" label="청천1동" symbol="Cheongcheon1-dong"/>
+			<Dong code="110612" label="청천2동" symbol="Cheongcheon2-dong"/>
+			<Dong code="110613" label="갈산1동" symbol="Galsan1-dong"/>
+			<Dong code="110614" label="갈산2동" symbol="Galsan2-dong"/>
+			<Dong code="110615" label="삼산1동" symbol="Samsan1-dong"/>
+			<Dong code="110616" label="삼산2동" symbol="Samsan2-dong"/>
+			<Dong code="110617" label="부개1동" symbol="Bugae1-dong"/>
+			<Dong code="110618" label="부개2동" symbol="Bugae2-dong"/>
+			<Dong code="110619" label="부개3동" symbol="Bugae3-dong"/>
+			<Dong code="110620" label="일신동" symbol="Ilsin-dong"/>
+			<Dong code="110621" label="십정1동" symbol="Sipjeong1-dong"/>
+			<Dong code="110622" label="십정2동" symbol="Sipjeong2-dong"/>
+		</Gu>
+		<Gu code="110700" label="서구" symbol="IncheonSeo">
+			<Dong code="110701" label="검암경서동" symbol="Geomamgyeongseo-dong"/>
+			<Dong code="110702" label="연희동" symbol="Yeonhui-dong"/>
+			<Dong code="110703" label="청라1동" symbol="Cheongna1-dong"/>
+			<Dong code="110704" label="청라2동" symbol="Cheongna2-dong"/>
+			<Dong code="110705" label="청라3동" symbol="Cheongna3-dong"/>
+			<Dong code="110706" label="가정1동" symbol="Gajeong1-dong"/>
+			<Dong code="110707" label="가정2동" symbol="Gajeong2-dong"/>
+			<Dong code="110708" label="가정3동" symbol="Gajeong3-dong"/>
+			<Dong code="110709" label="석남1동" symbol="Seongnam1-dong"/>
+			<Dong code="110710" label="석남2동" symbol="Seongnam2-dong"/>
+			<Dong code="110711" label="석남3동" symbol="Seongnam3-dong"/>
+			<Dong code="110712" label="신현원창동" symbol="Sinhyeonwonchang-dong"/>
+			<Dong code="110713" label="가좌1동" symbol="Gajwa1-dong"/>
+			<Dong code="110714" label="가좌2동" symbol="Gajwa2-dong"/>
+			<Dong code="110715" label="가좌3동" symbol="Gajwa3-dong"/>
+			<Dong code="110716" label="가좌4동" symbol="Gajwa4-dong"/>
+			<Dong code="110717" label="검단1동" symbol="Geomdan1-dong"/>
+			<Dong code="110718" label="검단2동" symbol="Geomdan2-dong"/>
+			<Dong code="110719" label="검단3동" symbol="Geomdan3-dong"/>
+			<Dong code="110720" label="검단4동" symbol="Geomdan4-dong"/>
+			<Dong code="110721" label="검단5동" symbol="Geomdan5-dong"/>
+		</Gu>
+		<Gu code="110800" label="연수구" symbol="Yeonsu">
+			<Dong code="110801" label="옥련1동" symbol="Ongnyeon1-dong"/>
+			<Dong code="110802" label="옥련2동" symbol="Ongnyeon2-dong"/>
+			<Dong code="110803" label="선학동" symbol="Seonhak-dong"/>
+			<Dong code="110804" label="연수1동" symbol="Yeonsu1-dong"/>
+			<Dong code="110805" label="연수2동" symbol="Yeonsu2-dong"/>
+			<Dong code="110806" label="연수3동" symbol="Yeonsu3-dong"/>
+			<Dong code="110807" label="청학동" symbol="Cheonghak-dong"/>
+			<Dong code="110808" label="동춘1동" symbol="Dongchun1-dong"/>
+			<Dong code="110809" label="동춘2동" symbol="Dongchun2-dong"/>
+			<Dong code="110810" label="동춘3동" symbol="Dongchun3-dong"/>
+			<Dong code="110811" label="송도1동" symbol="Songdo1-dong"/>
+			<Dong code="110812" label="송도2동" symbol="Songdo2-dong"/>
+			<Dong code="110813" label="송도3동" symbol="Songdo3-dong"/>
+		</Gu>
+		<Gu code="110900" label="옹진군" symbol="Ongjin" horizontalCenterGap="5" verticalCenterGap="28">
+			<Dong code="110901" label="북도면" symbol="Bukdo-myeon"/>
+			<Dong code="110902" label="백령면" symbol="Baengnyeong-myeon"/>
+			<Dong code="110903" label="대청면" symbol="Daecheong-myeon"/>
+			<Dong code="110904" label="덕적면" symbol="Deokjeok-myeon"/>
+			<Dong code="110905" label="영흥면" symbol="Yeongheung-myeon"/>
+			<Dong code="110906" label="자월면" symbol="Jawol-myeon"/>
+			<Dong code="110907" label="연평면" symbol="Yeonpyeong-myeon"/>
+		</Gu>
+		<Gu code="111000" label="중구" symbol="IncheonJung" horizontalCenterGap="-10">
+			<Dong code="111001" label="연안동" symbol="Yeonan-dong"/>
+			<Dong code="111002" label="신포동" symbol="Sinpo-dong"/>
+			<Dong code="111003" label="신흥동" symbol="ICN-Sinheung-dong"/>
+			<Dong code="111004" label="도원동" symbol="ICN-Dowon-dong"/>
+			<Dong code="111005" label="율목동" symbol="Yulmok-dong"/>
+			<Dong code="111006" label="동인천동" symbol="Dongincheon-dong"/>
+			<Dong code="111007" label="북성동" symbol="Bukseong-dong"/>
+			<Dong code="111008" label="송월동" symbol="Songwol-dong"/>
+			<Dong code="111009" label="영종동" symbol="Yeongjong-dong"/>
+			<Dong code="111010" label="운서동" symbol="Unseo-dong"/>
+			<Dong code="111011" label="용유동" symbol="Yongyu-dong"/>
+		</Gu>
+	</Province>
+	<Province code="50000" label="광주" symbol="Gwangju">
+		<Gu code="50100" label="광산구" symbol="Gwangsan">
+			<Dong code="50101" label="도산동" symbol="Dosan-dong"/>
+			<Dong code="50102" label="동곡동" symbol="Donggok-dong"/>
+			<Dong code="50103" label="본량동" symbol="Bolnyang-dong"/>
+			<Dong code="50104" label="비아동" symbol="Bia-dong"/>
+			<Dong code="50105" label="삼도동" symbol="Samdo-dong"/>
+			<Dong code="50106" label="송정1동" symbol="Songjeong1-dong"/>
+			<Dong code="50107" label="송정2동" symbol="Songjeong2-dong"/>
+			<Dong code="50108" label="수완동>지도에없음" symbol="Suwan-dong"/>
+			<Dong code="50109" label="신가동" symbol="Singa-dong"/>
+			<Dong code="50110" label="신창동>지도에없음" symbol="Sinchang-dong"/>
+			<Dong code="50111" label="신흥동" symbol="GJ-Sinheung-dong"/>
+			<Dong code="50112" label="어룡동" symbol="Eoryong-dong"/>
+			<Dong code="50113" label="우산동" symbol="GJ-GS-Usan-dong"/>
+			<Dong code="50114" label="운남동" symbol="Unnam-dong"/>
+			<Dong code="50115" label="월곡1동" symbol="Wolgok1-dong"/>
+			<Dong code="50116" label="월곡2동" symbol="Wolgok2-dong"/>
+			<Dong code="50117" label="임곡동" symbol="Imgok-dong"/>
+			<Dong code="50118" label="첨단1동" symbol="Cheomdan1-dong"/>
+			<Dong code="50119" label="첨단2동" symbol="Cheomdan2-dong"/>
+			<Dong code="50120" label="평동" symbol="Pyeong-dong"/>
+			<Dong code="50121" label="하남동" symbol="Hanam-dong"/>
+		</Gu>
+		<Gu code="50200" label="남구" symbol="GwangjuNam" horizontalCenterGap="8" verticalCenterGap="15">
+			<Dong code="50201" label="대촌동" symbol="Daechon-dong"/>
+			<Dong code="50202" label="방림1동" symbol="Bangnim1-dong"/>
+			<Dong code="50203" label="방림2동" symbol="Bangnim2-dong"/>
+			<Dong code="50204" label="백운1동" symbol="Baekun1-dong"/>
+			<Dong code="50205" label="백운2동" symbol="Baekun2-dong"/>
+			<Dong code="50206" label="봉선1동" symbol="Bongseon1-dong"/>
+			<Dong code="50207" label="봉선2동" symbol="Bongseon2-dong"/>
+			<Dong code="50208" label="사직동" symbol="Sajik-dong"/>
+			<Dong code="50209" label="송암동" symbol="Songam-dong"/>
+			<Dong code="50210" label="양림동" symbol="Yangnim-dong"/>
+			<Dong code="50211" label="월산4동" symbol="Wolsan4-dong"/>
+			<Dong code="50212" label="월산5동" symbol="Wolsan5-dong"/>
+			<Dong code="50213" label="월산동" symbol="Wolsan-dong"/>
+			<Dong code="50214" label="주월1동" symbol="Juwol1-dong"/>
+			<Dong code="50215" label="주월2동" symbol="Juwol2-dong"/>
+			<Dong code="50216" label="효덕동" symbol="Hyodeok-dong"/>
+		</Gu>
+		<Gu code="50300" label="동구" symbol="GwangjuDong">
+			<Dong code="50301" label="계림1동" symbol="Gyerim1-dong"/>
+			<Dong code="50302" label="계림2동" symbol="Gyerim2-dong"/>
+			<Dong code="50303" label="동명동" symbol="Dongmyeong-dong"/>
+			<Dong code="50304" label="산수1동" symbol="Sansu1-dong"/>
+			<Dong code="50305" label="산수2동" symbol="Sansu2-dong"/>
+			<Dong code="50306" label="서남동" symbol="Seonam-dong"/>
+			<Dong code="50307" label="지산1동" symbol="GJ-Jisan1-dong"/>
+			<Dong code="50308" label="지산2동" symbol="GJ-Jisan2-dong"/>
+			<Dong code="50309" label="지원1동" symbol="Jiwon1-dong"/>
+			<Dong code="50310" label="지원2동" symbol="Jiwon2-dong"/>
+			<Dong code="50311" label="충장동" symbol="Chungjang-dong"/>
+			<Dong code="50312" label="학동" symbol="Hak-dong"/>
+			<Dong code="50313" label="학운동" symbol="Hagun-dong"/>
+		</Gu>
+		<Gu code="50400" label="북구" symbol="GwangjuBuk">
+			<Dong code="50401" label="건국동" symbol="Geonguk-dong"/>
+			<Dong code="50402" label="동림동" symbol="Dongnim-dong"/>
+			<Dong code="50403" label="두암1동" symbol="Duam1-dong"/>
+			<Dong code="50404" label="두암2동" symbol="Duam2-dong"/>
+			<Dong code="50405" label="두암3동" symbol="Duam3-dong"/>
+			<Dong code="50406" label="매곡동" symbol="Maegok-dong"/>
+			<Dong code="50407" label="문화동" symbol="Munhwa-dong"/>
+			<Dong code="50408" label="문흥1동" symbol="Munheung1-dong"/>
+			<Dong code="50409" label="문흥2동" symbol="Munheung2-dong"/>
+			<Dong code="50410" label="삼각동" symbol="Samgak-dong"/>
+			<Dong code="50411" label="석곡동" symbol="Seokgok-dong"/>
+			<Dong code="50412" label="신안동" symbol="Sinan-dong"/>
+			<Dong code="50413" label="양산동>지도에없음" symbol="Yangsan-dong"/>
+			<Dong code="50414" label="오치1동" symbol="Ochi1-dong"/>
+			<Dong code="50415" label="오치2동" symbol="Ochi2-dong"/>
+			<Dong code="50416" label="용봉동" symbol="Yongbong-dong"/>
+			<Dong code="50417" label="우산동" symbol="GJ-BG-Usan-dong"/>
+			<Dong code="50418" label="운암1동" symbol="Unam1-dong"/>
+			<Dong code="50419" label="운암2동" symbol="Unam2-dong"/>
+			<Dong code="50420" label="운암3동" symbol="Unam3-dong"/>
+			<Dong code="50421" label="일곡동" symbol="Ilgok-dong"/>
+			<Dong code="50422" label="임동" symbol="Im-dong"/>
+			<Dong code="50423" label="중앙동" symbol="GJ-Jungang-dong"/>
+			<Dong code="50424" label="중흥1동" symbol="Jungheung1-dong"/>
+			<Dong code="50425" label="중흥2동" symbol="Jungheung2-dong"/>
+			<Dong code="50426" label="중흥3동" symbol="Jungheung3-dong"/>
+			<Dong code="50427" label="풍향동" symbol="Punghyang-dong"/>
+		</Gu>
+		<Gu code="50500" label="서구" symbol="GwangjuSeo">
+			<Dong code="50501" label="광천동" symbol="Gwangcheon-dong"/>
+			<Dong code="50502" label="금호1동" symbol="Geumho1-dong"/>
+			<Dong code="50503" label="금호2동" symbol="Geumho2-dong"/>
+			<Dong code="50504" label="농성1동" symbol="Nongseong1-dong"/>
+			<Dong code="50505" label="농성2동" symbol="Nongseong2-dong"/>
+			<Dong code="50506" label="동천동" symbol="GJ-Dongcheon-dong"/>
+			<Dong code="50507" label="상무1동" symbol="Sangmu1-dong"/>
+			<Dong code="50508" label="상무2동" symbol="Sangmu2-dong"/>
+			<Dong code="50509" label="서창동" symbol="GJ-Seochang-dong"/>
+			<Dong code="50510" label="양3동" symbol="Yang3-dong"/>
+			<Dong code="50511" label="양동" symbol="Yang-dong"/>
+			<Dong code="50512" label="유덕동" symbol="Yudeok-dong"/>
+			<Dong code="50513" label="치평동" symbol="Chipyeong-dong"/>
+			<Dong code="50514" label="풍암동" symbol="Pungam-dong"/>
+			<Dong code="50515" label="화정1동" symbol="Hwajeong1-dong"/>
+			<Dong code="50516" label="화정2동" symbol="Hwajeong2-dong"/>
+			<Dong code="50517" label="화정3동" symbol="Hwajeong3-dong"/>
+			<Dong code="50518" label="화정4동" symbol="Hwajeong4-dong"/>
+		</Gu>
+	</Province>
+	<Province code="60000" label="대구" symbol="Daegu">
+		<Gu code="60100" label="남구" symbol="DaeguNam" horizontalCenterGap="2">
+			<Dong code="60101" label="대명1동" symbol="Daemyeong1-dong"/>
+			<Dong code="60102" label="대명2동" symbol="Daemyeong2-dong"/>
+			<Dong code="60103" label="대명3동" symbol="Daemyeong3-dong"/>
+			<Dong code="60104" label="대명4동" symbol="Daemyeong4-dong"/>
+			<Dong code="60105" label="대명5동" symbol="Daemyeong5-dong"/>
+			<Dong code="60106" label="대명6동" symbol="Daemyeong6-dong"/>
+			<Dong code="60107" label="대명9동" symbol="Daemyeong9-dong"/>
+			<Dong code="60108" label="대명10동" symbol="Daemyeong10-dong"/>
+			<Dong code="60109" label="대명11동" symbol="Daemyeong11-dong"/>
+			<Dong code="60110" label="봉덕1동" symbol="Bongdeok1-dong"/>
+			<Dong code="60111" label="봉덕2동" symbol="Bongdeok2-dong"/>
+			<Dong code="60112" label="봉덕3동" symbol="Bongdeok3-dong"/>
+			<Dong code="60113" label="이천동" symbol="Icheon-dong"/>
+		</Gu>
+		<Gu code="60200" label="달서구" symbol="Dalseo" horizontalCenterGap="-5" verticalCenterGap="-6">
+			<Dong code="60201" label="감삼동" symbol="Gamsam-dong"/>
+			<Dong code="60202" label="도원동" symbol="DG-Dowon-dong"/>
+			<Dong code="60203" label="두류1.2동" symbol="Duryu1.2-dong"/>
+			<Dong code="60204" label="두류3동" symbol="Duryu3-dong"/>
+			<Dong code="60205" label="본동" symbol="Bon-dong"/>
+			<Dong code="60206" label="본리동" symbol="Bolli-dong"/>
+			<Dong code="60207" label="상인1동" symbol="Sangin1-dong"/>
+			<Dong code="60208" label="상인2동" symbol="Sangin2-dong"/>
+			<Dong code="60209" label="상인3동" symbol="Sangin3-dong"/>
+			<Dong code="60210" label="성당동" symbol="Seongdang-dong"/>
+			<Dong code="60211" label="송현1동" symbol="Songhyeon1-dong"/>
+			<Dong code="60212" label="송현2동" symbol="Songhyeon2-dong"/>
+			<Dong code="60213" label="신당동" symbol="Sindang-dong"/>
+			<Dong code="60214" label="용산1동" symbol="Yongsan1-dong"/>
+			<Dong code="60215" label="용산2동" symbol="Yongsan2-dong"/>
+			<Dong code="60216" label="월성1동" symbol="Wolseong1-dong"/>
+			<Dong code="60217" label="월성2동" symbol="Wolseong2-dong"/>
+			<Dong code="60218" label="이곡1동" symbol="Igok1-dong"/>
+			<Dong code="60219" label="이곡2동" symbol="Igok2-dong"/>
+			<Dong code="60220" label="장기동" symbol="Janggi-dong"/>
+			<Dong code="60221" label="죽전동" symbol="Jukjeon-dong"/>
+			<Dong code="60222" label="진천동" symbol="Jincheon-dong"/>
+		</Gu>
+		<Gu code="60300" label="달성군" symbol="Dalseong" horizontalCenterGap="-10" verticalCenterGap="10">
+			<Dong code="60301" label="가창면" symbol="Gachang-myeon"/>
+			<Dong code="60302" label="구지면" symbol="Guji-myeon"/>
+			<Dong code="60303" label="논공읍" symbol="Nongong-eup"/>
+			<Dong code="60304" label="다사읍" symbol="Dasa-eup"/>
+			<Dong code="60305" label="옥포면" symbol="Okpo-myeon"/>
+			<Dong code="60306" label="유가면" symbol="Yuga-myeon"/>
+			<Dong code="60307" label="하빈면" symbol="Habin-myeon"/>
+			<Dong code="60308" label="현풍면" symbol="Hyeonpung-myeon"/>
+			<Dong code="60309" label="화원읍" symbol="Hwawon-eup"/>
+		</Gu>
+		<Gu code="60400" label="동구" symbol="DaeguDong">
+			<Dong code="60401" label="공산동" symbol="Gongsan-dong"/>
+			<Dong code="60402" label="도평동" symbol="Dopyeong-dong"/>
+			<Dong code="60403" label="동촌동" symbol="Dongchon-dong"/>
+			<Dong code="60404" label="방촌동" symbol="Bangchon-dong"/>
+			<Dong code="60405" label="불로.봉무동" symbol="Bongmu-dong"/>
+			<Dong code="60406" label="신암1동" symbol="Sinam1-dong"/>
+			<Dong code="60407" label="신암2동" symbol="Sinam2-dong"/>
+			<Dong code="60408" label="신암3동" symbol="Sinam3-dong"/>
+			<Dong code="60409" label="신암4동" symbol="Sinam4-dong"/>
+			<Dong code="60410" label="신암5동" symbol="Sinam5-dong"/>
+			<Dong code="60411" label="신천1.2동" symbol="Sincheon1.2-dong"/>
+			<Dong code="60412" label="신천3동" symbol="Sincheon3-dong"/>
+			<Dong code="60413" label="신천4동" symbol="Sincheon4-dong"/>
+			<Dong code="60414" label="안심1동" symbol="Ansim1-dong"/>
+			<Dong code="60415" label="안심2동" symbol="Ansim2-dong"/>
+			<Dong code="60416" label="안심3.4동" symbol="Ansim3.4-dong"/>
+			<Dong code="60417" label="지저동" symbol="Jijeo-dong"/>
+			<Dong code="60418" label="해안동" symbol="Haean-dong"/>
+			<Dong code="60419" label="효목1동" symbol="Hyomok1-dong"/>
+			<Dong code="60420" label="효목2동" symbol="Hyomok2-dong"/>
+		</Gu>
+		<Gu code="60500" label="북구" symbol="DaeguBuk" horizontalCenterGap="6" verticalCenterGap="4">
+			<Dong code="60501" label="검단동" symbol="Geomdan-dong"/>
+			<Dong code="60502" label="고성동" symbol="Goseong-dong"/>
+			<Dong code="60503" label="관문동" symbol="Gwanmun-dong"/>
+			<Dong code="60504" label="관음동" symbol="Gwaneum-dong"/>
+			<Dong code="60505" label="구암동" symbol="Guam-dong"/>
+			<Dong code="60506" label="국우동" symbol="Gugu-dong"/>
+			<Dong code="60507" label="노원동" symbol="Nowon-dong"/>
+			<Dong code="60508" label="대현동" symbol="DG-Daehyeon-dong"/>
+			<Dong code="60509" label="동천동" symbol="DG-Dongcheon-dong"/>
+			<Dong code="60510" label="무태조야동" symbol="Mutaejoya-dong"/>
+			<Dong code="60511" label="복현1동" symbol="Bokhyeon1-dong"/>
+			<Dong code="60512" label="복현2동" symbol="Bokhyeon2-dong"/>
+			<Dong code="60513" label="산격1동" symbol="Sangyeok1-dong"/>
+			<Dong code="60514" label="산격2동" symbol="Sangyeok2-dong"/>
+			<Dong code="60515" label="산격3동" symbol="Sangyeok3-dong"/>
+			<Dong code="60516" label="산격4동" symbol="Sangyeok4-dong"/>
+			<Dong code="60517" label="읍내동" symbol="Eumnae-dong"/>
+			<Dong code="60518" label="칠성동" symbol="Chilseong-dong"/>
+			<Dong code="60519" label="침산1동" symbol="Chimsan1-dong"/>
+			<Dong code="60520" label="침산2동" symbol="Chimsan2-dong"/>
+			<Dong code="60521" label="침산3동" symbol="Chimsan3-dong"/>
+			<Dong code="60522" label="태전1동" symbol="Taejeon1-dong"/>
+			<Dong code="60523" label="태전2동" symbol="Taejeon2-dong"/>
+		</Gu>
+		<Gu code="60600" label="서구" symbol="DaeguSeo">
+			<Dong code="60601" label="내당1동" symbol="Naedang1-dong"/>
+			<Dong code="60602" label="내당2.3동" symbol="Naedang2.3-dong"/>
+			<Dong code="60603" label="내당4동" symbol="Naedang4-dong"/>
+			<Dong code="60604" label="비산1동" symbol="Bisan1-dong"/>
+			<Dong code="60605" label="비산2.3동" symbol="Bisan2.3-dong"/>
+			<Dong code="60606" label="비산4동" symbol="Bisan4-dong"/>
+			<Dong code="60607" label="비산5동" symbol="Bisan5-dong"/>
+			<Dong code="60608" label="비산6동" symbol="Bisan6-dong"/>
+			<Dong code="60609" label="비산7동" symbol="Bisan7-dong"/>
+			<Dong code="60610" label="상중이동" symbol="Sangjungi-dong"/>
+			<Dong code="60611" label="원대동" symbol="Wondae-dong"/>
+			<Dong code="60612" label="평리1동" symbol="Pyeongni1-dong"/>
+			<Dong code="60613" label="평리2동" symbol="Pyeongni2-dong"/>
+			<Dong code="60614" label="평리3동" symbol="Pyeongni3-dong"/>
+			<Dong code="60615" label="평리4동" symbol="Pyeongni4-dong"/>
+			<Dong code="60616" label="평리5동" symbol="Pyeongni5-dong"/>
+			<Dong code="60617" label="평리6동" symbol="Pyeongni6-dong"/>
+		</Gu>
+		<Gu code="60700" label="수성구" symbol="Suseong">
+			<Dong code="60701" label="고산1동" symbol="Gosan1-dong"/>
+			<Dong code="60702" label="고산2동" symbol="Gosan2-dong"/>
+			<Dong code="60703" label="고산3동" symbol="Gosan3-dong"/>
+			<Dong code="60704" label="두산동" symbol="Dusan-dong"/>
+			<Dong code="60705" label="만촌1동" symbol="Manchon1-dong"/>
+			<Dong code="60706" label="만촌2동" symbol="Manchon2-dong"/>
+			<Dong code="60707" label="만촌3동" symbol="Manchon3-dong"/>
+			<Dong code="60708" label="범물1동" symbol="Beommul1-dong"/>
+			<Dong code="60709" label="범물2동" symbol="Beommul2-dong"/>
+			<Dong code="60710" label="범어1동" symbol="Beomeo1-dong"/>
+			<Dong code="60711" label="범어2동" symbol="Beomeo2-dong"/>
+			<Dong code="60712" label="범어3동" symbol="Beomeo3-dong"/>
+			<Dong code="60713" label="범어4동" symbol="Beomeo4-dong"/>
+			<Dong code="60714" label="상동" symbol="Sang-dong"/>
+			<Dong code="60715" label="수성1가동" symbol="Suseong1ga-dong"/>
+			<Dong code="60716" label="수성2.3가동" symbol="Suseong2.3ga-dong"/>
+			<Dong code="60717" label="수성4가동" symbol="Suseong4ga-dong"/>
+			<Dong code="60718" label="중동" symbol="Jung-dong"/>
+			<Dong code="60719" label="지산1동" symbol="DG-Jisan1-dong"/>
+			<Dong code="60720" label="지산2동" symbol="DG-Jisan2-dong"/>
+			<Dong code="60721" label="파동" symbol="Pa-dong"/>
+			<Dong code="60722" label="황금1동" symbol="Hwanggeum1-dong"/>
+			<Dong code="60723" label="황금2동" symbol="Hwanggeum2-dong"/>
+		</Gu>
+		<Gu code="60800" label="중구" symbol="DaeguJung" horizontalCenterGap="2">
+			<Dong code="60801" label="남산1동" symbol="Namsan1-dong"/>
+			<Dong code="60802" label="남산2동" symbol="Namsan2-dong"/>
+			<Dong code="60803" label="남산3동" symbol="Namsan3-dong"/>
+			<Dong code="60804" label="남산4동" symbol="Namsan4-dong"/>
+			<Dong code="60805" label="대봉1동" symbol="Daebong1-dong"/>
+			<Dong code="60806" label="대봉2동" symbol="Daebong2-dong"/>
+			<Dong code="60807" label="대신동" symbol="Daesin-dong"/>
+			<Dong code="60808" label="동인동" symbol="Dongin-dong"/>
+			<Dong code="60809" label="삼덕동" symbol="Samdeok-dong"/>
+			<Dong code="60810" label="성내1동" symbol="Seongnae1-dong"/>
+			<Dong code="60811" label="성내2동" symbol="Seongnae2-dong"/>
+			<Dong code="60812" label="성내3동" symbol="Seongnae3-dong"/>
+		</Gu>
+	</Province>
+	<Province code="70000" label="대전" symbol="Daejeon">
+		<Gu code="70100" label="대덕구" symbol="Daedeok" horizontalCenterGap="-5" verticalCenterGap="-10">
+			<Dong code="70101" label="대화동" symbol="Daehwa-dong"/>
+			<Dong code="70102" label="덕암동" symbol="Deogam-dong"/>
+			<Dong code="70103" label="목상동" symbol="Moksang-dong"/>
+			<Dong code="70104" label="법1동" symbol="Beop1-dong"/>
+			<Dong code="70105" label="법2동" symbol="Beop2-dong"/>
+			<Dong code="70106" label="비래동" symbol="Birae-dong"/>
+			<Dong code="70107" label="석봉동" symbol="Seokbong-dong"/>
+			<Dong code="70108" label="송촌동" symbol="Songchon-dong"/>
+			<Dong code="70109" label="신탄진동" symbol="Sintanjin-dong"/>
+			<Dong code="70110" label="오정동" symbol="Ojeong-dong"/>
+			<Dong code="70111" label="중리동" symbol="Jungni-dong"/>
+			<Dong code="70112" label="회덕동" symbol="Hoedeok-dong"/>
+		</Gu>
+		<Gu code="70200" label="동구" symbol="DaejeonDong" horizontalCenterGap="-5">
+			<Dong code="70201" label="가양1동" symbol="Gayang1-dong"/>
+			<Dong code="70202" label="가양2동" symbol="Gayang2-dong"/>
+			<Dong code="70203" label="대동" symbol="Dae-dong"/>
+			<Dong code="70204" label="대청동" symbol="DJ-Daecheong-dong"/>
+			<Dong code="70205" label="산내동" symbol="Sannae-dong"/>
+			<Dong code="70206" label="삼성동" symbol="Samseong-dong"/>
+			<Dong code="70207" label="성남동" symbol="Seongnam-dong"/>
+			<Dong code="70208" label="신인동>>지도에 인동+신흥동" symbol="Sinin-dong"/>
+			<Dong code="70209" label="용운동" symbol="Yongun-dong"/>
+			<Dong code="70210" label="용전동" symbol="Yongjeon-dong"/>
+			<Dong code="70211" label="자양동" symbol="Jayang-dong"/>
+			<Dong code="70212" label="중앙동" symbol="DJ-Jungang-dong"/>
+			<Dong code="70213" label="판암1동" symbol="Panam1-dong"/>
+			<Dong code="70214" label="판암2동" symbol="Panam2-dong"/>
+			<Dong code="70215" label="홍도동" symbol="Hongdo-dong"/>
+			<Dong code="70216" label="효동" symbol="Hyo-dong"/>
+		</Gu>
+		<Gu code="70300" label="서구" symbol="DaejeonSeo">
+			<Dong code="70301" label="가수원동" symbol="Gasuwon-dong"/>
+			<Dong code="70302" label="가장동" symbol="Gajang-dong"/>
+			<Dong code="70303" label="갈마1동" symbol="Galma1-dong"/>
+			<Dong code="70304" label="갈마2동" symbol="Galma2-dong"/>
+			<Dong code="70305" label="관저1동" symbol="Gwanjeo1-dong"/>
+			<Dong code="70306" label="관저2동" symbol="Gwanjeo2-dong"/>
+			<Dong code="70307" label="괴정동" symbol="Goejeong-dong"/>
+			<Dong code="70308" label="기성동" symbol="Giseong-dong"/>
+			<Dong code="70309" label="내동" symbol="Nae-dong"/>
+			<Dong code="70310" label="도마1동" symbol="Doma1-dong"/>
+			<Dong code="70311" label="도마2동" symbol="Doma2-dong"/>
+			<Dong code="70312" label="둔산1동" symbol="Dunsan1-dong"/>
+			<Dong code="70313" label="둔산2동" symbol="Dunsan2-dong"/>
+			<Dong code="70314" label="둔산3동" symbol="Dunsan3-dong"/>
+			<Dong code="70315" label="만년동" symbol="Mannyeon-dong"/>
+			<Dong code="70316" label="변동" symbol="Byeon-dong"/>
+			<Dong code="70317" label="복수동" symbol="Boksu-dong"/>
+			<Dong code="70318" label="용문동" symbol="Yongmun-dong"/>
+			<Dong code="70319" label="월평1동" symbol="Wolpyeong1-dong"/>
+			<Dong code="70320" label="월평2동" symbol="Wolpyeong2-dong"/>
+			<Dong code="70321" label="월평3동" symbol="Wolpyeong3-dong"/>
+			<Dong code="70322" label="정림동" symbol="Jeongnim-dong"/>
+			<Dong code="70323" label="탄방동" symbol="Tanbang-dong"/>
+		</Gu>
+		<Gu code="70400" label="유성구" symbol="Yuseong">
+			<Dong code="70401" label="관평동" symbol="Gwanpyeong-dong"/>
+			<Dong code="70402" label="구즉동" symbol="Gujeuk-dong"/>
+			<Dong code="70403" label="노은1동" symbol="Noeun1-dong"/>
+			<Dong code="70404" label="노은2동" symbol="Noeun2-dong"/>
+			<Dong code="70405" label="신성동" symbol="Sinseong-dong"/>
+			<Dong code="70406" label="온천1동" symbol="Oncheon1-dong"/>
+			<Dong code="70407" label="온천2동" symbol="Oncheon2-dong"/>
+			<Dong code="70408" label="전민동" symbol="Jeonmin-dong"/>
+			<Dong code="70409" label="진잠동" symbol="Jinjam-dong"/>
+		</Gu>
+		<Gu code="70500" label="중구" symbol="DaejeonJung" horizontalCenterGap="-2">
+			<Dong code="70501" label="대사동" symbol="Daesa-dong"/>
+			<Dong code="70502" label="대흥동" symbol="Daeheung-dong"/>
+			<Dong code="70503" label="목동" symbol="Mok-dong"/>
+			<Dong code="70504" label="문창동" symbol="Munchang-dong"/>
+			<Dong code="70505" label="문화1동" symbol="Munhwa1-dong"/>
+			<Dong code="70506" label="문화2동" symbol="Munhwa2-dong"/>
+			<Dong code="70507" label="부사동" symbol="Busa-dong"/>
+			<Dong code="70508" label="산성동" symbol="Sanseong-dong"/>
+			<Dong code="70509" label="석교동" symbol="Seokgyo-dong"/>
+			<Dong code="70510" label="오류동" symbol="Oryu-dong"/>
+			<Dong code="70511" label="용두동" symbol="Yongdu-dong"/>
+			<Dong code="70512" label="유천1동" symbol="Yucheon1-dong"/>
+			<Dong code="70513" label="유천2동" symbol="Yucheon2-dong"/>
+			<Dong code="70514" label="은행선화동" symbol="Eunhaengseonhwa-dong"/>
+			<Dong code="70515" label="중촌동" symbol="Jungchon-dong"/>
+			<Dong code="70516" label="태평1동" symbol="Taepyeong1-dong"/>
+			<Dong code="70517" label="태평2동" symbol="Taepyeong2-dong"/>
+		</Gu>
+	</Province>
+	<Province code="80000" label="부산" symbol="Busan" verticalCenterGap="1">
+		<Gu code="80100" label="강서구" symbol="BusanGangseo" verticalCenterGap="-12">
+			<Dong code="80100" label="가덕도동" symbol="Gadeokdo-dong"/>
+			<Dong code="80101" label="가락동" symbol="Garak-dong"/>
+			<Dong code="80102" label="강동동" symbol="BS-Gangdong-dong"/>
+			<Dong code="80103" label="녹산동" symbol="Noksan-dong"/>
+			<Dong code="80104" label="대저1동" symbol="Daejeo1-dong"/>
+			<Dong code="80105" label="대저2동" symbol="Daejeo2-dong"/>
+			<Dong code="80106" label="명지동" symbol="Myeongji-dong"/>
+		</Gu>
+		<Gu code="80200" label="금정구" symbol="Geumjeong">
+			<Dong code="80201" label="구서제1동" symbol="Guseo1-dong"/>
+			<Dong code="80202" label="구서제2동" symbol="Guseo2-dong"/>
+			<Dong code="80203" label="금사동" symbol="Geumsa-dong"/>
+			<Dong code="80204" label="금성동" symbol="Geumseong-dong"/>
+			<Dong code="80205" label="남산동" symbol="Namsan-dong"/>
+			<Dong code="80206" label="부곡제1동" symbol="Bugok1-dong"/>
+			<Dong code="80207" label="부곡제2동" symbol="Bugok2-dong"/>
+			<Dong code="80208" label="부곡제3동" symbol="Bugok3-dong"/>
+			<Dong code="80209" label="부곡제4동" symbol="Bugok4-dong"/>
+			<Dong code="80210" label="서제1동" symbol="Seo1-dong"/>
+			<Dong code="80211" label="서제2동" symbol="Seo2-dong"/>
+			<Dong code="80212" label="서제3동" symbol="Seo3-dong"/>
+			<Dong code="80213" label="선두구동" symbol="Seondugu-dong"/>
+			<Dong code="80214" label="장전제1동" symbol="Jangjeon1-dong"/>
+			<Dong code="80215" label="장전제2동" symbol="Jangjeon2-dong"/>
+			<Dong code="80216" label="장전제3동" symbol="Jangjeon3-dong"/>
+			<Dong code="80217" label="청룡노포동" symbol="Nopo-dong"/>
+		</Gu>
+		<Gu code="80300" label="기장군" symbol="Gijang" horizontalCenterGap="-4">
+			<Dong code="80301" label="기장읍" symbol="Gijang-eup"/>
+			<Dong code="80302" label="일광면" symbol="Ilgwang-myeon"/>
+			<Dong code="80303" label="장안읍" symbol="Jangan-eup"/>
+			<Dong code="80304" label="정관읍" symbol="Jeonggwan-eup"/>
+			<Dong code="80305" label="철마면" symbol="Cheolma-myeon"/>
+		</Gu>
+		<Gu code="80400" label="남구" symbol="BusanNam">
+			<Dong code="80401" label="감만제1동" symbol="Gamman1-dong"/>
+			<Dong code="80402" label="감만제2동" symbol="Gamman2-dong"/>
+			<Dong code="80403" label="대연제1동" symbol="Daeyeon1-dong"/>
+			<Dong code="80404" label="대연제3동" symbol="Daeyeon3-dong"/>
+			<Dong code="80405" label="대연제4동" symbol="Daeyeon4-dong"/>
+			<Dong code="80406" label="대연제5동" symbol="Daeyeon5-dong"/>
+			<Dong code="80407" label="대연제6동" symbol="Daeyeon6-dong"/>
+			<Dong code="80408" label="문현제1동" symbol="Munhyeon1-dong"/>
+			<Dong code="80409" label="문현제2동" symbol="Munhyeon2-dong"/>
+			<Dong code="80410" label="문현제3동" symbol="Munhyeon3-dong"/>
+			<Dong code="80411" label="문현제4동" symbol="Munhyeon4-dong"/>
+			<Dong code="80412" label="용당동" symbol="Yongdang-dong"/>
+			<Dong code="80413" label="용호제1동" symbol="Yongho1-dong"/>
+			<Dong code="80414" label="용호제2동" symbol="Yongho2-dong"/>
+			<Dong code="80415" label="용호제3동" symbol="Yongho3-dong"/>
+			<Dong code="80416" label="용호제4동" symbol="Yongho4-dong"/>
+			<Dong code="80417" label="우암동" symbol="Uam-dong"/>
+		</Gu>
+		<Gu code="80500" label="동구" symbol="BusanDong">
+			<Dong code="80501" label="범일제1동" symbol="Beomil1-dong"/>
+			<Dong code="80502" label="범일제2동" symbol="Beomil2-dong"/>
+			<Dong code="80503" label="범일제4동" symbol="Beomil4-dong"/>
+			<Dong code="80504" label="범일제5동" symbol="Beomil5-dong"/>
+			<Dong code="80505" label="수정제1동" symbol="Sujeong1-dong"/>
+			<Dong code="80506" label="수정제2동" symbol="Sujeong2-dong"/>
+			<Dong code="80507" label="수정제4동" symbol="Sujeong4-dong"/>
+			<Dong code="80508" label="수정제5동" symbol="Sujeong5-dong"/>
+			<Dong code="80509" label="좌천동" symbol="Jwacheon-dong"/>
+			<Dong code="80510" label="초량제1동" symbol="Choryang1-dong"/>
+			<Dong code="80511" label="초량제2동" symbol="Choryang2-dong"/>
+			<Dong code="80512" label="초량제3동" symbol="Choryang3-dong"/>
+			<Dong code="80513" label="초량제6동" symbol="Choryang6-dong"/>
+		</Gu>
+		<Gu code="80600" label="동래구" symbol="Dongnae">
+			<Dong code="80601" label="명륜동" symbol="Myeongnyun-dong"/>
+			<Dong code="80602" label="명장제1동" symbol="Myeongjang1-dong"/>
+			<Dong code="80603" label="명장제2동" symbol="Myeongjang2-dong"/>
+			<Dong code="80604" label="복산동" symbol="Boksan-dong"/>
+			<Dong code="80605" label="사직제1동" symbol="Sajik1-dong"/>
+			<Dong code="80606" label="사직제2동" symbol="Sajik2-dong"/>
+			<Dong code="80607" label="사직제3동" symbol="Sajik3-dong"/>
+			<Dong code="80608" label="수민동" symbol="Sumin-dong"/>
+			<Dong code="80609" label="안락제1동" symbol="Allak1-dong"/>
+			<Dong code="80610" label="안락제2동" symbol="Allak2-dong"/>
+			<Dong code="80611" label="온천제1동" symbol="BS-Oncheon1-dong"/>
+			<Dong code="80612" label="온천제2동" symbol="BS-Oncheon2-dong"/>
+			<Dong code="80613" label="온천제3동" symbol="BS-Oncheon3-dong"/>
+		</Gu>
+		<Gu code="80700" label="부산진구" symbol="Busanjin">
+			<Dong code="80701" label="가야제1동" symbol="Gaya1-dong"/>
+			<Dong code="80702" label="가야제2동" symbol="Gaya2-dong"/>
+			<Dong code="80703" label="개금제1동" symbol="Gaegeum1-dong"/>
+			<Dong code="80704" label="개금제2동" symbol="Gaegeum2-dong"/>
+			<Dong code="80705" label="개금제3동" symbol="Gaegeum3-dong"/>
+			<Dong code="80706" label="당감제1동" symbol="Danggam1-dong"/>
+			<Dong code="80707" label="당감제2동" symbol="Danggam2-dong"/>
+			<Dong code="80708" label="당감제4동" symbol="Danggam4-dong"/>
+			<Dong code="80709" label="범천제1동" symbol="Beomcheon1-dong"/>
+			<Dong code="80710" label="범천제2동" symbol="Beomcheon2-dong"/>
+			<Dong code="80711" label="부암제1동" symbol="Buam1-dong"/>
+			<Dong code="80712" label="부암제3동" symbol="Buam3-dong"/>
+			<Dong code="80713" label="부전제1동" symbol="Bujeon1-dong"/>
+			<Dong code="80714" label="부전제2동" symbol="Bujeon2-dong"/>
+			<Dong code="80715" label="양정제1동" symbol="Yangjeong1-dong"/>
+			<Dong code="80716" label="양정제2동" symbol="Yangjeong2-dong"/>
+			<Dong code="80717" label="연지동" symbol="Yeonji-dong"/>
+			<Dong code="80718" label="전포제1동" symbol="Jeonpo1-dong"/>
+			<Dong code="80719" label="전포제2동" symbol="Jeonpo2-dong"/>
+			<Dong code="80720" label="초읍동" symbol="Choeup-dong"/>
+		</Gu>
+		<Gu code="80800" label="북구" symbol="BusanBuk">
+			<Dong code="80801" label="구포제1동" symbol="Gupo1-dong"/>
+			<Dong code="80802" label="구포제2동" symbol="Gupo2-dong"/>
+			<Dong code="80803" label="구포제3동" symbol="Gupo3-dong"/>
+			<Dong code="80804" label="금곡동" symbol="Geumgok-dong"/>
+			<Dong code="80805" label="덕천제1동" symbol="Deokcheon1-dong"/>
+			<Dong code="80806" label="덕천제2동" symbol="Deokcheon2-dong"/>
+			<Dong code="80807" label="덕천제3동" symbol="Deokcheon3-dong"/>
+			<Dong code="80808" label="만덕제1동" symbol="Mandeok1-dong"/>
+			<Dong code="80809" label="만덕제2동" symbol="Mandeok2-dong"/>
+			<Dong code="80810" label="만덕제3동" symbol="Mandeok3-dong"/>
+			<Dong code="80811" label="화명제1동" symbol="Hwamyeong1-dong"/>
+			<Dong code="80812" label="화명제2동" symbol="Hwamyeong2-dong"/>
+			<Dong code="80813" label="화명제3동" symbol="Hwamyeong3-dong"/>
+		</Gu>
+		<Gu code="80900" label="사상구" symbol="Sasang">
+			<Dong code="80901" label="감전동" symbol="Gamjeon-dong"/>
+			<Dong code="80902" label="괘법동" symbol="Gwaebeop-dong"/>
+			<Dong code="80903" label="덕포제1동" symbol="Deokpo1-dong"/>
+			<Dong code="80904" label="덕포제2동" symbol="Deokpo2-dong"/>
+			<Dong code="80905" label="모라제1동" symbol="Mora1-dong"/>
+			<Dong code="80906" label="모라제3동" symbol="Mora3-dong"/>
+			<Dong code="80907" label="삼락동" symbol="Samnak-dong"/>
+			<Dong code="80908" label="엄궁동" symbol="Eomgung-dong"/>
+			<Dong code="80909" label="주례제1동" symbol="Jurye1-dong"/>
+			<Dong code="80910" label="주례제2동" symbol="Jurye2-dong"/>
+			<Dong code="80911" label="주례제3동" symbol="Jurye3-dong"/>
+			<Dong code="80912" label="학장동" symbol="Hakjang-dong"/>
+		</Gu>
+		<Gu code="81000" label="사하구" symbol="Saha" verticalCenterGap="-8">
+			<Dong code="81001" label="감천제1동" symbol="Gamcheon1-dong"/>
+			<Dong code="81002" label="감천제2동" symbol="Gamcheon2-dong"/>
+			<Dong code="81003" label="괴정제1동" symbol="Goejeong1-dong"/>
+			<Dong code="81004" label="괴정제2동" symbol="Goejeong2-dong"/>
+			<Dong code="81005" label="괴정제3동" symbol="Goejeong3-dong"/>
+			<Dong code="81006" label="괴정제4동" symbol="Goejeong4-dong"/>
+			<Dong code="81007" label="구평동" symbol="Gupyeong-dong"/>
+			<Dong code="81008" label="다대제1동" symbol="Dadae1-dong"/>
+			<Dong code="81009" label="다대제2동" symbol="Dadae2-dong"/>
+			<Dong code="81010" label="당리동" symbol="Dangni-dong"/>
+			<Dong code="81011" label="신평제1동" symbol="Sinpyeong1-dong"/>
+			<Dong code="81012" label="신평제2동" symbol="Sinpyeong2-dong"/>
+			<Dong code="81013" label="장림제1동" symbol="Jangnim1-dong"/>
+			<Dong code="81014" label="장림제2동" symbol="Jangnim2-dong"/>
+			<Dong code="81015" label="하단제1동" symbol="Hadan1-dong"/>
+			<Dong code="81016" label="하단제2동" symbol="Hadan2-dong"/>
+		</Gu>
+		<Gu code="81100" label="서구" symbol="BusanSeo" horizontalCenterGap="0" verticalCenterGap="-7">
+			<Dong code="81101" label="남부민제1동" symbol="Nambumin1-dong"/>
+			<Dong code="81102" label="남부민제2동" symbol="Nambumin2-dong"/>
+			<Dong code="81103" label="동대신제1동" symbol="Dongdaesin1-dong"/>
+			<Dong code="81104" label="동대신제2동" symbol="Dongdaesin2-dong"/>
+			<Dong code="81105" label="동대신제3동" symbol="Dongdaesin3-dong"/>
+			<Dong code="81106" label="부민동" symbol="Bumin-dong"/>
+			<Dong code="81107" label="서대신제1동" symbol="Seodaesin1-dong"/>
+			<Dong code="81108" label="서대신제3동" symbol="Seodaesin3-dong"/>
+			<Dong code="81109" label="서대신제4동" symbol="Seodaesin4-dong"/>
+			<Dong code="81110" label="아미동" symbol="Ami-dong"/>
+			<Dong code="81111" label="암남동" symbol="Amnam-dong"/>
+			<Dong code="81112" label="초장동" symbol="Chojang-dong"/>
+			<Dong code="81113" label="충무동" symbol="Chungmu-dong"/>
+		</Gu>
+		<Gu code="81200" label="수영구" symbol="Suyeong">
+			<Dong code="81201" label="광안제1동" symbol="Gwangan1-dong"/>
+			<Dong code="81202" label="광안제2동" symbol="Gwangan2-dong"/>
+			<Dong code="81203" label="광안제3동" symbol="Gwangan3-dong"/>
+			<Dong code="81204" label="광안제4동" symbol="Gwangan4-dong"/>
+			<Dong code="81205" label="남천제1동" symbol="Namcheon1-dong"/>
+			<Dong code="81206" label="남천제2동" symbol="Namcheon2-dong"/>
+			<Dong code="81207" label="망미제1동" symbol="Mangmi1-dong"/>
+			<Dong code="81208" label="망미제2동" symbol="Mangmi2-dong"/>
+			<Dong code="81209" label="민락동" symbol="Millak-dong"/>
+			<Dong code="81210" label="수영동" symbol="Suyeong-dong"/>
+		</Gu>
+		<Gu code="81300" label="연제구" symbol="Yeonje" verticalCenterGap="-3">
+			<Dong code="81301" label="거제제1동" symbol="Geoje1-dong"/>
+			<Dong code="81302" label="거제제2동" symbol="Geoje2-dong"/>
+			<Dong code="81303" label="거제제3동" symbol="Geoje3-dong"/>
+			<Dong code="81304" label="거제제4동" symbol="Geoje4-dong"/>
+			<Dong code="81305" label="연산제1동" symbol="Yeonsan1-dong"/>
+			<Dong code="81306" label="연산제2동" symbol="Yeonsan2-dong"/>
+			<Dong code="81307" label="연산제3동" symbol="Yeonsan3-dong"/>
+			<Dong code="81308" label="연산제4동" symbol="Yeonsan4-dong"/>
+			<Dong code="81309" label="연산제5동" symbol="Yeonsan5-dong"/>
+			<Dong code="81310" label="연산제6동" symbol="Yeonsan6-dong"/>
+			<Dong code="81311" label="연산제8동" symbol="Yeonsan8-dong"/>
+			<Dong code="81312" label="연산제9동" symbol="Yeonsan9-dong"/>
+		</Gu>
+		<Gu code="81400" label="영도구" symbol="Yeongdo">
+			<Dong code="81401" label="남항동" symbol="Namhang-dong"/>
+			<Dong code="81402" label="동삼제1동" symbol="Dongsam1-dong"/>
+			<Dong code="81403" label="동삼제2동" symbol="Dongsam2-dong"/>
+			<Dong code="81404" label="동삼제3동" symbol="Dongsam3-dong"/>
+			<Dong code="81405" label="봉래제1동" symbol="Bongnae1-dong"/>
+			<Dong code="81406" label="봉래제2동" symbol="Bongnae2-dong"/>
+			<Dong code="81407" label="신선동" symbol="Sinseon-dong"/>
+			<Dong code="81408" label="영선제1동" symbol="Yeongseon1-dong"/>
+			<Dong code="81409" label="영선제2동" symbol="Yeongseon2-dong"/>
+			<Dong code="81410" label="청학제1동" symbol="Cheonghak1-dong"/>
+			<Dong code="81411" label="청학제2동" symbol="Cheonghak2-dong"/>
+		</Gu>
+		<Gu code="81500" label="중구" symbol="BusanJung">
+			<Dong code="81501" label="광복동" symbol="Gwangbok-dong"/>
+			<Dong code="81502" label="남포동" symbol="Nampo-dong"/>
+			<Dong code="81503" label="대청동" symbol="BS-Daecheong-dong"/>
+			<Dong code="81504" label="동광동" symbol="Donggwang-dong"/>
+			<Dong code="81505" label="보수동" symbol="Bosu-dong"/>
+			<Dong code="81506" label="부평동" symbol="Bupyeong-dong"/>
+			<Dong code="81507" label="영주제1동" symbol="Yeongju1-dong"/>
+			<Dong code="81508" label="영주제2동" symbol="Yeongju2-dong"/>
+			<Dong code="81509" label="중앙동" symbol="BS-Jungang-dong"/>
+		</Gu>
+		<Gu code="81600" label="해운대구" symbol="Haeundae">
+			<Dong code="81601" label="반송제1동" symbol="Bansong1-dong"/>
+			<Dong code="81602" label="반송제2동" symbol="Bansong2-dong"/>
+			<Dong code="81603" label="반여제1동" symbol="Banyeo1-dong"/>
+			<Dong code="81604" label="반여제2동" symbol="Banyeo2-dong"/>
+			<Dong code="81605" label="반여제3동" symbol="Banyeo3-dong"/>
+			<Dong code="81606" label="반여제4동" symbol="Banyeo4-dong"/>
+			<Dong code="81607" label="송정동" symbol="BS-Songjeong-dong"/>
+			<Dong code="81608" label="우제1동" symbol="U1-dong"/>
+			<Dong code="81609" label="우제2동" symbol="U2-dong"/>
+			<Dong code="81610" label="우제3동" symbol="U3-dong"/>
+			<Dong code="81611" label="재송제1동" symbol="Jaesong1-dong"/>
+			<Dong code="81612" label="재송제2동" symbol="Jaesong2-dong"/>
+			<Dong code="81613" label="좌제1동" symbol="Jwa1-dong"/>
+			<Dong code="81614" label="좌제2동" symbol="Jwa2-dong"/>
+			<Dong code="81615" label="좌제3동" symbol="Jwa3-dong"/>
+			<Dong code="81616" label="좌제4동" symbol="Jwa4-dong"/>
+			<Dong code="81617" label="중제1동" symbol="Jung1-dong"/>
+			<Dong code="81618" label="중제2동" symbol="Jung2-dong"/>
+		</Gu>
+	</Province>
+	<Province code="100" label="강원도" symbol="Gangwon" horizontalCenterGap="5" verticalCenterGap="10">
+		<Gu code="101" label="강릉시" symbol="Gangneung" horizontalCenterGap="5"/>
+		<Gu code="102" label="고성군" symbol="GangwonGoseong" verticalCenterGap="8"/>
+		<Gu code="103" label="동해시" symbol="Donghae" verticalCenterGap="4"/>
+		<Gu code="104" label="삼척시" symbol="Samcheok" horizontalCenterGap="7"/>
+		<Gu code="105" label="속초시" symbol="Sokcho" verticalCenterGap="2"/>
+		<Gu code="106" label="양구군" symbol="Yanggu"/>
+		<Gu code="107" label="양양군" symbol="Yangyang"/>
+		<Gu code="108" label="영월군" symbol="Yeongwol" horizontalCenterGap="-2" verticalCenterGap="7"/>
+		<Gu code="109" label="원주시" symbol="Wonju" horizontalCenterGap="-7"/>
+		<Gu code="110" label="인제군" symbol="Inje"/>
+		<Gu code="111" label="정선군" symbol="Jeongseon" horizontalCenterGap="-4"/>
+		<Gu code="112" label="철원군" symbol="Cheorwon"/>
+		<Gu code="113" label="춘천시" symbol="Chuncheon" verticalCenterGap="-3"/>
+		<Gu code="114" label="태백시" symbol="Taebaek" verticalCenterGap="10"/>
+		<Gu code="115" label="평창군" symbol="Pyeongchang" horizontalCenterGap="-6"/>
+		<Gu code="116" label="홍천군" symbol="Hongcheon"/>
+		<Gu code="117" label="화천군" symbol="Hwacheon"/>
+		<Gu code="118" label="횡성군" symbol="Hoengseong" horizontalCenterGap="6" verticalCenterGap="-7"/>
+	</Province>
+	<Province code="200" label="경기도" symbol="Gyeonggi" horizontalCenterGap="6" verticalCenterGap="20">
+		<Gu code="201" label="가평군" symbol="Gapyeong"/>
+		<Gu code="202" label="고양시" symbol="Goyang">
+			<Dong code="2021" label="일산서구" symbol="Ilsanseo"/>
+			<Dong code="2022" label="일산동구" symbol="Ilsandong"/>
+			<Dong code="2023" label="덕양구" symbol="Deogyang"/>
+		</Gu>
+		<Gu code="203" label="과천시" symbol="Gwacheon"/>
+		<Gu code="204" label="광명시" symbol="Gwangmyeong"/>
+		<Gu code="205" label="광주시" symbol="Gwangjusi"/>
+		<Gu code="206" label="구리시" symbol="Guri"/>
+		<Gu code="207" label="군포시" symbol="Gunpo"/>
+		<Gu code="208" label="김포시" symbol="Gimpo" horizontalCenterGap="-8"/>
+		<Gu code="209" label="남양주시" symbol="Namyangju" horizontalCenterGap="4" verticalCenterGap="-2"/>
+		<Gu code="210" label="동두천시" symbol="Dongducheon"/>
+		<Gu code="211" label="부천시" symbol="Bucheon">
+			<Dong code="2011" label="오정구" symbol="Ojeong"/>
+			<Dong code="2012" label="원미구" symbol="Wonmi"/>
+			<Dong code="2013" label="소사구" symbol="Sosa"/>
+		</Gu>
+		<Gu code="212" label="성남시" symbol="Seongnam">
+			<Dong code="2121" label="수정구" symbol="Sujeong"/>
+			<Dong code="2122" label="중원구" symbol="Jungwon"/>
+			<Dong code="2123" label="분당구" symbol="Bundang"/>
+		</Gu>
+		<Gu code="213" label="수원시" symbol="Suwon">
+			<Dong code="2131" label="장안구" symbol="Jangan"/>
+			<Dong code="2132" label="권선구" symbol="Gwonseon"/>
+			<Dong code="2133" label="팔달구" symbol="Paldal"/>
+			<Dong code="2134" label="영통구" symbol="Yeongtong"/>
+		</Gu>
+		<Gu code="214" label="시흥시" symbol="Siheung"/>
+		<Gu code="215" label="안산시" symbol="Ansan" horizontalCenterGap="-2" verticalCenterGap="1">
+			<Dong code="2151" label="상록구" symbol="Sangrok"/>
+			<Dong code="2152" label="단원구" symbol="Danwon"/>
+		</Gu>
+		<Gu code="216" label="안성시" symbol="Anseong"/>
+		<Gu code="217" label="안양시" symbol="Anyang">
+			<Dong code="2171" label="만안구" symbol="Manan"/>
+			<Dong code="2172" label="동안구" symbol="Dongan"/>
+		</Gu>
+		<Gu code="218" label="양주시" symbol="Yangju"/>
+		<Gu code="219" label="양평군" symbol="Yangpyeong"/>
+		<Gu code="220" label="여주군" symbol="Yeoju" horizontalCenterGap="8"/>
+		<Gu code="221" label="연천군" symbol="Yeoncheon" horizontalCenterGap="4" verticalCenterGap="2"/>
+		<Gu code="222" label="오산시" symbol="Osan"/>
+		<Gu code="223" label="용인시" symbol="Yongin">
+			<Dong code="2231" label="수지구" symbol="Suji"/>
+			<Dong code="2232" label="기흥구" symbol="Giheung"/>
+			<Dong code="2233" label="처인구" symbol="Cheoin"/>
+		</Gu>
+		<Gu code="224" label="의왕시" symbol="Uiwang" horizontalCenterGap="3"/>
+		<Gu code="225" label="의정부시" symbol="Uijeongbu"/>
+		<Gu code="226" label="이천시" symbol="Icheon" horizontalCenterGap="-4" verticalCenterGap="-2"/>
+		<Gu code="227" label="파주시" symbol="Paju" horizontalCenterGap="-4" verticalCenterGap="2"/>
+		<Gu code="228" label="평택시" symbol="Pyeongtaek" verticalCenterGap="3"/>
+		<Gu code="229" label="포천시" symbol="Pocheon" horizontalCenterGap="-2"/>
+		<Gu code="230" label="하남시" symbol="Hanam"/>
+		<Gu code="231" label="화성시" symbol="Hwaseong" horizontalCenterGap="-4" verticalCenterGap="-4"/>
+	</Province>
+	<Province code="300" label="경상남도" symbol="Gyeongnam" horizontalCenterGap="-6" verticalCenterGap="-5">
+		<Gu code="301" label="거제시" symbol="Geoje" horizontalCenterGap="2"/>
+		<Gu code="302" label="거창군" symbol="Geochang" horizontalCenterGap="4" verticalCenterGap="-4"/>
+		<Gu code="303" label="고성군" symbol="Goseong" horizontalCenterGap="-2"/>
+		<Gu code="304" label="김해시" symbol="Gimhae"/>
+		<Gu code="305" label="남해군" symbol="Namhae" verticalCenterGap="2"/>
+		<Gu code="306" label="밀양시" symbol="Miryang" horizontalCenterGap="-2"/>
+		<Gu code="307" label="사천시" symbol="Sacheon"/>
+		<Gu code="308" label="산청군" symbol="Sancheong"/>
+		<Gu code="309" label="양산시" symbol="Yangsan"/>
+		<Gu code="310" label="의령군" symbol="Uiryeong"/>
+		<Gu code="311" label="진주시" symbol="Jinju"/>
+		<Gu code="312" label="창녕군" symbol="Changnyeong" horizontalCenterGap="-2"/>
+		<Gu code="313" label="창원시" symbol="Changwon">
+			<Dong code="3131" label="의창구" symbol="Uichang"/>
+			<Dong code="3132" label="마산회원구" symbol="MasanHoiwon"/>
+			<Dong code="3133" label="성산구" symbol="Seongsan"/>
+			<Dong code="3134" label="마산합포구" symbol="Masanhappo"/>
+			<Dong code="3135" label="진해구" symbol="Jinhae"/>
+		</Gu>
+		<Gu code="314" label="통영시" symbol="Tongyeong"/>
+		<Gu code="315" label="하동군" symbol="Hadong" horizontalCenterGap="5"/>
+		<Gu code="316" label="함안군" symbol="Haman"/>
+		<Gu code="317" label="함양군" symbol="Hamyang"/>
+		<Gu code="318" label="합천군" symbol="Hapcheon" verticalCenterGap="4"/>
+	</Province>
+	<Province code="400" label="경상북도" symbol="Gyeongbuk" horizontalCenterGap="-20" verticalCenterGap="18">
+		<Gu code="401" label="경산시" symbol="Gyeongsan" verticalCenterGap="4"/>
+		<Gu code="402" label="경주시" symbol="Gyeongju" verticalCenterGap="4"/>
+		<Gu code="403" label="고령군" symbol="Goryeong" horizontalCenterGap="-2" verticalCenterGap="2"/>
+		<Gu code="404" label="구미시" symbol="Gumi"/>
+		<Gu code="405" label="군위군" symbol="Gunwi" verticalCenterGap="2"/>
+		<Gu code="406" label="김천시" symbol="Gimcheon" verticalCenterGap="-4"/>
+		<Gu code="407" label="문경시" symbol="Mungyeong" horizontalCenterGap="4"/>
+		<Gu code="408" label="봉화군" symbol="Bonghwa"/>
+		<Gu code="409" label="상주시" symbol="Sangju" verticalCenterGap="4"/>
+		<Gu code="410" label="성주군" symbol="Seongju"/>
+		<Gu code="411" label="안동시" symbol="Andong" horizontalCenterGap="4"/>
+		<Gu code="412" label="영덕군" symbol="Yeongdeok" horizontalCenterGap="3"/>
+		<Gu code="413" label="영양군" symbol="Yeongyang"/>
+		<Gu code="414" label="영주시" symbol="Yeongju" horizontalCenterGap="-4"/>
+		<Gu code="415" label="영천시" symbol="Yeongcheon" horizontalCenterGap="2"/>
+		<Gu code="416" label="예천군" symbol="Yecheon"/>
+		<Gu code="417" label="울릉군" symbol="Ulleung"/>
+		<Gu code="418" label="울진군" symbol="Uljin" horizontalCenterGap="1" verticalCenterGap="-3"/>
+		<Gu code="419" label="의성군" symbol="Uiseong" verticalCenterGap="2"/>
+		<Gu code="420" label="청도군" symbol="Cheongdo"  verticalCenterGap="6"/>
+		<Gu code="421" label="청송군" symbol="Cheongsong" horizontalCenterGap="2" verticalCenterGap="4"/>
+		<Gu code="422" label="칠곡군" symbol="Chilgok"/>
+		<Gu code="423" label="포항시" symbol="Pohang" horizontalCenterGap="-3" verticalCenterGap="-8">
+			<Dong code="4231" label="북구" symbol="Buk"/>
+			<Dong code="4232" label="남구" symbol="Nam"/>
+		</Gu>
+	</Province>
+	<Province code="100000" label="울산" symbol="Ulsan" verticalCenterGap="-3">
+		<Gu code="100100" label="남구" symbol="UlsanNam" horizontalCenterGap="8">
+			<Dong code="100101" label="달동" symbol="Dal-dong"/>
+			<Dong code="100102" label="대현동" symbol="US-Daehyeon-dong"/>
+			<Dong code="100103" label="무거동" symbol="Mugeo-dong"/>
+			<Dong code="100104" label="삼산동" symbol="Samsan-dong"/>
+			<Dong code="100105" label="삼호동" symbol="Samho-dong"/>
+			<Dong code="100106" label="선암동" symbol="US-Seonam-dong"/>
+			<Dong code="100107" label="수암동" symbol="Suam-dong"/>
+			<Dong code="100108" label="신정1동" symbol="Sinjeong1-dong"/>
+			<Dong code="100109" label="신정2동" symbol="Sinjeong2-dong"/>
+			<Dong code="100110" label="신정3동" symbol="Sinjeong3-dong"/>
+			<Dong code="100111" label="신정4동" symbol="Sinjeong4-dong"/>
+			<Dong code="100112" label="신정5동" symbol="Sinjeong5-dong"/>
+			<Dong code="100113" label="야음장생포동" symbol="Yaeumjangsaengpo-dong"/>
+			<Dong code="100114" label="옥동" symbol="Ok-dong"/>
+		</Gu>
+		<Gu code="100200" label="동구" symbol="UlsanDong">
+			<Dong code="100201" label="남목1동" symbol="Nammok1-dong"/>
+			<Dong code="100202" label="남목2동" symbol="Nammok2-dong"/>
+			<Dong code="100203" label="남목3동" symbol="Nammok3-dong"/>
+			<Dong code="100204" label="대송동" symbol="Daesong-dong"/>
+			<Dong code="100205" label="방어동" symbol="Bangeo-dong"/>
+			<Dong code="100206" label="일산동" symbol="Ilsan-dong"/>
+			<Dong code="100207" label="전하1동" symbol="Jeonha1-dong"/>
+			<Dong code="100208" label="전하2동" symbol="Jeonha2-dong"/>
+			<Dong code="100209" label="화정동" symbol="Hwajeong-dong"/>
+		</Gu>
+		<Gu code="100300" label="북구" symbol="UlsanBuk">
+			<Dong code="100301" label="강동동" symbol="US-Gangdong-dong"/>
+			<Dong code="100302" label="농소1동" symbol="Nongso1-dong"/>
+			<Dong code="100303" label="농소2동" symbol="Nongso2-dong"/>
+			<Dong code="100304" label="농소3동" symbol="Nongso3-dong"/>
+			<Dong code="100305" label="송정동" symbol="US-Songjeong-dong"/>
+			<Dong code="100306" label="양정동" symbol="Yangjeong-dong"/>
+			<Dong code="100307" label="염포동" symbol="Yeompo-dong"/>
+			<Dong code="100308" label="효문동" symbol="Hyomun-dong"/>
+		</Gu>
+		<Gu code="100400" label="울주군" symbol="Ulju">
+			<Dong code="100401" label="두동면" symbol="Dudong-myeon"/>
+			<Dong code="100402" label="두서면" symbol="Duseo-myeon"/>
+			<Dong code="100403" label="범서읍" symbol="Beomseo-eup"/>
+			<Dong code="100404" label="삼남면" symbol="Samnam-myeon"/>
+			<Dong code="100405" label="삼동면" symbol="Samdong-myeon"/>
+			<Dong code="100406" label="상북면" symbol="Sangbuk-myeon"/>
+			<Dong code="100407" label="서생면" symbol="Seosaeng-myeon"/>
+			<Dong code="100408" label="언양읍" symbol="Eonyang-eup"/>
+			<Dong code="100409" label="온산읍" symbol="Onsan-eup"/>
+			<Dong code="100410" label="온양읍" symbol="Onyang-eup"/>
+			<Dong code="100411" label="웅촌면" symbol="Ungchon-myeon"/>
+			<Dong code="100412" label="청량면" symbol="Cheongnyang-myeon"/>
+		</Gu>
+		<Gu code="100500" label="중구" symbol="UlsanJung">
+			<Dong code="100501" label="다운동" symbol="Daun-dong"/>
+			<Dong code="100502" label="반구1동" symbol="Bangu1-dong"/>
+			<Dong code="100503" label="반구2동" symbol="Bangu2-dong"/>
+			<Dong code="100504" label="병영1동" symbol="Byeongyeong1-dong"/>
+			<Dong code="100505" label="병영2동" symbol="Byeongyeong2-dong"/>
+			<Dong code="100506" label="북정동" symbol="Bukjeong-dong"/>
+			<Dong code="100507" label="복산1동" symbol="Boksan1-dong"/>
+			<Dong code="100508" label="복산2동" symbol="Boksan2-dong"/>
+			<Dong code="100509" label="약사동" symbol="Yaksa-dong"/>
+			<Dong code="100510" label="우정동" symbol="Ujeong-dong"/>
+			<Dong code="100511" label="중앙동" symbol="US-Jungang-dong"/>
+			<Dong code="100512" label="태화동" symbol="Taehwa-dong"/>
+			<Dong code="100513" label="학성동" symbol="Hakseong-dong"/>
+		</Gu>
+	</Province>
+	<Province code="1200" label="전라남도" symbol="Jeonnam" horizontalCenterGap="4">
+		<Gu code="1201" label="강진군" symbol="Gangjin"/>
+		<Gu code="1202" label="고흥군" symbol="Goheung" horizontalCenterGap="8" verticalCenterGap="4"/>
+		<Gu code="1203" label="곡성군" symbol="Gokseong" horizontalCenterGap="5"/>
+		<Gu code="1204" label="광양시" symbol="Gwangyang" horizontalCenterGap="2" verticalCenterGap="4"/>
+		<Gu code="1205" label="구례군" symbol="Gurye"/>
+		<Gu code="1206" label="나주시" symbol="Naju"/>
+		<Gu code="1207" label="담양군" symbol="Damyang"/>
+		<Gu code="1208" label="목포시" symbol="Mokpo"/>
+		<Gu code="1209" label="무안군" symbol="Muan"/>
+		<Gu code="1210" label="보성군" symbol="Boseong"/>
+		<Gu code="1211" label="순천시" symbol="Suncheon" verticalCenterGap="4"/>
+		<Gu code="1212" label="신안군" symbol="Sinan"/>
+		<Gu code="1213" label="여수시" symbol="Yeosu" verticalCenterGap="-2"/>
+		<Gu code="1214" label="영광군" symbol="Yeonggwang" verticalCenterGap="4"/>
+		<Gu code="1215" label="영암군" symbol="Yeongam" horizontalCenterGap="4"/>
+		<Gu code="1216" label="완도군" symbol="Wando"/>
+		<Gu code="1217" label="장성군" symbol="Jangseong" verticalCenterGap="4"/>
+		<Gu code="1218" label="장흥군" symbol="Jangheung" horizontalCenterGap="2"/>
+		<Gu code="1219" label="진도군" symbol="Jindo" verticalCenterGap="3"/>
+		<Gu code="1220" label="함평군" symbol="Hampyeong"/>
+		<Gu code="1221" label="해남군" symbol="Haenam" horizontalCenterGap="6"/>
+		<Gu code="1222" label="화순군" symbol="Hwasun"/>
+	</Province>
+	<Province code="1300" label="전라북도" symbol="Jeonbuk" horizontalCenterGap="4">
+		<Gu code="1301" label="고창군" symbol="Gochang"/>
+		<Gu code="1302" label="군산시" symbol="Gunsan" horizontalCenterGap="2" verticalCenterGap="4"/>
+		<Gu code="1303" label="김제시" symbol="Gimje"/>
+		<Gu code="1304" label="남원시" symbol="Namwon" horizontalCenterGap="2" verticalCenterGap="1"/>
+		<Gu code="1305" label="무주군" symbol="Muju"/>
+		<Gu code="1306" label="부안군" symbol="Buan"/>
+		<Gu code="1307" label="순창군" symbol="Sunchang" horizontalCenterGap="3"/>
+		<Gu code="1308" label="완주군" symbol="Wanju" horizontalCenterGap="3" verticalCenterGap="-16"/>
+		<Gu code="1309" label="익산시" symbol="Iksan"/>
+		<Gu code="1310" label="임실군" symbol="Imsil" horizontalCenterGap="-5"/>
+		<Gu code="1311" label="장수군" symbol="Jangsu" horizontalCenterGap="7"/>
+		<Gu code="1312" label="전주시" symbol="Jeonju">
+			<Dong code="13121" label="덕진구" symbol="Deokjin"/>
+			<Dong code="13122" label="완산구" symbol="Wansan"/>
+		</Gu>
+		<Gu code="1313" label="정읍시" symbol="Jeongeup"/>
+		<Gu code="1314" label="진안군" symbol="Jinan"/>
+	</Province>
+	<Province code="1400" label="제주도" symbol="Jeju">
+		<Gu code="1401" label="서귀포시" symbol="Seogwipo" verticalCenterGap="12"/>
+		<Gu code="1402" label="제주시" symbol="Jeju-si" verticalCenterGap="-6"/>
+	</Province>
+	<Province code="1500" label="충청남도" symbol="Chungnam" verticalCenterGap="3" horizontalCenterGap="-8">
+		<Gu code="1501" label="계룡시" symbol="Gyeryong"/>
+		<Gu code="1502" label="공주시" symbol="Gongju" horizontalCenterGap="2"/>
+		<Gu code="1503" label="금산군" symbol="Geumsan"/>
+		<Gu code="1504" label="논산시" symbol="Nonsan" verticalCenterGap="4"/>
+		<Gu code="1505" label="당진시" symbol="Dangjin"/>
+		<Gu code="1506" label="보령시" symbol="Boryeong"/>
+		<Gu code="1507" label="부여군" symbol="Buyeo"/>
+		<Gu code="1508" label="서산시" symbol="Seosan" verticalCenterGap="12"/>
+		<Gu code="1509" label="서천군" symbol="Seocheon" horizontalCenterGap="4"/>
+		<Gu code="1510" label="아산시" symbol="Asan"/>
+		<Gu code="1512" label="예산군" symbol="Yesan" horizontalCenterGap="8"/>
+		<Gu code="1513" label="천안시" symbol="Cheonan">
+			<Dong code="15131" label="동남구" symbol="Dongnam"/>
+			<Dong code="15132" label="서북구" symbol="Seobuk"/>
+		</Gu>
+		<Gu code="1514" label="청양군" symbol="Cheongyang" horizontalCenterGap="-5"/>
+		<Gu code="1515" label="태안군" symbol="Taean" verticalCenterGap="-11"/>
+		<Gu code="1516" label="홍성군" symbol="Hongseong"/>
+	</Province>
+	<Province code="1600" label="충청북도" symbol="Chungbuk" horizontalCenterGap="-10" verticalCenterGap="-16">
+		<Gu code="1601" label="괴산군" symbol="Goesan" horizontalCenterGap="-2"/>
+		<Gu code="1602" label="단양군" symbol="Danyang" horizontalCenterGap="-6"/>
+		<Gu code="1603" label="보은군" symbol="Boeun"/>
+		<Gu code="1604" label="영동군" symbol="Yeongdong"/>
+		<Gu code="1605" label="옥천군" symbol="Okcheon" horizontalCenterGap="-2"/>
+		<Gu code="1606" label="음성군" symbol="Eumseong" horizontalCenterGap="-5" verticalCenterGap="8"/>
+		<Gu code="1607" label="제천시" symbol="Jecheon" horizontalCenterGap="4" verticalCenterGap="-17"/>
+		<Gu code="1608" label="증평군" symbol="Jeungpyeong"/>
+		<Gu code="1609" label="진천군" symbol="Jincheon" verticalCenterGap="5"/>
+		<Gu code="1611" label="청주시" symbol="Cheongju">
+			<Dong code="16111" label="청원구" symbol="Cheongwon" horizontalCenterGap="10"/>
+			<Dong code="16112" label="흥덕구" symbol="Heungdeok"/>
+			<Dong code="16113" label="상당구" symbol="Sangdang" horizontalCenterGap="-20"/>
+			<Dong code="16114" label="서원구" symbol="Seowon" horizontalCenterGap="-10"/>
+		</Gu>
+		<Gu code="1612" label="충주시" symbol="Chungju"/>
+	</Province>
+	<Province code="1700" label="세종" symbol="Sejong" horizontalCenterGap="1">
+		<Gu code="1701" label="세종" symbol="Sejong-sub"/>
+	</Province>
+</Map>

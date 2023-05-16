@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.wh.ep.EPWH8126696Mapper">
+    
+    <resultMap id="askMap" type="hashmap">
+		<result property="ASK_SEQ" column="ASK_SEQ" />
+		<result property="CNTN_SE" column="CNTN_SE" />
+		<result property="SBJ" column="SBJ" />
+		<result property="CNTN_TP" column="CNTN_TP"  />
+		<result property="CNTN" column="CNTN"  javaType="java.lang.String" jdbcType="CLOB" />
+	</resultMap>
+	
+	<!-- 문의/답변 상세조회 -->
+	<select id="epwh8126696_select1" parameterType="map" resultMap="askMap">
+	    SELECT ASK_SEQ,
+	    	   SBJ,
+	    	   CNTN_SE,
+	    	   CNTN_TP,
+	    	   CNTN
+	      FROM EPCN_ASK_ANSR
+	     WHERE 1=1
+	       AND ASK_SEQ = #{ASK_SEQ}
+	       AND CNTN_SE = #{CNTN_SE}
+	</select>
+	
+	<!-- 문의 등록 순번 조회 -->
+	<select id="epwh8126696_select2" resultType="hashmap">
+	    SELECT NVL(MAX(ASK_SEQ), 0)+1 AS ASK_SEQ
+  		  FROM EPCN_ASK_ANSR
+	</select>
+	
+	<!-- 문의 등록 -->
+	<insert id="epwh8126696_update1" parameterType="map">
+	    INSERT
+	      INTO EPCN_ASK_ANSR
+	      		(
+	      			ASK_SEQ,
+	      			CNTN_SE,
+	      			SBJ,
+	      			CNTN_TP,
+	      			CNTN,
+	      			REG_PRSN_ID,
+	      			REG_DTTM
+	      		)
+	      	   VALUES
+	      	    (
+	      	    	#{ASK_SEQ},
+	      	    	#{CNTN_SE},
+	      	    	#{SBJ},
+	      	    	#{CNTN_TP},
+	      	    	#{CNTN2},
+	      	    	#{REG_PRSN_ID},
+	      	    	SYSDATE
+	      	    )
+	</insert>
+	
+	<!-- 답변 등록인지 수정인지 확인 조회 -->
+	<select id="epwh8126696_select3" parameterType="map" resultType="hashmap">
+	    SELECT ASK_SEQ,
+	    	   CNTN_SE,
+	    	   SBJ,
+	    	   CNTN_TP,
+	    	   CNTN
+	      FROM EPCN_ASK_ANSR
+	     WHERE 1=1
+	       AND ASK_SEQ = #{ASK_SEQ}
+	       AND CNTN_SE = #{CNTN_SE}
+	</select>
+	
+	<!-- 답변 등록 -->
+	<insert id="epwh8126696_update2" parameterType="map">
+	    INSERT
+	      INTO EPCN_ASK_ANSR
+	      		(
+	      			ASK_SEQ,
+	      			CNTN_SE,
+	      			SBJ,
+	      			CNTN_TP,
+	      			CNTN,
+	      			REG_PRSN_ID,
+	      			REG_DTTM
+	      		)
+	      	   VALUES
+	      	    (
+	      	    	#{ASK_SEQ},
+	      	    	#{CNTN_SE},
+	      	    	#{SBJ},
+	      	    	#{CNTN_TP},
+	      	    	#{CNTN2},
+	      	    	#{REG_PRSN_ID},
+	      	    	SYSDATE
+	      	    )
+	</insert>
+	
+	<!-- 문의/답변 수정 -->
+	<update id="epwh8126696_update3" parameterType="map">
+	    UPDATE EPCN_ASK_ANSR
+	       SET SBJ = #{SBJ},
+	           CNTN = #{CNTN2},
+	           UPD_PRSN_ID = #{UPD_PRSN_ID},
+	           UPD_DTTM = SYSDATE
+	     WHERE 1=1
+	       AND ASK_SEQ = #{ASK_SEQ}
+	       AND CNTN_SE = #{CNTN_SE}
+	</update>
+    
+</mapper>

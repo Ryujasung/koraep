@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.mf.ep.EPMF8160653Mapper">
+
+    
+    <!-- 등록설문 조회 -->
+	<select id="epmf8160653_select1" parameterType="map" resultType="hashmap">
+		/* EPMF8160601Mapper.epmf8160653_select1 */
+	    SELECT 
+	    	A.SVY_NO
+			,A.SBJ
+			,A.SVY_SE_CD
+			,A.RST_TRGT_CD
+			,(SELECT ETC_CD_NM FROM EPCN_ETC_CD 
+				WHERE GRP_CD = 'S100' 
+					AND LANG_SE_CD = 'KOR' 
+					AND ETC_CD = A.SVY_SE_CD) AS SVY_SE_CD_NM
+			,A.SVY_TRGT_CD
+            ,(SELECT SUBSTR(XMLAGG(XMLELEMENT(x, ',', X.SVY_TRGT_NM)).EXTRACT('//text()'), 2) AS SVY_TRGT_NM 
+               FROM 
+                    (SELECT 
+                           (SELECT ETC_CD_NM 
+                             FROM EPCN_ETC_CD 
+                            WHERE GRP_CD = 'S110' 
+                                  AND LANG_SE_CD = 'KOR' 
+                                  AND ETC_CD = RS.SVY_TRGT_CD 
+                           ) AS SVY_TRGT_NM, 
+                           RS.SVY_NO 
+                      FROM 
+                           (SELECT DISTINCT SVY_NO, 
+                                  TRIM(REGEXP_SUBSTR(SVY_TRGT_CD, '[^|]+', 1, LEVEL)) AS SVY_TRGT_CD 
+                             FROM EPCN_SVY_MST CONNECT BY INSTR(SVY_TRGT_CD,'|',1, LEVEL-1) > 0 
+                           ) RS 
+                    ) X 
+              WHERE A.SVY_NO = X.SVY_NO ) AS SVY_TRGT_CD_NM 
+			,A.SVY_ST_DT
+			,A.SVY_END_DT
+			,(SELECT COUNT(1) FROM EPCN_SVY_ITEM 
+				WHERE SVY_NO = A.SVY_NO) AS SVY_ITEM_CNT 
+			,(CASE WHEN TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN A.SVY_ST_DT AND A.SVY_END_DT THEN 'Y' ELSE 'N' END) VOTE_ABLE_YN
+			,(CASE WHEN (SELECT COUNT(*) FROM EPCN_SVY_ITEM_ANSR
+						WHERE USER_ID = #{USER_ID} AND SVY_NO = A.SVY_NO) > 0 THEN 'Y' ELSE 'N' END) AS VOTE_YN
+			,(SELECT COUNT(*) FROM
+						  (SELECT USER_ID, SVY_NO
+						  FROM EPCN_SVY_ITEM_ANSR
+						  GROUP BY USER_ID, SVY_NO) X
+				WHERE X.SVY_NO = A.SVY_NO) AS VOTE_CNT
+		FROM EPCN_SVY_MST A
+		WHERE  A.USE_YN = 'Y'
+            AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN A.SVY_ST_DT AND A.SVY_END_DT
+			AND A.SVY_TRGT_CD like '%'||#{SVY_TRGT_CD}||'%'
+			<if test='SBJ != null and SBJ != ""'>
+			       AND A.SBJ LIKE '%' || #{SBJ} || '%'
+			</if>
+		ORDER BY A.REG_DTTM DESC
+	</select>
+	
+	
+	<resultMap id="svy_item_list" type="hashmap">
+		<result property="SVY_NO" column="SVY_NO"/>
+		<result property="SVY_ITEM_NO" column="SVY_ITEM_NO"/>
+		<result property="ASK_CNTN" column="ASK_CNTN"/>
+		<result property="ANSR_SE_CD" column="ANSR_SE_CD"/>
+		<collection property="OPT_LIST" column="{SVY_NO=SVY_NO, SVY_ITEM_NO=SVY_ITEM_NO}"
+			 javaType="java.util.ArrayList" ofType="hashmap" select="epmf8160653_select21"/>
+	</resultMap>
+
+	<!-- 선택설문 문항조회 -->
+	<select id="epmf8160653_select2" parameterType="map" resultMap="svy_item_list">
+		SELECT
+			SVY_NO
+		    ,SVY_ITEM_NO
+            ,NVL(SVY_ITEM_NO_NM,' ') AS SVY_ITEM_NO_NM
+		    ,ASK_CNTN
+			,ANSR_SE_CD
+		FROM EPCN_SVY_ITEM
+		WHERE SVY_NO = #{SVY_NO}
+	</select>
+	
+	<!-- 문항옵션조회 -->
+	<select id="epmf8160653_select21" parameterType="map" resultType="hashmap">
+		SELECT
+			SVY_NO
+		    ,SVY_ITEM_NO
+		    ,OPT_NO
+			,OPT_CNTN
+			,REFN_IMG
+		FROM EPCN_SVY_ITEM_OPT
+		WHERE SVY_NO = #{SVY_NO}
+			<if test='SVY_ITEM_NO != null and SVY_ITEM_NO != ""'>
+				AND SVY_ITEM_NO = #{SVY_ITEM_NO}
+			</if>
+		ORDER BY SVY_ITEM_NO    ,OPT_NO
+	</select>
+	
+    <resultMap id="cntnMap" type="hashmap">
+        <result property="SVY_NO" column="SVY_NO" />
+        <result property="CNTN" column="CNTN"  javaType="java.lang.String" jdbcType="CLOB" />
+    </resultMap>
+
+    <!-- 설문조사 설명 조회 -->
+    <select id="epmf8160653_select22" parameterType="map" resultMap="cntnMap">
+        /* EPMF8160653Mapper.epmf8160653_select22 */
+        SELECT 
+            SVY_NO
+            ,NVL(CNTN,' ') AS CNTN
+        FROM EPCN_SVY_MST
+        WHERE 1=1
+            AND SVY_NO = #{SVY_NO}
+    </select>
+	
+	<!-- 선택설문 참여결과저장 -->
+	<insert id="epmf8160653_insert" parameterType="map">	
+		INSERT INTO EPCN_SVY_ITEM_ANSR(
+			USER_ID			
+			,SVY_NO			
+			,SVY_ITEM_NO
+			,OPT_NO			
+			,ANSR_CNTN		
+			,ANSR_DTTM
+		)VALUES(
+			#{USER_ID}		
+			,#{SVY_NO}		
+			,#{SVY_ITEM_NO}
+			,DECODE(#{ANSR_SE_CD}, 'I', 1, #{OPT_NO})		
+			,DECODE(#{ANSR_SE_CD}, 'I', #{ANSR_CNTN}, '')	
+			,SYSDATE
+		)
+	</insert>
+	
+	
+	<!--설문 참여수 -->
+	<select id="epmf8160653_select3" parameterType="map" resultType="java.lang.String">
+		SELECT 
+			COUNT(X.USER_ID) 
+    	FROM (
+	    		SELECT 
+	        		SVY_NO, USER_ID 
+	        	FROM 
+	        		EPCN_SVY_ITEM_ANSR 
+	    		GROUP BY SVY_NO, USER_ID
+    		) X
+        WHERE X.SVY_NO = #{SVY_NO}
+	</select>
+	
+	
+	<resultMap id="svy_result_list" type="hashmap">
+		<result property="SVY_NO" column="SVY_NO"/>
+		<result property="SVY_ITEM_NO" column="SVY_ITEM_NO"/>
+		<result property="ASK_CNTN" column="ASK_CNTN"/>
+		<result property="ANSR_SE_CD" column="ANSR_SE_CD"/>
+		<result property="VOTE_CNT" column="VOTE_CNT"/>
+		<collection property="OPT_LIST" column="{SVY_NO=SVY_NO, SVY_ITEM_NO=SVY_ITEM_NO, VOTE_CNT=VOTE_CNT}" javaType="java.util.ArrayList" ofType="hashmap" select="epmf8160653_select41"/>
+	</resultMap>
+
+	<!-- 선택설문 문항조회 -->
+	<select id="epmf8160653_select4" parameterType="map" resultMap="svy_result_list">
+		SELECT
+			SVY_NO
+		    ,SVY_ITEM_NO
+            ,NVL(SVY_ITEM_NO_NM,' ') AS SVY_ITEM_NO_NM
+		    ,ASK_CNTN
+			,ANSR_SE_CD
+			,#{VOTE_CNT} AS VOTE_CNT
+		FROM EPCN_SVY_ITEM
+		WHERE SVY_NO = #{SVY_NO}
+			--AND ANSR_SE_CD != 'I'
+	</select>
+	
+	<!-- 문항옵션별 응답수 조회 -->
+	<select id="epmf8160653_select41" parameterType="map" resultType="hashmap">
+        SELECT A.SVY_NO ,
+               A.SVY_ITEM_NO ,
+               A.OPT_NO ,
+               A.OPT_CNTN ,
+               A.CNT ,
+               A.RATE 
+          FROM 
+               (SELECT A.SVY_NO ,
+                      A.SVY_ITEM_NO ,
+                      A.OPT_NO ,
+                      A.OPT_CNTN ,
+                      NVL(B.CNT,0) AS CNT ,
+                      ROUND(NVL(B.CNT,0) * 100 / #{VOTE_CNT}, 1) AS RATE 
+                 FROM EPCN_SVY_ITEM_OPT A 
+                  LEFT OUTER JOIN 
+                      (SELECT SVY_NO, 
+                             SVY_ITEM_NO, 
+                             OPT_NO, 
+                             COUNT(OPT_NO) CNT 
+                        FROM EPCN_SVY_ITEM_ANSR 
+                       WHERE ANSR_CNTN IS NULL 
+                       GROUP BY SVY_NO, 
+                             SVY_ITEM_NO, 
+                             OPT_NO
+                      ) B 
+                      ON A.SVY_NO = B.SVY_NO 
+                      AND A.SVY_ITEM_NO = B.SVY_ITEM_NO 
+                      AND A.OPT_NO = B.OPT_NO , 
+                      EPCN_SVY_ITEM C 
+                WHERE 1=1
+                      AND A.SVY_NO = C.SVY_NO 
+                      AND A.SVY_ITEM_NO = C.SVY_ITEM_NO 
+                      AND C.ANSR_SE_CD != 'I' 
+                      AND A.SVY_NO = #{SVY_NO} 
+                      AND A.SVY_ITEM_NO = #{SVY_ITEM_NO} 
+                   UNION ALL 
+               SELECT A.SVY_NO, 
+                      A.SVY_ITEM_NO, 
+                      ROWNUM AS OPT_NO, 
+                      A.OPT_CNTN, 
+                      A.CNT, 
+                      ROUND(NVL(A.CNT,0) * 100 / #{VOTE_CNT}, 1) AS RATE 
+                 FROM 
+                      (SELECT A.SVY_NO, 
+                             A.SVY_ITEM_NO, 
+                             A.ANSR_CNTN AS OPT_CNTN, 
+                             COUNT(*) AS CNT 
+                        FROM EPCN_SVY_ITEM_ANSR A, 
+                             EPCN_SVY_ITEM B 
+                       WHERE 1=1 
+                             AND A.SVY_NO = B.SVY_NO 
+                             AND A.SVY_ITEM_NO = B.SVY_ITEM_NO 
+                             AND B.ANSR_SE_CD = 'I' 
+                             AND A.SVY_NO = #{SVY_NO} 
+                             AND A.SVY_ITEM_NO = #{SVY_ITEM_NO} 
+                       GROUP BY A.SVY_NO, A.SVY_ITEM_NO, A.ANSR_CNTN 
+                      ) A 
+               ) A  
+        ORDER BY A.SVY_ITEM_NO, A.OPT_NO    
+	</select>
+</mapper>

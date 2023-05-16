@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<State code="100" label="CentralSingapore" symbol="CentralSingapore"/>
+	<State code="200" label="NorthEast" symbol="NorthEast"/>
+	<State code="300" label="NorthWest" symbol="NorthWest"/>
+	<State code="400" label="SouthEast" symbol="SouthEast"/>
+	<State code="500" label="SouthWest" symbol="SouthWest"/>
+</Map>

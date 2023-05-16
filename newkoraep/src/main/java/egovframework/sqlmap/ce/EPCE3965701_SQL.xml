@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.ce.ep.EPCE3965701Mapper">
+          
+          <!-- 오류코드관리 조회 -->
+          <select id="epce3965701_select" parameterType="map" resultType="hashmap">
+	            SELECT 
+		           ERR_CD
+		          ,LANG_SE_CD
+		          ,ERR_SE
+		          ,ERR_MSG
+	             ,DECODE( USE_YN,'Y',EPCN_LANG_NM('use_y'),EPCN_LANG_NM('use_n')) AS USE_YN
+				  ,USE_YN AS USE_YN_ORI
+		          ,EPCN_ETC_NM(ERR_SE , 'S002') AS ERR_SE_NM
+				FROM  EPCN_ERR_CD
+				WHERE 1=1
+				AND    LANG_SE_CD = #{LANG_SE_CD}
+				<if test='ERR_CD !="" '>
+				AND    ERR_CD        =  #{ERR_CD}
+				</if>
+				ORDER BY ERR_CD
+          </select>
+          
+          <!-- 오류코드관리 조회시 입력값이 있을경우 수정 없을경우 저장 체크 -->
+          <select id="epce3965701_select2" resultType="int" parameterType="map">
+	          SELECT 
+			  COUNT(*) 
+			  FROM EPCN_ERR_CD
+			  WHERE 1=1
+			  AND    LANG_SE_CD   = #{LANG_SE_CD}
+			  AND    ERR_CD          =  TRIM(#{ERR_CD})
+			  AND    ERR_SE           =  #{ERR_SE}
+          </select>
+          
+          <!-- 오류코드관리 입력 -->
+          <insert id="epce3965701_insert" parameterType="map">
+              
+            INSERT 
+		    INTO EPCN_ERR_CD
+			    (
+			     ERR_CD
+			     ,LANG_SE_CD
+			     ,ERR_SE
+			     ,ERR_MSG
+			     ,USE_YN
+			     ,REG_PRSN_ID
+			     ,REG_DTTM
+			     )
+		     VALUES
+		       (
+		        TRIM(#{ERR_CD})
+			   ,#{LANG_SE_CD}
+			   ,#{ERR_SE}
+			   ,#{ERR_MSG}
+			   ,#{USE_YN}
+			   ,#{RGST_PRSN_ID}
+			     ,SYSDATE
+		       )
+          
+          </insert>
+          
+          <!-- 오류코드관리 수정 -->
+          <update id="epce3965701_update" parameterType="map">
+          
+	          	UPDATE
+		  	    EPCN_ERR_CD
+				SET
+					 ERR_MSG			=  #{ERR_MSG}
+					,USE_YN				=  #{USE_YN}
+					,UPD_PRSN_ID		=  #{RGST_PRSN_ID}
+					,UPD_DTTM	    =   SYSDATE 
+				 WHERE 1=1
+				 AND ERR_CD         = #{ERR_CD}
+				 AND LANG_SE_CD	= #{LANG_SE_CD}
+				 AND ERR_SE          = #{ERR_SE}
+	          
+          </update>
+          
+          
+</mapper>
