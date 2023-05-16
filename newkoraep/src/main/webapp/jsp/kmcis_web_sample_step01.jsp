@@ -7,13 +7,15 @@
 %>
 <%@ page  contentType = "text/html;charset=ksc5601"%>
 <%@ page import ="java.util.*,java.text.SimpleDateFormat"%>
+<%@ page import ="java.security.SecureRandom" %>
 <%
         //날짜 생성
         Calendar today = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         String day = sdf.format(today.getTime());
-
-        java.util.Random ran = new Random();
+		//취약점점검 3079 류제성
+        /* java.util.Random ran = new Random(); */
+		Random ran = SecureRandom.getInstance("SHAIPRNG");
         //랜덤 문자 길이
         int numLength = 6;
         String randomStr = "";
