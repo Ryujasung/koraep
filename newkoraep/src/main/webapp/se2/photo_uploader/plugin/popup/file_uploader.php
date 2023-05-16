@@ -33,5 +33,5 @@ else {
 	$url .= '&errstr=error';
 }
 	
-header('Location: '. $url);
+header('Location: '. filter($url));
 ?>

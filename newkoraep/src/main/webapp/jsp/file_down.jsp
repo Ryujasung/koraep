@@ -20,7 +20,11 @@
 	
 	// 2017-02-20, 파일명 변경 추가 시작
  	String tmpName = request.getParameter("fileName");
-	String[] arrName = tmpName.split("/");
+	//취약점점검 3175 류제성
+	String[] arrName = null;
+	if (tmpName != null){
+		arrName = tmpName.split("/");	
+	}
 	String fileName = arrName[arrName.length-1];
 
 	//String fileName = (null == request.getParameter("fileName")) ? "" : request.getParameter("fileName");

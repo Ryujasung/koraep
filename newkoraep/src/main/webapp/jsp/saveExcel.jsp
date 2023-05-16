@@ -32,12 +32,11 @@ try{
 		response.reset();
 		response.setContentType("application/vnd.ms-excel;charset=UTF-8");
 		String client = request.getHeader("User-Agent");
-		//취약점점검 3085 류제성
-		String content_length = String.valueOf(outputStream.size());
 		
 		response.setHeader("Content-Disposition","attachment; filename=\"" + URLEncoder.encode(fileName,"UTF-8").replaceAll("\r", "").replaceAll("\n", "") + "\"");
 		response.setHeader("Content-Transfer-Encoding", "binary");
-		response.setHeader("Content-Length",content_length);
+		//취약점점검 3085 류제성
+		response.setHeader("Content-Length",String.valueOf(outputStream.size()).replaceAll("\r", "").replaceAll("\n", "") + "\"");
 	
 		
 		out.clear();
