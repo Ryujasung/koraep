@@ -679,7 +679,8 @@ public class EPCE9000601Service {
 								epce9000601Mapper.EPCM_URM_SUM_UPDATE((Map<String, String>) chkList.get(j));
 						 	}
 						} catch (Exception e) {
-							e.printStackTrace();
+							/* e.printStackTrace(); */
+							//취약점점검 6323 기원우 
 							 if(e.getMessage().equals("A003")){
 								 throw new Exception(e.getMessage()); 
 							 }else  if(e.getMessage().equals("A021")){

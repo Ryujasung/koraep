@@ -44,7 +44,8 @@ public class CryptoJS {
  
             return new String(recoveredPlaintextBytes);
         } catch (Exception e) {
-            e.printStackTrace();
+			/* e.printStackTrace(); */
+        	//취약점점검 6291 기원우
         }
  
         return null;

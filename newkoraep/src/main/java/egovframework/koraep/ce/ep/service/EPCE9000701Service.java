@@ -102,6 +102,7 @@ try {
 //	model.addAttribute("obj", util.mapToJson(epce9000701Mapper.epce9000761_select(map)));
 } catch (Exception e) {
 	/*e.printStackTrace();*/
+	//취약점점검 6334 기원우
 }
 			
 

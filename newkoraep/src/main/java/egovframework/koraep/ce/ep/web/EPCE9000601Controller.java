@@ -368,6 +368,7 @@ public class EPCE9000601Controller {
 		}catch(Exception e){
 			errCd = e.getMessage();
 			/*e.printStackTrace();*/
+			//취약점점검 6307 기원우
 		}
 		
 		JSONObject rtnObj = new JSONObject();
@@ -425,6 +426,7 @@ public class EPCE9000601Controller {
 		}catch(Exception e){
 			errCd = e.getMessage();
 			/*e.printStackTrace();*/
+			//취약점점검 6303 기원우
 			if(data.get("ERR_CTNR_NM") !=null){
 				System.out.println(data.get("ERR_CTNR_NM").toString());
 			}
@@ -563,9 +565,11 @@ public class EPCE9000601Controller {
 	} catch (FileNotFoundException e1) {
 		// TODO Auto-generated catch block
 		/*e1.printStackTrace();*/
+		//취약점점검 6322 기원우 
 	} catch (IOException e1) {
 		// TODO Auto-generated catch block
 		/*e1.printStackTrace();*/
+		//취약점점검 6319 기원우
 	}
 	}
 

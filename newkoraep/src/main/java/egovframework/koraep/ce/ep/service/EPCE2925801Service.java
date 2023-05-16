@@ -581,6 +581,7 @@ public class EPCE2925801Service {
 						   
 					} catch (Exception e) {
 						/*e.printStackTrace();*/
+						//취약점점검 6332 기원우
 						 if(e.getMessage().equals("A003")){
 							 throw new Exception(e.getMessage()); 
 						 }else if(e.getMessage().equals("A021")){

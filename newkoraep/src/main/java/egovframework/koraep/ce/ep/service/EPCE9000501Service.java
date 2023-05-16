@@ -818,6 +818,7 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 
 		}catch(Exception e){
 			/*e.printStackTrace();*/
+			//취약점점검 6339 기원우
 			throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		}
 

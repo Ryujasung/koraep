@@ -114,6 +114,7 @@ public class SchedulBatchComponent {
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 /*			e1.printStackTrace();*/
+			//취약점점검 6282 기원우 
 		} // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		
 		List<?> menuList = epce0140199Mapper.epce0140199_select2(data);
@@ -131,6 +132,7 @@ public class SchedulBatchComponent {
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				/*e1.printStackTrace();*/
+				//취약점점검 6311 기원우
 			}
 		}else{
 			System.out.println("데이터없음");
@@ -318,6 +320,7 @@ public class SchedulBatchComponent {
 		
 		} catch (Exception e) {		
 			/*e.printStackTrace();*/
+			//취약점점검 6286 기원우
 		}
 		/*
 		BatchTestComponent batchTestComponent = new BatchTestComponent();

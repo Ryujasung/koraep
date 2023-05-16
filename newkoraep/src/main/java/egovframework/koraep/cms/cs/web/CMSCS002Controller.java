@@ -227,7 +227,9 @@ public class CMSCS002Controller {
 			
 		} catch (Exception e) {
 			/*System.out.println(e.getMessage());*/
+			//취약점점검 6284 기원우
 			/*e.printStackTrace();*/
+			//취약점점검 6285 기원우			
 		}
 		
 		return data;

@@ -198,6 +198,7 @@ public class CommonCeController {
 		}
 		catch(Exception e) {
 			/*e.printStackTrace();*/
+			//취약점점검 6302 기원우
 		}
 		
 		if(null == device) {
@@ -1719,6 +1720,7 @@ public class CommonCeController {
 		} catch (Exception e) {
 			errCd = e.getMessage();
 			/*e.printStackTrace();*/
+			//취약점점검 6326 기원우
 		}
 
 		JSONObject rtnObj = new JSONObject();
@@ -1800,6 +1802,7 @@ public class CommonCeController {
 			rtn = "9999";
 		} catch (Exception e) {
 			/*System.out.println("failed: " + e.getMessage());*/
+			//취약점점검 6309 기원우
 			rtn = "8888";
 		} finally{
 			if(os!=null){
@@ -1891,18 +1894,21 @@ public class CommonCeController {
 	        
 		}catch(IOException e){
 			/*e.printStackTrace();*/
+			//취약점점검 6337 기원우
 			errCd = "B999";	//"파일 수신오류"
 			System.out.println("sssssssssss : " + errCd);
 		}catch(JSONException e){
-			e.printStackTrace();
+			/* e.printStackTrace(); */
 			errCd = "B009";	//"josn 형식 불일치"
 			System.out.println("sssssssssss : " + errCd);
 		}catch(SQLException e){
 			/*e.printStackTrace();*/
+			//취약점점검 6313 기원우
 			errCd = "B003";	//db처리 오류
 			System.out.println("sssssssssss : " + errCd);
 		}catch(Exception e){
 			/*e.printStackTrace();*/
+			//취약점점검 6340 기원우
 			errCd = e.getMessage();
 			System.out.println("sssssssssss : " + errCd);
 		}
@@ -1923,6 +1929,7 @@ public class CommonCeController {
 			out.close();
 		}catch(Exception e){
 			/*e.printStackTrace();*/
+			//취약점점검 6324 기원우 
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}finally{
 			if(out != null) out.close();

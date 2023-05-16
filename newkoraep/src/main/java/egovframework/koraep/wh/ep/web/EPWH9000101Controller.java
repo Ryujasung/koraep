@@ -265,6 +265,7 @@ public class EPWH9000101Controller {
 		}catch(Exception e){
 			errCd = e.getMessage();
 			/*e.printStackTrace();*/
+			//취약점점검 6318 기원우
 			//if(data.get("ERR_CTNR_NM") !=null){
 			//	System.out.println(data.get("ERR_CTNR_NM").toString());
 			//}

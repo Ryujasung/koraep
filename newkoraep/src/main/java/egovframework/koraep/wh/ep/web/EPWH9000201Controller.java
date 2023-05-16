@@ -171,6 +171,7 @@ public class EPWH9000201Controller {
 
 		}catch(Exception e){
 			/*e.printStackTrace();*/
+			//취약점검 6283 기원우
 			errCd = "A001";
 		}
 

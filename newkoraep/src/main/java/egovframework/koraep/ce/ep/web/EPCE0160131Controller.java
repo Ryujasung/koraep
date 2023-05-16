@@ -217,7 +217,9 @@ public class EPCE0160131Controller {
 			document = (Document) Jsoup.connect(apiUrl).get();
 		} catch (IOException e1) {
 			/*System.out.println(e1.getMessage());*/
+			//취약점점검 6308 기원우
 			/*e1.printStackTrace();*/
+			//취약점점검 6290 기원우
 		} catch(Exception e){
 			System.out.println(e.getMessage());
 			e.printStackTrace();
