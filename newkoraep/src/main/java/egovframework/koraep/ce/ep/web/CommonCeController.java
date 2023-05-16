@@ -197,7 +197,7 @@ public class CommonCeController {
 			device = DeviceUtils.getCurrentDevice(request);
 		}
 		catch(Exception e) {
-			e.printStackTrace();
+			/*e.printStackTrace();*/
 		}
 		
 		if(null == device) {
@@ -1720,7 +1720,7 @@ public class CommonCeController {
 			
 		} catch (Exception e) {
 			errCd = e.getMessage();
-			e.printStackTrace();
+			/*e.printStackTrace();*/
 		}
 
 		JSONObject rtnObj = new JSONObject();
@@ -1803,7 +1803,7 @@ public class CommonCeController {
 			//System.out.println("search URL connect failed: " + e.getMessage());
 			rtn = "9999";
 		} catch (Exception e) {
-			System.out.println("failed: " + e.getMessage());
+			/*System.out.println("failed: " + e.getMessage());*/
 			rtn = "8888";
 		} finally{
 			if(os!=null){
@@ -1901,7 +1901,7 @@ public class CommonCeController {
 			System.out.println("ERRCD : " + errCd);
 	        
 		}catch(IOException e){
-			e.printStackTrace();
+			/*e.printStackTrace();*/
 			errCd = "B999";	//"파일 수신오류"
 			System.out.println("sssssssssss : " + errCd);
 		}catch(JSONException e){
@@ -1909,11 +1909,11 @@ public class CommonCeController {
 			errCd = "B009";	//"josn 형식 불일치"
 			System.out.println("sssssssssss : " + errCd);
 		}catch(SQLException e){
-			e.printStackTrace();
+			/*e.printStackTrace();*/
 			errCd = "B003";	//db처리 오류
 			System.out.println("sssssssssss : " + errCd);
 		}catch(Exception e){
-			e.printStackTrace();
+			/*e.printStackTrace();*/
 			errCd = e.getMessage();
 			System.out.println("sssssssssss : " + errCd);
 		}
@@ -1933,7 +1933,7 @@ public class CommonCeController {
 			out.flush();
 			out.close();
 		}catch(Exception e){
-			e.printStackTrace();
+			/*e.printStackTrace();*/
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}finally{
 			if(out != null) out.close();
