@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.security.SecureRandom;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -238,7 +239,9 @@ public class EPCE0085201Controller {
 //	        System.out.println("param"+param);
 //	        System.out.println("model"+model);
 //	        System.out.println("request"+request.getParameter("CERT_DIV"));
-	        java.util.Random ran = new Random();	 //랜덤 문자 길이
+	        //취약점점검 3169 류제성
+			/* java.util.Random ran = new Random(); */	 //랜덤 문자 길이
+	        Random ran = SecureRandom.getInstance("SHAIPRNG");
 	        int numLength = 6;
 	        String randomStr = "";
 	        for (int i = 0; i < numLength; i++) {

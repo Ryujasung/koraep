@@ -7,6 +7,7 @@
 <%@ page  contentType = "text/html;charset=ksc5601"%>
 <%@ page import ="java.util.*,java.text.SimpleDateFormat"%>
 <%@ page import = "java.util.*" %>
+<%@ page import ="java.security.SecureRandom" %>
 <%
     //tr_cert 데이터 변수 선언 ---------------------------------------------------------------
 // 	String tr_cert       = "";
@@ -31,8 +32,9 @@
         Calendar today = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         String day = sdf.format(today.getTime());
-
-        java.util.Random ran = new Random();
+      	//취약점점검 3080 류제성
+        /* java.util.Random ran = new Random(); */
+		Random ran = SecureRandom.getInstance("SHAIPRNG");
         //랜덤 문자 길이
         int numLength = 6;
         String randomStr = "";

@@ -82,7 +82,9 @@
 		
 		Long s = file.length();
 		if((s/1024/1024) > 256) throw new IOException(); 
-
+		
+		//취약점점검 3164 류제성
+		if ((int)file.length() < 0) return;
 		byte[] data = new byte[(int)file.length()];
 		fis = new BufferedInputStream(new FileInputStream(file));
 		fos = new BufferedOutputStream(response.getOutputStream());
