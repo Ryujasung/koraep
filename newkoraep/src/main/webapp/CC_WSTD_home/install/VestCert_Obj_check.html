@@ -77,7 +77,12 @@
 	var versionCheck = false;
 	var iframesrc = "https://127.0.0.1:14461";
 	var cntAdd = 0;
-	var sessionID = Math.random();
+	//취약점점검 5581 류제성
+	/* var sessionID = Math.random(); */
+	var sessionID = new Uint32Array(1);
+	window.crypto.getRandomValues(sessionID);
+	
+	
 	// IE 안됨
 	// get Token informations form HSM
 	function parseInt(s){
@@ -87,7 +92,7 @@
 	
 	var text = {
 		"messageNumber": 0,
-		"sessionID": "" + sessionID,
+		"sessionID": "" + sessionID[0],
 		"operation":"GetVersion"
 	};
 	
@@ -174,15 +179,18 @@
 		}
 		
 		var chkImg;
+		//취약점점검 5582 류제성
+		var randvar = new Uint32Array(1);
+		window.crypto.getRandomValues(randvar);
 		if (navigator.userAgent.indexOf("MSIE 7.0") != -1) {
-			chkImg = document.createElement("<img id='hsmImg' src='"+iframesrc + '/TIC?cd=' + Math.random() + "' onload='' onerror='' />");
+			chkImg = document.createElement("<img id='hsmImg' src='"+iframesrc + '/TIC?cd=' + randvar[0] + "' onload='' onerror='' />");
 			chkImg.onerror = function() {fnResult(chkImg, false);};
 			chkImg.onload = function() {fnResult(chkImg, true);};
 			chkImg.style.display = "none";
 		} else {
 			chkImg = document.createElement('img');
 			chkImg.setAttribute('id', "hsmImg");
-			chkImg.setAttribute('src', iframesrc + '/TIC?cd=' + Math.random());
+			chkImg.setAttribute('src', iframesrc + '/TIC?cd=' + randvar[0]);
 			chkImg.onerror = function() {fnResult(chkImg, false);};
 			chkImg.onload = function() {fnResult(chkImg, true);};
 			chkImg.style.display = "none";
