@@ -106,11 +106,11 @@ public class LoggerAspect {
 				}
 			}
 		}catch (IOException io) {
-			io.printStackTrace();
+			io.getMessage();
 		}catch (SQLException sq) {
-			sq.printStackTrace();
+			sq.getMessage();
 		}catch (NullPointerException nu){
-			nu.printStackTrace();
+			nu.getMessage();
 		}catch(Exception e){
 			BTN_CD = "";
 		}

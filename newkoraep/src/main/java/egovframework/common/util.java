@@ -290,9 +290,9 @@ public  class util{
 			}
 			br.close();
 		}catch (IOException io) {
-			io.printStackTrace();
+			io.getMessage();
 		}catch (NullPointerException nu){
-			nu.printStackTrace();
+			nu.getMessage();
 		}catch(Exception e){
 			return "";
 		}finally{
@@ -370,7 +370,7 @@ public  class util{
 
             return hexString.toString();
         }catch (NullPointerException nu){
-			nu.printStackTrace();
+			nu.getMessage();
 		}catch(Exception e){
 			 throw new RuntimeException();
 		}

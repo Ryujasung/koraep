@@ -54,11 +54,11 @@ public class ExcelReader {
 		try{
 			return getDataStreamXlsx(file, firstRowColumYn);
 		}catch (IOException io) {
-			io.printStackTrace();
+			System.out.println(io.toString());
 		}catch (SQLException sq) {
-			sq.printStackTrace();
+			System.out.println(sq.toString());
 		}catch (NullPointerException nu){
-			nu.printStackTrace();
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			throw new Exception();
 		}finally{
@@ -71,11 +71,11 @@ public class ExcelReader {
 		try{
 			 return getDataStreamXlsx(file, firstRowColumYn);
 		}catch (IOException io) {
-			io.printStackTrace();
+			System.out.println(io.toString());
 		}catch (SQLException sq) {
-			sq.printStackTrace();
+			System.out.println(sq.toString());
 		}catch (NullPointerException nu){
-			nu.printStackTrace();
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			throw new Exception();
 		}finally{
@@ -151,11 +151,11 @@ public class ExcelReader {
 		try{
 			return getDataStream(file, firstRowColumYn);
 		}catch (IOException io) {
-			io.printStackTrace();
+			System.out.println(io.toString());
 		}catch (SQLException sq) {
-			sq.printStackTrace();
+			System.out.println(sq.toString());
 		}catch (NullPointerException nu){
-			nu.printStackTrace();
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			throw new Exception();
 		}finally{
@@ -168,11 +168,11 @@ public class ExcelReader {
 		try{
 			 return getDataStream(file, firstRowColumYn);
 		}catch (IOException io) {
-			io.printStackTrace();
+			System.out.println(io.toString());
 		}catch (SQLException sq) {
-			sq.printStackTrace();
+			System.out.println(sq.toString());
 		}catch (NullPointerException nu){
-			nu.printStackTrace();
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			throw new Exception();
 		}finally{

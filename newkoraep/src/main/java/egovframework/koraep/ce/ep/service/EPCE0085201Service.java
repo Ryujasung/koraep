@@ -62,11 +62,11 @@ public class EPCE0085201Service {
 		try {
 			map.put("bizrInfo", util.mapToJson(bizrInfo));
 		}catch (IOException io) {
-			io.printStackTrace();
+			io.getMessage();
 		}catch (SQLException sq) {
-			sq.printStackTrace();
+			sq.getMessage();
 		}catch (NullPointerException nu){
-			nu.printStackTrace();
+			nu.getMessage();
 		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -102,11 +102,11 @@ public class EPCE0085201Service {
 			model.addAttribute("areaList", util.mapToJson(areaList));
 			
 		}catch (IOException io) {
-			io.printStackTrace();
+			io.getMessage();
 		}catch (SQLException sq) {
-			sq.printStackTrace();
+			sq.getMessage();
 		}catch (NullPointerException nu){
-			nu.printStackTrace();
+			nu.getMessage();
 		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -144,11 +144,11 @@ public class EPCE0085201Service {
 			}
 			
 		}catch (IOException io) {
-			io.printStackTrace();
+			io.getMessage();
 		}catch (SQLException sq) {
-			sq.printStackTrace();
+			sq.getMessage();
 		}catch (NullPointerException nu){
-			nu.printStackTrace();
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -322,11 +322,11 @@ public class EPCE0085201Service {
 						try {
 							map2 = EgovFileMngUtil.uploadBizFile(mFile);
 						}catch (IOException io) {
-							io.printStackTrace();
+							io.getMessage();
 						}catch (SQLException sq) {
-							sq.printStackTrace();
+							sq.getMessage();
 						}catch (NullPointerException nu){
-							nu.printStackTrace();
+							nu.getMessage();
 						}catch (Exception e) {
 							// TODO Auto-generated catch block
 							org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -361,11 +361,11 @@ public class EPCE0085201Service {
 					
 				}
 			}catch (IOException io) {
-				io.printStackTrace();
+				io.getMessage();
 			}catch (SQLException sq) {
-				sq.printStackTrace();
+				sq.getMessage();
 			}catch (NullPointerException nu){
-				nu.printStackTrace();
+				nu.getMessage();
 			}catch(Exception e){
 				throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -444,11 +444,11 @@ public class EPCE0085201Service {
 				*/
 				
 			}catch (IOException io) {
-				io.printStackTrace();
+				io.getMessage();
 			}catch (SQLException sq) {
-				sq.printStackTrace();
+				sq.getMessage();
 			}catch (NullPointerException nu){
-				nu.printStackTrace();
+				nu.getMessage();
 			}catch(Exception e){
 				throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}

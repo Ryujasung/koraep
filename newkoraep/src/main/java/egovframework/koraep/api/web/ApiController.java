@@ -128,14 +128,14 @@ public class ApiController {
 	        errCd = apiService.recvJsonData(request, data);
 			System.out.println("errCd"+errCd);
 		}catch (IOException io) {
-        	io.printStackTrace();
+        	io.getMessage();
         }catch (SQLException sq) {
-        	sq.printStackTrace();
+        	sq.getMessage();
         }catch (NullPointerException nu){
-        	nu.printStackTrace();
+        	nu.getMessage();
         }catch(Exception e){
 
-			e.printStackTrace();
+			e.getMessage();
 
 			errCd = e.getMessage();
 			if(errCd.indexOf("Could not open JDBC Connection") > - 1){
@@ -183,11 +183,11 @@ public class ApiController {
 			JSONArray rslt = apiService.searchData(request);
 			rtnObj.put("RSLT_LST", rslt);
 		}catch (IOException io) {
-        	io.printStackTrace();
+        	io.getMessage();
         }catch (SQLException sq) {
-        	sq.printStackTrace();
+        	sq.getMessage();
         }catch (NullPointerException nu){
-        	nu.printStackTrace();
+        	nu.getMessage();
         }catch(Exception e){
 			errCd = e.getMessage();
 			rtnObj.put("RSLT_LST", "[]");
@@ -325,10 +325,10 @@ public class ApiController {
 		fileReader.close();
 	} catch (FileNotFoundException e1) {
 		// TODO Auto-generated catch block
-		e1.printStackTrace();
+		e1.getMessage();
 	} catch (IOException e1) {
 		// TODO Auto-generated catch block
-		e1.printStackTrace();
+		e1.getMessage();
 	} 
 	}
 	/**
@@ -398,14 +398,14 @@ public class ApiController {
 	        //데이터 처리
 	        errCd = apiService.urmJsonData(request, data);
 		}catch (IOException io) {
-        	io.printStackTrace();
+        	io.getMessage();
         }catch (SQLException sq) {
-        	sq.printStackTrace();
+        	sq.getMessage();
         }catch (NullPointerException nu){
-        	nu.printStackTrace();
+        	nu.getMessage();
         }catch(Exception e){
 
-			e.printStackTrace();
+			e.getMessage();
 			
 			errCd = e.getMessage();
 			if(errCd.indexOf("Could not open JDBC Connection") > - 1){
@@ -766,13 +766,13 @@ public class ApiController {
 //			System.out.println("885 : "+_csrf);
             
         }catch (IOException io) {
-        	io.printStackTrace();
+        	io.getMessage();
         }catch (SQLException sq) {
-        	sq.printStackTrace();
+        	sq.getMessage();
         }catch (NullPointerException nu){
-        	nu.printStackTrace();
+        	nu.getMessage();
         }catch(Exception e){
-        	e.printStackTrace();
+        	e.getMessage();
         	msg = "[KMCIS] Receive Error -" + e.getMessage();
         	model.addAttribute("msg", msg);
 //        	/*model.addAttribute("msg", msg);*/
