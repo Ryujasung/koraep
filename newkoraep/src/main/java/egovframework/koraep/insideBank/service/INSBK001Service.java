@@ -176,6 +176,11 @@ public class INSBK001Service {
 			//취약점점검 6338 기원우
 			/*e.printStackTrace();*/
 			//취약점점검 6312 기원우
+		}finally {
+			if(in!=null) {
+				in.close();
+				//취약점점검 3173 기원우 
+			}
 		}
 		
 		return resultMap;

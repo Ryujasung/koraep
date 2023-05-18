@@ -317,7 +317,9 @@
 
             /* 페이징 사용 등록 */
             if(kora.common.null2void(INQ_PARAMS.FN_CALLBACK) != ""){
-                eval(INQ_PARAMS.FN_CALLBACK+"()");
+            	/* eval(INQ_PARAMS.FN_CALLBACK+"()"); */
+			 	 window[INQ_PARAMS.FN_CALLBACK]();
+			 	//취약점점검 6047 기원우
             } else {
                 gridApp.setData();
                 /* 페이징 표시 */

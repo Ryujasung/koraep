@@ -619,6 +619,11 @@ public class EPCE9000601Controller {
 		// TODO Auto-generated catch block
 		/*e1.printStackTrace();*/
 		//취약점점검 6319 기원우
+	}finally {
+		if(obj!=null) {
+			obj.close();
+			//취약점점검 3172 기원우 
+		}
 	}
 	}
 
