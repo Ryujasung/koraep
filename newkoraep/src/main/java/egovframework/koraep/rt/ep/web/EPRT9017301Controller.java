@@ -1,5 +1,7 @@
 package egovframework.koraep.rt.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -104,6 +106,12 @@ public class EPRT9017301Controller {
 		try{
 			errCd = eprt9017301Service.eprt9017301_insert(data, request);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -187,6 +195,12 @@ public class EPRT9017301Controller {
 		try{
 			errCd = eprt9017301Service.eprt9017331_insert(data, request);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

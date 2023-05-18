@@ -75,6 +75,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.sql.SQLException;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -111,6 +112,12 @@ public class SchedulBatchComponent {
 				
 				
 				
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 /*			e1.printStackTrace();*/
@@ -129,6 +136,12 @@ public class SchedulBatchComponent {
 		
 				}
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				/*e1.printStackTrace();*/
@@ -318,6 +331,12 @@ public class SchedulBatchComponent {
 //			Method doMethod = clsTs.getClass().getMethod("getTest");
 //			doMethod.invoke(clsTs);
 		
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {		
 			/*e.printStackTrace();*/
 			//취약점점검 6286 기원우

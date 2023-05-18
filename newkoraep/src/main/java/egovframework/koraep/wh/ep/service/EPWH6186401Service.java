@@ -1,5 +1,7 @@
 package egovframework.koraep.wh.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +59,12 @@ public class EPWH6186401Service {
 				model.addAttribute("whsl_se_cdList", util.mapToJson(whsl_se_cdList));
 				model.addAttribute("whsdlList", util.mapToJson(whsdlList));
 				model.addAttribute("areaList", util.mapToJson(areaList));
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 
@@ -75,6 +83,12 @@ public class EPWH6186401Service {
 	    	HashMap<String, Object> rtnMap = new HashMap<String, Object>();
 	    		try {
 	    			rtnMap.put("whsdlList", util.mapToJson(commonceService.mfc_bizrnm_select4(request, inputMap)));
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 
@@ -108,6 +122,12 @@ public class EPWH6186401Service {
 				rtnMap.put("selList", util.mapToJson(epwh6186401Mapper.epwh6186401_select(inputMap)));
 				rtnMap.put("totalList", util.mapToJson(epwh6186401Mapper.epwh6186401_select3(inputMap)));
 				System.out.println("rtnMap"+rtnMap);
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 			}
@@ -141,6 +161,12 @@ public class EPWH6186401Service {
 				map.put("columns", data.get("columns").toString());
 				//엑셀파일 저장
 				commonceService.excelSave(request, map, list);
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch(Exception e){
 				return "A001"; //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}

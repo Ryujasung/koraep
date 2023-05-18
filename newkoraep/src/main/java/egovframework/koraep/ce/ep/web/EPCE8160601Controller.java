@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +57,12 @@ public class EPCE8160601Controller {
 			model.addAttribute("svy_se_cd_list", util.mapToJson(svy_se_cd_list));
 			model.addAttribute("svy_trgt_cd_list", util.mapToJson(svy_trgt_cd_list));
 			model.addAttribute("rst_trgt_cd_list", util.mapToJson(rst_trgt_cd_list));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -95,6 +103,12 @@ public class EPCE8160601Controller {
 			List<?> list = epce8160601Service.epce81606012_select1(param);
 			model.addAttribute("searchList", util.mapToJson(list).toString());
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -118,6 +132,12 @@ public class EPCE8160601Controller {
 				
 		try{
 			errCd = epce8160601Service.epce81606012_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -174,6 +194,12 @@ public class EPCE8160601Controller {
 		*/
 		try{
 			epce8160601Service.epce8160601_update(param);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = "A001";
 			msg = commonceService.getErrorMsgNew(request, "A", errCd);

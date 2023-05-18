@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +63,12 @@ public class EPCE2350901Service {
 			model.addAttribute("bizrList", util.mapToJson(bizrList));
 			//model.addAttribute("bizrListW", util.mapToJson(bizrListW));
 			model.addAttribute("whsdlSeCdList", util.mapToJson(whsdlSeCdList));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -134,6 +142,12 @@ public class EPCE2350901Service {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
 			map.put("searchList", util.mapToJson(menuList));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -225,6 +239,12 @@ public class EPCE2350901Service {
 					epce2350901Mapper.epce2350901_update(map2); //마스터 테이블 합계데이터 업데이트
 				}
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				 if(e.getMessage().equals("A012") ){
 					 throw new Exception(e.getMessage());
@@ -435,6 +455,12 @@ public class EPCE2350901Service {
 					epce2350901Mapper.epce2350901_update(map2); //마스터 테이블 합계데이터 업데이트
 				}
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				 if(e.getMessage().equals("A012") ){
 					 throw new Exception(e.getMessage());
@@ -517,6 +543,12 @@ public class EPCE2350901Service {
 					
 				}//end of for
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				 if(e.getMessage().equals("A012") ){
 					 throw new Exception(e.getMessage());
@@ -570,6 +602,12 @@ public class EPCE2350901Service {
 			//엑셀파일 저장
 			commonceService.excelSave(request, map, list);
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			return "A001"; //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		}

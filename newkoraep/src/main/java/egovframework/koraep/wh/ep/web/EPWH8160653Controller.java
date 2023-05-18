@@ -1,5 +1,7 @@
 package egovframework.koraep.wh.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +62,12 @@ public class EPWH8160653Controller {
 			model.addAttribute("svy_se_cd_list", util.mapToJson(svy_se_cd_list));
 			model.addAttribute("svy_trgt_cd_list", util.mapToJson(svy_trgt_cd_list));
 			model.addAttribute("BIZR_TP_CD", vo.getBIZR_TP_CD());
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -231,6 +239,12 @@ public class EPWH8160653Controller {
 		*/
 		try{
 			epwh8160653Service.epwh8160653_insert(param);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = "A001";
 			msg = commonceService.getErrorMsgNew(request, "A", errCd);

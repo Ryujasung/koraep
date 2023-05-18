@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +63,12 @@ public class EPCE0191801Service {
 
 			try {
 				model.addAttribute("initList", util.mapToJson(initList));
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -105,6 +113,12 @@ public class EPCE0191801Service {
 			}
 			rtnMap.put("RSLT_MSG", commonceService.getErrorMsgNew(request, "A", errCd)); // 오류 메세지 put
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			rtnMap.put("RSLT_CD", "A001"); // 오류코드 put
 			return rtnMap; // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
@@ -139,6 +153,12 @@ public class EPCE0191801Service {
 		 	
 		 	try {
 				model.addAttribute("initList", util.mapToJson(initList));
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -188,6 +208,12 @@ public class EPCE0191801Service {
 					epce0191801Mapper.epce0191831_insert(inputMap); // 기준취급수수료 저장
 					epce0191801Mapper.epce0191831_insert2(inputMap); // 기준취급수수료 이력 저장
 				}
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -243,6 +269,12 @@ public class EPCE0191801Service {
 			inputMap.put("RGST_PRSN_ID", vo.getUSER_ID());
 			epce0191801Mapper.epce0191842_update(inputMap);  //기준취급수수료 수정
 			epce0191801Mapper.epce0191831_insert2(inputMap); // 기준취급료수수이력 저장
+	}catch (IOException io) {
+		System.out.println(io.toString());
+	}catch (SQLException sq) {
+		System.out.println(sq.toString());
+	}catch (NullPointerException nu){
+		System.out.println(nu.toString());
 	}catch(Exception e){
 		 if(e.getMessage().equals("A005")){
 			throw new Exception(e.getMessage()); 

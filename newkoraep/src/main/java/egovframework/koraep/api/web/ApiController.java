@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.security.SecureRandom;
+import java.sql.SQLException;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -126,7 +127,13 @@ public class ApiController {
 	        //데이터 처리
 	        errCd = apiService.recvJsonData(request, data);
 			System.out.println("errCd"+errCd);
-		}catch(Exception e){
+		}catch (IOException io) {
+        	io.printStackTrace();
+        }catch (SQLException sq) {
+        	sq.printStackTrace();
+        }catch (NullPointerException nu){
+        	nu.printStackTrace();
+        }catch(Exception e){
 
 			e.printStackTrace();
 
@@ -175,7 +182,13 @@ public class ApiController {
 			errCd = "0000";
 			JSONArray rslt = apiService.searchData(request);
 			rtnObj.put("RSLT_LST", rslt);
-		}catch(Exception e){
+		}catch (IOException io) {
+        	io.printStackTrace();
+        }catch (SQLException sq) {
+        	sq.printStackTrace();
+        }catch (NullPointerException nu){
+        	nu.printStackTrace();
+        }catch(Exception e){
 			errCd = e.getMessage();
 			rtnObj.put("RSLT_LST", "[]");
 		}
@@ -384,7 +397,13 @@ public class ApiController {
 	        
 	        //데이터 처리
 	        errCd = apiService.urmJsonData(request, data);
-		}catch(Exception e){
+		}catch (IOException io) {
+        	io.printStackTrace();
+        }catch (SQLException sq) {
+        	sq.printStackTrace();
+        }catch (NullPointerException nu){
+        	nu.printStackTrace();
+        }catch(Exception e){
 
 			e.printStackTrace();
 			
@@ -746,6 +765,12 @@ public class ApiController {
 //			model.addAttribute("_csrf", _csrf);
 //			System.out.println("885 : "+_csrf);
             
+        }catch (IOException io) {
+        	io.printStackTrace();
+        }catch (SQLException sq) {
+        	sq.printStackTrace();
+        }catch (NullPointerException nu){
+        	nu.printStackTrace();
         }catch(Exception e){
         	e.printStackTrace();
         	msg = "[KMCIS] Receive Error -" + e.getMessage();

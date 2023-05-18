@@ -1,5 +1,7 @@
 package egovframework.koraep.mf.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -65,6 +67,12 @@ public class EPMF81606641Controller {
 		List<?> ansr_list = commonceService.getCommonCdListNew("S120");	//설문답변형식
 		try {
 			model.addAttribute("ansr_list", util.mapToJson(ansr_list));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -121,6 +129,12 @@ public class EPMF81606641Controller {
 		
 		try{
 			epmf81606641Service.epmf81606641_update1(param);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = "A001";
 			msg = commonceService.getErrorMsgNew(request, "A", errCd);
@@ -175,6 +189,12 @@ public class EPMF81606641Controller {
 		
 		try{
 			epmf81606641Service.epmf81606641_update2(param);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = "A001";
 			msg = commonceService.getErrorMsgNew(request, "A", errCd);

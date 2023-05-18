@@ -1,5 +1,7 @@
 package egovframework.koraep.mf.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +93,12 @@ public class EPMF4763601Service {
 				model.addAttribute("ctnrList", "{}");	
 			}
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -123,6 +131,12 @@ public class EPMF4763601Service {
 		try {
 			model.addAttribute("excaStdMap", util.mapToJson(excaStdMap));
 			model.addAttribute("mfcSeCdList", util.mapToJson(mfcSeCdList));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -166,6 +180,12 @@ public class EPMF4763601Service {
 			model.addAttribute("ctnrList", util.mapToJson(ctnrList));
 			model.addAttribute("searchDtl", util.mapToJson(epmf4763601Mapper.epmf4763642_select(param)));
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}
@@ -210,6 +230,12 @@ public class EPMF4763601Service {
 			map.put("searchList", util.mapToJson(list));
 			//map.put("totalCnt", epmf4763601Mapper.epmf4763601_select_cnt(data));
 			map.put("totalList", epmf4763601Mapper.epmf4763601_select_cnt(data));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -247,6 +273,12 @@ public class EPMF4763601Service {
 		try {
 			map.put("brchList", util.mapToJson(brchList));
 			map.put("ctnrList", util.mapToJson(ctnrList));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -343,6 +375,12 @@ public class EPMF4763601Service {
 					 
 				}//end of for
 								
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				 if(e.getMessage().equals("A014") || e.getMessage().equals("A017") ){
 					 throw new Exception(e.getMessage());
@@ -457,6 +495,12 @@ public class EPMF4763601Service {
 					 
 				}//end of for
 								
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				 if(e.getMessage().equals("A014") || e.getMessage().equals("A017") ){
 					 throw new Exception(e.getMessage());
@@ -505,6 +549,12 @@ public class EPMF4763601Service {
 
 				}//end of for
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				 throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -550,6 +600,12 @@ public class EPMF4763601Service {
 
 				}//end of for
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				 throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -598,6 +654,12 @@ public class EPMF4763601Service {
 			//엑셀파일 저장
 			commonceService.excelSave(request, data, list);
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			return  "A001"; //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		}

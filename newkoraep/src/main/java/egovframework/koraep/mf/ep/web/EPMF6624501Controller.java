@@ -1,5 +1,7 @@
 package egovframework.koraep.mf.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -103,6 +105,12 @@ public class EPMF6624501Controller {
 			data.put("EXCH_STAT_CD", "RG");
 			
 			errCd = epmf6624501Service.epmf6624564_update(data, request); 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -134,6 +142,12 @@ public class EPMF6624501Controller {
 			data.put("EXCH_STAT_CD", "CC");
 			
 			errCd = epmf6624501Service.epmf6624564_update(data, request); 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -175,6 +189,12 @@ public class EPMF6624501Controller {
 		
 		try{
 			errCd = epmf6624501Service.epmf6624501_delete(data, request); 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -224,6 +244,12 @@ public class EPMF6624501Controller {
 			List<?> list = epmf6624501Service.epmf6624531_select2(data);
 			rtnObj.put("CTNR_INFO", util.mapToJson(list).toString());
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -254,6 +280,12 @@ public class EPMF6624501Controller {
 		
 		try{
 			errCd = epmf6624501Service.epmf6624531_insert(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -281,6 +313,12 @@ public class EPMF6624501Controller {
 		
 		try{
 			errCd = epmf6624501Service.epmf6624542_update(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -307,6 +345,12 @@ public class EPMF6624501Controller {
 		
 		try{
 			errCd = epmf6624501Service.epmf6624501_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

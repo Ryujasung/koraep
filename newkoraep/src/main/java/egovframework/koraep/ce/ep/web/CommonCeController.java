@@ -195,8 +195,13 @@ public class CommonCeController {
 		try {
 			/* 모바일체크 */
 			device = DeviceUtils.getCurrentDevice(request);
-		}
-		catch(Exception e) {
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
+		}catch(Exception e) {
 			/*e.printStackTrace();*/
 			//취약점점검 6302 기원우
 		}
@@ -277,6 +282,12 @@ public class CommonCeController {
 				msg	= "Invalid username and password"; //한글이 깨져서 jsp에서 강제로 바꿈...
 			}
 			
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			msg = "no id";
 		}
@@ -515,6 +526,12 @@ public class CommonCeController {
 			out.flush();
 			out.close();
 			fis.close();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			if (out != null)
 				out.close();
@@ -678,6 +695,12 @@ public class CommonCeController {
 		String rtn = "";
 		try {
 			rtn = util.mapToJson(ancList).toString();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -714,6 +737,12 @@ public class CommonCeController {
 		String rtn = "";
 		try {
 			rtn = util.mapToJson(ancList).toString();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -736,6 +765,12 @@ public class CommonCeController {
 
 		try {
 			commonceService.confirm_anc(paramMap, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -789,6 +824,12 @@ public class CommonCeController {
 		String rtn = "";
 		try {
 			rtn = util.mapToJson(menuList).toString();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -813,6 +854,12 @@ public class CommonCeController {
 
 		try {
 			rtn = util.mapToJson(list).toString();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -836,6 +883,12 @@ public class CommonCeController {
 
 		try {
 			rtn = util.mapToJson(list).toString();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -860,6 +913,12 @@ public class CommonCeController {
 
 		try {
 			rtn = util.mapToJson(list).toString();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -1043,6 +1102,12 @@ public class CommonCeController {
 		try {
 			return util.mapToJson(
 					commonceService.excelUpload(inputMap, request)).toString();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			errCd = e.getMessage();
 			JSONObject rtnObj = new JSONObject();
@@ -1141,6 +1206,12 @@ public class CommonCeController {
 
 		try {
 			rtn = util.mapToJson(list).toString();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -1171,6 +1242,12 @@ public class CommonCeController {
 
 		try {
 			rtn = util.mapToJson(list).toString();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -1203,6 +1280,12 @@ public class CommonCeController {
 
 		try {
 			rtn = util.mapToJson(list).toString();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -1242,6 +1325,12 @@ public class CommonCeController {
 
 		try {
 			rtn = util.mapToJson(list).toString();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -1292,6 +1381,12 @@ public class CommonCeController {
 
 		try {
 			rtn = util.mapToJson(list).toString();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -1315,6 +1410,12 @@ public class CommonCeController {
 		HashMap<String, Object> rtnMap = new HashMap<String, Object>();
 		try {
 			rtnMap.put("ctnr_nm", util.mapToJson(commonceService.ctnr_cd_select(data)));//빈용기명 조회
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}
@@ -1337,6 +1438,12 @@ public class CommonCeController {
 		HashMap<String, Object> rtnMap = new HashMap<String, Object>();
 		try {
 			rtnMap.put("ctnr_nm", util.mapToJson(commonceService.ctnr_nm_select2(request, data)));//빈용기명 조회
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}
@@ -1359,6 +1466,12 @@ public class CommonCeController {
 		HashMap<String, Object> rtnMap = new HashMap<String, Object>();
 		try {
 			rtnMap.put("selList", util.mapToJson(commonceService.ctnr_se_select(request, data)));
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}
@@ -1381,6 +1494,12 @@ public class CommonCeController {
 		HashMap<String, Object> rtnMap = new HashMap<String, Object>();
 		try {
 			rtnMap.put("ctnr_nm", util.mapToJson(commonceService.rtrvl_ctnr_cd_select2(data)));//빈용기명 조회
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}
@@ -1427,6 +1546,12 @@ public class CommonCeController {
 					HashMap map = new HashMap();
 					try {
 						map = EgovFileMngUtil.uploadFile(mFile, centerBizrNo);
+					}catch (IOException io) {
+						io.getMessage();
+					}catch (SQLException sq) {
+						sq.getMessage();
+					}catch (NullPointerException nu){
+						nu.getMessage();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -1441,6 +1566,12 @@ public class CommonCeController {
 
 		try {
 			rtn = util.mapToJson(list).toString();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -1463,6 +1594,12 @@ public class CommonCeController {
 		String errCd = "";
 		try {
 			errCd = commonceService.GRID_INFO_INSERT(inputMap, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			errCd = e.getMessage();
 		}
@@ -1717,6 +1854,12 @@ public class CommonCeController {
 			
 			
 			
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			errCd = e.getMessage();
 			/*e.printStackTrace();*/
@@ -1859,6 +2002,12 @@ public class CommonCeController {
 		
 		try{
 			errCd = commonceService.updatePrsnInfoChgAgrYn(paramMap);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -1927,6 +2076,12 @@ public class CommonCeController {
 			out.print(rslt);
 			out.flush();
 			out.close();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			/*e.printStackTrace();*/
 			//취약점점검 6324 기원우 

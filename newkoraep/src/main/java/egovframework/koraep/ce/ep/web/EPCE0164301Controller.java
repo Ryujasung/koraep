@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +76,12 @@ public class EPCE0164301Controller {
 		
 		try{
 			errCd = epce0164301Service.epce0164301_excel(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -102,6 +110,12 @@ public class EPCE0164301Controller {
 		try{
 			List<?> list = epce0164301Service.epce0164301_delete(inputMap,request);
 			rtnObj.put("initList", util.mapToJson(list).toString());
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -189,6 +203,12 @@ public class EPCE0164301Controller {
 		try{
 			List<?> list = epce0164301Service.epce0164331_select5(inputMap,request);
 			rtnObj.put("selList", util.mapToJson(list).toString());
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -224,6 +244,12 @@ public class EPCE0164301Controller {
 		
 		try{
 			errCd = epce0164301Service.epce0164331_insert(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -264,6 +290,12 @@ public class EPCE0164301Controller {
 		try{
 
 			errCd = epce0164301Service.epce0164342_update(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

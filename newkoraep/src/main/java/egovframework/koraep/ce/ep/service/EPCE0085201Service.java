@@ -1,7 +1,9 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -59,7 +61,13 @@ public class EPCE0085201Service {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
 			map.put("bizrInfo", util.mapToJson(bizrInfo));
-		} catch (Exception e) {
+		}catch (IOException io) {
+			io.printStackTrace();
+		}catch (SQLException sq) {
+			sq.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
+		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}
@@ -93,7 +101,13 @@ public class EPCE0085201Service {
 			List<?> areaList = commonceService.getCommonCdListNew("B010");//지역
 			model.addAttribute("areaList", util.mapToJson(areaList));
 			
-		} catch (Exception e) {
+		}catch (IOException io) {
+			io.printStackTrace();
+		}catch (SQLException sq) {
+			sq.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
+		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}
@@ -129,6 +143,12 @@ public class EPCE0085201Service {
 				model.addAttribute("brchList", util.mapToJson(brchList));
 			}
 			
+		}catch (IOException io) {
+			io.printStackTrace();
+		}catch (SQLException sq) {
+			sq.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -301,7 +321,13 @@ public class EPCE0085201Service {
 				    	HashMap map2 = new HashMap();
 						try {
 							map2 = EgovFileMngUtil.uploadBizFile(mFile);
-						} catch (Exception e) {
+						}catch (IOException io) {
+							io.printStackTrace();
+						}catch (SQLException sq) {
+							sq.printStackTrace();
+						}catch (NullPointerException nu){
+							nu.printStackTrace();
+						}catch (Exception e) {
 							// TODO Auto-generated catch block
 							org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 						}	//파일저장
@@ -334,6 +360,12 @@ public class EPCE0085201Service {
 					nRow++;
 					
 				}
+			}catch (IOException io) {
+				io.printStackTrace();
+			}catch (SQLException sq) {
+				sq.printStackTrace();
+			}catch (NullPointerException nu){
+				nu.printStackTrace();
 			}catch(Exception e){
 				throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -411,6 +443,12 @@ public class EPCE0085201Service {
 				commonceService.ath_grp_insert(athMap);
 				*/
 				
+			}catch (IOException io) {
+				io.printStackTrace();
+			}catch (SQLException sq) {
+				sq.printStackTrace();
+			}catch (NullPointerException nu){
+				nu.printStackTrace();
 			}catch(Exception e){
 				throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}

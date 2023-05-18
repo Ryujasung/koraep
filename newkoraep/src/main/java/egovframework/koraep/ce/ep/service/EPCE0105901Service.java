@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +59,12 @@ public class EPCE0105901Service {
 			try {
 				model.addAttribute("mfcSeCdList", util.mapToJson(mfcSeCdList));	//생산자구분 리스트
 				model.addAttribute("ctnrNmList", util.mapToJson(ctnrNmList));		//빈용기명
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -79,6 +87,12 @@ public class EPCE0105901Service {
 	    	try {
 				rtnMap.put("initList", util.mapToJson(epce0105901Mapper.epce0105901_select(inputMap)));
 				rtnMap.put("totalCnt", epce0105901Mapper.epce0105901_select_cnt(inputMap));
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -105,6 +119,12 @@ public class EPCE0105901Service {
 				//엑셀파일 저장
 				commonceService.excelSave(request, data, list);
 
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			}catch(Exception e){
 				return "A001"; //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -124,6 +144,12 @@ public class EPCE0105901Service {
 	    	List<?> ctnrNmList = commonceService.ctnr_nm_select(request, inputMap);
 	    	try {
 				rtnMap.put("ctnrNmList", util.mapToJson(ctnrNmList));
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");

@@ -75,6 +75,12 @@ public class EPCE6120901Controller {
 		
 		try{
 			errCd = epce6120901Service.epce6120901_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

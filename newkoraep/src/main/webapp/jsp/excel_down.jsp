@@ -11,7 +11,8 @@
 <%@ page import="org.apache.poi.hssf.usermodel.HSSFSheet" %>
 <%@ page import="org.apache.poi.hssf.usermodel.HSSFWorkbook" %>
 <%@ page import="org.apache.poi.hssf.record.crypto.Biff8EncryptionKey" %>
-
+<%@ page import="java.io.IOException"%>
+<%@ page import="java.sql.SQLException"%>
 <%@ page import="java.util.Map" %>
 
 <%
@@ -205,6 +206,12 @@
 		
 		workbook.write();
 	
+	}catch (IOException io) {
+		System.out.println(io.toString());
+	}catch (SQLException sq) {
+		System.out.println(sq.toString());
+	}catch (NullPointerException nu){
+		System.out.println(nu.toString());
 	}catch(Exception e){
 		throw new Exception("error !!!!");
 		//return;
@@ -214,6 +221,12 @@
 		if(workbook != null) { 
 			try { 
 				workbook.close(); 
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch(Exception e) {
 				throw new Exception("workbook close error !!!!");
 				//return;

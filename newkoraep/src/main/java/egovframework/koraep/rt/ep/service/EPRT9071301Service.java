@@ -1,5 +1,7 @@
 package egovframework.koraep.rt.ep.service;
   
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -60,6 +62,12 @@ public class EPRT9071301Service {
 				List<?> statList = commonceService.getCommonCdListNew("D034");
 				model.addAttribute("statList", util.mapToJson(statList));
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -91,6 +99,12 @@ public class EPRT9071301Service {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			try {
 				map.put("searchList", util.mapToJson(list));
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -123,6 +137,12 @@ public class EPRT9071301Service {
 			try {
 				model.addAttribute("searchDtl", util.mapToJson(searchDtl));
 				model.addAttribute("searchList", util.mapToJson(searchList));
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");

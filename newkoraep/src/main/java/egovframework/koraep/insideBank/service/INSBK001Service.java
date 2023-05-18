@@ -1,10 +1,12 @@
 package egovframework.koraep.insideBank.service;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -163,6 +165,12 @@ public class INSBK001Service {
             }
             resultMap.put("RESULT_CODE" , rCode );
             resultMap.put("RUN_STAT_CD" , rTaxGbn );
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			/*System.out.println(e.getMessage());*/
 			//취약점점검 6338 기원우

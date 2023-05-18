@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,12 @@ public class EPCE3961301Service {
 		try {
 			model.addAttribute("workSeList", util.mapToJson(workSeList));  
 			model.addAttribute("menuSetList", util.mapToJson(menuSetList));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -73,6 +81,12 @@ public class EPCE3961301Service {
 	    	
 	    	try {
 				rtnMap.put("menuNm", util.mapToJson(epce3961301Mapper.epce3961301_select(inputMap)));
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -93,6 +107,12 @@ public class EPCE3961301Service {
 	    	
 	    	try {
 				rtnMap.put("btnNm", util.mapToJson(epce3961301Mapper.epce3961301_select2(inputMap)));
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -122,6 +142,12 @@ public class EPCE3961301Service {
 	    	try {
 				rtnMap.put("execHistList", util.mapToJson(epce3961301Mapper.epce3961301_select3(inputMap)));
 				rtnMap.put("totalCnt", epce3961301Mapper.epce3961301_select3_cnt(inputMap));
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -173,6 +199,12 @@ public class EPCE3961301Service {
 				//엑셀파일 저장
 				commonceService.excelSave(request, data, list);
 		
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch(Exception e){
 				return "A001"; //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}

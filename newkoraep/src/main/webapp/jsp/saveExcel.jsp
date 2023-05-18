@@ -51,6 +51,10 @@ try{
 	}else{
 		return;
 	}
+}catch (IOException io) {
+	System.out.println(io.toString());
+}catch (NullPointerException nu){
+	System.out.println(nu.toString());
 }catch(Exception e){
 	//	System.out.println("error !!!!");
 	throw new Exception("error !!!!");
@@ -61,6 +65,10 @@ finally{
 	if(outputStream != null) { 
 		try { 
 			outputStream.close(); 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch(Exception e) {
 			//System.out.println("workbook close error !!!!");
 			throw new Exception("workbook close error !!!!");

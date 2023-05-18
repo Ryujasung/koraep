@@ -1,10 +1,12 @@
 package egovframework.koraep.cms.cs.web;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,6 +89,12 @@ public class CMSCS002Controller {
 
 		try{
 			errCd = cmscs002Service.cmscs002_update(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -118,6 +126,12 @@ public class CMSCS002Controller {
 			// CMS 예금주 조회 api 호출
 			Map<String, String> data = acctNmUpdate(map, request);
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -225,6 +239,12 @@ public class CMSCS002Controller {
             Gson gson = new Gson();
 			data = (Map<String, String>)gson.fromJson(responseStr, Map.class);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			/*System.out.println(e.getMessage());*/
 			//취약점점검 6284 기원우

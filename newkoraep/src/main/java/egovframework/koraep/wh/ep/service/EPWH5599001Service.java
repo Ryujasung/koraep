@@ -1,5 +1,7 @@
 package egovframework.koraep.wh.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +80,12 @@ public class EPWH5599001Service {
 				String   title = commonceService.getMenuTitle("EPWH55990088");//타이틀
 				model.addAttribute("area_cd_list", util.mapToJson(area_cd_list));
 				model.addAttribute("titleSub", title);
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -106,6 +114,12 @@ public class EPWH5599001Service {
 						map.put("REG_PRSN_ID", vo.getUSER_ID());//등록자
 						epwh0160101Mapper.epwh0181088_update(map);//상태변경
 					}
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				}catch (Exception e) {
 					if(e.getMessage().equals("A012") ){
 						 throw new Exception(e.getMessage());
@@ -170,6 +184,12 @@ public class EPWH5599001Service {
 			String title = commonceService.getMenuTitle("EPWH55990013");//타이틀
 			model.addAttribute("aff_ogn_cd_list", util.mapToJson(aff_ogn_cd_list));
 			model.addAttribute("titleSub", title);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -198,6 +218,12 @@ public class EPWH5599001Service {
 					map.put("REG_PRSN_ID", vo.getUSER_ID());//등록자
 					epwh0160101Mapper.epce55990013_update(map);//상태변경
 				}
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch (Exception e) {
 				throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}

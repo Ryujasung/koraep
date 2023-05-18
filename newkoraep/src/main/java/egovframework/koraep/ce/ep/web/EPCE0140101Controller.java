@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import javax.annotation.Resource;
@@ -80,6 +82,12 @@ public class EPCE0140101Controller {
 		
 		try{
 			errCd = epce0140101Service.epce0140101_excel(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -118,6 +126,12 @@ public class EPCE0140101Controller {
 				errCd = epce0140101Service.epce0140101_update4(data, request); //비밀번호오류초기화
 			}
 			
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -188,6 +202,12 @@ public class EPCE0140101Controller {
 		
 		try{
 			errCd = epce0140101Service.epce0140188_update(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -316,6 +336,12 @@ public class EPCE0140101Controller {
 		
 		try{
 			errCd = epce0140101Service.epce0140142_update(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -343,6 +369,12 @@ public class EPCE0140101Controller {
 		
 		try{
 			errCd = epce0140101Service.epce0140142_delete(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -370,6 +402,12 @@ public class EPCE0140101Controller {
 		
 		try{
 			errCd = epce0140101Service.epce0140164_update(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -397,6 +435,12 @@ public class EPCE0140101Controller {
 		
 		try{
 			errCd = epce0140101Service.epce0140164_update2(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

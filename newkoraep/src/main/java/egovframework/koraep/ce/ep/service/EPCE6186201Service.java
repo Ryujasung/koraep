@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,12 @@ public class EPCE6186201Service {
 			
 			try {
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 			}	
@@ -67,6 +75,12 @@ public class EPCE6186201Service {
 
 				rtnMap.put("selList", util.mapToJson(list));
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 			}	  
@@ -92,6 +106,12 @@ public class EPCE6186201Service {
 				//엑셀파일 저장
 				commonceService.excelSave(request, data, list);
 
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch(Exception e){
 				return  "A001"; //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}

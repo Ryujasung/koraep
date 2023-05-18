@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -84,6 +86,12 @@ public class EPCE3968101Controller {
 	    String errCd = "";
 		try{
 			errCd =epce3968101Service.epce3968101_select2(inputMap, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -134,6 +142,12 @@ public class EPCE3968101Controller {
 	    String errCd = "";
 		try{
 			errCd =epce3968101Service.epce3968101_select5(inputMap, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -160,6 +174,12 @@ public class EPCE3968101Controller {
 	    String errCd = "";
 		try{
 			errCd = epce3968101Service. epce3968101_insert(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -185,6 +205,12 @@ public class EPCE3968101Controller {
 	    String errCd = "";
 		try{
 			errCd = epce3968101Service. epce3968101_insert2(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

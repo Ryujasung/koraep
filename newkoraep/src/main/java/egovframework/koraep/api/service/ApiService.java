@@ -3,6 +3,7 @@ package egovframework.koraep.api.service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.SocketException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -80,6 +81,12 @@ public class ApiService {
 
 			seq = apiMapper.SELECT_EPCN_API_DTL_HIST_SEQ();
 
+		}catch (IOException io) {
+			io.printStackTrace();
+		}catch (SQLException sq) {
+			sq.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
 		} catch (Exception e) {
 			seq = 999999999;
 			; // "DB처리중 오류가 발생하였습니다. 관리자에게 문의하세요."
@@ -150,6 +157,12 @@ public class ApiService {
 
 			apiMapper.UPDATE_EPCN_API_DTL_HIST_ANSR(data);
 
+		}catch (IOException io) {
+			io.printStackTrace();
+		}catch (SQLException sq) {
+			sq.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
 		} catch (Exception e) {
 			errCd = "B003"; // "DB처리중 오류가 발생하였습니다. 관리자에게 문의하세요."
 			// log.debug("==================Exception===============" +
@@ -485,6 +498,12 @@ public class ApiService {
 			// 구병실행상세 등록
 			// apiMapper.INSERT_AP_R01_EPCN_CAP_DTL(map);
 
+		}catch (IOException io) {
+			io.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
+		}catch(Exception e){
+			throw new Exception();
 		} catch (Exception e) {
 			// org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 			if (e.getMessage() != null && e.getMessage().indexOf("B0") > -1)
@@ -595,7 +614,13 @@ public class ApiService {
 			// 실데이타에 반영처리
 			apiMapper.INSERT_AP_R02_EPDM_DRCT_DVRY_INFO(map);
 
-		} catch (Exception e) {
+		}catch (IOException io) {
+			io.printStackTrace();
+		}catch (SQLException sq) {
+			sq.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
+		}catch (Exception e) {
 			// org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 			if (e.getMessage() != null && e.getMessage().indexOf("B0") > -1)
 				errCd = e.getMessage();
@@ -805,6 +830,12 @@ public class ApiService {
 								.get(j));
 			}
 
+		}catch (IOException io) {
+			io.printStackTrace();
+		}catch (SQLException sq) {
+			sq.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
 		} catch (Exception e) {
 			// org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 			if (e.getMessage() != null && e.getMessage().indexOf("B0") > -1)
@@ -1065,6 +1096,12 @@ public class ApiService {
 			 * apiMapper.INSERT_AP_R06_EPCN_CAP_DTL(map);
 			 */
 
+		}catch (IOException io) {
+			io.printStackTrace();
+		}catch (SQLException sq) {
+			sq.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
 		} catch (Exception e) {
 			// org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 			if (e.getMessage() != null && e.getMessage().indexOf("B0") > -1)
@@ -1279,6 +1316,12 @@ public class ApiService {
 				apiMapper.UPDATE_AP_R07_EPCM_RTN_MST_TMP(map2);
 			}
 
+		}catch (IOException io) {
+			io.printStackTrace();
+		}catch (SQLException sq) {
+			sq.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
 		} catch (Exception e) {
 			// org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 			if (e.getMessage() != null && e.getMessage().indexOf("B0") > -1)
@@ -1362,6 +1405,12 @@ public class ApiService {
 
 			}// end of for
 
+		}catch (IOException io) {
+			io.printStackTrace();
+		}catch (SQLException sq) {
+			sq.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
 		} catch (Exception e) {
 			// org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 			if (e.getMessage() != null && e.getMessage().indexOf("B0") > -1)
@@ -1686,7 +1735,13 @@ public class ApiService {
 
 			seq = apiMapper.SELECT_EPCN_URM_HIST_SEQ();
 
-		} catch (Exception e) {
+		} catch (IOException io) {
+			io.printStackTrace();
+		}catch (SQLException sq) {
+			sq.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
+		}catch (Exception e) {
 			seq = 999999999;
 			; // "DB처리중 오류가 발생하였습니다. 관리자에게 문의하세요."
 			throw new Exception("B003");
@@ -1756,6 +1811,12 @@ public class ApiService {
 
 			apiMapper.UPDATE_EPCN_URM_HIST_ANSR(data);
 
+		}catch (IOException io) {
+			io.printStackTrace();
+		}catch (SQLException sq) {
+			sq.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
 		} catch (Exception e) {
 			errCd = "B003"; // "DB처리중 오류가 발생하였습니다. 관리자에게 문의하세요."
 			// log.debug("==================Exception===============" +
@@ -1981,7 +2042,13 @@ public class ApiService {
 						.get(j));
 			}
 
-		} catch (Exception e) {
+		} catch (IOException io) {
+			io.printStackTrace();
+		}catch (SQLException sq) {
+			sq.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
+		}catch (Exception e) {
 			// org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 			if (e.getMessage() != null && e.getMessage().indexOf("B0") > -1)
 				errCd = e.getMessage();

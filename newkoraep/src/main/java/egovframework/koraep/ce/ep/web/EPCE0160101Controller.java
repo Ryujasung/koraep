@@ -86,6 +86,12 @@ public class EPCE0160101Controller {
 
 		try{
 			errCd = epce0160101Service.epce0160101_excel(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -149,6 +155,12 @@ public class EPCE0160101Controller {
 				}
 			}
 
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			/*e.printStackTrace();*/
 			//취약점점검 6320 기원우
@@ -186,6 +198,12 @@ public class EPCE0160101Controller {
 				errCd = epce0160101Service.epce0160101_updateData3(data, request); //비활동처리
 			}
 
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -265,6 +283,12 @@ public class EPCE0160101Controller {
 		String errCd = "";
 		try{
 			errCd = epce0160101Service.epce0160117_update(inputMap, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -331,6 +355,12 @@ public class EPCE0160101Controller {
 		String errCd = "";
 		try{
 			errCd = epce0160101Service.epce0160188_update(inputMap, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -357,6 +387,12 @@ public class EPCE0160101Controller {
 
 		try{
 			errCd = epce0160101Service.epce01601018_1_update4(data, request, model); //관리자변경
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");

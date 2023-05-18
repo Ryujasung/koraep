@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,12 @@ public class EPCE3988501Service {
 					model.addAttribute("work_se_list", util.mapToJson(commonceService.getCommonCdListNew("S016")));  	//업무구분
 					model.addAttribute("rtc_dt_se_list", util.mapToJson(commonceService.getCommonCdListNew("S018"))); //제한일자구분
 					model.addAttribute("selList", util.mapToJson(epce3988501Mapper.epce3988501_select()));    
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {             
 					// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -62,6 +70,12 @@ public class EPCE3988501Service {
 			HashMap<String, Object> rtnMap = new HashMap<String, Object>();
 			try {
 					rtnMap.put("selList", util.mapToJson(epce3988501Mapper.epce3988501_select()));
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 					// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -86,6 +100,12 @@ public class EPCE3988501Service {
 						
 						inputMap.put("REG_PRSN_ID", vo.getUSER_ID());				//등록자
 						 epce3988501Mapper.epce3988501_insert(inputMap);		
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch (Exception e) {
 						 throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}

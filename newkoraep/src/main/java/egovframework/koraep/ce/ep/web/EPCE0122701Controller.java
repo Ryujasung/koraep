@@ -92,6 +92,12 @@ public class EPCE0122701Controller {
 		
 		try{
 			errCd = epce0122701Service.epce0122731_insert(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -138,6 +144,12 @@ public class EPCE0122701Controller {
 		
 		try{
 			errCd = epce0122701Service.epce0122742_update(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

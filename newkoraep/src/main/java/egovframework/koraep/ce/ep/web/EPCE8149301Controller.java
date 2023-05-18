@@ -3,6 +3,8 @@
  */
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -158,6 +160,12 @@ public class EPCE8149301Controller {
 				url = "/MAIN.do";
 			}
 			msg = "";
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			msg = "처리중 오류가 발생 했습니다.";
 			//org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -186,6 +194,12 @@ public class EPCE8149301Controller {
 		String cd = "";
 		try{
 			cd = epce8149301Service.epce8149301_delete(request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			cd = "2";
 		}
@@ -212,6 +226,12 @@ public class EPCE8149301Controller {
 		String cd = "";
 		try{
 			cd = epce8149301Service.epce8149301_update3(request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			cd = "2";
 		}

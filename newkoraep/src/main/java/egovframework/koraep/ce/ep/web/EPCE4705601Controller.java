@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -149,8 +151,15 @@ public class EPCE4705601Controller {
 		
 		try{
 			errCd = epce4705601Service.epce4705601_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
+			System.out.println(errCd);
 		}
 		
 		JSONObject rtnObj = new JSONObject();
@@ -173,8 +182,18 @@ public class EPCE4705601Controller {
 		String errCd = "";
 		try{
 			errCd = epce4705601Service.epce4705601_update(inputMap, request);
+		}catch (IOException io) {
+			io.toString();
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			sq.toString();
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			nu.toString();
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
+			System.out.println(errCd);
 		}
 		
 		JSONObject rtnObj = new JSONObject();
@@ -218,8 +237,18 @@ public class EPCE4705601Controller {
 		
 		try{
 			errCd = epce4705601Service.epce4705664_delete(inputMap, request);
+		}catch (IOException io) {
+			io.toString();
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			sq.toString();
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			nu.toString();
+			System.out.println(nu.toString());
 		}catch(Exception e){
-			errCd = e.getMessage();
+			errCd = e.toString();
+			System.out.println(errCd);
 		}
 		
 		JSONObject rtnObj = new JSONObject();
@@ -274,8 +303,18 @@ public class EPCE4705601Controller {
 		try{
 			errCd = epce4705601Service.epce4705631_insert(data, request);
 			
+		}catch (IOException io) {
+			io.toString();
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			sq.toString();
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			nu.toString();
+			System.out.println(nu.toString());
 		}catch(Exception e){
-			errCd = e.getMessage();
+			errCd = e.toString();
+			System.out.println(errCd);
 		}
 		   
 		JSONObject rtnObj = new JSONObject();
@@ -319,8 +358,18 @@ public class EPCE4705601Controller {
 		try{
 			errCd = epce4705601Service.epce47056312_insert(data, request);
 			
+		}catch (IOException io) {
+			io.toString();
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			sq.toString();
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			nu.toString();
+			System.out.println(nu.toString());
 		}catch(Exception e){
-			errCd = e.getMessage();
+			errCd = e.toString();
+			System.out.println(errCd);
 		}
 		   
 		JSONObject rtnObj = new JSONObject();
@@ -380,8 +429,18 @@ public class EPCE4705601Controller {
 		try{
 			errCd = epce4705601Service.epce47056422_update(data, request);
 			
+		}catch (IOException io) {
+			io.toString();
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			sq.toString();
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			nu.toString();
+			System.out.println(nu.toString());
 		}catch(Exception e){
-			errCd = e.getMessage();
+			errCd = e.toString();
+			System.out.println(errCd);
 		}
 		
 		JSONObject rtnObj = new JSONObject();
@@ -408,8 +467,18 @@ public class EPCE4705601Controller {
 		try{
 			errCd = epce4705601Service.epce4705642_update(data, request);
 			
+		}catch (IOException io) {
+			io.toString();
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			sq.toString();
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			nu.toString();
+			System.out.println(nu.toString());
 		}catch(Exception e){
-			errCd = e.getMessage();
+			errCd = e.toString();
+			System.out.println(errCd);
 		}
 		
 		JSONObject rtnObj = new JSONObject();

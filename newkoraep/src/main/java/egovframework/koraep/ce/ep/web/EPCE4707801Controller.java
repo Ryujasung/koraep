@@ -118,6 +118,12 @@ public class EPCE4707801Controller {
 		try{
 			errCd = epce4707801Service.epce4707888_insert(inputMap, request);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -143,6 +149,12 @@ public class EPCE4707801Controller {
 		String errCd = "";
 		try{
 			errCd = epce4707801Service.epce4707888_delete(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

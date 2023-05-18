@@ -1,5 +1,7 @@
 package egovframework.koraep.rt.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -99,6 +101,12 @@ public class EPRT9025801Controller {
 		String errCd = "";
 		try{
 			errCd = eprt9025801Service.eprt9025801_update(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}  
@@ -216,6 +224,12 @@ public class EPRT9025801Controller {
 		try{
 			errCd = eprt9025801Service.eprt9025831_insert(data, request);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 			if(data.get("ERR_CTNR_NM") !=null){
@@ -291,6 +305,12 @@ public class EPRT9025801Controller {
 		try{
 			errCd = eprt9025801Service.eprt9025842_insert(data, request);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 			if(data.get("ERR_CTNR_NM") !=null){
@@ -322,6 +342,12 @@ public class EPRT9025801Controller {
 		String errCd = "";
 		try{
 			errCd = eprt9025801Service.eprt9025842_delete(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}  

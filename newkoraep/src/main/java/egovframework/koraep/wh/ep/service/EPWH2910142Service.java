@@ -1,5 +1,7 @@
 package egovframework.koraep.wh.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -104,6 +106,12 @@ public class EPWH2910142Service {
 				model.addAttribute("ctnr_nm", util.mapToJson(ctnr_nm));	         
 				model.addAttribute("initList", util.mapToJson(initList));   
 				model.addAttribute("rmk_list", util.mapToJson(rmk_list));             
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				/*e.printStackTrace();*/
@@ -126,6 +134,12 @@ public class EPWH2910142Service {
 			try {							
 				inputMap.put("SOJU_STD_EXT", "Y");
 				rtnMap.put("ctnr_nm", util.mapToJson(commonceService.ctnr_cd_select(inputMap)));//빈용기명 조회
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -144,6 +158,12 @@ public class EPWH2910142Service {
 	    	try {
 	    		inputMap.put("SOJU_STD_EXT", "Y");
 				rtnMap.put("ctnr_nm", util.mapToJson(commonceService.ctnr_cd_select(inputMap)));//빈용기명 조회	
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -229,6 +249,12 @@ public class EPWH2910142Service {
 					 		}
 					 	}
 					 	
+					}catch (IOException io) {
+						System.out.println(io.toString());
+					}catch (SQLException sq) {
+						System.out.println(sq.toString());
+					}catch (NullPointerException nu){
+						System.out.println(nu.toString());
 					} catch (Exception e) {
 
 						 if(e.getMessage().equals("A009") || e.getMessage().equals("A008") || e.getMessage().equals("A003")){
@@ -263,6 +289,12 @@ public class EPWH2910142Service {
 				try {
 					epwh2910101Mapper.epwh2910101_delete(inputMap); // 반환내역서 삭제
 					
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				}catch (Exception e) {
 					throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 				}

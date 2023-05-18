@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -148,6 +150,12 @@ public class EPCE0160116Service {
 					EgovFileMngUtil efmu = new EgovFileMngUtil();
 					efmu.deleteBizFile(sCtrtFileNm);
 				}
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -204,6 +212,12 @@ public class EPCE0160116Service {
 			
 			//사업자 삭제
 			epce0160101Mapper.epce0160116_delete4(data);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			rtnCd = "B018";
 			/*e.printStackTrace();*/
@@ -331,6 +345,12 @@ public class EPCE0160116Service {
 				    	HashMap map2 = new HashMap();
 						try {
 							map2 = EgovFileMngUtil.uploadBizFile(mFile);
+						}catch (IOException io) {
+							System.out.println(io.toString());
+						}catch (SQLException sq) {
+							System.out.println(sq.toString());
+						}catch (NullPointerException nu){
+							System.out.println(nu.toString());
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -366,6 +386,12 @@ public class EPCE0160116Service {
 				}
 				
 			    	
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			 throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		}

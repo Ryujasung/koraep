@@ -3,6 +3,9 @@
  */
 package egovframework.common;
 
+import java.io.IOException;
+import java.net.SocketException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -102,8 +105,13 @@ public class LoggerAspect {
 					BTN_CD = util.null2void(map.get("PARAM_BTN_CD"));
 				}
 			}
-		}
-		catch (Exception e) {
+		}catch (IOException io) {
+			io.printStackTrace();
+		}catch (SQLException sq) {
+			sq.printStackTrace();
+		}catch (NullPointerException nu){
+			nu.printStackTrace();
+		}catch(Exception e){
 			BTN_CD = "";
 		}
 

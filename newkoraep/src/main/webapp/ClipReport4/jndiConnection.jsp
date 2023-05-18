@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*, javax.naming.*, javax.sql.*" %>
+<%@ page import="java.io.*"%>
 <%
 	Connection conn = null;
 	Statement stmt = null;
@@ -13,6 +14,12 @@
 		out.println("<h5>- Product Version : " + conn.getMetaData().getDatabaseProductVersion() + "</h5>");
 		out.println("<h5>- Driver Name : " + conn.getMetaData().getDriverName()+"</h5>");
 		out.println("<h5>- Driver Version : " + conn.getMetaData().getDriverVersion()+"</h5>");
+	}catch (IOException io) {
+		System.out.println(io.toString());
+	}catch (SQLException sq) {
+		System.out.println(sq.toString());
+	}catch (NullPointerException nu){
+		System.out.println(nu.toString());
 	} catch (Exception e) {
 		response.getWriter().append("<h5>Exception Message<h5><br>");
 		//e.printStackTrace(response.getWriter());

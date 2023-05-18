@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,8 +89,14 @@ public class EPCE4707201Controller {
 		
 		try{
 			errCd = epce4707201Service.epce4707201_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
-			errCd = e.getMessage();
+			System.out.println(e.toString());
 		}
 		
 		JSONObject rtnObj = new JSONObject();
@@ -112,8 +120,14 @@ public class EPCE4707201Controller {
 
 		try{
 			errCd = epce4707201Service.epce4707201_update(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
-			errCd = e.getMessage();
+			System.out.println(e.toString());
 		}
 
 		JSONObject rtnObj = new JSONObject();
@@ -138,6 +152,12 @@ public class EPCE4707201Controller {
 
 		try{
 			errCd = epce4707201Service.epce4707201_update2(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -221,6 +241,12 @@ public class EPCE4707201Controller {
 
 		try{
 			errCd = epce4707201Service.epce47072882_update(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -276,6 +302,12 @@ public class EPCE4707201Controller {
 		
 		try{
 			errCd = epce4707201Service.epce4707264_update(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

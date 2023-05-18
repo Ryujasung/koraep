@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,6 +79,12 @@ public class EPCE4705601Service {
 						model.addAttribute("whsl_se_cdList", util.mapToJson(commonceService.whsdl_se_select(request, map)));  //도매업자 구분
 						model.addAttribute("whsdlList", util.mapToJson(commonceService.mfc_bizrnm_select4(request, map)));		//도매업자 업체명조회	
 						model.addAttribute("titleSub", commonceService.getMenuTitle("EPCE4705601"));										//타이틀
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -101,6 +109,12 @@ public class EPCE4705601Service {
 	    			rtnMap.put("mfc_bizrnmList", util.mapToJson(commonceService.std_mgnt_mfc_select(request, inputMap))); 
 	    		}
 					
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -119,6 +133,12 @@ public class EPCE4705601Service {
 	    	HashMap<String, Object> rtnMap = new HashMap<String, Object>();
 	    	try {
 	    		rtnMap.put("chkCnt", epce4705601Mapper.epce4705601_select7(inputMap));
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -143,6 +163,12 @@ public class EPCE4705601Service {
 	    		
 				rtnMap.put("bizr_tp_cd", bizrTpCd); //사업자유형코드
 				rtnMap.put("ctnr_seList", util.mapToJson(commonceService.ctnr_se_select(request, inputMap))); //빈용기 구분 조회
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -164,6 +190,12 @@ public class EPCE4705601Service {
 			      	rtnMap.put("whsdlList", util.mapToJson(commonceService.mfc_bizrnm_select4(request, inputMap)));   //도매업자 업체명조회
 			      	inputMap.put("BIZR_TP_CD", "");
 			      	rtnMap.put("brch_nmList", util.mapToJson(commonceService.brch_nm_select(request, inputMap)));
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -182,6 +214,12 @@ public class EPCE4705601Service {
 	    	HashMap<String, Object> rtnMap = new HashMap<String, Object>();
 	    		try {
 					rtnMap.put("whsdlList", util.mapToJson(commonceService.mfc_bizrnm_select4(request, inputMap)));
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -203,6 +241,12 @@ public class EPCE4705601Service {
 	    			inputMap.put("MFC_BIZRNM_RETURN", list);  
 					rtnMap.put("selList", util.mapToJson(epce4705601Mapper.epce4705601_select4(inputMap)));
 					rtnMap.put("totalList", epce4705601Mapper.epce4705601_select4_cnt(inputMap));
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -234,6 +278,12 @@ public class EPCE4705601Service {
 				
 				//엑셀파일 저장
 				commonceService.excelSave(request, map, list);
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch(Exception e){
 				return "A001"; //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -266,6 +316,12 @@ public class EPCE4705601Service {
 						 map.put("REG_PRSN_ID", vo.getUSER_ID());  		//등록자
 						 epce4705601Mapper.epce4705601_update(map);//수기입고정정  정정확인,정정반려,확인취소 상태 변경
 					}
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				}catch (Exception e) {
 					if(e.getMessage().equals("A012") ){
 						 throw new Exception(e.getMessage()); 
@@ -323,6 +379,12 @@ public class EPCE4705601Service {
 				model.addAttribute("titleSub", title);
 				model.addAttribute("ssUserNm", ssUserNm);
 				model.addAttribute("ssBizrNm", ssBizrNm);
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -357,6 +419,12 @@ public class EPCE4705601Service {
 						 epce4705601Mapper.epce4705664_update(inputMap); 	// 연결정정문서번호 삭제
 					 }
 					 
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				}catch(Exception e){
 					if(e.getMessage().equals("A012") ){
 						 throw new Exception(e.getMessage()); 
@@ -424,6 +492,12 @@ public class EPCE4705601Service {
 							model.addAttribute("ctnr_seList", util.mapToJson(ctnr_seList));	
 							model.addAttribute("ctnr_nm", util.mapToJson(ctnr_nm));
 							model.addAttribute("rmk_list", util.mapToJson(rmk_list));	
+						}catch (IOException io) {
+							System.out.println(io.toString());
+						}catch (SQLException sq) {
+							System.out.println(sq.toString());
+						}catch (NullPointerException nu){
+							System.out.println(nu.toString());
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -442,6 +516,12 @@ public class EPCE4705601Service {
 				    	HashMap<String, Object> rtnMap = new HashMap<String, Object>();
 				    	try {
 							rtnMap.put("ctnr_nm", util.mapToJson(commonceService.ctnr_cd_select(inputMap)));
+						}catch (IOException io) {
+							System.out.println(io.toString());
+						}catch (SQLException sq) {
+							System.out.println(sq.toString());
+						}catch (NullPointerException nu){
+							System.out.println(nu.toString());
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -540,6 +620,12 @@ public class EPCE4705601Service {
 												
 											}//end of for
 								 	
+									}catch (IOException io) {
+										System.out.println(io.toString());
+									}catch (SQLException sq) {
+										System.out.println(sq.toString());
+									}catch (NullPointerException nu){
+										System.out.println(nu.toString());
 									} catch (Exception e) {
 										 if(e.getMessage().equals("A008") || e.getMessage().equals("A014") || e.getMessage().equals("A016")  || e.getMessage().equals("A017") ){
 											 throw new Exception(e.getMessage()); 
@@ -595,6 +681,12 @@ public class EPCE4705601Service {
 							model.addAttribute("ctnr_prps_list", util.mapToJson(ctnr_prps_list));   
 							model.addAttribute("rmk_list", util.mapToJson(rmk_list));   
 							
+						}catch (IOException io) {
+							System.out.println(io.toString());
+						}catch (SQLException sq) {
+							System.out.println(sq.toString());
+						}catch (NullPointerException nu){
+							System.out.println(nu.toString());
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -644,6 +736,12 @@ public class EPCE4705601Service {
 												
 											}//end of for
 								 	
+									}catch (IOException io) {
+										System.out.println(io.toString());
+									}catch (SQLException sq) {
+										System.out.println(sq.toString());
+									}catch (NullPointerException nu){
+										System.out.println(nu.toString());
 									} catch (Exception e) {
 										 throw new Exception("A001"); //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 									}
@@ -688,6 +786,12 @@ public class EPCE4705601Service {
 								model.addAttribute("rmk_list", util.mapToJson(rmk_list));
 								model.addAttribute("crct_gridList", util.mapToJson(crct_gridList));
 								
+							}catch (IOException io) {
+								System.out.println(io.toString());
+							}catch (SQLException sq) {
+								System.out.println(sq.toString());
+							}catch (NullPointerException nu){
+								System.out.println(nu.toString());
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -744,6 +848,12 @@ public class EPCE4705601Service {
 								model.addAttribute("ctnr_seList", util.mapToJson(ctnr_seList));	
 								model.addAttribute("ctnr_nm", util.mapToJson(ctnr_nm));
 								model.addAttribute("rmk_list", util.mapToJson(rmk_list));	
+							}catch (IOException io) {
+								System.out.println(io.toString());
+							}catch (SQLException sq) {
+								System.out.println(sq.toString());
+							}catch (NullPointerException nu){
+								System.out.println(nu.toString());
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -785,6 +895,12 @@ public class EPCE4705601Service {
 												epce4705601Mapper.epce4705631_insert(map); // 입고정정 등록
 											}//end of for
 									 	
+										}catch (IOException io) {
+											System.out.println(io.toString());
+										}catch (SQLException sq) {
+											System.out.println(sq.toString());
+										}catch (NullPointerException nu){
+											System.out.println(nu.toString());
 										} catch (Exception e) {
 											 if(e.getMessage().equals("A008") || e.getMessage().equals("A014") || e.getMessage().equals("A016")  || e.getMessage().equals("A017") ){
 												 throw new Exception(e.getMessage()); 
@@ -864,6 +980,12 @@ public class EPCE4705601Service {
 													epce4705601Mapper.epce4705631_insert(map); // 입고정정 등록
 												}//end of for
 									 	
+										}catch (IOException io) {
+											System.out.println(io.toString());
+										}catch (SQLException sq) {
+											System.out.println(sq.toString());
+										}catch (NullPointerException nu){
+											System.out.println(nu.toString());
 										} catch (Exception e) {
 											 if(e.getMessage().equals("A008") || e.getMessage().equals("A014") || e.getMessage().equals("A016")  || e.getMessage().equals("A017") ){
 												 throw new Exception(e.getMessage()); 
@@ -929,6 +1051,12 @@ public class EPCE4705601Service {
 						model.addAttribute("whsl_se_cdList", util.mapToJson(whsl_se_cdList));	
 						model.addAttribute("whsdlList", util.mapToJson(whsdlList));	
 						model.addAttribute("titleSub", title);
+					}catch (IOException io) {
+						System.out.println(io.toString());
+					}catch (SQLException sq) {
+						System.out.println(sq.toString());
+					}catch (NullPointerException nu){
+						System.out.println(nu.toString());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -951,6 +1079,12 @@ public class EPCE4705601Service {
 				      		rtnMap.put("whsdlList", util.mapToJson(commonceService.mfc_bizrnm_select4(request, inputMap))); // 생산자랑 거래중인 도매업자 업체명조회
 					    	inputMap.put("BIZR_TP_CD", "");
 							rtnMap.put("brch_nmList", util.mapToJson(commonceService.brch_nm_select(request, inputMap)));	 //사업자 직매장/공장 조회	
+					}catch (IOException io) {
+						System.out.println(io.toString());
+					}catch (SQLException sq) {
+						System.out.println(sq.toString());
+					}catch (NullPointerException nu){
+						System.out.println(nu.toString());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -970,6 +1104,12 @@ public class EPCE4705601Service {
 			    	HashMap<String, Object> rtnMap = new HashMap<String, Object>();
 			    		try {
 							rtnMap.put("whsdlList", util.mapToJson(commonceService.mfc_bizrnm_select4(request, inputMap))); //업체명 조회	
+						}catch (IOException io) {
+							System.out.println(io.toString());
+						}catch (SQLException sq) {
+							System.out.println(sq.toString());
+						}catch (NullPointerException nu){
+							System.out.println(nu.toString());
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -989,6 +1129,12 @@ public class EPCE4705601Service {
 			    	
 			    	try {
 				      		rtnMap.put("whsdlList", util.mapToJson(commonceService.mfc_bizrnm_select4(request, inputMap)));    	 // 생산자랑 거래중인 도매업자 업체명조회
+					}catch (IOException io) {
+						System.out.println(io.toString());
+					}catch (SQLException sq) {
+						System.out.println(sq.toString());
+					}catch (NullPointerException nu){
+						System.out.println(nu.toString());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -1012,6 +1158,12 @@ public class EPCE4705601Service {
 			    			
 							rtnMap.put("selList", util.mapToJson(epce4705601Mapper.epce47056642_select(inputMap)));
 							rtnMap.put("totalCnt", epce4705601Mapper.epce47056642_select_cnt(inputMap));
+						}catch (IOException io) {
+							System.out.println(io.toString());
+						}catch (SQLException sq) {
+							System.out.println(sq.toString());
+						}catch (NullPointerException nu){
+							System.out.println(nu.toString());
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");

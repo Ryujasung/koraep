@@ -4,6 +4,8 @@ import net.sf.json.JSONObject;
 
 import org.springframework.stereotype.Controller;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,6 +70,12 @@ public class EPCE0160116Controller {
 		
 			try{
 				errCd = epce0160116Service.epce0160116_update(data, request);
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			}catch(Exception e){
 				errCd = e.getMessage();
 			}
@@ -100,6 +108,12 @@ public class EPCE0160116Controller {
 			
 			try{
 				errCd = epce0160116Service.epce0160116_delete(data, request);
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			}catch(Exception e){
 				errCd = e.getMessage();
 			}
@@ -126,6 +140,12 @@ public class EPCE0160116Controller {
 			
 			try{
 				errCd = epce0160116Service.epce0160116_delete2(data, request);
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			}catch(Exception e){
 				errCd = e.getMessage();
 			}
@@ -169,6 +189,12 @@ public class EPCE0160116Controller {
 		
 		try{
 			errCd = epce0160116Service.epce0160142_update(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

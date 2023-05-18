@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +56,12 @@ public class EPCE4770801Service {
 		
 		try {
 			model.addAttribute("mfcBizrList", util.mapToJson(mfcBizrList));	
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -153,6 +161,12 @@ public class EPCE4770801Service {
 			model.addAttribute("searchList7",   util.mapToJson(searchList7));
 			model.addAttribute("searchList7_2", util.mapToJson(searchList7_2));
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			/*e.printStackTrace();*/
@@ -328,6 +342,12 @@ public class EPCE4770801Service {
 			map.put("searchList2", util.mapToJson(searchList2));
 			map.put("searchList7", util.mapToJson(searchList7));
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -468,6 +488,12 @@ public class EPCE4770801Service {
 			//정정 및 정산연산조정 상태변경
 			epce4770801Mapper.EPCE4770831_update2(param);
 		
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			/*e.printStackTrace();*/
 			//취약점점검 6300 기원우

@@ -20,6 +20,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.security.SecureRandom;
+import java.sql.SQLException;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -597,6 +598,12 @@ public class EPCE0085201Controller {
 //			model.addAttribute("_csrf", _csrf);
 //			System.out.println("885 : "+_csrf);
             
+        }catch (IOException io) {
+        	io.getMessage();
+        }catch (SQLException sq) {
+        	sq.getMessage();
+        }catch (NullPointerException nu){
+        	nu.getMessage();
         }catch(Exception e){
         	/*e.printStackTrace();*/
         	//취약점점검 6316 기원우 
@@ -753,6 +760,12 @@ public class EPCE0085201Controller {
 				if(corpState != null){
 					state = corpState.getState();
 				}
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			}catch(Exception e){
 				//errMsg = e.getMessage();
 				state = "";
@@ -760,6 +773,12 @@ public class EPCE0085201Controller {
 			
 			errCd = epce0085201Service.epce00852013_insert(request, state);
 			
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -787,6 +806,12 @@ public class EPCE0085201Controller {
 		
 		try{
 			errCd = epce0085201Service.epce00852015_insert(request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
