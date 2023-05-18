@@ -237,7 +237,9 @@
 		        
 		       //파라미터 call back function 실행
 				 if(kora.common.null2void(INQ_PARAMS.FN_CALLBACK2) != ""){
-				 	eval(INQ_PARAMS.FN_CALLBACK2+"()");
+				 	/* eval(INQ_PARAMS.FN_CALLBACK2+"()"); */
+				 	 window[INQ_PARAMS.FN_CALLBACK2]();
+				 	//취약점점검 5934 기원우
 				 }else{
 					 gridApp.setData();
 				 }

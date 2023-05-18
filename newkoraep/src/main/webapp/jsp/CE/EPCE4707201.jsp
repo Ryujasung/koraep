@@ -326,7 +326,9 @@
 		    	 dataGrid = gridRoot.getDataGrid();  // 그리드 객체
 		    	 
 		    	 if(kora.common.null2void(INQ_PARAMS.FN_CALLBACK) != ""){
-				 	eval(INQ_PARAMS.FN_CALLBACK+"()");
+		    		 /* eval(INQ_PARAMS.FN_CALLBACK+"()"); */
+				 	 window[INQ_PARAMS.FN_CALLBACK]();
+				 	//취약점점검 5924 기원우
 				 }else{
 					 gridApp.setData();
 				 }

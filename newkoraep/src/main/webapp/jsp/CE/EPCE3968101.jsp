@@ -420,7 +420,9 @@
 		layoutStr.push('			<DataGridColumn dataField="GRP_CD" headerText="'+parent.fn_text('grp_cd')+'" textAlign="center" width="18%" />');
 		layoutStr.push('			<DataGridColumn dataField="GRP_NM" headerText="'+parent.fn_text('grp_nm')+'" width="18%" />');
 		layoutStr.push('			<DataGridColumn dataField="USE_YN" headerText="'+parent.fn_text('use_yn')+'" textAlign="center" width="18%"  itemEditor="ComboBoxEditor" editorDataField="selectedDataField" itemRendererDataField="code" itemRenderer="DataProviderItem" itemRendererDataProvider="'
-						+ JSON.stringify(grdUseYnList).replace( eval("/" + "\"" + "/g"), "\'") + '"/>');
+						/* + JSON.stringify(grdUseYnList).replace( eval("/" + "\"" + "/g"), "\'") + '"/>'); */
+						   + JSON.stringify(grdUseYnList).replace(new RegExp('"', 'g'), "\'") + '"/>');
+						//취약점점검 5918 기원우 
 		layoutStr.push('		</columns>');
 		layoutStr.push('	</DataGrid>');
 		layoutStr.push('</rMateGrid>');
@@ -436,7 +438,9 @@
 		layoutStr2.push('			<DataGridColumn dataField="RSV_ITEM2" headerText="'+parent.fn_text('rsv_item')+'2" width="15%" />');
 		layoutStr2.push('			<DataGridColumn dataField="RSV_ITEM3" headerText="'+parent.fn_text('rsv_item')+'3" width="15%" />');
 		layoutStr2.push('			<DataGridColumn dataField="USE_YN" headerText="'+parent.fn_text('use_yn')+'" textAlign="center" width="10%"  itemEditor="ComboBoxEditor" editorDataField="selectedDataField" itemRendererDataField="code" itemRenderer="DataProviderItem" itemRendererDataProvider="'
-						+ JSON.stringify(grdUseYnList).replace(eval("/" + "\"" + "/g"), "\'") + '"/>');
+				/* + JSON.stringify(grdUseYnList).replace( eval("/" + "\"" + "/g"), "\'") + '"/>'); */
+				   + JSON.stringify(grdUseYnList).replace(new RegExp('"', 'g'), "\'") + '"/>');
+				//취약점점검 5919 기원우
 		layoutStr2.push('		</columns>');
 		layoutStr2.push('	</DataGrid>');
 		layoutStr2.push('</rMateGrid>');

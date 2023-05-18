@@ -46,15 +46,25 @@
 		var data = searchDtl;
 		$('.row > .txtbox').each(function(){
 			if($(this).attr('id') == 'NOTY_AMT' || $(this).attr('id') == 'ADD_AMT'){
-				$(this).text(kora.common.format_comma(eval('data.'+$(this).attr('id'))) + ' 원');
+				/* $(this).text(kora.common.format_comma(eval('data.'+$(this).attr('id'))) + ' 원'); */
+				$(this).text(kora.common.format_comma(data[$(this).attr('id')]) + ' 원');
+				//취약점점검 5884 기원우
 			}else if($(this).attr('id') == 'BIZRNO'){
-				$(this).text(kora.common.setDelim(eval('data.'+$(this).attr('id')), '999-99-99999') );
+				/* $(this).text(kora.common.setDelim(eval('data.'+$(this).attr('id')), '999-99-99999') ); */
+			    $(this).text(kora.common.setDelim(data[$(this).attr('id')], '999-99-99999'));
+				//취약점점검 5885 기원우 
 			}else if($(this).attr('id') == 'RISU_RSN' && data.RISU_RSN != undefined){
-				$(this).html(eval('data.'+$(this).attr('id')).replaceAll('\\n', '<br>'));
+				  /* $(this).html(eval('data.'+$(this).attr('id')).replaceAll('\\n', '<br>')); */
+                $(this).html(data[$(this).attr('id')].replaceAll('\\n', '<br>'));
+              //취약점점검 5886 기원우
 			}else if($(this).attr('id') == 'RISU_DT' && data.RISU_DT != undefined){
-				$(this).text(kora.common.setDelim(eval('data.'+$(this).attr('id')), '9999-99-99') );
+				   /* $(this).text(kora.common.setDelim(eval('data.'+$(this).attr('id')), '9999-99-99') ); */
+                $(this).text(kora.common.setDelim(data[$(this).attr('id')], '9999-99-99'));
+              //취약점점검 5887 기원우
 			}else{
-				$(this).text(eval('data.'+$(this).attr('id')));
+				/* $(this).text(eval('data.'+$(this).attr('id'))); */
+				$(this).text(data[$(this).attr('id')]);
+				//취약점점검 5888 기원우 
 			}
 		});
 		

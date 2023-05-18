@@ -171,7 +171,9 @@
 		
 		/* 페이징 사용 등록 */
 	    if(kora.common.null2void(jParams.FN_CALLBACK) != ""){
-			eval(jParams.FN_CALLBACK+"()");
+			/* eval(jParams.FN_CALLBACK+"()"); */
+			 window[jParams.FN_CALLBACK]();
+			 	//취약점점검 5948 기원우
 		} else {
 			gridMovePage(gridCurrentPage);
 		}

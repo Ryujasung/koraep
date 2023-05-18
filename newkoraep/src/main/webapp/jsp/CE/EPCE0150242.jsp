@@ -113,10 +113,14 @@
 			//데이터 셋팅
 			var data = searchDtl;
 			$('.row > input').each(function(){
-				$(this).val(eval('data.'+$(this).attr('id')));
+				/* $(this).val(eval('data.'+$(this).attr('id'))); */
+				    $(this).val(data[$(this).attr('id')]);
+				//취약점점검 5823 기원우 
 			});
 			$('.row > select').each(function(){
-				$(this).val(eval('data.'+$(this).attr('id')));
+				/* $(this).val(eval('data.'+$(this).attr('id'))); */
+			    $(this).val(data[$(this).attr('id')]);
+				//취약점점검 5824 기원우				
 			});
 			
 			$(":radio[name='PAY_EXEC_YN'][value='"+searchDtl.PAY_EXEC_YN+"']").prop("checked", true);

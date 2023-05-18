@@ -444,7 +444,9 @@
 		     
 			 //파라미터 call back function 실행
 			 if(kora.common.null2void(INQ_PARAMS.FN_CALLBACK) != ""){
-			 	eval(INQ_PARAMS.FN_CALLBACK+"()");
+					/* eval(INQ_PARAMS.FN_CALLBACK+"()"); */
+			 	 window[INQ_PARAMS.FN_CALLBACK]();
+			 	//취약점점검 6013 기원우
 			 }
 		 }
 		
