@@ -250,6 +250,19 @@ public class CMSCS002Controller {
 			//취약점점검 6284 기원우
 			/*e.printStackTrace();*/
 			//취약점점검 6285 기원우			
+		}finally {
+			if(conn!=null) {
+				conn.close();
+				//취약점점검 3168 기원우
+			}
+			if(in!=null) {
+				in.close();
+				//취약점점검 3167 기원우
+			}
+			if(os!=null) {
+				os.close();
+				//취약점점검 3166 기원우 
+			}
 		}
 		
 		return data;

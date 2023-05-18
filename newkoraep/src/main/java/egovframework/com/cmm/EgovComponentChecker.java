@@ -30,12 +30,13 @@ import org.springframework.stereotype.Service;
 public class EgovComponentChecker extends EgovAbstractServiceImpl implements ApplicationContextAware{
 	
 
-	public static ApplicationContext context;
+	/*public static ApplicationContext context;*/
+	//취약점점검 3177 기원우 
 	
 	@Override
 	public void setApplicationContext(ApplicationContext context)
 		throws BeansException {
-		
+		public static ApplicationContext context;
 		EgovComponentChecker.context = context;
 	}
 	
@@ -47,6 +48,7 @@ public class EgovComponentChecker extends EgovAbstractServiceImpl implements App
 	public static boolean hasComponent(String componentName){
 		
 		try{
+			public static ApplicationContext context;
 			Object component = context.getBean(componentName);
 			
 			if(component == null){

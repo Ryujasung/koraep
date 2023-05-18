@@ -1908,7 +1908,11 @@ public class CommonCeController {
 			if(rc==200){
 				StringBuffer sb = new StringBuffer();
 				String str = "";
-				BufferedReader br = new BufferedReader(new InputStreamReader((connection.getInputStream())));
+				
+				BufferedReader br = null;
+				try {
+						br = new BufferedReader(new InputStreamReader((connection.getInputStream())));
+				//취약점점검 3162 기원우 
 				while( (str = br.readLine()) !=null) {      
 					sb.append(URLDecoder.decode(str, "utf-8"));
 				}
@@ -1920,6 +1924,18 @@ public class CommonCeController {
 				System.out.println("RSLT_DT=======" + data.get("RSLT_DT"));
 				System.out.println("RSLT_TKTM=======" + data.get("RSLT_TKTM"));
 				rtn = data.get("RSLT_CD").toString();
+				
+				}catch (IOException e) {
+					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
+				} finally {
+				    if (br != null) {
+				        try {
+				            br.close();
+				        } catch (IOException e) {
+				        	org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
+				        }
+				    }
+				}
 			}else{
 				StringBuffer sb = new StringBuffer();
 				String str = "";
