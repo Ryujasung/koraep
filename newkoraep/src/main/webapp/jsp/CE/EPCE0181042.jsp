@@ -227,10 +227,16 @@
 			//데이터 셋팅
 			var data = searchDtl;
 			$('.row > input').each(function(){
-				$(this).val(eval('data.'+$(this).attr('id')));
+				/* $(this).val(eval('data.'+$(this).attr('id'))); */
+			    $(this).val(data[$(this).attr('id')]);
+			//취약점점검 5829 기원우 
+
 			});
+			
 			$('.row > select').each(function(){
-				$(this).val(eval('data.'+$(this).attr('id')));
+				/* $(this).val(eval('data.'+$(this).attr('id'))); */
+			    $(this).val(data[$(this).attr('id')]);
+				//취약점점검 5830 기원우				
 			});
 			
 			if(searchDtl.ACP_MGNT_YN == 'Y'){

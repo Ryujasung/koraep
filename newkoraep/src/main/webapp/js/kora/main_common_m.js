@@ -190,7 +190,9 @@ function gfn_mobileCheck(){
  **/
 function jsonObject(val){
 	try{
-		return eval('(' + val + ')');
+		/*return eval('(' + val + ')');*/
+		return JSON.parse(val);
+		//취약점점검 5859 기원우
 	}
 	catch(Exception){
 		return null;

@@ -115,14 +115,18 @@
             $("#GRP_BRCH_NO").val(searchDtl.GRP_BRCH_NO);
             $('#BRCH_NO_TXT').text(searchDtl.BRCH_NO);
 
-            //데이터 셋팅
-            var data = searchDtl;
-            $('.row > input').each(function(){
-                $(this).val(eval('data.'+$(this).attr('id')));
-            });
-            $('.row > select').each(function(){
-                $(this).val(eval('data.'+$(this).attr('id')));
-            });
+          //데이터 셋팅
+			var data = searchDtl;
+			$('.row > input').each(function(){
+				/* $(this).val(eval('data.'+$(this).attr('id'))); */
+				    $(this).val(data[$(this).attr('id')]);
+				//취약점점검 5876 기원우 
+			});
+			$('.row > select').each(function(){
+				/* $(this).val(eval('data.'+$(this).attr('id'))); */
+			    $(this).val(data[$(this).attr('id')]);
+				//취약점점검 5877 기원우				
+			});
             
             $(":radio[name='PAY_EXEC_YN'][value='"+searchDtl.PAY_EXEC_YN+"']").prop("checked", true);
             

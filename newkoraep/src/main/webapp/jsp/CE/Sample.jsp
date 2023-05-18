@@ -62,8 +62,13 @@ function fnCommSetLabel(data, grdData, grdCode, grdLabel){
 	
 	try {
 		$.each(data, function(i, v) {
-			var $code  = eval("v."+grdCode);
-			var $value = eval("v."+grdLabel);
+			/* var $code  = eval("v."+grdCode);
+			var $value = eval("v."+grdLabel); */ 
+			
+			var $code  = v[grdCode];
+			//취약점점검 5962 기원우
+			var $value = v[grdLabel];
+			//취약점점검 5963 기원우
 			
 			grd.push({'label':$value, 'code':$code});
 			
@@ -124,8 +129,14 @@ function gridSet(){
 	layoutStr.push('	<DataGrid headerColors="[#EFF6FC,#EFF6FC]" verticalAlign="middle" id="dg1" headerWordWrap="true" headerHeight="35" horizontalScrollPolicy="auto" >');
 	layoutStr.push('		<columns>');
 	layoutStr.push('			<DataGridColumn dataField="IDX" headerText="번호" itemRenderer="IndexNoItem" textAlign="center" width="50" />');
-	layoutStr.push('			<DataGridColumn dataField="STD_CTNR_CD" headerText="STD_CTNR_CD" width="100"    itemEditor="ComboBoxEditor" editorDataField="selectedDataField" itemRendererDataField="code" itemRenderer="DataProviderItem" itemRendererDataProvider="'+JSON.stringify(grdStdList).replace( eval("/" + "\"" + "/g"),"\'")+'" />'); 
-	layoutStr.push('			<DataGridColumn dataField="DTSS_NO" headerText="DTSS_NO" width="100"    itemEditor="ComboBoxEditor" editorDataField="selectedDataField" itemRendererDataField="code" itemRenderer="DataProviderItem" itemRendererDataProvider="'+JSON.stringify(grdStdList).replace( eval("/" + "\"" + "/g"),"\'")+'" />'); 
+	layoutStr.push('			<DataGridColumn dataField="STD_CTNR_CD" headerText="STD_CTNR_CD" width="100"    itemEditor="ComboBoxEditor" editorDataField="selectedDataField" itemRendererDataField="code" itemRenderer="DataProviderItem" itemRendererDataProvider="'
+			/* +JSON.stringify(grdStdList).replace( eval("/" + "\"" + "/g"),"\'")+'" />'); */ 
+			+ JSON.stringify(grdStdList).replace(new RegExp('"', 'g'), "\'") + '"/>');
+			//취약점점검 5964 기원우
+	layoutStr.push('			<DataGridColumn dataField="DTSS_NO" headerText="DTSS_NO" width="100"    itemEditor="ComboBoxEditor" editorDataField="selectedDataField" itemRendererDataField="code" itemRenderer="DataProviderItem" itemRendererDataProvider="'
+			/* +JSON.stringify(grdStdList).replace( eval("/" + "\"" + "/g"),"\'")+'" />'); */ 
+			+ JSON.stringify(grdStdList).replace(new RegExp('"', 'g'), "\'") + '"/>');
+			//취약점점검 5965 기원우
 	layoutStr.push('			<DataGridColumn dataField="SBJ" headerText="제목" width="200" />');
 	layoutStr.push('			<DataGridColumn dataField="JOB" headerText="JOB" width="20"     />');
 	layoutStr.push('		</columns>');
@@ -166,7 +177,9 @@ function gridReadyHandler(id) {
 	gridApp.setData();  //${searchList}
 	
 	if(kora.common.null2void(jParams.FN_CALLBACK) != ""){
-		eval(jParams.FN_CALLBACK+"()");
+		/* eval(jParams.FN_CALLBACK+"()"); */
+		 window[jParams.FN_CALLBACK]();
+		//취약점점검 5966 기원우
 	} else {
 	//	gridMovePage(gridCurrentPage);
 	}

@@ -220,14 +220,20 @@ $(function(){
 					// 변경이벤트 후처리(fn_해당ID_chng())
 					var obj;
 					try {
-						obj	= eval("fn_"+$(this).attr("id")+"_chng");
+						/*obj	= eval("fn_"+$(this).attr("id")+"_chng");*/
+						let functionSuffix = $(this).attr("id") + "_chng";
+						let obj = window["fn_" + functionSuffix];
+						//취약점점검 5834 기원우 
 					}
 					catch(e) {
 						return;
 					}
 					
 					if(typeof obj != "undefined"){
-						eval("fn_"+$(this).attr("id")+"_chng()");
+						/*eval("fn_"+$(this).attr("id")+"_chng()");*/
+						let functionSuffix = $(this).attr("id") + "_chng";
+						let obj = window["fn_" + functionSuffix];
+						//취약점점검 5835 기원우 
 					}
 				}	
 			}	
@@ -254,14 +260,20 @@ $(function(){
 					// 변경이벤트 후처리(fn_해당ID_chng())
 					var obj;
 					try {
-						obj	= eval("fn_"+$(this).attr("id")+"_chng");
+						/*obj	= eval("fn_"+$(this).attr("id")+"_chng");*/
+						let functionSuffix = $(this).attr("id") + "_chng";
+						let obj = window["fn_" + functionSuffix];
+						//취약점점검 5836 기원우 
 					}
 					catch(e) {
 						return;
 					}
 					
 					if(typeof obj != "undefined"){
-						eval("fn_"+$(this).attr("id")+"_chng()");
+					/*	eval("fn_"+$(this).attr("id")+"_chng()");*/
+						let functionSuffix = $(this).attr("id") + "_chng";
+						let obj = window["fn_" + functionSuffix];
+						//취약점점검 5837 기원우 
 					}
 				}	
 			}	
@@ -679,7 +691,9 @@ String.prototype.replaceAll = function(str1, str2){
 	var temp_str = this.trim();
 	if(this.trim() == "") return temp_str;
 
-	return temp_str.replace( eval("/" + str1 + "/g"),str2);
+	/*return temp_str.replace( eval("/" + str1 + "/g"),str2);*/
+	return temp_str.replace(new RegExp(str1, 'g'), str2);
+	//취약점점검 5838 기원우
 };
 
 /**************************************************************
@@ -1040,7 +1054,9 @@ function ajaxPost(url, dataBody, func, pAsync){
  **/
 function jsonObject(val){
 	try{
-		return eval('(' + val + ')');
+		/*return eval('(' + val + ')');*/
+		return JSON.parse(val);
+		//취약점점검 5839 기원우 
 	}
 	catch(Exception){
 		return null;
@@ -2102,8 +2118,12 @@ kora.common.goPageD = function(url, jsonInp, jsonInq, goGubn){
 			if(kora.common.null2void(goGubn) == "M"){
 				nSeq = nSeq - 1;
 				if(nSeq > 0){
-					var jsonCur = eval("jsonInq.DEPTH_PARAMS"+(nSeq+1));
-					var jsonBak = eval("jsonInq.DEPTH_PARAMS"+nSeq);
+					/*var jsonCur = eval("jsonInq.DEPTH_PARAMS"+(nSeq+1));*/
+					var jsonCur = jsonInq["DEPTH_PARAMS" + (nSeq + 1)];
+					//취약점점검 5840 기원우
+					/*var jsonBak = eval("jsonInq.DEPTH_PARAMS"+nSeq);*/
+					var jsonBak = jsonInq["DEPTH_PARAMS" + nSeq];
+					//취약점점검 5841 기원우					
 					if(kora.common.null2void(jsonCur.URL_CALLBACK)!="") $form.attr('action', jsonCur.URL_CALLBACK);
 					$.each(jsonBak, function(i, v){
 						$form.append('<input name="'+i+'" type="hidden" value="'+v+'" />');
@@ -2651,7 +2671,6 @@ kora.common.setEtcCmBx2 = function(data, dynVal, selectedValue, selector, code, 
 	var selectbo = selector;
 	var _style = selectbo.attr("style");
 	var _class = selectbo.attr("class");
-	
 	// 기존에 option 항목이 존재하면 삭제.
 	//selectbo.children(".generated").remove();
 	selectbo.children().remove();
@@ -2685,9 +2704,12 @@ kora.common.setEtcCmBx2 = function(data, dynVal, selectedValue, selector, code, 
 		
 		$.each(data, function(i, v) {
 		
-			var $code  = eval("v."+code); 
-			var $value = eval("v."+value);
-			
+			/*var $code  = eval("v."+code);*/ 
+			var $code = v[code];
+			//취약점점검 5842 기원우
+			/*var $value = eval("v."+value);*/
+			var $value = v[value];
+			//취약점점검 5843 기원우			
 			if(arrDyn.length > 1){
 				var nMatch = 0;
 				for(var j=0; j<arrDyn.length; j++){
@@ -2920,7 +2942,9 @@ function fnrrnCheck(rrn){
  */
 function gfn_enter(func){
 	if (event.keyCode != 13) return;
-	eval(func+'()');
+	/*eval(func+'()');*/
+	window[func](); //func가 전역함수 일 경우만 window 객체 사용 가능 
+	//취약점점검 5844 기원우
 }
 
 //특수키 사용금지
@@ -3257,7 +3281,10 @@ kora.common.saveLayout = function (val) {
 	/* ---------------드레그 컬럼 저장---------------------------------------------------------- */
 		if(val ==undefined) val="";
 		url ="/GRID_INFO.do"
-		dataGrid = eval('gridRoot'+val).getDataGrid();
+		/*dataGrid = eval('gridRoot'+val).getDataGrid();*/
+			dataGrid = window['gridRoot' + val].getDataGrid();
+		//취약점점검 5845 기원우
+		
 		columns = dataGrid.getGroupedColumns();
 		
 		var colArray = [];
