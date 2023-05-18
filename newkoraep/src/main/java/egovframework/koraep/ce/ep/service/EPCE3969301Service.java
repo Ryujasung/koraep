@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -53,6 +55,12 @@ public class EPCE3969301Service {
 			
 			List<?> btchList = epce3969301Mapper.epce3969301_select2(); //배치 목록
 			model.addAttribute("btchList", util.mapToJson(btchList));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -101,6 +109,12 @@ public class EPCE3969301Service {
 				
 				epce3969301Mapper.epce3969301_update(data);	
 				
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		}
@@ -122,6 +136,12 @@ public class EPCE3969301Service {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
 			map.put("searchList", util.mapToJson(list));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.security.GeneralSecurityException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -453,8 +454,14 @@ public class CommonCeService{
 			Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), user.getAuthorities());
 		    SecurityContext securityContext = SecurityContextHolder.getContext();
 		    securityContext.setAuthentication(authentication);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
-
+			e.getMessage();
 		}
 		
 		//세션 저장
@@ -589,8 +596,14 @@ public class CommonCeService{
 			Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), pwd, user.getAuthorities());
 		    SecurityContext securityContext = SecurityContextHolder.getContext();
 		    securityContext.setAuthentication(authentication);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
-
+			e.getMessage();
 		}
 		
 		/********************************************************/
@@ -920,7 +933,13 @@ public class CommonCeService{
 		
 		try {
 			map.put("USER_ID", map.get("USER_ID"));
-		} catch (Exception e) {
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
+		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}
@@ -1454,6 +1473,12 @@ public class CommonCeService{
 		if(ERR_SE.equals("B")){ //연계 API 이력 등록
 			try {
 				insertErrorLogAPI(request, errCd, errMsg);
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				return errMsg;
@@ -2325,6 +2350,12 @@ public class CommonCeService{
 				try{
 					commonceMapper.doc_psnb_insert(data);
 					roop = false;
+				}catch (IOException io) {
+					io.getMessage();
+				}catch (SQLException sq) {
+					sq.getMessage();
+				}catch (NullPointerException nu){
+					nu.getMessage();
 				}catch(Exception e){
 					roop = true; //다시 조회
 				}
@@ -2385,6 +2416,12 @@ public class CommonCeService{
 			try{
 				commonceMapper.psnb_insert(data);
 				roop = false;
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			}catch(Exception e){
 				roop = true;	//다시 조회
 			}
@@ -2752,6 +2789,12 @@ public class CommonCeService{
 					}//while
 			    	rtnMap.put("list", util.mapToJson(list));    	 
 			    	
+				}catch (IOException io) {
+					io.getMessage();
+				}catch (SQLException sq) {
+					sq.getMessage();
+				}catch (NullPointerException nu){
+					nu.getMessage();
 				}catch (Exception e) {
 					 if(e.getMessage().equals("A013") ){
 						 throw new Exception(e.getMessage());
@@ -2960,6 +3003,12 @@ public class CommonCeService{
 				try {
 					inputMap.put("USER_ID", vo.getUSER_ID());  		// 등록자
 					commonceMapper.GRID_INFO_INSERT(inputMap); 		// 그리드 컬럼 저장 수정
+				}catch (IOException io) {
+					io.getMessage();
+				}catch (SQLException sq) {
+					sq.getMessage();
+				}catch (NullPointerException nu){
+					nu.getMessage();
 				}catch (Exception e) {
 					throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 				}
@@ -3247,6 +3296,12 @@ public class CommonCeService{
 					rtnMap.put("askList",  util.mapToJson(commonceMapper.SELECT_MAIN_ASK_LIST(data)));
     			}
     			
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -3300,6 +3355,12 @@ public class CommonCeService{
 			try {
 
 				commonceMapper.UPDATE_PRSN_INFO_CHG_AGR_YN(map);
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			}catch(Exception e){
 				throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -3321,6 +3382,12 @@ public class CommonCeService{
 			try {
 
 				bizrTpCd = commonceMapper.SELECT_BIZR_TP_CD(map);
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			}catch(Exception e){
 				throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -3335,6 +3402,12 @@ public class CommonCeService{
 			try {
 
 				ErrCnt = commonceMapper.loginErrCnt(map);
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			}catch(Exception e){
 				throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -3355,6 +3428,12 @@ public class CommonCeService{
 			try {
 
 				pwdChg = commonceMapper.loginPwdChg(map);
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			}catch(Exception e){
 				throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}

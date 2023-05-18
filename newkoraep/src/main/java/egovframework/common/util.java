@@ -289,6 +289,10 @@ public  class util{
 				strOut.append(str);
 			}
 			br.close();
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			return "";
 		}finally{
@@ -365,9 +369,11 @@ public  class util{
             }
 
             return hexString.toString();
-        }catch(Exception e){
-            throw new RuntimeException();
-        }
+        }catch (NullPointerException nu){
+			nu.getMessage();
+		}catch(Exception e){
+			 throw new RuntimeException();
+		}
     }
 	
 	

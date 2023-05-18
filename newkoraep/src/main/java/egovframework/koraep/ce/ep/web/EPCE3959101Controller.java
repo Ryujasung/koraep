@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import javax.annotation.Resource;
@@ -138,6 +140,12 @@ public class EPCE3959101Controller {
 		try{
 			data.put("BIZR_ATH_SE", "A");//지역
 			errCd = epce3959101Service.epce3959131_update(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -166,6 +174,12 @@ public class EPCE3959101Controller {
 		try{
 			data.put("BIZR_ATH_SE", "O");//소속단체
 			errCd = epce3959101Service.epce3959131_update(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -194,6 +208,12 @@ public class EPCE3959101Controller {
 		try{
 			data.put("BIZR_ATH_SE", "B");//개별사업자
 			errCd = epce3959101Service.epce3959131_insert(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

@@ -1,6 +1,8 @@
 
 package egovframework.koraep.mf.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -78,6 +80,12 @@ public class EPMF4738731Controller {
 		try{
 			errCd = epmf4738731Service.epmf4738731_insert(data, request);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -137,6 +145,12 @@ public class EPMF4738731Controller {
 		try{
 			errCd = epmf4738731Service.epmf47387312_insert(data, request);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -184,6 +198,12 @@ public class EPMF4738731Controller {
 		try{
 			errCd = epmf4738731Service.epmf4738742_update(data, request);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

@@ -1,5 +1,7 @@
 package egovframework.koraep.mf.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +60,12 @@ public class EPMF6109501Service {
 
 				List<?> dtList = commonceService.getCommonCdListNew("D026"); //날짜
 				model.addAttribute("dtList", util.mapToJson(dtList));
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -98,6 +106,12 @@ public class EPMF6109501Service {
 
 				map.put("totalList", epmf6109501Mapper.epmf6109501_select_cnt(data));
 
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				/*e.printStackTrace();*/
@@ -121,6 +135,12 @@ public class EPMF6109501Service {
 
 	    		try {
 					rtnMap.put("ctnr_cd", util.mapToJson(commonceService.ctnr_nm_select2(request, inputMap)));
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -162,6 +182,12 @@ public class EPMF6109501Service {
 				//엑셀파일 저장
 				commonceService.excelSave(request, map, list);
 
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch(Exception e){
 				return "A001"; //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}

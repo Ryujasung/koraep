@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +66,12 @@ public class EPCE3951201Service {
 			model.addAttribute("cpctCdList", util.mapToJson(cpctCdList));
 			model.addAttribute("prpsCdList", util.mapToJson(prpsCdList));
 			model.addAttribute("langSeList", util.mapToJson(langSeList));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -88,6 +96,12 @@ public class EPCE3951201Service {
     	
     	try {
 			rtnMap.put("stdCtnrList", util.mapToJson(epce3951201Mapper.epce3951201_select(inputMap)));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -113,6 +127,12 @@ public String epce3951201_select3(Map<String, String> data, HttpServletRequest r
       if(sel_rst>0){
     	  errCd ="A003";
       }
+	}catch (IOException io) {
+		System.out.println(io.toString());
+	}catch (SQLException sq) {
+		System.out.println(sq.toString());
+	}catch (NullPointerException nu){
+		System.out.println(nu.toString());
 	}catch(Exception e){
 		return "A001"; //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 	}
@@ -142,6 +162,12 @@ public String epce3951201_insert(Map<String, String> data, HttpServletRequest re
 			epce3951201Mapper.epce3951201_update(data);  //표준용기 수정
 		}
 		
+	}catch (IOException io) {
+		System.out.println(io.toString());
+	}catch (SQLException sq) {
+		System.out.println(sq.toString());
+	}catch (NullPointerException nu){
+		System.out.println(nu.toString());
 	}catch(Exception e){
 		throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 	}

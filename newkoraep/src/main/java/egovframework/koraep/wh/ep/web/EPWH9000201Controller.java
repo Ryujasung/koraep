@@ -1,5 +1,7 @@
 package egovframework.koraep.wh.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,6 +108,12 @@ public class EPWH9000201Controller {
 
 		try{
 			errCd = epwh9000201Service.epwh9000201_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -169,6 +177,12 @@ public class EPWH9000201Controller {
 				}
 			}
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			/*e.printStackTrace();*/
 			//취약점검 6283 기원우
@@ -206,6 +220,12 @@ public class EPWH9000201Controller {
 				errCd = epwh9000201Service.epwh9000201_updateData3(data, request); //비활동처리
 			}
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -249,6 +269,12 @@ public class EPWH9000201Controller {
 			
 			errCd = epwh9000201Service.epwh9000231_insert(request, state);
 			
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch(Exception e){
 				errCd = e.getMessage();
 			}
@@ -292,6 +318,12 @@ public class EPWH9000201Controller {
 			
 			errCd = epwh9000201Service.epwh9000242_insert(request, state);
 			
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch(Exception e){
 				errCd = e.getMessage();
 			}
@@ -388,6 +420,12 @@ public class EPWH9000201Controller {
 		String errCd = "";
 		try{
 			errCd = epwh9000201Service.epwh9000217_update(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -454,6 +492,12 @@ public class EPWH9000201Controller {
 		String errCd = "";
 		try{
 			errCd = epwh9000201Service.epwh9000288_update(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -480,6 +524,12 @@ public class EPWH9000201Controller {
 
 		try{
 			errCd = epwh9000201Service.epwh90002018_1_update4(data, request, model); //관리자변경
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");

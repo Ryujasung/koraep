@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import javax.annotation.Resource;
@@ -144,6 +146,12 @@ public class EPCE4791401Controller {
 		
 		try{
 			errCd = epce4791401Service.epce4791431_insert(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -171,6 +179,12 @@ public class EPCE4791401Controller {
 		
 		try{
 			errCd = epce4791401Service.epce4791442_delete(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -198,6 +212,12 @@ public class EPCE4791401Controller {
 		
 		try{
 			errCd = epce4791401Service.epce4791442_update(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -225,6 +245,12 @@ public class EPCE4791401Controller {
 		
 		try{
 			errCd = epce4791401Service.EPCE4791464_update(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

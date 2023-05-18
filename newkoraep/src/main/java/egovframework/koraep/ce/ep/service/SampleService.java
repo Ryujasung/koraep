@@ -60,7 +60,13 @@ public class SampleService {
 			List<?> epcnStdCtnrList = sampleMapper.SELECT_EPCN_STD_CTNR_CD_LIST(inputMap);
 			
 			model.addAttribute("epcnMbrList", util.mapToJson(epcnStdCtnrList));
-		} catch (Exception e) {
+		} catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
+		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}
@@ -117,7 +123,13 @@ public class SampleService {
 		try {
 			map.put("searchList", util.mapToJson(list));
 			map.put("totalCnt", util.mapToJson(totalCnt));
-		} catch (Exception e) {
+		} catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
+		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}

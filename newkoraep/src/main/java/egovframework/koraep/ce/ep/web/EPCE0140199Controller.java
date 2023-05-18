@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import javax.annotation.Resource;
@@ -92,6 +94,12 @@ public class EPCE0140199Controller {
 				errCd = epce0140199Service.epce0140199_mail(data, request); //회원복원
 			}
 			
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -122,6 +130,12 @@ public class EPCE0140199Controller {
 		
 		try{
 			errCd = epce0140199Service.epce0140199_excel(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -160,6 +174,12 @@ public class EPCE0140199Controller {
 				errCd = epce0140199Service.epce0140199_update4(data, request); //비밀번호오류초기화
 			}
 			
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

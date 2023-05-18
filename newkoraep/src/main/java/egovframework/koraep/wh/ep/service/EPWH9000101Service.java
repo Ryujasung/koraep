@@ -1,5 +1,7 @@
 package egovframework.koraep.wh.ep.service;
   
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -95,6 +97,12 @@ public class EPWH9000101Service {
 					model.addAttribute("whsdl_cd_list", util.mapToJson(whsdl_cd_list));	
 					model.addAttribute("prpsCdList", util.mapToJson(prpsCdList));					
 					model.addAttribute("titleSub", title);
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -135,6 +143,12 @@ public class EPWH9000101Service {
 	    	
 	    	try {
 		      	rtnMap.put("whsdl_cd_list", util.mapToJson(commonceService.mfc_bizrnm_select4(request, inputMap)));    	 // 도매업자 업체명조회
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -153,6 +167,12 @@ public class EPWH9000101Service {
 	    	HashMap<String, Object> rtnMap = new HashMap<String, Object>();
     		try {
     			rtnMap.put("brch_cd_List", util.mapToJson(commonceService.brch_nm_select(request, inputMap))); 		// 도매업자 지점
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -183,6 +203,12 @@ public class EPWH9000101Service {
 					rtnMap.put("selList", util.mapToJson(EPWH9000101Mapper.EPWH9000101_select(inputMap))); 
 //					rtnMap.put("totalList", util.mapToJson(EPWH9000101Mapper.EPWH9000101_select_cnt(inputMap)));
 //					rtnMap.put("amt_tot_list", util.mapToJson(EPWH9000101Mapper.EPWH9000101_select2(inputMap))); 
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -216,6 +242,12 @@ public class EPWH9000101Service {
 				
 				//엑셀파일 저장
 				commonceService.excelSave(request, map, list);
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch(Exception e){
 				return  "A001"; //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -246,6 +278,12 @@ public class EPWH9000101Service {
 						EPWH9000101Mapper.EPWH9000101_delete(map); //  삭제
 					}
 	
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 					if (e.getMessage().equals("A012")) {
 						 throw new Exception(e.getMessage()); 
@@ -294,6 +332,12 @@ public class EPWH9000101Service {
 						 map.put("UPD_PRSN_ID", ssUserId);  	//요청자
 						 EPWH9000101Mapper.EPWH9000101_update(map);
 					}       
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				}catch (Exception e) {
 					 if(e.getMessage().equals("A012")){
 						 throw new Exception(e.getMessage());
@@ -332,6 +376,12 @@ public class EPWH9000101Service {
 					model.addAttribute("initList", util.mapToJson(initList));	
 					model.addAttribute("INQ_PARAMS",jParams);
 					model.addAttribute("titleSub", title);
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -372,6 +422,12 @@ public class EPWH9000101Service {
 					model.addAttribute("stat_cd_list", util.mapToJson(stat_cd_list));	  	 
 					model.addAttribute("AreaCdList", util.mapToJson(AreaCdList));
 					
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -393,6 +449,12 @@ public class EPWH9000101Service {
 	  			rtnMap.put("dps_fee_list", util.mapToJson(commonceService.rtrvl_ctnr_dps_fee_select(inputMap))); 	//회수용기 보증금 취급수수료
 	  			rtnMap.put("dps_pbox_list", util.mapToJson(commonceService.pbox_select(inputMap))); 	//회수용기 보증금 취급수수료
 	  			rtnMap.put("stat_cd_list", util.mapToJson(commonceService.getCommonCdListNew("S200"))); 	//상태코드
+  		}catch (IOException io) {
+  			System.out.println(io.toString());
+  		}catch (SQLException sq) {
+  			System.out.println(sq.toString());
+  		}catch (NullPointerException nu){
+  			System.out.println(nu.toString());
   		} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -411,6 +473,12 @@ public class EPWH9000101Service {
 	    	HashMap<String, Object> rtnMap = new HashMap<String, Object>();
   		try {
   				rtnMap.put("dps_fee_list", util.mapToJson(commonceService.rtrvl_ctnr_dps_fee_select(inputMap))); 	//회수용기 보증금 취급수수료
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -429,6 +497,12 @@ public class EPWH9000101Service {
 	    	HashMap<String, Object> rtnMap = new HashMap<String, Object>();
   		try {  
   				rtnMap.put("selList", util.mapToJson(EPWH9000101Mapper.EPWH9000131_select4(inputMap))); 	
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -458,6 +532,12 @@ public class EPWH9000101Service {
 	    	
 	    	try {  
   				rtnMap.put("selList", util.mapToJson(EPWH9000101Mapper.EPWH9000131_select5(inputMap))); 	
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -507,6 +587,12 @@ public class EPWH9000101Service {
 							
 						
 						}
+					}catch (IOException io) {
+						System.out.println(io.toString());
+					}catch (SQLException sq) {
+						System.out.println(sq.toString());
+					}catch (NullPointerException nu){
+						System.out.println(nu.toString());
 					} catch (Exception e) {
 						/*e.printStackTrace();*/
 						//취약점점검 6292 기원우
@@ -557,6 +643,12 @@ public class EPWH9000101Service {
 					model.addAttribute("stat_cd_list", util.mapToJson(stat_cd_list));	  	 
 					model.addAttribute("AreaCdList", util.mapToJson(AreaCdList));
 					
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -630,6 +722,12 @@ public class EPWH9000101Service {
 //					 		EPWH9000101Mapper.EPWH9000131_update(map3);
 					 	}*/
 						   
+					}catch (IOException io) {
+						System.out.println(io.toString());
+					}catch (SQLException sq) {
+						System.out.println(sq.toString());
+					}catch (NullPointerException nu){
+						System.out.println(nu.toString());
 					} catch (Exception e) {
 						 if(e.getMessage().equals("A003")){
 							 throw new Exception(e.getMessage()); 
@@ -673,6 +771,12 @@ public class EPWH9000101Service {
 				model.addAttribute("initList", util.mapToJson(initList));	      
 				model.addAttribute("INQ_PARAMS",jParams);
 				model.addAttribute("titleSub", title);                         
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -704,6 +808,12 @@ public class EPWH9000101Service {
  				model.addAttribute("whsdl_cd_list", util.mapToJson(whsdl_cd_list));	   
  				model.addAttribute("INQ_PARAMS",jParams);
  				model.addAttribute("titleSub", title);
+ 			}catch (IOException io) {
+ 				System.out.println(io.toString());
+ 			}catch (SQLException sq) {
+ 				System.out.println(sq.toString());
+ 			}catch (NullPointerException nu){
+ 				System.out.println(nu.toString());
  			} catch (Exception e) {
  				// TODO Auto-generated catch block
  				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -730,6 +840,12 @@ public class EPWH9000101Service {
 	    	
 	    		try {
 					rtnMap.put("selList", util.mapToJson(EPWH9000101Mapper.EPWH9000197_select(inputMap))); 
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -749,6 +865,12 @@ public class EPWH9000101Service {
 			String errCd = "0000";
 				try {  
 						EPWH9000101Mapper.EPWH9000197_delete(inputMap); //  삭제  
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 						 throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 				}    
@@ -776,6 +898,12 @@ public class EPWH9000101Service {
  			try {
  				model.addAttribute("INQ_PARAMS",jParams);   
  				model.addAttribute("titleSub", title);
+ 			}catch (IOException io) {
+ 				System.out.println(io.toString());
+ 			}catch (SQLException sq) {
+ 				System.out.println(sq.toString());
+ 			}catch (NullPointerException nu){
+ 				System.out.println(nu.toString());
  			} catch (Exception e) {
  				// TODO Auto-generated catch block
  				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -824,6 +952,12 @@ public class EPWH9000101Service {
 						}
 					}
 					
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch (Exception e) {
 				throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -931,6 +1065,12 @@ public class EPWH9000101Service {
 	            		EPWH9000101Mapper.EPWH9000188_insert(inputMap);
 	            	}
 	            }		
+	        }catch (IOException io) {
+	        	System.out.println(io.toString());
+	        }catch (SQLException sq) {
+	        	System.out.println(sq.toString());
+	        }catch (NullPointerException nu){
+	        	System.out.println(nu.toString());
 	        }
 	        catch (Exception e) {
 	        	
@@ -975,6 +1115,12 @@ public class EPWH9000101Service {
  				model.addAttribute("initList", util.mapToJson(initList));	   
  				model.addAttribute("INQ_PARAMS",jParams);  
  				model.addAttribute("titleSub", title);
+ 			}catch (IOException io) {
+ 				System.out.println(io.toString());
+ 			}catch (SQLException sq) {
+ 				System.out.println(sq.toString());
+ 			}catch (NullPointerException nu){
+ 				System.out.println(nu.toString());
  			} catch (Exception e) {
  				// TODO Auto-generated catch block
  				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");

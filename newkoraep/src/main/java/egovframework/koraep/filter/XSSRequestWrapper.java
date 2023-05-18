@@ -21,6 +21,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -58,6 +61,12 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
                     log.debug(String.format("--- adding pattern: [%s] with flags %d\n", regex, orFlags));
                 }
                 patterns[ix] = Pattern.compile(regex, orFlags);
+            }catch (IOException io) {
+            	System.out.println(io.toString());
+            }catch (SQLException sq) {
+            	System.out.println(sq.toString());
+            }catch (NullPointerException nu){
+            	System.out.println(nu.toString());
             }
             catch (Exception e) {
                 log.error("Failed to compile regex: " + regex, e);

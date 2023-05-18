@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +59,12 @@ public class EPCE2371201Service {
 			//구분코드
 			List<?> rtnStatList = epce2371201Mapper.epce2371201_select();
 			model.addAttribute("rtnStatList", util.mapToJson(rtnStatList)); //구분리스트
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -77,6 +85,12 @@ public class EPCE2371201Service {
 			List<?> reqBrchList	= commonceService.brch_nm_select(request, map);
 			try {
 				model.addAttribute("brchList", util.mapToJson(reqBrchList)); //직매장
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -114,6 +128,12 @@ public class EPCE2371201Service {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
 			map.put("searchList", util.mapToJson(list));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -212,6 +232,12 @@ public class EPCE2371201Service {
 					//epce2371201Mapper.epce2371201_insert3(map2); 보증금 발급시 처리함 20180730 
 				}
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch (Exception e) {
 				if(e.getMessage().equals("A012") || e.getMessage().equals("D002") ){
 					throw new Exception(e.getMessage()); 
@@ -263,6 +289,12 @@ public class EPCE2371201Service {
 			//엑셀파일 저장
 			commonceService.excelSave(request, map, list);
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			return "A001"; //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		}

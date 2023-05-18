@@ -1,5 +1,7 @@
 package egovframework.koraep.mf.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +56,13 @@ public class EPMF0130201Service {
 			
 			rtnMap.put("selList", util.mapToJson(epmf0130201Mapper.epmf0130201_select(inputMap)));
 			rtnMap.put("totalList", util.mapToJson(epmf0130201Mapper.epmf0130201_select_cnt(inputMap)));
-		} catch (Exception e) {
+		} catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
+		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 		}	  
@@ -75,6 +83,12 @@ public class EPMF0130201Service {
 		try {
 			epmf0130201Mapper.epmf0130201_delete(data);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		}

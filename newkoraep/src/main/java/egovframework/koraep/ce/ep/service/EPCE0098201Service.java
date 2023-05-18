@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +65,12 @@ public class EPCE0098201Service {
 				model.addAttribute("selList", util.mapToJson(selList));
 				model.addAttribute("totalCnt", totalCnt);	*/
 			
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -84,6 +92,12 @@ public class EPCE0098201Service {
 			rtnMap.put("selList", util.mapToJson(epce0098201Mapper.epce0098201_select(data))); 
 			rtnMap.put("totalCnt", epce0098201Mapper.epce0098201_select_cnt(data));
 		
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -115,6 +129,12 @@ public class EPCE0098201Service {
 			model.addAttribute("nextNoti", util.mapToJson(epce8149093Mapper.epce8149093_select3(inputMap)));//다음글 제목 조회
 			model.addAttribute("fileList", util.mapToJson(epce8149093Mapper.epce8149093_select4(inputMap))); //공지사항 첨부파일 조회
 			
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -139,6 +159,12 @@ public class EPCE0098201Service {
 			rtnMap.put("preNoti", util.mapToJson(epce8149093Mapper.epce8149093_select2(inputMap))); //이전글 제목 조회
 			rtnMap.put("nextNoti", util.mapToJson(epce8149093Mapper.epce8149093_select3(inputMap))); //다음글 제목 조회
 			rtnMap.put("fileList", util.mapToJson(epce8149093Mapper.epce8149093_select4(inputMap))); //공지사항 첨부파일 조회
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -172,6 +198,12 @@ public class EPCE0098201Service {
 					int totalCnt			= epce0098201Mapper.epce0098201_select_cnt(map);	//조회 카운트
 					model.addAttribute("selList", util.mapToJson(selList));
 					model.addAttribute("totalCnt", totalCnt);	*/
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -193,6 +225,12 @@ public class EPCE0098201Service {
 				rtnMap.put("selList", util.mapToJson(epce0098201Mapper.epce00982882_select(data))); 
 				rtnMap.put("totalCnt", epce0098201Mapper.epce00982882_select_cnt(data));
 			
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -223,6 +261,12 @@ public class EPCE0098201Service {
 				model.addAttribute("nextNoti", util.mapToJson(epce8169997Mapper.epce8169997_select3(inputMap)));//다음글 제목 조회
 				model.addAttribute("fileList", util.mapToJson(epce8169997Mapper.epce8169997_select4(inputMap))); //FAQ 첨부파일 조회
 				
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -246,6 +290,12 @@ public class EPCE0098201Service {
 				rtnMap.put("preNoti", util.mapToJson(epce8169997Mapper.epce8169997_select2(inputMap))); //이전글 제목 조회
 				rtnMap.put("nextNoti", util.mapToJson(epce8169997Mapper.epce8169997_select3(inputMap))); //다음글 제목 조회
 				rtnMap.put("fileList", util.mapToJson(epce8169997Mapper.epce8169997_select4(inputMap))); //FAQ 첨부파일 조회
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");

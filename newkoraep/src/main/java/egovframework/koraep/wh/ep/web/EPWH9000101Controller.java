@@ -1,5 +1,7 @@
 package egovframework.koraep.wh.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,6 +100,12 @@ public class EPWH9000101Controller {
 		String errCd = "";
 		try{
 			errCd = EPWH9000101Service.EPWH9000101_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -124,6 +132,12 @@ public class EPWH9000101Controller {
 
 		try{
 			errCd = EPWH9000101Service.EPWH9000101_delete(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -148,6 +162,12 @@ public class EPWH9000101Controller {
 
 		try{
 			errCd = EPWH9000101Service.EPWH9000101_update(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -262,6 +282,12 @@ public class EPWH9000101Controller {
 		try{
 			errCd = EPWH9000101Service.EPWH9000131_insert(data, request);
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 			/*e.printStackTrace();*/
@@ -316,6 +342,12 @@ public class EPWH9000101Controller {
 
 		try{
 			errCd = EPWH9000101Service.EPWH9000142_update(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 			//if(data.get("ERR_CTNR_NM") !=null){
@@ -392,6 +424,12 @@ public class EPWH9000101Controller {
 		String errCd = "";
 		try{
 			errCd = EPWH9000101Service.EPWH9000197_delete(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -433,6 +471,12 @@ public class EPWH9000101Controller {
 		String errCd = "";
 		try{
 			errCd = EPWH9000101Service.EPWH9000188_insert(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

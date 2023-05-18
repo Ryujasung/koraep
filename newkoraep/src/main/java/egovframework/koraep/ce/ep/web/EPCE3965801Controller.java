@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,6 +92,12 @@ public class EPCE3965801Controller {
 	    String errCd = "";
 		try{
 			errCd = epce3965801Service.epce3965801_select4(inputMap, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -113,6 +121,12 @@ public class EPCE3965801Controller {
 	    String errCd = "";
 		try{
 			errCd = epce3965801Service.epce3965801_insert(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

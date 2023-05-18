@@ -3,6 +3,7 @@ package egovframework.koraep.ce.ep.web;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -172,6 +173,12 @@ public class EPCE9000601Controller {
 		String errCd = "";
 		try{
 			errCd = epce9000601Service.epce9000601_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -197,6 +204,12 @@ public class EPCE9000601Controller {
 		String errCd = "";
 		try{
 			errCd = epce9000601Service.epce9000602_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -222,6 +235,12 @@ public class EPCE9000601Controller {
 		String errCd = "";
 		try{
 			errCd = epce9000601Service.epce9000664_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -247,6 +266,12 @@ public class EPCE9000601Controller {
 		String errCd = "";
 		try{
 			errCd = epce9000601Service.epce9000601_delete(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -271,6 +296,12 @@ public class EPCE9000601Controller {
 
 		try{
 			errCd = epce9000601Service.epce9000601_update(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -296,6 +327,12 @@ public class EPCE9000601Controller {
 
 		try{
 			errCd = epce9000601Service.epce9000601_update2(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -365,6 +402,12 @@ public class EPCE9000601Controller {
 		try{
 			errCd = epce9000601Service.epce9000601_insert(data, request);
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 			/*e.printStackTrace();*/
@@ -423,6 +466,12 @@ public class EPCE9000601Controller {
 
 		try{
 			errCd = epce9000601Service.epce9000642_insert(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 			/*e.printStackTrace();*/

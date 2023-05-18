@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,6 +108,12 @@ public class EPCE4759401Service {
 				model.addAttribute("whsdlList", "{}");	
 			}
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -139,6 +147,12 @@ public class EPCE4759401Service {
 			model.addAttribute("dlivyStatSeList", util.mapToJson(dlivyStatSeList));
 			
 			model.addAttribute("titleSub", commonceService.getMenuTitle("EPCE4759431")); //타이틀
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -194,6 +208,12 @@ public class EPCE4759401Service {
 			
 			model.addAttribute("searchDtl", util.mapToJson(epce4759401Mapper.epce4759442_select(param)));
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -243,6 +263,12 @@ public class EPCE4759401Service {
 		try {
 			map.put("searchList", util.mapToJson(list));
 			map.put("totalList", epce4759401Mapper.epce4759401_select_cnt(data));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -292,6 +318,12 @@ public class EPCE4759401Service {
 			map.put("brchList", util.mapToJson(brchList));
 			map.put("ctnrList", util.mapToJson(ctnrList));
 			map.put("whsdlList", util.mapToJson(commonceService.mfc_bizrnm_select4(request, data))); 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -312,6 +344,12 @@ public class EPCE4759401Service {
     	
     	try {
 	      		rtnMap.put("whsdlList", util.mapToJson(commonceService.mfc_bizrnm_select4(request, inputMap)));    	 // 생산자랑 거래중인 도매업자 업체명조회
+    	}catch (IOException io) {
+    		System.out.println(io.toString());
+    	}catch (SQLException sq) {
+    		System.out.println(sq.toString());
+    	}catch (NullPointerException nu){
+    		System.out.println(nu.toString());
     	} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -354,6 +392,12 @@ public class EPCE4759401Service {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
 			map.put("whsdlList", util.mapToJson(commonceService.mfc_bizrnm_select4(request, data))); 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -407,6 +451,12 @@ public class EPCE4759401Service {
 			commonceService.excelSave(request, data, list);
 
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			return  "A001"; //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		}
@@ -515,6 +565,12 @@ public class EPCE4759401Service {
 
 				}//end of for
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				if(e.getMessage().equals("A014") || e.getMessage().equals("A017") ){
 					 throw new Exception(e.getMessage());
@@ -640,6 +696,12 @@ public class EPCE4759401Service {
 
 				}//end of for
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				if(e.getMessage().equals("A014") || e.getMessage().equals("A017") ){
 					 throw new Exception(e.getMessage());
@@ -687,6 +749,12 @@ public class EPCE4759401Service {
 
 				}//end of for
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				 throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -732,6 +800,12 @@ public class EPCE4759401Service {
 
 				}//end of for
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				 throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}

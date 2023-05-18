@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import javax.annotation.Resource;
@@ -81,6 +83,12 @@ public class EPCE3991801Controller {
 		
 		try{
 			errCd = epce3991801Service.epce3991801_update(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -136,6 +144,12 @@ public class EPCE3991801Controller {
 		
 		try{
 			errCd = epce3991801Service.epce3991888_update(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

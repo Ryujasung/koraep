@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +57,12 @@ public class EPCE0182901Service {
 			
 			try {
 				model.addAttribute("initList", util.mapToJson(initList));
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -76,6 +84,12 @@ public class EPCE0182901Service {
     	HashMap<String, Object> rtnMap = new HashMap<String, Object>();
     		try {
 				rtnMap.put("selList", util.mapToJson(epce0182901Mapper.epce0182901_select(inputMap))); 
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -103,6 +117,12 @@ public class EPCE0182901Service {
 			}
 			epce0182901Mapper.epce0182901_delete(inputMap); // 회수수수료관리 삭제
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			if (e.getMessage().equals("A006")) {
 				 throw new Exception(e.getMessage()); 
@@ -138,6 +158,12 @@ public class EPCE0182901Service {
 				model.addAttribute("initList", util.mapToJson(initList));
 		   		model.addAttribute("INQ_PARAMS", jParams);
 				model.addAttribute("titleSub", title);
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -170,6 +196,12 @@ public class EPCE0182901Service {
 				inputMap.put("REG_SN", reg_sn);
 				epce0182901Mapper.epce0182931_insert(inputMap); // 회수수수료 저장
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				if (e.getMessage().equals("A005")) {
 					 throw new Exception(e.getMessage()); 
@@ -203,6 +235,12 @@ public class EPCE0182901Service {
 					model.addAttribute("initList", util.mapToJson(initList));
 					model.addAttribute("titleSub", title);
 					model.addAttribute("INQ_PARAMS", jParams);
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -232,6 +270,12 @@ public class EPCE0182901Service {
 		}
 		inputMap.put("RGST_PRSN_ID", vo.getUSER_ID());
 		epce0182901Mapper.epce0182942_update(inputMap);  //회수수수료 수정
+	}catch (IOException io) {
+		System.out.println(io.toString());
+	}catch (SQLException sq) {
+		System.out.println(sq.toString());
+	}catch (NullPointerException nu){
+		System.out.println(nu.toString());
 	}catch(Exception e){
 		 if(e.getMessage().equals("A005")){
 			throw new Exception(e.getMessage()); 

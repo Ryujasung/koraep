@@ -1,5 +1,7 @@
 package egovframework.koraep.wh.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -53,6 +55,12 @@ public class EPWH8126695Controller {
 			//문의/답변 상세, 답변글 리스트 조회
 			model = epwh8126695Service.epwh8126695(model, request);
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			String errCd = e.getMessage();
 			

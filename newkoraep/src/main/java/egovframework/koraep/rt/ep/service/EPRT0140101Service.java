@@ -1,5 +1,7 @@
 package egovframework.koraep.rt.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,6 +105,12 @@ public class EPRT0140101Service {
 				model.addAttribute("brchList", util.mapToJson(commonceService.brch_nm_select(request, smap)));
 			}
 			model.addAttribute("deptList", util.mapToJson(commonceService.dept_nm_select(smap)));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -187,6 +195,12 @@ public class EPRT0140101Service {
 				//사용자변경이력등록
 	    		eprt0140101Mapper.eprt0140101_insert(data);
 			    	
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			if(e.getMessage().equals("B017") ){
 				 throw new Exception(e.getMessage());
@@ -236,6 +250,12 @@ public class EPRT0140101Service {
 				eprt0140101Mapper.eprt0140164_update2(data);
 				eprt0140101Mapper.eprt0140164_update3(data);
 			    	
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		}

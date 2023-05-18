@@ -80,6 +80,12 @@ public class EPMF0140101Controller {
 		
 		try{
 			errCd = epmf0140101Service.epmf0140101_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -116,6 +122,12 @@ public class EPMF0140101Controller {
 				errCd = epmf0140101Service.epmf0140101_update3(data, request); //비밀번호변경승인
 			}
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -186,6 +198,12 @@ public class EPMF0140101Controller {
 		
 		try{
 			errCd = epmf0140101Service.epmf0140188_update(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -317,6 +335,12 @@ public class EPMF0140101Controller {
 		
 		try{
 			errCd = epmf0140101Service.epmf0140142_update(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -344,6 +368,12 @@ public class EPMF0140101Controller {
 		
 		try{
 			errCd = epmf0140101Service.epmf0140164_update(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -371,6 +401,12 @@ public class EPMF0140101Controller {
 		
 		try{
 			errCd = epmf0140101Service.epmf0140164_update2(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

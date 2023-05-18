@@ -1,5 +1,7 @@
 package egovframework.koraep.wh.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -192,6 +194,12 @@ public class EPWH2910131Controller {
 		try{
 			errCd = epwh2910131Service.epwh2910131_insert(data, request);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 			if(data.get("ERR_CTNR_NM") !=null){

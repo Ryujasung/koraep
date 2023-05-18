@@ -1,5 +1,7 @@
 package egovframework.koraep.mf.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,6 +93,12 @@ public class EPMF0150201Controller {
 		
 		try{
 			errCd = epmf0150201Service.epmf0150201_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -116,6 +124,12 @@ public class EPMF0150201Controller {
 		String errCd = "";
 		try{
 			errCd = epmf0150201Service.epmf0150201_update(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -192,6 +206,12 @@ public class EPMF0150201Controller {
 		
 		try{
 			errCd = epmf0150201Service.epmf0150231_insert(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -219,6 +239,12 @@ public class EPMF0150201Controller {
 		
 		try{
 			errCd = epmf0150201Service.epmf0150242_update(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -261,6 +287,12 @@ public class EPMF0150201Controller {
 		String errCd = "";
 		try{
 			errCd = epmf0150201Service.epmf0150288_update(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

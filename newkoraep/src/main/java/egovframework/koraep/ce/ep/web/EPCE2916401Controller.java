@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -122,6 +124,12 @@ public class EPCE2916401Controller {
 		
 		try{
 			errCd = epce2916401Service.epce2916401_excel(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -148,6 +156,12 @@ public class EPCE2916401Controller {
 		
 		try{
 			errCd = epce2916401Service.epce2916401_update(inputMap, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -235,6 +249,12 @@ public class EPCE2916401Controller {
 		try{
 			errCd = epce2916401Service.epce2916488_insert(inputMap, request);
 			
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -261,6 +281,12 @@ public class EPCE2916401Controller {
 		try{
 			errCd = epce2916401Service.epce2916488_delete(inputMap, request);
 			
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -344,6 +370,12 @@ public class EPCE2916401Controller {
 		try{
 			errCd = epce2916401Service.epce29164883_update(inputMap, request);
 			
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -385,6 +417,12 @@ public class EPCE2916401Controller {
 		try{
 			errCd = epce2916401Service.EPCE29164312_insert(inputMap, request);
 			
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

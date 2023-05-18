@@ -1,5 +1,7 @@
 package egovframework.koraep.rt.ep.service;
   
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -60,6 +62,12 @@ public class EPRT9025801Service {
 			
 			try {
 				model.addAttribute("INQ_PARAMS",jParams);
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -89,6 +97,12 @@ public class EPRT9025801Service {
 					rtnMap.put("rtrvl_tot_list", util.mapToJson(eprt9025801Mapper.eprt9025801_select2(inputMap))); 
 					
 					rtnMap.put("totalList", util.mapToJson(eprt9025801Mapper.eprt9025801_select_cnt(inputMap))); 
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -121,6 +135,12 @@ public class EPRT9025801Service {
 						}
 						inputMap.put("RTRVL_STAT_CD", "RC");  						// 소매업자확인 상태
 						eprt9025801Mapper.eprt9025801_update(inputMap); 	// 상태변경
+  				}catch (IOException io) {
+  					System.out.println(io.toString());
+  				}catch (SQLException sq) {
+  					System.out.println(sq.toString());
+  				}catch (NullPointerException nu){
+  					System.out.println(nu.toString());
   				}catch (Exception e) {
 					 if(e.getMessage().equals("A012")){
 						 throw new Exception(e.getMessage()); 
@@ -164,6 +184,12 @@ public class EPRT9025801Service {
 					model.addAttribute("initList", util.mapToJson(initList));	
 					model.addAttribute("INQ_PARAMS",jParams);
 					model.addAttribute("titleSub", title);
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -211,6 +237,12 @@ public class EPRT9025801Service {
 					model.addAttribute("whsdl_cd_list", util.mapToJson(whsdl_cd_list));	
 					model.addAttribute("dps_fee_list", util.mapToJson(dps_fee_list));	
 					model.addAttribute("rtc_dt_list", util.mapToJson(rtc_dt_list));	  	    //등록일자제한설정
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -234,7 +266,13 @@ public class EPRT9025801Service {
 					inputMap.put("BIZR_TP_CD", vo.getBIZR_TP_CD());  	   				
 				}   
   				rtnMap.put("dps_fee_list", util.mapToJson(commonceService.rtrvl_ctnr_dps_fee_select(inputMap))); 	//회수용기 보증금 취급수수료
-			} catch (Exception e) {   
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
+			}catch (Exception e) {   
 				// TODO Auto-generated catch block   
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
 			}	  
@@ -314,6 +352,12 @@ public class EPRT9025801Service {
 					 		eprt9025801Mapper.eprt9025831_update(map);
 					 	}   
 						   
+					}catch (IOException io) {
+						System.out.println(io.toString());
+					}catch (SQLException sq) {
+						System.out.println(sq.toString());
+					}catch (NullPointerException nu){
+						System.out.println(nu.toString());
 					} catch (Exception e) {
 						 if(e.getMessage().equals("A003")){
 							 throw new Exception(e.getMessage()); 
@@ -356,6 +400,12 @@ public class EPRT9025801Service {
  				model.addAttribute("INQ_PARAMS",jParams);
  				model.addAttribute("titleSub", title);                         
  				model.addAttribute("rtc_dt_list", util.mapToJson(rtc_dt_list));	  	    //등록일자제한설정
+ 			}catch (IOException io) {
+ 				System.out.println(io.toString());
+ 			}catch (SQLException sq) {
+ 				System.out.println(sq.toString());
+ 			}catch (NullPointerException nu){
+ 				System.out.println(nu.toString());
  			} catch (Exception e) {
  				// TODO Auto-generated catch block
  				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -431,6 +481,12 @@ public class EPRT9025801Service {
 					 		eprt9025801Mapper.eprt9025831_update(map3);
 					 	}   
 						   
+					}catch (IOException io) {
+						System.out.println(io.toString());
+					}catch (SQLException sq) {
+						System.out.println(sq.toString());
+					}catch (NullPointerException nu){
+						System.out.println(nu.toString());
 					} catch (Exception e) {
 						 if(e.getMessage().equals("A003")){  
 							 throw new Exception(e.getMessage()); 
@@ -464,6 +520,12 @@ public class EPRT9025801Service {
 							throw new Exception("A012"); //상태정보가 변경되어있습니다. 다시 한 번 확인하시기 바랍니다.
 						 }
 						eprt9025801Mapper.eprt9025842_delete2(inputMap); 	//삭제
+  				}catch (IOException io) {
+  					System.out.println(io.toString());
+  				}catch (SQLException sq) {
+  					System.out.println(sq.toString());
+  				}catch (NullPointerException nu){
+  					System.out.println(nu.toString());
   				}catch (Exception e) {
 					 if(e.getMessage().equals("A012")){
 						 throw new Exception(e.getMessage()); 

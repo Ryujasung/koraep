@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +58,12 @@ public class EPCE9000501Service {
 			model.addAttribute("urm_list2", util.mapToJson(urm_list2));
 			model.addAttribute("urm_list", util.mapToJson(urm_list));
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -184,6 +192,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 		try {
 			map.put("searchList", util.mapToJson(list));
 			map.put("totalCnt", epce9000501Mapper.epce9000501_select2_cnt(data));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -214,6 +228,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 		try {
 			map.put("searchList", util.mapToJson(list));
 //			map.put("totalCnt", epce9000501Mapper.epce9000501_select2_cnt(data));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -249,6 +269,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 			//엑셀파일 저장
 			commonceService.excelSave(request, data, list);
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			return "A001"; //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		}
@@ -283,6 +309,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 			//엑셀파일 저장
 			commonceService.excelSave(request, data, list);
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			return "A001"; //DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		}
@@ -387,6 +419,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 					epce9000501Mapper.EPCE9000538_select(map); // 반환내역서 삭제
 				}
 
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				if (e.getMessage().equals("A009")) {
 					 throw new Exception(e.getMessage());
@@ -409,6 +447,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 		try {
 			String title = commonceService.getMenuTitle("EPCE9000517");//타이틀
 			model.addAttribute("titleSub", title);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -491,6 +535,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 			List<?>	urm_list = urm_list_select(request, map);    			//도매업자 업체명조회
 			model.addAttribute("urm_list", util.mapToJson(urm_list));
 			model.addAttribute("titleSub", title);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -523,6 +573,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 					epce9000501Mapper.epce9000531_hist(map);	//등록 처리
 					epce9000501Mapper.epce9000588_update(map);
 				}
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch (Exception e) {
 				throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -563,6 +619,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 					epce9000501Mapper.epce9000531_update_hist(data);	//등록 처리
 					epce9000501Mapper.epce9000531_update(data);	//등록 처리
 					
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch(Exception e){
 				if(e.getMessage().equals("B007") || e.getMessage().equals("B008") ){
 					 throw new Exception(e.getMessage());
@@ -597,6 +659,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 							
 							epce9000501Mapper.epce9000537_update(data);	//등록 처리
 							
+					}catch (IOException io) {
+						System.out.println(io.toString());
+					}catch (SQLException sq) {
+						System.out.println(sq.toString());
+					}catch (NullPointerException nu){
+						System.out.println(nu.toString());
 					}catch(Exception e){
 						if(e.getMessage().equals("B007") || e.getMessage().equals("B008") ){
 							 throw new Exception(e.getMessage());
@@ -642,6 +710,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 				}
 				
 				
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			if(e.getMessage().equals("B007") || e.getMessage().equals("B008") ){
 				 throw new Exception(e.getMessage());
@@ -675,6 +749,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 				
 				epce9000501Mapper.epce9000533_insert(data);	//등록 처리
 				
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			if(e.getMessage().equals("B007") || e.getMessage().equals("B008") ){
 				 throw new Exception(e.getMessage());
@@ -711,6 +791,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 //				model.addAttribute("rtc_dt_list", util.mapToJson(rtc_dt_list));	  	 
 //				model.addAttribute("stat_cd_list", util.mapToJson(stat_cd_list));	  	 
 				
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -734,6 +820,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 				model.addAttribute("urm_fix_list", util.mapToJson(urm_fix_list));
 				model.addAttribute("urm_list", util.mapToJson(urm_list));
 				
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -816,6 +908,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 					errCd = "A007"; //저장할 데이타가 없습니다.
 				}
 
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			/*e.printStackTrace();*/
 			//취약점점검 6339 기원우
@@ -832,6 +930,12 @@ public List<?> urm_select2(HttpServletRequest request, Map<String, String> data)
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
 			map.put("searchList", util.mapToJson(menuList));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");

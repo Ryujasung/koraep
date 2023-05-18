@@ -1,5 +1,7 @@
 package egovframework.koraep.mf.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,6 +84,12 @@ public class EPMF6652931Service {
 			model.addAttribute("mfcSeCdList", util.mapToJson(mfcSeCdList));	//생산자구분 리스트
 			model.addAttribute("rtc_dt_list", util.mapToJson(rtc_dt_list));	  	    //등록일자제한설정
 		
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -218,6 +226,12 @@ public class EPMF6652931Service {
 			 		epmf6652931Mapper.epmf6652931_update3(map);
 			 	}
 				
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				/*e.printStackTrace();*/
 				//취약점점검 6331 기원우
@@ -289,6 +303,12 @@ public class EPMF6652931Service {
 			       	 rtnMap.put("ctnr_nm", util.mapToJson(epmf6652931Mapper.epmf6652931_select5(inputMap)));
 	            }
 	         }
+    	}catch (IOException io) {
+    		System.out.println(io.toString());
+    	}catch (SQLException sq) {
+    		System.out.println(sq.toString());
+    	}catch (NullPointerException nu){
+    		System.out.println(nu.toString());
     	} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -311,6 +331,12 @@ public class EPMF6652931Service {
     	//도매업자 업체명
     	try {
 			rtnMap.put("whsdl", util.mapToJson(commonceService.mfc_bizrnm_select4_y(request, inputMap)));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -330,6 +356,12 @@ public class EPMF6652931Service {
     	HashMap<String, Object> rtnMap = new HashMap<String, Object>();
     	try {
 			rtnMap.put("ctnr_nm", util.mapToJson(epmf6652931Mapper.epmf6652931_select5(inputMap)));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -348,6 +380,12 @@ public class EPMF6652931Service {
     	HashMap<String, Object> rtnMap = new HashMap<String, Object>();
     	try {
 			rtnMap.put("selList", util.mapToJson(epmf6652931Mapper.epmf6652931_select8(inputMap)));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -387,6 +425,12 @@ public class EPMF6652931Service {
 		         //빈용기명 조회
 		       	 try {
 					rtnMap.put("ctnr_nm", util.mapToJson(epmf6652931Mapper.epmf6652931_select5(inputMap)));
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");

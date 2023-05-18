@@ -1,7 +1,11 @@
 package egovframework.common;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketException;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,6 +53,12 @@ public class ExcelReader {
 		InputStream file = new FileInputStream(CommonProperties.FILE_UPLOAD_PATH + "/" + fileNm);
 		try{
 			return getDataStreamXlsx(file, firstRowColumYn);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			throw new Exception();
 		}finally{
@@ -60,6 +70,12 @@ public class ExcelReader {
 		InputStream file = mFile.getInputStream();
 		try{
 			 return getDataStreamXlsx(file, firstRowColumYn);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			throw new Exception();
 		}finally{
@@ -134,6 +150,12 @@ public class ExcelReader {
 		InputStream file = new FileInputStream(CommonProperties.FILE_UPLOAD_PATH + "/" + fileNm);
 		try{
 			return getDataStream(file, firstRowColumYn);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			throw new Exception();
 		}finally{
@@ -145,6 +167,12 @@ public class ExcelReader {
 		InputStream file = mFile.getInputStream();
 		try{
 			 return getDataStream(file, firstRowColumYn);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			throw new Exception();
 		}finally{

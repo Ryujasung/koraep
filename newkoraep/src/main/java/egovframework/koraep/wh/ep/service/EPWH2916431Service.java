@@ -1,5 +1,7 @@
 package egovframework.koraep.wh.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -110,6 +112,12 @@ public class EPWH2916431Service {
 					model.addAttribute("ctnr_seList", util.mapToJson(ctnr_seList));	
 					model.addAttribute("ctnr_nm", util.mapToJson(ctnr_nm));
 					model.addAttribute("rmk_list", util.mapToJson(rmk_list));	
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -127,6 +135,12 @@ public class EPWH2916431Service {
 		    	HashMap<String, Object> rtnMap = new HashMap<String, Object>();
 		    	try {
 					rtnMap.put("ctnr_nm", util.mapToJson(commonceService.ctnr_cd_select(inputMap)));//빈용기명 조회
+				}catch (IOException io) {
+					System.out.println(io.toString());
+				}catch (SQLException sq) {
+					System.out.println(sq.toString());
+				}catch (NullPointerException nu){
+					System.out.println(nu.toString());
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -219,6 +233,12 @@ public class EPWH2916431Service {
 						 		epwh2983931Mapper.epwh29839882_delete2(map);		// 템프 증빙사진 삭제
 						 	}
 						 	
+						}catch (IOException io) {
+							System.out.println(io.toString());
+						}catch (SQLException sq) {
+							System.out.println(sq.toString());
+						}catch (NullPointerException nu){
+							System.out.println(nu.toString());
 						} catch (Exception e) {
 							 if(e.getMessage().equals("A008") || e.getMessage().equals("A009") ){
 								 throw new Exception(e.getMessage()); 
@@ -306,6 +326,12 @@ public class EPWH2916431Service {
 						 		epwh2983931Mapper.epwh29839882_delete2(last_map);		// 템프 증빙사진 삭제
 						 	}
 							
+						}catch (IOException io) {
+							System.out.println(io.toString());
+						}catch (SQLException sq) {
+							System.out.println(sq.toString());
+						}catch (NullPointerException nu){
+							System.out.println(nu.toString());
 						} catch (Exception e) {
 							if(e.getMessage().equals("A008") || e.getMessage().equals("A009") ){
 								 throw new Exception(e.getMessage()); 

@@ -1,5 +1,7 @@
 package egovframework.koraep.mf.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -41,6 +43,12 @@ public class EPMF8716201Service {
 		List<?> bankList = commonceService.getCommonCdListNew("S090");// 은행
 		try {
 			model.addAttribute("bankList", util.mapToJson(bankList));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");

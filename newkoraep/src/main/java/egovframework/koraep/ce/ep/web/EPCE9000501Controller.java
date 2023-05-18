@@ -2,6 +2,7 @@ package egovframework.koraep.ce.ep.web;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,6 +107,12 @@ public class EPCE9000501Controller {
 
 		try{
 			errCd = epce9000501Service.epce900053219_05_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -133,6 +140,12 @@ public class EPCE9000501Controller {
 
 		try{
 			errCd = epce9000501Service.epce9000501_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -242,6 +255,12 @@ public class EPCE9000501Controller {
 		String errCd = "";
 		try{
 			errCd = epce9000501Service.EPCE9000538_select(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -322,6 +341,12 @@ public class EPCE9000501Controller {
 		String errCd = "";
 		try{
 			errCd = epce9000501Service.epce9000588_update(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -409,6 +434,12 @@ public class EPCE9000501Controller {
 			errCd = epce9000501Service.epce9000531_update(data, request);
 			
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -440,6 +471,12 @@ public class EPCE9000501Controller {
 			errCd = epce9000501Service.epce9000537_update(data, request);
 			
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -466,6 +503,12 @@ public class EPCE9000501Controller {
 		
 		try{
 			errCd = epce9000501Service.epce9000531_insert(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -493,6 +536,12 @@ public class EPCE9000501Controller {
 		
 		try{
 			errCd = epce9000501Service.epce9000533_insert(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -574,6 +623,12 @@ public class EPCE9000501Controller {
 			try{
 					errCd = epce9000501Service.epce900050142_update(data, request); //회원복원
 
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			}catch(Exception e){
 				errCd = e.getMessage();
 			}

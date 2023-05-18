@@ -1,10 +1,13 @@
 package egovframework.common;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Wrapper;
 
@@ -34,8 +37,10 @@ public class EgovResourceCloseHelper {
 			if (resource != null) {
 				try {
 					resource.close();
-				} catch (Exception ignore) {
+				} catch (IOException io ) {
 					EgovBasicLogger.ignore("Occurred Exception to close resource is ingored!!");
+				} catch (Exception e) {
+					e.getMessage();
 				}
 			}
 		}
@@ -51,20 +56,26 @@ public class EgovResourceCloseHelper {
 				if (object instanceof ResultSet) {
 					try {
 						((ResultSet)object).close();
-					} catch (Exception ignore) {
+					} catch (SQLException ex ) {
 						EgovBasicLogger.ignore("Occurred Exception to close resource is ingored!!");
+					} catch (Exception e) {
+						e.getMessage();
 					}
 				} else if (object instanceof Statement) {
 					try {
 						((Statement)object).close();
-					} catch (Exception ignore) {
+					} catch (SQLException ex) {
 						EgovBasicLogger.ignore("Occurred Exception to close resource is ingored!!");
+					} catch (Exception e) {
+						e.getMessage();
 					}
 				} else if (object instanceof Connection) {
 					try {
 						((Connection)object).close();
-					} catch (Exception ignore) {
+					} catch (SQLException ex) {
 						EgovBasicLogger.ignore("Occurred Exception to close resource is ingored!!");
+					} catch (Exception e) {
+						e.getMessage();
 					}
 				} else {
 					throw new IllegalArgumentException("Wrapper type is not found : " + object.toString());
@@ -81,22 +92,28 @@ public class EgovResourceCloseHelper {
 		if (socket != null) {
 			try {
 				socket.shutdownOutput();
-			} catch (Exception ignore) {
+			} catch (SocketException ex) {
 				EgovBasicLogger.ignore("Occurred Exception to shutdown ouput is ignored!!");
+			} catch (Exception e) {
+				e.getMessage();
 			}
 			
 			try {
 				socket.close();
-			} catch (Exception ignore) {
-				EgovBasicLogger.ignore("Occurred Exception to close resource is ignored!!");
+			} catch (SocketException ex) {
+				EgovBasicLogger.ignore("Occurred Exception to shutdown ouput is ignored!!");
+			} catch (Exception e) {
+				e.getMessage();
 			}
 		}
 		
 		if (server != null) {
 			try {
 				server.close();
-			} catch (Exception ignore) {
-				EgovBasicLogger.ignore("Occurred Exception to close resource is ignored!!");
+			} catch (SocketException ex) {
+				EgovBasicLogger.ignore("Occurred Exception to shutdown ouput is ignored!!");
+			} catch (Exception e) {
+				e.getMessage();
 			}
 		}
 	}
@@ -111,14 +128,18 @@ public class EgovResourceCloseHelper {
 			if (socket != null) {
 				try {
 					socket.shutdownOutput();
-				} catch (Exception ignore) {
+				} catch (SocketException ex) {
 					EgovBasicLogger.ignore("Occurred Exception to shutdown ouput is ignored!!");
+				} catch (Exception e) {
+					e.getMessage();
 				}
 				
 				try {
 					socket.close();
-				} catch (Exception ignore) {
-					EgovBasicLogger.ignore("Occurred Exception to close resource is ignored!!");
+				} catch (SocketException ex) {
+					EgovBasicLogger.ignore("Occurred Exception to shutdown ouput is ignored!!");
+				} catch (Exception e) {
+					e.getMessage();
 				}
 			}
 		}

@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,6 +99,12 @@ public class EPCE2925801Controller {
 		String errCd = "";
 		try{
 			errCd = epce2925801Service.epce2925801_excel(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -123,6 +131,12 @@ public class EPCE2925801Controller {
 
 		try{
 			errCd = epce2925801Service.epce2925801_delete(inputMap, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -147,6 +161,12 @@ public class EPCE2925801Controller {
 
 		try{
 			errCd = epce2925801Service.epce2925801_update(inputMap, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -261,6 +281,12 @@ public class EPCE2925801Controller {
 		try{
 			errCd = epce2925801Service.epce2925831_insert(data, request);
 
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 			/*e.printStackTrace();*/
@@ -315,6 +341,12 @@ public class EPCE2925801Controller {
 
 		try{
 			errCd = epce2925801Service.epce2925842_insert(data, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 			//if(data.get("ERR_CTNR_NM") !=null){
@@ -391,6 +423,12 @@ public class EPCE2925801Controller {
 		String errCd = "";
 		try{
 			errCd = epce2925801Service.epce2925897_delete(inputMap, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -432,6 +470,12 @@ public class EPCE2925801Controller {
 		String errCd = "";
 		try{
 			errCd = epce2925801Service.epce2925888_insert(inputMap, request);
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

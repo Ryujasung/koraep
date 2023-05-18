@@ -1,5 +1,7 @@
 package egovframework.koraep.mf.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -122,6 +124,12 @@ public class EPMF2916401Controller {
 		
 		try{
 			errCd = epmf2916401Service.epmf2916401_excel(data, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -148,6 +156,12 @@ public class EPMF2916401Controller {
 		
 		try{
 			errCd = epmf2916401Service.epmf2916401_update(inputMap, request);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -235,6 +249,12 @@ public class EPMF2916401Controller {
 		try{
 			errCd = epmf2916401Service.epmf2916488_insert(inputMap, request);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -261,6 +281,12 @@ public class EPMF2916401Controller {
 		try{
 			errCd = epmf2916401Service.epmf2916488_delete(inputMap, request);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -344,6 +370,12 @@ public class EPMF2916401Controller {
 		try{
 			errCd = epmf2916401Service.epmf29164883_update(inputMap, request);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}
@@ -385,6 +417,12 @@ public class EPMF2916401Controller {
 		try{
 			errCd = epmf2916401Service.EPMF29164313_update(inputMap, request);
 			
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = e.getMessage();
 		}

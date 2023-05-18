@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.web;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -67,6 +69,12 @@ public class EPCE81606641Controller {
 
 			model.addAttribute("ansr_list", util.mapToJson(commonceService.getCommonCdListNew("S120"))); //설문답변형식
 			model.addAttribute("cntn", util.mapToJson(epce81606641Service.epce81606641_select_cntn(param)));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -118,6 +126,12 @@ public class EPCE81606641Controller {
 		
 		try{
 			epce81606641Service.epce81606641_update1(param);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = "A001";
 			msg = commonceService.getErrorMsgNew(request, "A", errCd);
@@ -172,6 +186,12 @@ public class EPCE81606641Controller {
 		
 		try{
 			epce81606641Service.epce81606641_update2(param);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = "A001";
 			msg = commonceService.getErrorMsgNew(request, "A", errCd);
@@ -202,6 +222,12 @@ public class EPCE81606641Controller {
 		
 		try{
 			epce81606641Service.epce81606641_update3(param);
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		}catch(Exception e){
 			errCd = "A001";
 			msg = commonceService.getErrorMsgNew(request, "A", errCd);

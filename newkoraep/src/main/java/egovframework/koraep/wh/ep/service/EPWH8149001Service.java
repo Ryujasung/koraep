@@ -1,4 +1,6 @@
 package egovframework.koraep.wh.ep.service;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +54,12 @@ public class EPWH8149001Service {
 		} else {
 			try {
 				model.addAttribute("totalCnt", util.mapToJson(totalCnt));
+			}catch (IOException io) {
+				System.out.println(io.toString());
+			}catch (SQLException sq) {
+				System.out.println(sq.toString());
+			}catch (NullPointerException nu){
+				System.out.println(nu.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -141,6 +149,12 @@ public class EPWH8149001Service {
 		try {
 			map.put("searchList", util.mapToJson(list));
 			map.put("totalCnt", util.mapToJson(totalCnt));
+		}catch (IOException io) {
+			System.out.println(io.toString());
+		}catch (SQLException sq) {
+			System.out.println(sq.toString());
+		}catch (NullPointerException nu){
+			System.out.println(nu.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");

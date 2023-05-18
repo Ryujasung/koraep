@@ -1,5 +1,6 @@
 package egovframework.common;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -14,7 +15,7 @@ import egovframework.common.CommonProperties;
  
 public class CryptoJS {
 	
-    public static String decrypt(String ciphertext) {
+    public static String decrypt(String ciphertext)throws IOException {
     	
     	
         try {
@@ -43,7 +44,8 @@ public class CryptoJS {
             byte[] recoveredPlaintextBytes = cipher.doFinal(ciphertextBytes);
  
             return new String(recoveredPlaintextBytes);
-        } catch (Exception e) {
+            //취약점점검 3178 류제성
+        } catch (IOException io) {
 			/* e.printStackTrace(); */
         	//취약점점검 6291 기원우
         }

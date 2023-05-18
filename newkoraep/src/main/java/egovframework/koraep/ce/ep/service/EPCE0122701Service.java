@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +64,12 @@ public class EPCE0122701Service {
 
 			try {
 				model.addAttribute("initList", util.mapToJson(initList));
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -104,6 +112,12 @@ public class EPCE0122701Service {
 				
 				rtnMap.put("RSLT_MSG", commonceService.getErrorMsgNew(request, "A", errCd)); //오류 메세지 put
 				
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			} catch (Exception e) {
 				rtnMap.put("RSLT_CD",  "A001"); // 오류코드 put
 				return rtnMap; // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
@@ -138,6 +152,12 @@ public class EPCE0122701Service {
 		 	
 		 	try {
 				model.addAttribute("initList", util.mapToJson(initList));
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
@@ -187,6 +207,12 @@ public class EPCE0122701Service {
 					epce0122701Mapper.epce0122731_insert(inputMap); // 기준보증금 저장
 					epce0122701Mapper.epce0122731_insert2(inputMap); // 기준보증금이력 저장
 				}
+			}catch (IOException io) {
+				io.getMessage();
+			}catch (SQLException sq) {
+				sq.getMessage();
+			}catch (NullPointerException nu){
+				nu.getMessage();
 			} catch (Exception e) {
 				throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 			}
@@ -244,6 +270,12 @@ public class EPCE0122701Service {
 				epce0122701Mapper.epce0122742_update(inputMap);  //기준보증금 수정
 				epce0122701Mapper.epce0122731_insert2(inputMap); // 기준보증금이력 저장
 			}
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		}catch(Exception e){
 			throw new Exception("A001"); // DB 처리중 오류가 발생하였습니다. 관리자에게 문의하세요.
 		}

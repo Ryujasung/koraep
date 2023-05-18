@@ -1,5 +1,7 @@
 package egovframework.koraep.ce.ep.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +47,12 @@ public class EPCE0130101Service {
 		try {
 			rtnMap.put("selList", util.mapToJson(epce0130101Mapper.epce0130101_select(inputMap)));
 			rtnMap.put("totalList", util.mapToJson(epce0130101Mapper.epce0130101_select_cnt(inputMap)));
+		}catch (IOException io) {
+			io.getMessage();
+		}catch (SQLException sq) {
+			sq.getMessage();
+		}catch (NullPointerException nu){
+			nu.getMessage();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			org.slf4j.LoggerFactory.getLogger(egovframework.common.AuthenticationFailHandlerImpl.class).debug("Exception Error");
